@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Government and Politics — Unit 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07080a;
+      --card: #0d0f12;
+      --card2: #12161c;
+      --border: rgba(255,255,255,0.07);
+      --text: #dde3ec;
+      --muted: #7a8699;
+      --gold: #c9a84c;
+      --teal: #3eb89a;
+      --blue: #5b8fd4;
+      --red: #d95f5f;
+      --orange: #f28749;
+      --purple: #9b86f4;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Mono", monospace;
+      overflow: hidden;
+      cursor: none;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .35;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width .2s ease, height .2s ease;
+    }
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100;
+    }
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--gold);
+    }
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 10%, rgba(201,168,76,.12), transparent 65%);
+      opacity: .1;
+      pointer-events: none;
+      transition: background 1s ease, opacity .25s ease;
+      z-index: 0;
+    }
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(5,6,8,.84);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(0.23,1,0.32,1);
+    }
+    #sidebar:hover, #sidebar.pinned { width: 264px; }
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .08em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+    }
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+    #pinBtn.pinned { color: var(--gold); border-color: rgba(201,168,76,.24); }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      border: 1px solid rgba(201,168,76,.2);
+      background: rgba(201,168,76,.07);
+      color: var(--gold);
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .logo-copy { opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+    .logo-copy h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 13px;
+      letter-spacing: .25em;
+      color: var(--gold);
+    }
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .search-wrap {
+      position: relative;
+      padding: 10px;
+    }
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, border-color .2s ease;
+    }
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sb-search-trigger:hover { border-color: rgba(201,168,76,.2); }
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(201,168,76,.18);
+      background: rgba(8,10,13,.98);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s ease, transform .22s ease;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+    }
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+    }
+    #sbResults { max-height: 280px; overflow: auto; }
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      cursor: none;
+      transition: background .15s ease;
+    }
+    .sb-result:hover { background: rgba(201,168,76,.06); }
+    .sb-result:last-child { border-bottom: none; }
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--gold);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .sb-result-term {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 14px;
+      color: white;
+      letter-spacing: .04em;
+    }
+    .sb-result-snip {
+      font-family: "Crimson Pro", serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto;
+    }
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s ease, color .2s ease;
+      position: relative;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.03); color: #aeb7c6; }
+    .nav-btn.active { background: rgba(201,168,76,.07); color: var(--gold); }
+    .nav-btn.active .nav-indicator { opacity: 1; }
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 24px;
+      background: var(--gold);
+      border-radius: 5px;
+      opacity: 0;
+    }
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: blink 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px);
+    }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .glass-btn, #scoreTracker {
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      padding: 9px 14px;
+      font: inherit;
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s ease, color .2s ease, background .2s ease;
+      white-space: nowrap;
+    }
+    .glass-btn:hover, #scoreTracker:hover { color: var(--gold); border-color: rgba(201,168,76,.26); }
+    .glass-btn.active {
+      color: var(--gold);
+      border-color: rgba(201,168,76,.32);
+      background: rgba(201,168,76,.08);
+    }
+    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(0.23,1,0.32,1); }
+    .tab-content.active { display: block; }
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .unit-tag {
+      display: block;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .page-header h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(38px, 5vw, 62px);
+      letter-spacing: .08em;
+      line-height: .96;
+      color: white;
+    }
+    .page-header p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .hero-grid,
+    .principle-grid,
+    .case-grid,
+    .exam-grid,
+    .democracy-grid,
+    .structure-grid,
+    .federal-grid,
+    .writing-grid,
+    .glossary-grid,
+    .flash-grid {
+      display: grid;
+      gap: 22px;
+    }
+    .hero-grid { grid-template-columns: 1.15fr .85fr; margin-bottom: 26px; }
+    .democracy-grid,
+    .structure-grid,
+    .case-grid,
+    .writing-grid,
+    .flash-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .principle-grid,
+    .federal-grid,
+    .glossary-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .exam-grid { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+    .card,
+    .feature-card,
+    .principle-card,
+    .case-card,
+    .exam-card,
+    .flash-card,
+    .timeline-item,
+    .writing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+    .card:hover,
+    .feature-card:hover,
+    .principle-card:hover,
+    .case-card:hover,
+    .exam-card:hover,
+    .flash-card:hover,
+    .timeline-item:hover,
+    .writing-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.14);
+      box-shadow: 0 20px 48px rgba(0,0,0,.35);
+    }
+    .hero-card::before,
+    .feature-card::before,
+    .principle-card::before,
+    .case-card::before,
+    .exam-card::before,
+    .writing-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+      background: var(--accent, var(--gold));
+      opacity: .6;
+    }
+    .hero-card { --accent: var(--gold); }
+    .accent-blue { --accent: var(--blue); }
+    .accent-teal { --accent: var(--teal); }
+    .accent-red { --accent: var(--red); }
+    .accent-orange { --accent: var(--orange); }
+    .accent-purple { --accent: var(--purple); }
+    .card-sub {
+      color: var(--accent, var(--gold));
+      font-size: 9px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 28px;
+      letter-spacing: .05em;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .body-copy,
+    .bullet-list,
+    .timeline-copy,
+    .case-copy,
+    .writing-copy,
+    .exam-copy,
+    .feature-copy {
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.82;
+      font-size: 15px;
+    }
+    .body-copy p + p,
+    .feature-copy p + p,
+    .case-copy p + p,
+    .writing-copy p + p,
+    .exam-copy p + p { margin-top: 12px; }
+    .bullet-list { padding-left: 18px; }
+    .bullet-list li + li { margin-top: 10px; }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+    }
+    .tag {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 7px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .stat-box {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      padding: 16px;
+    }
+    .stat-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .stat-box strong {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 26px;
+      letter-spacing: .06em;
+      color: white;
+    }
+    .focus-callout {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(201,168,76,.16);
+      background: rgba(201,168,76,.05);
+    }
+    .focus-callout .label {
+      color: var(--gold);
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .principle-card h3,
+    .case-card h3,
+    .exam-card h3,
+    .flash-front h3,
+    .timeline-year,
+    .writing-card h3 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      letter-spacing: .05em;
+    }
+    .principle-card h3,
+    .case-card h3,
+    .exam-card h3,
+    .writing-card h3 { font-size: 24px; margin-bottom: 12px; }
+    .timeline-year { font-size: 26px; margin-bottom: 8px; }
+    .mini-label {
+      color: var(--gold);
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .two-col-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .list-panel {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .list-panel h4 {
+      color: white;
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .list-panel ul {
+      padding-left: 18px;
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+    .timeline {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+    }
+    .timeline-item {
+      min-width: 320px;
+      max-width: 360px;
+      flex: 0 0 320px;
+      border-left: 2px solid rgba(201,168,76,.22);
+      padding-left: 24px;
+      scroll-snap-align: start;
+      background:
+        linear-gradient(180deg, rgba(201,168,76,.04), transparent 40%),
+        var(--card);
+    }
+    .timeline-copy { margin-top: 8px; }
+    .timeline-copy ul {
+      margin-top: 10px;
+      padding-left: 18px;
+    }
+    .timeline-copy li + li { margin-top: 6px; }
+    .timeline-intro {
+      margin-bottom: 18px;
+      padding: 18px 20px;
+      border: 1px solid rgba(201,168,76,.14);
+      border-radius: 16px;
+      background: rgba(201,168,76,.04);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .glossary-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .glossary-toolbar input {
+      min-width: 260px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding: 11px 14px;
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+    }
+    .glossary-card h4 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 22px;
+      letter-spacing: .04em;
+      margin-bottom: 12px;
+    }
+    .flash-card {
+      perspective: 1000px;
+      cursor: none;
+      min-height: 240px;
+    }
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 184px;
+      transform-style: preserve-3d;
+      transition: transform .55s ease;
+    }
+    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+    .flash-front, .flash-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .flash-back { transform: rotateY(180deg); }
+    .flash-hint {
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(3,4,6,.74);
+      backdrop-filter: blur(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+      z-index: 120;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      width: min(760px, calc(100vw - 32px));
+      max-height: min(84vh, 920px);
+      overflow: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(10,12,16,.96);
+      padding: 28px;
+      box-shadow: 0 36px 90px rgba(0,0,0,.55);
+    }
+    .modal-close {
+      float: right;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 9px;
+      letter-spacing: .14em;
+      cursor: none;
+    }
+    .modal-title {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 38px;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+    .modal-sub {
+      color: var(--gold);
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .quiz-status {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .quiz-question {
+      font-family: "Crimson Pro", serif;
+      color: white;
+      font-size: 24px;
+      line-height: 1.35;
+      margin-bottom: 20px;
+    }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font: inherit;
+      font-size: 11px;
+      letter-spacing: .04em;
+      cursor: none;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .quiz-option:hover { border-color: rgba(201,168,76,.2); }
+    .quiz-option.correct { border-color: rgba(62,184,154,.35); background: rgba(62,184,154,.08); }
+    .quiz-option.wrong { border-color: rgba(217,95,95,.35); background: rgba(217,95,95,.08); }
+    .quiz-feedback {
+      margin-top: 18px;
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .quiz-next {
+      margin-top: 18px;
+    }
+    .essay-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .essay-topic-btn {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .08em;
+      cursor: none;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .essay-topic-btn:hover, .essay-topic-btn.active {
+      border-color: rgba(201,168,76,.24);
+      background: rgba(201,168,76,.07);
+    }
+    .essay-outline {
+      display: none;
+      gap: 14px;
+    }
+    .essay-outline.show { display: grid; }
+    .essay-block {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
+      padding: 18px;
+    }
+    .essay-block-label {
+      color: var(--gold);
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+    .essay-block-body {
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.78;
+      font-size: 15px;
+    }
+    strong.ap-term {
+      color: #f1dc9c;
+      font-weight: 600;
+    }
+    body.ap-highlight strong.ap-term {
+      background: rgba(201,168,76,.12);
+      padding: 0 3px;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(201,168,76,.15);
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 1020px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .dash-stats, .two-col-list { grid-template-columns: 1fr; }
+      #main { padding-left: 26px; padding-right: 26px; }
+    }
+    @media (max-width: 760px) {
+      body { cursor: auto; overflow: auto; display: block; }
+      #cursor, #readingProgress { display: none; }
+      #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      #sidebar:hover, #sidebar.pinned { width: 100%; }
+      .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important; }
+      #pinBtn { display: none; }
+      nav { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      #main { height: auto; overflow: visible; }
+      .topbar { position: static; }
+      .glossary-toolbar input { min-width: 100%; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="ambientOverlay"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">AP</div>
+      <div class="logo-copy">
+        <h1>GOPO UNIT 1</h1>
+        <p>Foundations of Democracy</p>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Unit 1</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color: var(--gold); font-size: 12px;">⌕</span>
+          <input id="sbInput" type="text" placeholder="Find concepts, cases, or themes" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+
+    <nav id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <span class="dot"></span>
+      <span>Study Mode Active</span>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+      </div>
+      <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+    </div>
+
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 1 · Constitutional Democracy</span>
+        <h2>Foundations of American Government</h2>
+        <p>Enlightenment ideas · Articles of Confederation · ratification · federalism</p>
+      </header>
+
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Core Frame</div>
+          <div class="card-title">What Unit 1 Is Really About</div>
+          <div class="body-copy">
+            <p>The Constitution is best understood as a response to two simultaneous problems: the new nation needed a government strong enough to govern, but the Framers also feared concentrated power and designed the system to slow it down.</p>
+            <p>That tension runs through everything in Unit 1: <strong class="ap-term">natural rights</strong>, <strong class="ap-term">limited government</strong>, <strong class="ap-term">separation of powers</strong>, <strong class="ap-term">checks and balances</strong>, and <strong class="ap-term">federalism</strong>.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box">
+              <span>Study Sections</span>
+              <strong>10</strong>
+            </div>
+            <div class="stat-box">
+              <span>Key Cases</span>
+              <strong>3</strong>
+            </div>
+            <div class="stat-box">
+              <span>Quiz Items</span>
+              <strong>8</strong>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">
+              Build answers as chains: founding idea → constitutional structure → political consequence.
+            </div>
+          </div>
+        </article>
+
+        <article class="card feature-card accent-blue">
+          <div class="card-sub">Fast Review</div>
+          <div class="card-title">What You Must Be Able To Explain</div>
+          <ul class="bullet-list">
+            <li>How <strong class="ap-term">Locke</strong>, <strong class="ap-term">Montesquieu</strong>, and social contract theory shaped the Constitution.</li>
+            <li>Why the <strong class="ap-term">Articles of Confederation</strong> failed and how the Constitution fixed those weaknesses.</li>
+            <li>How the Framers balanced liberty and order through structure rather than trust.</li>
+            <li>How <strong class="ap-term">Federalist 10</strong>, <strong class="ap-term">Federalist 51</strong>, and the Bill of Rights fit into ratification.</li>
+            <li>How <strong class="ap-term">federalism</strong> divides power and why Supreme Court cases changed that balance.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Founding Docs</span>
+            <span class="tag">Constitution</span>
+            <span class="tag">Federalism</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="exam-grid">
+        <article class="exam-card accent-red">
+          <div class="mini-label">Common Mistakes</div>
+          <h3>Avoid These</h3>
+          <ul class="bullet-list">
+            <li>Calling natural rights rights that are granted by government.</li>
+            <li>Treating limited government as no government or weak government in every respect.</li>
+            <li>Mixing up separation of powers with checks and balances.</li>
+            <li>Listing cases or Federalist papers without connecting them to a claim.</li>
+          </ul>
+        </article>
+
+        <article class="exam-card accent-teal">
+          <div class="mini-label">Study Strategy</div>
+          <h3>Best Order To Review</h3>
+          <ul class="bullet-list">
+            <li>Start with founding ideas and democratic models.</li>
+            <li>Move to the Articles, the Convention, and ratification.</li>
+            <li>Finish with constitutional structure, federalism, and court cases.</li>
+            <li>Then drill glossary terms and do a quiz or essay outline.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="ideas">
+      <header class="page-header">
+        <span class="unit-tag">Foundations</span>
+        <h2>Enlightenment and Founding Ideas</h2>
+        <p>Natural rights · social contract · consent of the governed</p>
+      </header>
+
+      <div class="principle-grid">
+        <article class="principle-card accent-gold">
+          <div class="mini-label">Core Claim</div>
+          <h3>Reason Over Tradition</h3>
+          <div class="body-copy">
+            <p>The <strong class="ap-term">Enlightenment</strong> emphasized reason as the best tool for organizing society. That pushed political thinkers to question monarchy, inherited authority, and unaccountable power.</p>
+            <p>For AP Gov, this matters because the Founders borrowed the idea that legitimate government must be justified, limited, and structured to protect liberty.</p>
+          </div>
+        </article>
+
+        <article class="principle-card accent-blue">
+          <div class="mini-label">Thinkers</div>
+          <h3>Who Matches Which Idea</h3>
+          <ul class="bullet-list">
+            <li><strong class="ap-term">Hobbes</strong>: order, strong ruler, social contract for stability.</li>
+            <li><strong class="ap-term">Locke</strong>: natural rights, consent, right to revolution.</li>
+            <li><strong class="ap-term">Montesquieu</strong>: separation of powers.</li>
+            <li><strong class="ap-term">Rousseau</strong>: public good over narrow self-interest.</li>
+            <li><strong class="ap-term">Voltaire</strong> and <strong class="ap-term">Diderot</strong>: freedom of thought and criticism of concentrated authority.</li>
+          </ul>
+        </article>
+
+        <article class="principle-card accent-teal">
+          <div class="mini-label">Declaration Logic</div>
+          <h3>Natural Rights and Consent</h3>
+          <div class="body-copy">
+            <p>The <strong class="ap-term">Declaration of Independence</strong> applies Enlightenment ideas as a political argument. Government exists to protect rights, derives authority from the consent of the governed, and may be altered or abolished if it violates that purpose.</p>
+            <p>That same logic explains why American constitutional design emphasizes both effective government and structural limits.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="democracy">
+      <header class="page-header">
+        <span class="unit-tag">Models of Democracy</span>
+        <h2>Direct, Representative, Participatory, Pluralist, Elite</h2>
+        <p>Know the definition and apply it to a scenario</p>
+      </header>
+
+      <div class="democracy-grid">
+        <article class="feature-card accent-gold">
+          <div class="card-sub">Direct</div>
+          <div class="card-title">Citizens Vote on Policy</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Direct democracy</strong> means citizens vote directly on laws and policies. In the United States, this appears mostly through state and local initiatives and referendums, not national policymaking.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-blue">
+          <div class="card-sub">Representative</div>
+          <div class="card-title">The Republic Model</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Representative democracy</strong> means citizens choose leaders to make policy decisions. The Framers preferred this model because they feared instability, factions, and mob rule.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-teal">
+          <div class="card-sub">Participatory</div>
+          <div class="card-title">Broad Public Engagement</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Participatory democracy</strong> argues that broad involvement by ordinary citizens creates a more responsive system.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-orange">
+          <div class="card-sub">Pluralist</div>
+          <div class="card-title">Competition Among Groups</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Pluralist democracy</strong> sees policy as the result of bargaining among many groups. It does not mean every group has equal power.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-purple">
+          <div class="card-sub">Elite</div>
+          <div class="card-title">Power Concentrates at the Top</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Elite democracy</strong> argues that the wealthy and educated tend to dominate political outcomes and that mass participation is often limited in practice.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="articles">
+      <header class="page-header">
+        <span class="unit-tag">First Government</span>
+        <h2>The Articles of Confederation</h2>
+        <p>Weak national structure · strong state sovereignty · Shays' Rebellion</p>
+      </header>
+
+      <div class="structure-grid">
+        <article class="feature-card accent-red">
+          <div class="card-sub">Weaknesses</div>
+          <div class="card-title">Why the Articles Failed</div>
+          <ul class="bullet-list">
+            <li>No national executive to enforce laws.</li>
+            <li>No national judiciary to interpret laws.</li>
+            <li>Congress could not tax directly.</li>
+            <li>Congress had weak power over interstate commerce.</li>
+            <li>Major action required supermajorities; amendments required unanimity.</li>
+          </ul>
+        </article>
+
+        <article class="feature-card accent-teal">
+          <div class="card-sub">Accomplishments</div>
+          <div class="card-title">What Still Worked</div>
+          <div class="feature-copy">
+            <p>The Articles were not useless. They kept the new nation functioning after independence, helped establish a federal relationship between states and the national government, and shaped western expansion through the <strong class="ap-term">Northwest Ordinance</strong>.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-orange">
+          <div class="card-sub">Turning Point</div>
+          <div class="card-title">Shays' Rebellion</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Shays' Rebellion</strong> showed many leaders that the national government lacked the power to maintain order. That crisis helped build support for a stronger central government at the Constitutional Convention.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="convention">
+      <header class="page-header">
+        <span class="unit-tag">Philadelphia 1787</span>
+        <h2>The Convention and the Big Compromises</h2>
+        <p>Representation · slavery · executive power · Electoral College</p>
+      </header>
+
+      <div class="principle-grid">
+        <article class="principle-card accent-blue">
+          <div class="mini-label">Representation</div>
+          <h3>Virginia vs. New Jersey</h3>
+          <div class="body-copy">
+            <p>The <strong class="ap-term">Virginia Plan</strong> favored large states with representation by population. The <strong class="ap-term">New Jersey Plan</strong> favored small states with equal state voting.</p>
+            <p>The <strong class="ap-term">Great Compromise</strong> combined both: a population-based House and an equal-representation Senate.</p>
+          </div>
+        </article>
+
+        <article class="principle-card accent-red">
+          <div class="mini-label">Slavery and Power</div>
+          <h3>Three-Fifths Compromise</h3>
+          <div class="body-copy">
+            <p>The <strong class="ap-term">Three-Fifths Compromise</strong> counted enslaved people as three-fifths of a person for representation and taxation. It was a political compromise over power, not a moral settlement.</p>
+          </div>
+        </article>
+
+        <article class="principle-card accent-gold">
+          <div class="mini-label">Institutional Fixes</div>
+          <h3>Executive, Judiciary, Electoral College</h3>
+          <div class="body-copy">
+            <p>The Convention created a single president to enforce laws, a national judiciary to resolve disputes, and an <strong class="ap-term">Electoral College</strong> rather than direct national popular election.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="ratification">
+      <header class="page-header">
+        <span class="unit-tag">The Ratification Fight</span>
+        <h2>Federalists vs. Anti-Federalists</h2>
+        <p>Factions · checks and balances · strong executive · Bill of Rights</p>
+      </header>
+
+      <div class="exam-grid">
+        <article class="exam-card accent-teal">
+          <div class="mini-label">Federalists</div>
+          <h3>Case for Ratification</h3>
+          <div class="exam-copy">
+            <p>Federalists argued the Articles were too weak and that internal structure would prevent tyranny even under a stronger national government.</p>
+            <p><strong class="ap-term">Federalist 10</strong> explains how a large republic controls faction. <strong class="ap-term">Federalist 51</strong> explains how ambition checks ambition through separated institutions.</p>
+          </div>
+        </article>
+
+        <article class="exam-card accent-red">
+          <div class="mini-label">Anti-Federalists</div>
+          <h3>Case Against Ratification</h3>
+          <div class="exam-copy">
+            <p>Anti-Federalists feared the Constitution would overpower states, endanger liberty, and create a powerful executive and judiciary. <strong class="ap-term">Brutus No. 1</strong> warns that a large republic could become unresponsive and dangerous.</p>
+          </div>
+        </article>
+
+        <article class="exam-card accent-gold">
+          <div class="mini-label">Ratification Solution</div>
+          <h3>Bill of Rights</h3>
+          <div class="exam-copy">
+            <p>The promise of a <strong class="ap-term">Bill of Rights</strong> was critical to winning ratification. Anti-Federalists wanted explicit protections because they did not trust structural limits alone.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="constitution">
+      <header class="page-header">
+        <span class="unit-tag">Instrument of Government</span>
+        <h2>Constitutional Structure and Core Principles</h2>
+        <p>Articles I-III · implied powers · judicial review · supremacy</p>
+      </header>
+
+      <div class="structure-grid">
+        <article class="feature-card accent-orange">
+          <div class="card-sub">Purpose</div>
+          <div class="card-title">Why the Constitution Was Created</div>
+          <div class="feature-copy">
+            <p>The Constitution was written to fix the weaknesses of the <strong class="ap-term">Articles of Confederation</strong>. The goal was to build a government strong enough to govern but limited enough to protect liberty.</p>
+            <p>The Constitution does not rely on trust. It relies on structured conflict between branches and between levels of government.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-gold">
+          <div class="card-sub">Branches</div>
+          <div class="card-title">Articles I, II, and III</div>
+          <div class="feature-copy">
+            <p>Article I creates Congress, Article II creates the presidency, and Article III creates the judiciary. Their powers are distinct by design.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-blue">
+          <div class="card-sub">Growth</div>
+          <div class="card-title">Implied Powers</div>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">necessary and proper clause</strong> allows Congress to make laws needed to carry out enumerated powers, which explains how the national government created institutions not explicitly named in the Constitution.</p>
+          </div>
+        </article>
+
+        <article class="feature-card accent-purple">
+          <div class="card-sub">Judiciary</div>
+          <div class="card-title">Marbury and Review</div>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Marbury v. Madison</strong> established <strong class="ap-term">judicial review</strong>, giving the Supreme Court the power to strike down laws that conflict with the Constitution.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="two-col-list">
+        <div class="list-panel">
+          <h4>Separation of Powers</h4>
+          <ul>
+            <li>Distinct roles for each branch.</li>
+            <li>Legislative makes law, executive enforces, judicial interprets.</li>
+            <li>Prevents one institution from holding every function.</li>
+          </ul>
+        </div>
+        <div class="list-panel">
+          <h4>Checks and Balances</h4>
+          <ul>
+            <li>President vetoes bills.</li>
+            <li>Senate confirms appointments and ratifies treaties.</li>
+            <li>Courts review laws for constitutionality.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="two-col-list" style="margin-top: 22px;">
+        <div class="list-panel">
+          <h4>Major Constitutional Powers</h4>
+          <ul>
+            <li>Congress makes laws, collects taxes, regulates trade, and declares war.</li>
+            <li>The president enforces laws, commands the military, and handles foreign policy.</li>
+            <li>The judiciary interprets laws and reviews constitutionality.</li>
+          </ul>
+        </div>
+        <div class="list-panel">
+          <h4>Bill of Rights Snapshot</h4>
+          <ul>
+            <li>Speech, religion, press, assembly, and petition.</li>
+            <li>Search and seizure protections, fair trial rights, due process.</li>
+            <li>Protection from cruel and unusual punishment.</li>
+            <li>Unlisted rights can still belong to the people.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="federalism">
+      <header class="page-header">
+        <span class="unit-tag">Divided Sovereignty</span>
+        <h2>Federalism Basics</h2>
+        <p>Enumerated powers · reserved powers · concurrent powers · grants</p>
+      </header>
+
+      <div class="federal-grid">
+        <article class="principle-card accent-orange">
+          <div class="mini-label">Simple Definition</div>
+          <h3>Federalism in Plain English</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Federalism</strong> is the division of power between the national government and state governments. Its purpose is to keep too much authority from concentrating in one place.</p>
+            <p>Most major political conflict in the United States can be framed as a struggle between national unity and state independence.</p>
+          </div>
+        </article>
+
+        <article class="principle-card accent-blue">
+          <div class="mini-label">Power Types</div>
+          <h3>Enumerated, Reserved, Concurrent</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Enumerated powers</strong> belong to the national government. <strong class="ap-term">Reserved powers</strong> remain with the states under the <strong class="ap-term">10th Amendment</strong>. <strong class="ap-term">Concurrent powers</strong> are shared.</p>
+            <ul class="bullet-list">
+              <li>Enumerated: declaring war, coining money, regulating interstate commerce.</li>
+              <li>Reserved: education, local policing, elections.</li>
+              <li>Concurrent: taxation, road building, law enforcement.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="principle-card accent-gold">
+          <div class="mini-label">Constitutional Hooks</div>
+          <h3>Supremacy, Commerce, Necessary and Proper</h3>
+          <div class="body-copy">
+            <p>The <strong class="ap-term">supremacy clause</strong> makes valid federal law supreme over conflicting state law. The <strong class="ap-term">commerce clause</strong> and implied powers often justify national action.</p>
+            <p>The <strong class="ap-term">necessary and proper clause</strong> is the foundation of implied powers, which is why it appears repeatedly in federalism disputes.</p>
+          </div>
+        </article>
+
+        <article class="principle-card accent-teal">
+          <div class="mini-label">Policy Tools</div>
+          <h3>Grants and Mandates</h3>
+          <div class="body-copy">
+            <p>The federal government often influences states through <strong class="ap-term">categorical grants</strong>, <strong class="ap-term">block grants</strong>, and <strong class="ap-term">mandates</strong>. Funding can shift power even without changing the Constitution.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="cases">
+      <header class="page-header">
+        <span class="unit-tag">Court Landmarks</span>
+        <h2>Federalism Cases You Must Know</h2>
+        <p>Clause, holding, and whether national or state power grew</p>
+      </header>
+
+      <div class="case-grid">
+        <article class="case-card accent-purple">
+          <div class="mini-label">Judicial Review</div>
+          <h3>Marbury v. Madison (1803)</h3>
+          <div class="case-copy">
+            <p>This case established <strong class="ap-term">judicial review</strong>, meaning the Supreme Court can declare laws unconstitutional.</p>
+            <p>Constitutional principle: <strong class="ap-term">separation of powers</strong>. Impact: strengthened the national judiciary. Big idea: courts are the final interpreters of the Constitution.</p>
+          </div>
+        </article>
+
+        <article class="case-card accent-gold">
+          <div class="mini-label">Implied Powers</div>
+          <h3>McCulloch v. Maryland (1819)</h3>
+          <div class="case-copy">
+            <p>The Court ruled that Congress could create a national bank under the <strong class="ap-term">necessary and proper clause</strong>, and states could not tax federal institutions.</p>
+            <p>Constitutional principle: implied powers plus the <strong class="ap-term">supremacy clause</strong>. Impact: expanded national government power. Big idea: federal law overrides conflicting state law.</p>
+          </div>
+        </article>
+
+        <article class="case-card accent-blue">
+          <div class="mini-label">Commerce</div>
+          <h3>Gibbons v. Ogden (1824)</h3>
+          <div class="case-copy">
+            <p>This case expanded the <strong class="ap-term">commerce clause</strong>, giving Congress broad power to regulate interstate trade.</p>
+            <p>Constitutional principle: commerce clause. Impact: strengthened federal economic power. Big idea: interstate commerce is controlled by the federal government.</p>
+          </div>
+        </article>
+
+        <article class="case-card accent-red">
+          <div class="mini-label">Limits</div>
+          <h3>United States v. Lopez (1995)</h3>
+          <div class="case-copy">
+            <p>The Court limited Congress's power under the commerce clause by ruling that gun possession in schools was not interstate commerce in that case.</p>
+            <p>Constitutional principle: limits on federal power. Impact: strengthened state authority. Big idea: not everything can be regulated by Congress.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="timeline">
+      <header class="page-header">
+        <span class="unit-tag">Chronology</span>
+        <h2>Founding Timeline</h2>
+        <p>Anchor ideas and institutions to dates</p>
+      </header>
+
+      <div class="timeline-intro">Horizontal study rail: scroll across the constitutional timeline from founding to modern limits on power.</div>
+
+      <div class="timeline">
+        <article class="timeline-item">
+          <div class="timeline-year">1776</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Declaration of Independence</strong>
+            <ul class="bullet-list">
+              <li>Introduces natural rights and consent of the governed.</li>
+              <li>Justifies breaking away from Britain.</li>
+              <li>Applies Enlightenment ideas in a political argument.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1781</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Articles of Confederation</strong>
+            <ul class="bullet-list">
+              <li>First national government.</li>
+              <li>Weak central authority.</li>
+              <li>No taxing power, no executive, no judiciary.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1786</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Shays' Rebellion</strong>
+            <ul class="bullet-list">
+              <li>Farmers revolt over debt and taxes.</li>
+              <li>Shows the national government cannot maintain order.</li>
+              <li>Pushes support for stronger government.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1787</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Constitutional Convention</strong>
+            <ul class="bullet-list">
+              <li>Held in Philadelphia.</li>
+              <li>Delegates replace the Articles instead of merely fixing them.</li>
+              <li>Core debates: representation, slavery, executive power.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1787</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Great Compromise</strong>
+            <ul class="bullet-list">
+              <li>House based on population.</li>
+              <li>Senate gives equal state representation.</li>
+              <li>Solves the large-state vs. small-state conflict.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1788</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Constitution Ratified</strong>
+            <ul class="bullet-list">
+              <li>Nine states approve the Constitution.</li>
+              <li>Federalists win the ratification fight.</li>
+              <li>Anti-Federalists are partly won over by the Bill of Rights promise.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1789</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Federal Government Begins</strong>
+            <ul class="bullet-list">
+              <li>George Washington becomes the first president.</li>
+              <li>The new constitutional system starts operating.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1791</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Bill of Rights Added</strong>
+            <ul class="bullet-list">
+              <li>First ten amendments.</li>
+              <li>Protects speech, religion, due process, and fair trial rights.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1803</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Marbury v. Madison</strong>
+            <ul class="bullet-list">
+              <li>Establishes judicial review.</li>
+              <li>Makes the Court a coequal branch.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1819</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">McCulloch v. Maryland</strong>
+            <ul class="bullet-list">
+              <li>Confirms implied powers of Congress.</li>
+              <li>Reinforces national supremacy over state interference.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1824</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Gibbons v. Ogden</strong>
+            <ul class="bullet-list">
+              <li>Expands federal power over interstate commerce.</li>
+              <li>States cannot interfere with national trade regulation.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1937</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Expansion of Federal Power</strong>
+            <ul class="bullet-list">
+              <li>New Deal-era decisions allow broader federal economic regulation.</li>
+              <li>Marks a more expansive modern reading of national power.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1960s</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Civil Rights Era Court Cases</strong>
+            <ul class="bullet-list">
+              <li>The Supreme Court broadens protections for civil rights and liberties.</li>
+              <li>The Constitution is applied more aggressively to protect individuals.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1995</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">United States v. Lopez</strong>
+            <ul class="bullet-list">
+              <li>Limits federal power under the commerce clause.</li>
+              <li>Shows states can regain authority in some areas.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Term Bank</span>
+        <h2>Glossary and Flashcards</h2>
+        <p>Filter terms, then flip cards for active recall</p>
+      </header>
+
+      <div class="glossary-toolbar">
+        <input id="glossaryFilter" type="text" placeholder="Filter glossary terms" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+
+      <div style="height: 26px;"></div>
+
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <section class="tab-content" id="writing">
+      <header class="page-header">
+        <span class="unit-tag">AP Writing</span>
+        <h2>How Unit 1 Appears in FRQs</h2>
+        <p>Use evidence to support reasoning, not to decorate an answer</p>
+      </header>
+
+      <div class="writing-grid">
+        <article class="writing-card accent-gold">
+          <div class="mini-label">Use This Pattern</div>
+          <h3>Evidence + Reasoning</h3>
+          <div class="writing-copy">
+            <p>Claim: The Constitution limits tyranny by dividing power.</p>
+            <p>Evidence: <strong class="ap-term">Federalist 51</strong> argues that ambition must counteract ambition.</p>
+            <p>Reasoning: Because each branch has institutional tools to resist the others, no branch can dominate easily.</p>
+          </div>
+        </article>
+
+        <article class="writing-card accent-blue">
+          <div class="mini-label">Typical Prompt Move</div>
+          <h3>Explain the Tradeoff</h3>
+          <div class="writing-copy">
+            <p>High-scoring answers explain how the same feature can solve one problem while creating another. For example, checks and balances protect liberty, but they also slow policymaking.</p>
+          </div>
+        </article>
+
+        <article class="writing-card accent-red">
+          <div class="mini-label">What To Avoid</div>
+          <h3>Term Dumping</h3>
+          <div class="writing-copy">
+            <p>Do not list ideas without linking them. The AP prompt usually wants a causal chain, a comparison, or an applied explanation.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button" data-close="quizModal">Close</button>
+      <div class="modal-title">Unit 1 Quiz</div>
+      <div class="modal-sub">8 AP-style review questions</div>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button" data-close="essayModal">Close</button>
+      <div class="modal-title">Prompt Bank</div>
+      <div class="modal-sub">Short outlines for common Unit 1 argument patterns</div>
+      <div class="essay-list" id="essayTopics"></div>
+      <div class="essay-outline" id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", label: "Dashboard", icon: "◈", ambient: "radial-gradient(ellipse at 60% 10%, rgba(201,168,76,.12), transparent 65%)" },
+      { id: "ideas", label: "Founding Ideas", icon: "✦", ambient: "radial-gradient(ellipse at 20% 20%, rgba(91,143,212,.12), transparent 65%)" },
+      { id: "democracy", label: "Democracy", icon: "◇", ambient: "radial-gradient(ellipse at 80% 20%, rgba(62,184,154,.12), transparent 65%)" },
+      { id: "articles", label: "Articles", icon: "▣", ambient: "radial-gradient(ellipse at 25% 70%, rgba(217,95,95,.12), transparent 65%)" },
+      { id: "convention", label: "Convention", icon: "◎", ambient: "radial-gradient(ellipse at 75% 35%, rgba(242,135,73,.12), transparent 65%)" },
+      { id: "ratification", label: "Ratification", icon: "◆", ambient: "radial-gradient(ellipse at 40% 25%, rgba(201,168,76,.12), transparent 65%)" },
+      { id: "constitution", label: "Constitution", icon: "▦", ambient: "radial-gradient(ellipse at 50% 50%, rgba(91,143,212,.12), transparent 65%)" },
+      { id: "federalism", label: "Federalism", icon: "◫", ambient: "radial-gradient(ellipse at 70% 70%, rgba(62,184,154,.12), transparent 65%)" },
+      { id: "cases", label: "Cases", icon: "◩", ambient: "radial-gradient(ellipse at 50% 20%, rgba(155,134,244,.12), transparent 65%)" },
+      { id: "timeline", label: "Timeline", icon: "↗", ambient: "radial-gradient(ellipse at 55% 60%, rgba(242,135,73,.12), transparent 65%)" },
+      { id: "glossary", label: "Glossary", icon: "⌘", ambient: "radial-gradient(ellipse at 30% 30%, rgba(201,168,76,.12), transparent 65%)" },
+      { id: "writing", label: "Writing", icon: "✎", ambient: "radial-gradient(ellipse at 65% 28%, rgba(217,95,95,.12), transparent 65%)" }
+    ];
+
+    const glossaryTerms = [
+      { term: "Natural Rights", def: "Rights people possess because they are human, not because government gives them.", tab: "ideas" },
+      { term: "Social Contract", def: "The theory that government is legitimate only because people consent to it in exchange for order and rights protection.", tab: "ideas" },
+      { term: "Consent of the Governed", def: "The idea that government authority comes from the people.", tab: "ideas" },
+      { term: "Limited Government", def: "Government power is restricted by law and constitutional design.", tab: "constitution" },
+      { term: "Republicanism", def: "Indirect rule through elected representatives rather than direct lawmaking by all citizens.", tab: "democracy" },
+      { term: "Popular Sovereignty", def: "Political authority rests ultimately with the people.", tab: "constitution" },
+      { term: "Separation of Powers", def: "Assigning different governmental powers to different branches.", tab: "constitution" },
+      { term: "Checks and Balances", def: "Shared powers that allow each branch to limit the others.", tab: "constitution" },
+      { term: "Articles of Confederation", def: "The first U.S. national framework, marked by strong state power and weak central authority.", tab: "articles" },
+      { term: "Shays' Rebellion", def: "An uprising that exposed the weakness of the Articles and increased support for a stronger national government.", tab: "articles" },
+      { term: "Great Compromise", def: "The agreement creating a population-based House and equal-representation Senate.", tab: "convention" },
+      { term: "Three-Fifths Compromise", def: "The compromise counting enslaved people as three-fifths for representation and taxation.", tab: "convention" },
+      { term: "Electoral College", def: "The constitutional system for choosing the president through electors allocated by each state's representation.", tab: "convention" },
+      { term: "Federalist 10", def: "Madison's argument that a large republic can control the effects of faction.", tab: "ratification" },
+      { term: "Federalist 51", def: "Madison's argument that ambition must counteract ambition through institutional design.", tab: "ratification" },
+      { term: "Brutus No. 1", def: "An Anti-Federalist warning that the Constitution gave the national government too much power.", tab: "ratification" },
+      { term: "Bill of Rights", def: "The first ten amendments, added to protect liberties and address Anti-Federalist concerns.", tab: "ratification" },
+      { term: "Judicial Review", def: "The power of courts to declare laws or government actions unconstitutional.", tab: "constitution" },
+      { term: "Necessary and Proper Clause", def: "The clause allowing Congress to make laws needed to carry out enumerated powers.", tab: "constitution" },
+      { term: "Supremacy Clause", def: "The rule that valid federal law overrides conflicting state law.", tab: "federalism" },
+      { term: "Commerce Clause", def: "The constitutional power allowing Congress to regulate interstate commerce.", tab: "federalism" },
+      { term: "Reserved Powers", def: "Powers left to the states because they are not delegated to the national government.", tab: "federalism" },
+      { term: "Concurrent Powers", def: "Powers shared by both national and state governments.", tab: "federalism" },
+      { term: "Categorical Grants", def: "Federal grants with narrow purposes and strict rules.", tab: "federalism" },
+      { term: "Block Grants", def: "Federal grants with broader purposes and fewer restrictions.", tab: "federalism" },
+      { term: "Mandate", def: "A federal requirement imposed on states, sometimes without funding.", tab: "federalism" },
+      { term: "McCulloch v. Maryland", def: "Case affirming implied powers and national supremacy over the states.", tab: "cases" },
+      { term: "Gibbons v. Ogden", def: "Case reading the commerce power broadly in interstate matters.", tab: "cases" },
+      { term: "United States v. Lopez", def: "Case showing the Court can enforce limits on the commerce power.", tab: "cases" }
+    ];
+
+    const flashcards = [
+      {
+        front: "How is limited government different from weak government?",
+        back: "Limited government means power is constrained by law and procedure. The Constitution was designed to make government effective enough to govern, but not unlimited."
+      },
+      {
+        front: "Federalist 10 vs. Federalist 51?",
+        back: "Federalist 10 is about factions and why a large republic can control their effects. Federalist 51 is about institutional design, checks, and balances."
+      },
+      {
+        front: "What weakness of the Articles did the Constitution most clearly fix?",
+        back: "Multiple. A direct example is enforcement: the Articles had no national executive, while the Constitution created a president to execute laws."
+      },
+      {
+        front: "How do McCulloch and Lopez differ?",
+        back: "McCulloch broadened national power through implied powers and supremacy. Lopez enforced a limit on national power under the commerce clause."
+      }
+    ];
+
+    const quizQuestions = [
+      {
+        question: "Which Enlightenment thinker is most closely associated with natural rights and the right to revolution?",
+        options: ["Thomas Hobbes", "John Locke", "Montesquieu", "Rousseau"],
+        correct: 1,
+        explanation: "Locke argued that government exists to protect life, liberty, and property, and that people may replace a government that violates those rights."
+      },
+      {
+        question: "What was one major weakness of the Articles of Confederation?",
+        options: ["The president had too much authority", "Congress could not tax directly", "States had no power at all", "The judiciary could strike down laws"],
+        correct: 1,
+        explanation: "Congress lacked taxation power under the Articles, which made it difficult to pay debts or govern effectively."
+      },
+      {
+        question: "The Great Compromise resolved disagreement over",
+        options: ["Judicial review", "Executive term length", "Representation in Congress", "The Bill of Rights"],
+        correct: 2,
+        explanation: "It created a bicameral legislature with population-based representation in the House and equal state representation in the Senate."
+      },
+      {
+        question: "Federalist 51 is most directly connected to which constitutional principle?",
+        options: ["Popular sovereignty", "Checks and balances", "Direct democracy", "Reserved powers"],
+        correct: 1,
+        explanation: "Madison argued that institutional rivalry helps prevent tyranny, which is the logic of checks and balances."
+      },
+      {
+        question: "Which clause is most often used to justify implied powers of Congress?",
+        options: ["Necessary and proper clause", "Free exercise clause", "Establishment clause", "Appointments clause"],
+        correct: 0,
+        explanation: "The necessary and proper clause allows Congress to pass laws needed to carry out its enumerated powers."
+      },
+      {
+        question: "McCulloch v. Maryland strengthened",
+        options: ["State power over federal institutions", "National power and national supremacy", "Direct democracy", "Anti-Federalist theory"],
+        correct: 1,
+        explanation: "The Court held Congress could create the bank and that Maryland could not tax it."
+      },
+      {
+        question: "Which model of democracy emphasizes competition among organized groups?",
+        options: ["Elite", "Participatory", "Pluralist", "Direct"],
+        correct: 2,
+        explanation: "Pluralist democracy sees policy as the result of bargaining and competition among many groups."
+      },
+      {
+        question: "Why was the Bill of Rights important to ratification?",
+        options: ["It created the presidency", "It convinced Anti-Federalists that liberties would be explicitly protected", "It replaced the Articles before debate started", "It eliminated federalism"],
+        correct: 1,
+        explanation: "The promise of explicit rights protections was crucial to winning over many Anti-Federalists."
+      }
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Explain how the Constitution limits government power",
+        blocks: [
+          ["Claim", "The Constitution limits government power by dividing authority between institutions and between levels of government rather than trusting leaders to act virtuously."],
+          ["Evidence", "Use Federalist 51, separation of powers, checks and balances, bicameralism, and federalism."],
+          ["Reasoning", "Because each institution has incentives and tools to resist the others, the system slows rash action and reduces the risk of concentrated power."],
+          ["Counterpoint", "These protections also reduce efficiency. The same features that protect liberty can make policymaking slower and more conflict-ridden."]
+        ]
+      },
+      {
+        label: "Explain why the Articles of Confederation failed",
+        blocks: [
+          ["Claim", "The Articles failed because they created a national government too weak to solve collective action problems requiring coordination across states."],
+          ["Evidence", "Point to taxation weakness, weak commerce power, lack of executive enforcement, and Shays' Rebellion."],
+          ["Reasoning", "Without money, enforcement, or reliable authority over interstate matters, Congress depended on voluntary state cooperation and could not govern effectively."],
+          ["Link", "The Constitution responded by creating a stronger national framework with taxing power, executive enforcement, and a national judiciary."]
+        ]
+      },
+      {
+        label: "Compare Federalist and Anti-Federalist views",
+        blocks: [
+          ["Claim", "Federalists and Anti-Federalists both feared tyranny, but they disagreed about where the greatest danger came from."],
+          ["Federalist View", "Federalists thought the Articles were too weak and argued that a stronger national government could still be controlled through internal checks."],
+          ["Anti-Federalist View", "Anti-Federalists feared distant national power, a strong executive, and an expansive judiciary, so they favored stronger state governments and explicit rights protections."],
+          ["Outcome", "The Bill of Rights became the practical compromise that helped secure ratification."]
+        ]
+      }
+    ];
+
+    const nav = document.getElementById("sidebarNav");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const main = document.getElementById("main");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map((tab) => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>
+      `).join("");
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll(".tab-content").forEach((section) => {
+        section.classList.toggle("active", section.id === tabId);
+      });
+      document.querySelectorAll(".nav-btn").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tabId);
+      });
+      const tab = tabs.find((entry) => entry.id === tabId);
+      if (tab) ambientOverlay.style.background = tab.ambient;
+      main.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderGlossary(filter = "") {
+      const value = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter((term) => {
+        return term.term.toLowerCase().includes(value) || term.def.toLowerCase().includes(value);
+      });
+      document.getElementById("glossaryGrid").innerHTML = items.map((item) => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map((card) => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div>
+                <div class="mini-label">Prompt</div>
+                <h3>${card.front}</h3>
+              </div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div>
+                <div class="mini-label">Answer</div>
+                <div class="body-copy">${card.back}</div>
+              </div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderEssayTopics() {
+      document.getElementById("essayTopics").innerHTML = essayOutlines.map((outline, index) => `
+        <button class="essay-topic-btn" type="button" data-essay-index="${index}">${outline.label}</button>
+      `).join("");
+      document.getElementById("essayOutline").classList.remove("show");
+      document.getElementById("essayOutline").innerHTML = "";
+    }
+
+    function selectEssay(index) {
+      document.querySelectorAll(".essay-topic-btn").forEach((btn) => {
+        btn.classList.toggle("active", Number(btn.dataset.essayIndex) === index);
+      });
+      const outline = essayOutlines[index];
+      document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) => `
+        <div class="essay-block">
+          <div class="essay-block-label">${label}</div>
+          <div class="essay-block-body">${body}</div>
+        </div>
+      `).join("");
+      document.getElementById("essayOutline").classList.add("show");
+    }
+
+    function renderQuizQuestion() {
+      const quizMount = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prevBest = Number(localStorage.getItem("apgopo_u1_best") || 0);
+        const best = Math.max(prevBest, pct);
+        localStorage.setItem("apgopo_u1_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        quizMount.innerHTML = `
+          <div class="quiz-status">Complete</div>
+          <div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div>
+          <div class="quiz-feedback">Use the glossary and prompt bank if you missed anything tied to ratification, federalism, or clause analysis.</div>
+          <div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>
+        `;
+        return;
+      }
+      quizLocked = false;
+      quizMount.innerHTML = `
+        <div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div>
+        <div class="quiz-question">${q.question}</div>
+        <div class="quiz-options">
+          ${q.options.map((option, index) => `<button class="quiz-option" type="button" data-option-index="${index}">${option}</button>`).join("")}
+        </div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div class="quiz-next" id="quizNext"></div>
+      `;
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    function initBestScore() {
+      const best = localStorage.getItem("apgopo_u1_best");
+      bestScoreEl.textContent = best ? best + "%" : "--";
+    }
+
+    renderNav();
+    renderGlossary();
+    renderFlashcards();
+    renderEssayTopics();
+    initBestScore();
+
+    document.addEventListener("mousemove", (event) => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = event.clientX + "px";
+      cursor.style.top = event.clientY + "px";
+    });
+
+    document.addEventListener("mouseover", (event) => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      const interactive = event.target.closest("button, a, .flash-card, .glossary-card");
+      cursor.style.width = interactive ? "20px" : "12px";
+      cursor.style.height = interactive ? "20px" : "12px";
+    });
+
+    pinBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("pinned");
+      pinBtn.classList.toggle("pinned");
+      pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+    });
+
+    nav.addEventListener("click", (event) => {
+      const button = event.target.closest(".nav-btn");
+      if (!button) return;
+      switchTab(button.dataset.tab);
+    });
+
+    document.getElementById("glossaryFilter").addEventListener("input", (event) => {
+      renderGlossary(event.target.value);
+    });
+
+    document.getElementById("flashGrid").addEventListener("click", (event) => {
+      const card = event.target.closest(".flash-card");
+      if (card) card.classList.toggle("flipped");
+    });
+
+    document.getElementById("openSearch").addEventListener("click", () => {
+      const panel = document.getElementById("sbSearchPanel");
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+    });
+
+    document.getElementById("sbInput").addEventListener("input", (event) => {
+      const query = event.target.value.toLowerCase().trim();
+      const matches = glossaryTerms.filter((entry) => {
+        return entry.term.toLowerCase().includes(query) || entry.def.toLowerCase().includes(query);
+      }).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = matches.length ? matches.map((item) => `
+        <div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}">
+          <div class="sb-result-tab">${item.tab}</div>
+          <div class="sb-result-term">${item.term}</div>
+          <div class="sb-result-snip">${item.def}</div>
+        </div>
+      `).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+
+    document.getElementById("sbResults").addEventListener("click", (event) => {
+      const result = event.target.closest(".sb-result");
+      if (!result || !result.dataset.targetTab) return;
+      switchTab(result.dataset.targetTab);
+      document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = "";
+      document.getElementById("sbResults").innerHTML = "";
+      if (result.dataset.targetTab === "glossary") {
+        document.getElementById("glossaryFilter").value = result.dataset.targetTerm;
+        renderGlossary(result.dataset.targetTerm);
+      }
+    });
+
+    document.getElementById("glossaryGrid").addEventListener("click", (event) => {
+      const card = event.target.closest(".glossary-card");
+      if (!card) return;
+      switchTab(card.dataset.targetTab);
+    });
+
+    apToggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("ap-highlight");
+      apToggleBtn.classList.toggle("active");
+    });
+
+    document.getElementById("quizOpenBtn").addEventListener("click", () => {
+      quizIndex = 0;
+      quizScore = 0;
+      renderQuizQuestion();
+      openModal("quizModal");
+    });
+
+    document.getElementById("essayOpenBtn").addEventListener("click", () => {
+      renderEssayTopics();
+      openModal("essayModal");
+    });
+
+    document.getElementById("essayTopics").addEventListener("click", (event) => {
+      const button = event.target.closest(".essay-topic-btn");
+      if (!button) return;
+      selectEssay(Number(button.dataset.essayIndex));
+    });
+
+    document.getElementById("quizMount").addEventListener("click", (event) => {
+      const option = event.target.closest(".quiz-option");
+      if (option && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex];
+        const selected = Number(option.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((btn, index) => {
+          if (index === q.correct) btn.classList.add("correct");
+          if (index === selected && selected !== q.correct) btn.classList.add("wrong");
+        });
+        if (selected === q.correct) quizScore += 1;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (event.target.id === "nextQuizBtn") {
+        quizIndex += 1;
+        renderQuizQuestion();
+      }
+      if (event.target.id === "restartQuizBtn") {
+        quizIndex = 0;
+        quizScore = 0;
+        renderQuizQuestion();
+      }
+    });
+
+    document.querySelectorAll("[data-close]").forEach((button) => {
+      button.addEventListener("click", () => closeModal(button.dataset.close));
+    });
+
+    document.querySelectorAll(".modal").forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) modal.classList.remove("open");
+      });
+    });
+
+    main.addEventListener("scroll", () => {
+      const max = main.scrollHeight - main.clientHeight;
+      const pct = max > 0 ? (main.scrollTop / max) * 100 : 0;
+      document.getElementById("readingProgressFill").style.width = pct + "%";
+    });
+  </script>
+</body>
+</html>
