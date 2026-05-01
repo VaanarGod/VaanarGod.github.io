@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Government and Politics - Unit 3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07080a;
+      --card: #0d0f12;
+      --border: rgba(255,255,255,0.07);
+      --text: #dde3ec;
+      --muted: #7a8699;
+      --gold: #c9a84c;
+      --teal: #3eb89a;
+      --blue: #5b8fd4;
+      --red: #d95f5f;
+      --orange: #f28749;
+      --purple: #9b86f4;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Mono", monospace;
+      overflow: hidden;
+      cursor: none;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .35;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width .2s ease, height .2s ease;
+    }
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100;
+    }
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--teal);
+    }
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 10%, rgba(62,184,154,.13), transparent 65%);
+      opacity: .11;
+      pointer-events: none;
+      transition: background 1s ease;
+      z-index: 0;
+    }
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(5,6,8,.84);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(0.23,1,0.32,1);
+    }
+    #sidebar:hover, #sidebar.pinned { width: 268px; }
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .08em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+    }
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+    #pinBtn.pinned { color: var(--teal); border-color: rgba(62,184,154,.28); }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      border: 1px solid rgba(62,184,154,.22);
+      background: rgba(62,184,154,.08);
+      color: var(--teal);
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .logo-copy { opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+    .logo-copy h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 13px;
+      letter-spacing: .25em;
+      color: var(--teal);
+    }
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .search-wrap { position: relative; padding: 10px; }
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, border-color .2s ease;
+    }
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sb-search-trigger:hover { border-color: rgba(62,184,154,.24); }
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(62,184,154,.18);
+      background: rgba(8,10,13,.98);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s ease, transform .22s ease;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+    }
+    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+    }
+    #sbResults { max-height: 280px; overflow: auto; }
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      cursor: none;
+      transition: background .15s ease;
+    }
+    .sb-result:hover { background: rgba(62,184,154,.06); }
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--teal);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .sb-result-term {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 14px;
+      color: white;
+      letter-spacing: .04em;
+    }
+    .sb-result-snip {
+      font-family: "Crimson Pro", serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto;
+    }
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s ease, color .2s ease;
+      position: relative;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.03); color: #aeb7c6; }
+    .nav-btn.active { background: rgba(62,184,154,.09); color: var(--teal); }
+    .nav-btn.active .nav-indicator { opacity: 1; }
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 24px;
+      background: var(--teal);
+      border-radius: 5px;
+      opacity: 0;
+    }
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: blink 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px);
+    }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .glass-btn, #scoreTracker {
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      padding: 9px 14px;
+      font: inherit;
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s ease, color .2s ease, background .2s ease;
+      white-space: nowrap;
+    }
+    .glass-btn:hover, #scoreTracker:hover { color: var(--teal); border-color: rgba(62,184,154,.28); }
+    .glass-btn.active {
+      color: var(--teal);
+      border-color: rgba(62,184,154,.34);
+      background: rgba(62,184,154,.09);
+    }
+    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(0.23,1,0.32,1); }
+    .tab-content.active { display: block; }
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .unit-tag {
+      display: block;
+      color: var(--teal);
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .page-header h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(38px, 5vw, 62px);
+      letter-spacing: .08em;
+      line-height: .96;
+      color: white;
+    }
+    .page-header p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .hero-grid, .grid-3, .grid-4, .glossary-grid, .flash-grid, .timeline {
+      display: grid;
+      gap: 22px;
+    }
+    .hero-grid { grid-template-columns: 1.15fr .85fr; margin-bottom: 26px; }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .grid-4, .glossary-grid, .flash-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .timeline {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+    }
+    .card, .feature-card, .timeline-item, .flash-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+    .card:hover, .feature-card:hover, .timeline-item:hover, .flash-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.14);
+      box-shadow: 0 20px 48px rgba(0,0,0,.35);
+    }
+    .card::before, .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent, var(--teal));
+      opacity: .7;
+    }
+    .accent-blue { --accent: var(--blue); }
+    .accent-gold { --accent: var(--gold); }
+    .accent-teal { --accent: var(--teal); }
+    .accent-red { --accent: var(--red); }
+    .accent-orange { --accent: var(--orange); }
+    .accent-purple { --accent: var(--purple); }
+    .card-sub, .mini-label {
+      color: var(--accent, var(--teal));
+      font-size: 9px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card-title, .feature-card h3, .timeline-year, .flash-front h3, .writing-title {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      letter-spacing: .05em;
+    }
+    .card-title { font-size: 30px; margin-bottom: 16px; }
+    .feature-card h3, .writing-title { font-size: 24px; margin-bottom: 12px; }
+    .timeline-year { font-size: 24px; margin-bottom: 8px; }
+    .body-copy, .feature-copy, .timeline-copy {
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.82;
+      font-size: 15px;
+    }
+    .body-copy p + p, .feature-copy p + p { margin-top: 12px; }
+    .bullet-list { padding-left: 18px; }
+    .bullet-list li + li { margin-top: 8px; }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+    }
+    .tag {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 7px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .stat-box {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      padding: 16px;
+    }
+    .stat-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .stat-box strong {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 26px;
+      letter-spacing: .06em;
+      color: white;
+    }
+    .focus-callout {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(62,184,154,.18);
+      background: rgba(62,184,154,.05);
+    }
+    .focus-callout .label {
+      color: var(--teal);
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .doctrine-visual {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .doctrine-node {
+      min-height: 82px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.025);
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      text-align: center;
+      color: white;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 20px;
+      letter-spacing: .06em;
+    }
+    .notes-shell {
+      display: grid;
+      grid-template-columns: minmax(230px, 300px) 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .notes-index {
+      position: sticky;
+      top: 88px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255,255,255,.025);
+      padding: 18px;
+    }
+    .notes-index-title {
+      color: var(--teal);
+      font-size: 9px;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .note-jump {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-align: left;
+      text-transform: uppercase;
+      cursor: none;
+    }
+    .note-jump:last-child { border-bottom: none; }
+    .note-jump span:last-child { color: var(--muted); }
+    .note-jump:hover { color: var(--teal); }
+    .notes-stack { display: grid; gap: 18px; }
+    .note-section {
+      scroll-margin-top: 110px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .note-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent, var(--teal));
+      opacity: .7;
+    }
+    .note-section h3 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 30px;
+      letter-spacing: .05em;
+      margin-bottom: 12px;
+    }
+    .note-section h4 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 21px;
+      letter-spacing: .05em;
+      margin: 18px 0 8px;
+    }
+    .note-section .body-copy + .body-copy { margin-top: 12px; }
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .mini-note {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.025);
+      padding: 16px;
+    }
+    .mini-note > strong {
+      display: block;
+      color: white;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 19px;
+      letter-spacing: .05em;
+      margin-bottom: 8px;
+    }
+    .timeline-intro {
+      margin-bottom: 18px;
+      padding: 18px 20px;
+      border: 1px solid rgba(62,184,154,.14);
+      border-radius: 16px;
+      background: rgba(62,184,154,.04);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+    .timeline-item {
+      min-width: 320px;
+      max-width: 360px;
+      flex: 0 0 320px;
+      scroll-snap-align: start;
+      border-left: 2px solid rgba(62,184,154,.24);
+      background: linear-gradient(180deg, rgba(62,184,154,.05), transparent 40%), var(--card);
+    }
+    .timeline-copy ul { margin-top: 10px; padding-left: 18px; }
+    .timeline-copy li + li { margin-top: 6px; }
+    .glossary-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .glossary-toolbar input {
+      min-width: 260px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding: 11px 14px;
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+    }
+    .glossary-card h4 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 22px;
+      letter-spacing: .04em;
+      margin-bottom: 12px;
+    }
+    .flash-card {
+      perspective: 1000px;
+      cursor: none;
+      min-height: 240px;
+    }
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 184px;
+      transform-style: preserve-3d;
+      transition: transform .55s ease;
+    }
+    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+    .flash-front, .flash-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .flash-back { transform: rotateY(180deg); }
+    .flash-hint {
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(3,4,6,.74);
+      backdrop-filter: blur(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+      z-index: 120;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      width: min(760px, calc(100vw - 32px));
+      max-height: min(84vh, 920px);
+      overflow: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(10,12,16,.96);
+      padding: 28px;
+      box-shadow: 0 36px 90px rgba(0,0,0,.55);
+    }
+    .modal-close {
+      float: right;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 9px;
+      letter-spacing: .14em;
+      cursor: none;
+    }
+    .modal-title {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 38px;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+    .modal-sub {
+      color: var(--teal);
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .quiz-status {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .quiz-question {
+      font-family: "Crimson Pro", serif;
+      color: white;
+      font-size: 24px;
+      line-height: 1.35;
+      margin-bottom: 20px;
+    }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font: inherit;
+      font-size: 11px;
+      letter-spacing: .04em;
+      cursor: none;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .quiz-option:hover { border-color: rgba(62,184,154,.22); }
+    .quiz-option.correct { border-color: rgba(62,184,154,.35); background: rgba(62,184,154,.08); }
+    .quiz-option.wrong { border-color: rgba(217,95,95,.35); background: rgba(217,95,95,.08); }
+    .quiz-feedback {
+      margin-top: 18px;
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .essay-list { display: grid; gap: 10px; margin-bottom: 20px; }
+    .essay-topic-btn {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .08em;
+      cursor: none;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .essay-topic-btn:hover, .essay-topic-btn.active {
+      border-color: rgba(62,184,154,.26);
+      background: rgba(62,184,154,.08);
+    }
+    .essay-outline { display: none; gap: 14px; }
+    .essay-outline.show { display: grid; }
+    .essay-block {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
+      padding: 18px;
+    }
+    .essay-block-label {
+      color: var(--teal);
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+    .essay-block-body {
+      font-family: "Crimson Pro", serif;
+      color: var(--muted);
+      line-height: 1.78;
+      font-size: 15px;
+    }
+    strong.ap-term {
+      color: #a8ffeb;
+      font-weight: 600;
+    }
+    body.ap-highlight strong.ap-term {
+      background: rgba(62,184,154,.12);
+      padding: 0 3px;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(62,184,154,.15);
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 1020px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .dash-stats, .doctrine-visual, .notes-shell { grid-template-columns: 1fr; }
+      .notes-index { position: static; }
+      #main { padding-left: 26px; padding-right: 26px; }
+    }
+    @media (max-width: 760px) {
+      body { cursor: auto; overflow: auto; display: block; }
+      #cursor, #readingProgress { display: none; }
+      #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      #sidebar:hover, #sidebar.pinned { width: 100%; }
+      .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important; }
+      #pinBtn { display: none; }
+      nav { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      #main { height: auto; overflow: visible; }
+      .topbar { position: static; }
+      .glossary-toolbar input { min-width: 100%; width: 100%; }
+      .page-header h2 { font-size: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="ambientOverlay"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">U3</div>
+      <div class="logo-copy">
+        <h1>GOPO UNIT 3</h1>
+        <p>Liberties and Rights</p>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Unit 3</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color: var(--teal); font-size: 12px;">⌕</span>
+          <input id="sbInput" type="text" placeholder="Find clauses, cases, rights, or tests" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+
+    <nav id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+      <span class="dot"></span>
+      <span>Rights Mode Active</span>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+      </div>
+      <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+    </div>
+
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 3 · Civil Liberties and Civil Rights</span>
+        <h2>How Rights Become Constitutional Rules</h2>
+        <p>Bill of Rights · incorporation · scrutiny · speech · due process · equality</p>
+      </header>
+
+      <div class="hero-grid">
+        <article class="card accent-teal">
+          <div class="card-sub">Core Strategy</div>
+          <div class="card-title">Translate the Scenario Into Doctrine</div>
+          <div class="body-copy">
+            <p>Unit 3 asks whether government has crossed a constitutional line. Strong answers identify the actor, the right, the legal test, and the likely result. <strong class="ap-term">Civil liberties</strong> usually limit government power; <strong class="ap-term">civil rights</strong> usually demand equal treatment and protection from discrimination.</p>
+            <p>The <strong class="ap-term">Fourteenth Amendment</strong> is the bridge: it applies many national rights against states through <strong class="ap-term">selective incorporation</strong> and supplies the <strong class="ap-term">Equal Protection Clause</strong>.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box">
+              <span>Live Sections</span>
+              <strong>11</strong>
+            </div>
+            <div class="stat-box">
+              <span>Major Cases</span>
+              <strong>28</strong>
+            </div>
+            <div class="stat-box">
+              <span>Core Tests</span>
+              <strong>7</strong>
+            </div>
+          </div>
+          <div class="doctrine-visual">
+            <div class="doctrine-node">Actor</div>
+            <div class="doctrine-node">Right</div>
+            <div class="doctrine-node">Test</div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Lens</div>
+            <div class="body-copy">Before deciding who wins, ask whether there is state action, which constitutional provision applies, and which scrutiny or balancing test controls.</div>
+          </div>
+        </article>
+
+        <article class="card accent-gold">
+          <div class="card-sub">Fast Review</div>
+          <div class="card-title">What You Need To Be Able To Do</div>
+          <ul class="bullet-list body-copy">
+            <li>Separate civil liberties from civil rights in a fact pattern.</li>
+            <li>Explain how <strong class="ap-term">selective incorporation</strong> applies most Bill of Rights protections to states.</li>
+            <li>Use <strong class="ap-term">strict scrutiny</strong>, <strong class="ap-term">intermediate scrutiny</strong>, and <strong class="ap-term">rational basis</strong> correctly.</li>
+            <li>Apply First Amendment doctrines to religion, speech, press, assembly, and association.</li>
+            <li>Connect rights of the accused to the Fourth, Fifth, Sixth, and Eighth Amendments.</li>
+            <li>Use civil rights statutes and constitutional clauses without mixing them up.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Incorporation</span>
+            <span class="tag">Speech</span>
+            <span class="tag">Due Process</span>
+            <span class="tag">Equal Protection</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Knowt-Style Notes</span>
+        <h2>Unit 3 Notes Index</h2>
+        <p>Jump by subtopic · read full study notes · connect cases to doctrines</p>
+      </header>
+
+      <div class="notes-shell">
+        <aside class="notes-index" aria-label="Unit 3 notes index">
+          <div class="notes-index-title">Subtopic Index</div>
+          <button class="note-jump" type="button" data-note-target="note-foundations"><span>Foundations</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="note-religion"><span>First Amendment</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="note-accused"><span>Due Process</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="note-privacy"><span>Privacy and Guns</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="note-equality"><span>Equal Protection</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="note-voting"><span>Voting Rights</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="note-casebank"><span>Case Bank</span><span>07</span></button>
+        </aside>
+
+        <div class="notes-stack">
+          <article class="note-section accent-teal" id="note-foundations">
+            <div class="mini-label">01 · Civil Liberties and Civil Rights</div>
+            <h3>Foundations and Incorporation</h3>
+            <div class="body-copy">
+              <p>Unit 3 starts with the difference between limits on government and guarantees of equal treatment. <strong class="ap-term">Civil liberties</strong> protect individuals from government interference, while <strong class="ap-term">civil rights</strong> focus on discrimination, equal citizenship, and access to public life.</p>
+              <p>The <strong class="ap-term">Bill of Rights</strong> originally restrained the national government. The major shift came after the Civil War, when the <strong class="ap-term">Fourteenth Amendment</strong> gave the Court a way to protect people from state governments through due process and equal protection.</p>
+              <p>Think of this unit as a map of constitutional claims. First ask who acted. If the actor is government, a constitutional right may apply directly. If the actor is private, the answer may depend on a civil rights statute. Then ask what right is involved, what legal standard applies, and whether the government can justify the restriction or classification.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Selective Incorporation</strong>
+                <div class="body-copy">The Court applies most Bill of Rights protections to states one right at a time through the Fourteenth Amendment Due Process Clause. <strong class="ap-term">Gitlow v. New York</strong> is a key early speech example. Later cases incorporated criminal procedure rights, such as <strong class="ap-term">Mapp</strong>, <strong class="ap-term">Gideon</strong>, and <strong class="ap-term">Miranda</strong>, and the Second Amendment through <strong class="ap-term">McDonald</strong>.</div>
+              </div>
+              <div class="mini-note">
+                <strong>State Action</strong>
+                <div class="body-copy">Constitutional claims usually require government action. A public school, police department, state legislature, or city election office is clearly government. A private employer, restaurant, or university may be regulated by statute, but its unfair action is not automatically unconstitutional.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Scrutiny</strong>
+                <div class="body-copy">Rational basis is easiest for government, intermediate scrutiny is commonly tied to sex discrimination, and strict scrutiny applies to race classifications and many fundamental-right burdens. The level of scrutiny often predicts the outcome, so naming the right test is a major FRQ skill.</div>
+              </div>
+            </div>
+            <h4>What Is Not Fully Incorporated</h4>
+            <div class="body-copy">
+              <p>Incorporation is not a perfect copy-paste of the whole Bill of Rights onto the states. AP courses commonly highlight the Fifth Amendment grand jury indictment requirement, the Seventh Amendment civil jury guarantee, and the Third Amendment quartering protection as examples that are not usually treated like the major incorporated rights. The takeaway is that incorporation happened gradually, case by case.</p>
+            </div>
+            <h4>How to Read a Scenario</h4>
+            <div class="body-copy">
+              <p>If a state arrests someone, restricts protest, searches a home, leads school prayer, segregates schools, or closes polling places, begin with government action. If a private business discriminates, think about statutes. If a law classifies people by race or sex, move to Equal Protection and scrutiny. If a law limits speech or religion, move to First Amendment doctrine.</p>
+            </div>
+            <h4>FRQ Move</h4>
+            <div class="body-copy">Translate facts into four steps: government actor, right or clause, test or standard, likely outcome.</div>
+          </article>
+
+          <article class="note-section accent-gold" id="note-religion">
+            <div class="mini-label">02 · First Amendment Freedoms</div>
+            <h3>Religion, Speech, Press, Assembly, Petition, and Association</h3>
+            <div class="body-copy">
+              <p>The First Amendment is a big Unit 3 bucket because it protects how people believe, speak, publish, gather, and challenge government. The AP skill is not just listing the freedoms. You need to identify the type of restriction: is government sponsoring religion, burdening religious practice, targeting a viewpoint, regulating the logistics of a protest, censoring a newspaper, or punishing speech after it happens?</p>
+              <p>The religion clauses can pull in different directions. The <strong class="ap-term">Establishment Clause</strong> limits government sponsorship, endorsement, coercion, or official favoritism toward religion. The <strong class="ap-term">Free Exercise Clause</strong> protects religious belief and practice, but it does not make every religiously motivated action immune from law.</p>
+              <p>Public-school prayer is a classic setting. A student praying privately is usually protected private expression. A teacher or school official leading prayer is more likely to be government-sponsored religious activity.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Engel v. Vitale</strong>
+                <div class="body-copy">Government-written or government-led prayer in public schools violates establishment principles, even if participation is framed as voluntary.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Lemon and Kennedy</strong>
+                <div class="body-copy">The Lemon test asks about secular purpose, primary effect, and entanglement. Newer cases place more weight on history, tradition, and coercion.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Smith and Yoder</strong>
+                <div class="body-copy">Neutral, generally applicable laws do not always require religious exemptions. Some cases and statutes still protect religious accommodation.</div>
+              </div>
+            </div>
+            <h4>Speech and Press</h4>
+            <div class="body-copy">
+              <p>Speech cases usually ask whether government is attacking the message or regulating the circumstances. <strong class="ap-term">Content-based restrictions</strong> target ideas, subjects, or viewpoints and are very suspicious. <strong class="ap-term">Content-neutral restrictions</strong> regulate time, place, and manner, like permits, sound limits, or traffic rules. Those can be constitutional if they are reasonable, applied fairly, and leave open other channels for expression.</p>
+              <p>The Court gives political expression especially strong protection. <strong class="ap-term">Brandenburg v. Ohio</strong> protects advocacy unless it is intended and likely to produce imminent lawless action. <strong class="ap-term">Texas v. Johnson</strong> protects flag burning because offensive political expression is still expression. <strong class="ap-term">Tinker v. Des Moines</strong> protects student symbolic speech unless school officials can show material and substantial disruption.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Prior Restraint</strong>
+                <div class="body-copy"><strong class="ap-term">Prior restraint</strong> means censorship before publication. <strong class="ap-term">New York Times Co. v. United States</strong> makes it extremely hard for government to stop publication, even when government claims national security concerns.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Defamation</strong>
+                <div class="body-copy">False statements that damage reputation receive less protection, but <strong class="ap-term">New York Times v. Sullivan</strong> requires public officials to prove actual malice: knowledge of falsity or reckless disregard for truth.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Obscenity</strong>
+                <div class="body-copy"><strong class="ap-term">Miller v. California</strong> created a three-part obscenity framework involving prurient interest, patently offensive depiction, and lack of serious value.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Assembly and Petition</strong>
+                <div class="body-copy">Peaceful gathering, protest, lawsuits, lobbying, and formal petitions are protected. Government can still regulate crowds for safety and order if the rules are neutral and evenly applied.</div>
+              </div>
+            </div>
+            <h4>Compelled Speech and Association</h4>
+            <div class="body-copy">
+              <p>The First Amendment also protects people from being forced to express a government-approved message. <strong class="ap-term">West Virginia v. Barnette</strong> is the key example: students could not be forced to salute the flag. Speech and assembly also imply freedom of association, meaning government usually cannot punish people simply for joining a group unless there is a serious and specific national security concern.</p>
+            </div>
+            <h4>Common Trap</h4>
+            <div class="body-copy">Do not write that religion is banned from public schools, or that offensive speech is automatically unprotected. The question is usually who is speaking, what government is doing, and whether the rule targets the message.</div>
+          </article>
+
+          <article class="note-section accent-red" id="note-accused">
+            <div class="mini-label">03 · Due Process and Criminal Procedure</div>
+            <h3>Rights of the Accused</h3>
+            <div class="body-copy">
+              <p>Rights of the accused limit government power from investigation through trial and punishment. The basic fear is that an unchecked state could search, arrest, interrogate, convict, or punish without fair procedures.</p>
+              <p>The Fourth Amendment focuses on searches and seizures; the Fifth protects against compelled self-incrimination and double jeopardy; the Sixth protects fair trial rights and counsel; the Eighth limits excessive bail, fines, and cruel punishment.</p>
+              <p>This section is about procedure: even if government is trying to enforce a legitimate criminal law, it must follow constitutional rules. Courts often ask whether police had enough evidence for a stop or search, whether a confession was coerced, whether a defendant had counsel, and whether punishment is constitutionally excessive.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Fourth Amendment</strong>
+                <div class="body-copy">The Fourth Amendment protects against unreasonable searches and seizures. Warrants usually need probable cause and must be specific about the place searched and items seized. Exceptions include consent, plain view, search incident to lawful arrest, some vehicle searches, and exigent circumstances.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Mapp and Terry</strong>
+                <div class="body-copy"><strong class="ap-term">Mapp</strong> applies the exclusionary rule to states, meaning illegally obtained evidence is generally excluded. <strong class="ap-term">Terry</strong> allows limited stop-and-frisk based on reasonable suspicion, a lower standard than probable cause.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Miranda and Gideon</strong>
+                <div class="body-copy"><strong class="ap-term">Miranda</strong> requires warnings during custodial interrogation: silence, counsel, and awareness that statements may be used in court. <strong class="ap-term">Gideon</strong> requires states to provide counsel for indigent felony defendants.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Eighth Amendment</strong>
+                <div class="body-copy">Capital punishment debates often turn on procedures, limits, and evolving standards of decency, not a simple yes-or-no rule.</div>
+              </div>
+            </div>
+            <h4>Fifth, Sixth, Seventh, and Habeas</h4>
+            <div class="body-copy">
+              <p>The Fifth Amendment protects against self-incrimination and double jeopardy, includes a takings rule, and requires due process. The Sixth Amendment covers speedy and public trial, impartial jury, notice of charges, confrontation of witnesses, compulsory process, and assistance of counsel. The Seventh Amendment covers civil juries in some federal civil cases and is commonly taught as not incorporated against states. Habeas corpus lets a person challenge unlawful detention and is tied to the Constitution’s broader fear of illegal imprisonment.</p>
+            </div>
+            <h4>Evidence Exceptions</h4>
+            <div class="body-copy">
+              <p>The exclusionary rule has limits. Evidence may sometimes come in through good-faith reliance on a warrant, inevitable discovery, or other exceptions. So an AP answer should not just say "illegal search means automatic freedom." Say what happens to the evidence and whether an exception might apply.</p>
+            </div>
+            <h4>Common Trap</h4>
+            <div class="body-copy">Miranda is not triggered by every police conversation. Look for both custody and interrogation.</div>
+          </article>
+
+          <article class="note-section accent-purple" id="note-privacy">
+            <div class="mini-label">04 · Privacy and Other Liberties</div>
+            <h3>Second Amendment, Third Amendment, Ninth Amendment, and Privacy</h3>
+            <div class="body-copy">
+              <p>Some Unit 3 rights are not only about speech or criminal procedure. The Court also decides whether a liberty is fundamental, whether it binds states, and how much room government has to regulate.</p>
+              <p>The Second Amendment protects an individual firearms right, while privacy doctrine grows from a mix of amendments and the concept of substantive due process rather than one explicit privacy clause.</p>
+              <p>This topic can feel scattered because it connects several doctrines: incorporation, unenumerated rights, substantive due process, and individual liberty. The unifying question is whether the Constitution protects a personal choice strongly enough to limit government regulation.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Heller and McDonald</strong>
+                <div class="body-copy"><strong class="ap-term">Heller</strong> recognizes an individual right to possess firearms for lawful purposes such as self-defense in the home. <strong class="ap-term">McDonald</strong> incorporates that right against states through the Fourteenth Amendment.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Ninth Amendment</strong>
+                <div class="body-copy">The Ninth Amendment signals that people retain rights not specifically listed, which connects to privacy and unenumerated-rights arguments.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Privacy Cases</strong>
+                <div class="body-copy"><strong class="ap-term">Griswold</strong> recognizes marital privacy, <strong class="ap-term">Dobbs</strong> overrules Roe and Casey, and <strong class="ap-term">Obergefell</strong> protects same-sex marriage.</div>
+              </div>
+            </div>
+            <h4>Third Amendment and Historical Context</h4>
+            <div class="body-copy">
+              <p>The Third Amendment forbids quartering soldiers in private homes without consent. It rarely appears as a modern case rule, but it helps show how the Bill of Rights responded to colonial experiences with arbitrary government power.</p>
+            </div>
+            <h4>Privacy Is Not One Clause</h4>
+            <div class="body-copy">
+              <p>The Constitution does not contain one sentence saying "right to privacy." Instead, privacy developed from several amendments and from the Fourteenth Amendment’s protection of liberty. <strong class="ap-term">Griswold</strong> is often taught as the beginning of modern privacy doctrine. <strong class="ap-term">Roe</strong> and <strong class="ap-term">Casey</strong> once protected abortion access, but <strong class="ap-term">Dobbs</strong> overruled those cases and returned most abortion regulation to states. Dobbs did not automatically erase every privacy case, so be precise about what changed.</p>
+            </div>
+            <h4>FRQ Move</h4>
+            <div class="body-copy">Separate policy arguments from constitutional doctrine. The question is what the Constitution protects, not whether the policy is good.</div>
+          </article>
+
+          <article class="note-section accent-orange" id="note-equality">
+            <div class="mini-label">05 · Civil Rights and Equal Protection</div>
+            <h3>The Struggle for Equality Under Law</h3>
+            <div class="body-copy">
+              <p>Civil rights questions focus on whether government is treating people equally and whether legal protections against discrimination are being enforced. The Reconstruction Amendments created the foundation: the Thirteenth abolished slavery, the Fourteenth created citizenship and equal protection, and the Fifteenth protected voting rights from racial discrimination.</p>
+              <p>Equal Protection analysis asks whether a classification exists, what kind it is, which level of scrutiny applies, and whether the government satisfies that standard.</p>
+              <p>Unlike many civil liberties questions, civil rights questions often involve both constitutional and statutory paths. The Equal Protection Clause is constitutional. Laws like the Civil Rights Act of 1964, Voting Rights Act, Title IX, ADA, and Fair Housing Act are statutes. A strong AP answer knows which one fits the facts.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Plessy and Brown</strong>
+                <div class="body-copy"><strong class="ap-term">Plessy</strong> upheld separate but equal. <strong class="ap-term">Brown</strong> rejected school segregation and became the key constitutional turning point, though implementation required later court orders, executive action, and federal legislation.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Intent and Impact</strong>
+                <div class="body-copy">Constitutional Equal Protection claims often need proof of discriminatory intent. Disparate impact means a policy has unequal effects, but unequal effects alone may not prove a constitutional violation without evidence of purpose.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Statutory Rights</strong>
+                <div class="body-copy">The Civil Rights Act, Fair Housing Act, Equal Pay Act, Title IX, ADA, IDEA, Age Discrimination Act, and Lilly Ledbetter Act all expand anti-discrimination protections beyond direct constitutional claims.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Affirmative Action</strong>
+                <div class="body-copy"><strong class="ap-term">Bakke</strong>, <strong class="ap-term">Grutter</strong>, and <strong class="ap-term">Students for Fair Admissions</strong> show strict scrutiny in race-conscious admissions.</div>
+              </div>
+            </div>
+            <h4>Reconstruction to Jim Crow</h4>
+            <div class="body-copy">
+              <p>After the Civil War, the Reconstruction Amendments promised a new constitutional order. But federal enforcement weakened, and many states used Jim Crow laws, poll taxes, literacy tests, and grandfather clauses to preserve racial hierarchy. The Court’s narrow reading of federal civil rights power in the late 1800s made it harder to challenge private discrimination until later civil rights legislation.</p>
+            </div>
+            <h4>Women and LGBTQ+ Rights</h4>
+            <div class="body-copy">
+              <p>Women’s civil rights expanded through the Nineteenth Amendment, Equal Pay Act, Civil Rights Act of 1964, Title IX, Civil Rights Restoration Act, and Lilly Ledbetter Fair Pay Act. In constitutional law, <strong class="ap-term">United States v. Virginia</strong> is the key sex-discrimination case and shows intermediate scrutiny. LGBTQ+ rights often combine due process and equal protection reasoning, especially in <strong class="ap-term">Lawrence v. Texas</strong> and <strong class="ap-term">Obergefell v. Hodges</strong>.</p>
+            </div>
+            <h4>Affirmative Action</h4>
+            <div class="body-copy">
+              <p>Affirmative action policies try to expand opportunity for groups that have faced discrimination. Critics often describe them as reverse discrimination. Because these policies use race, the Court applies strict scrutiny. <strong class="ap-term">Bakke</strong> rejected quotas but allowed some consideration of race, <strong class="ap-term">Grutter</strong> upheld limited race-conscious admissions, and <strong class="ap-term">Students for Fair Admissions</strong> sharply restricted race-conscious admissions policies.</p>
+            </div>
+            <h4>Common Trap</h4>
+            <div class="body-copy">Unequal outcomes are not automatically unconstitutional. Ask whether there is classification, intent, scrutiny, and a constitutional or statutory hook.</div>
+          </article>
+
+          <article class="note-section accent-blue" id="note-voting">
+            <div class="mini-label">06 · Voting Rights</div>
+            <h3>Political Equality and Access to the Ballot</h3>
+            <div class="body-copy">
+              <p>Voting rights are both civil rights and democratic structure. Election rules can be neutral administration, but they can also become tools of exclusion. AP questions often ask whether a rule burdens voters, whether it has a discriminatory purpose or effect, and whether a constitutional amendment or statute applies.</p>
+              <p>Voting rights disputes are rarely just about whether a state may regulate elections. States can regulate registration, ballot design, election timing, ID requirements, and polling places. The constitutional question is whether the regulation unfairly burdens voting or discriminates. The statutory question is often whether the rule violates the Voting Rights Act.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note">
+                <strong>Voting Amendments</strong>
+                <div class="body-copy">The Fifteenth protects race-based voting rights, the Nineteenth protects women’s suffrage, the Twenty-Fourth bans federal poll taxes, and the Twenty-Sixth sets the voting age at 18.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Voting Rights Act</strong>
+                <div class="body-copy">The VRA attacked literacy tests and other racial barriers. <strong class="ap-term">Shelby County</strong> weakened preclearance by striking the coverage formula.</div>
+              </div>
+              <div class="mini-note">
+                <strong>Representation</strong>
+                <div class="body-copy"><strong class="ap-term">Baker v. Carr</strong> opened redistricting challenges to federal courts. <strong class="ap-term">Reynolds v. Sims</strong> supports one person, one vote.</div>
+              </div>
+            </div>
+            <h4>Preclearance and Shelby County</h4>
+            <div class="body-copy">
+              <p>Preclearance required certain jurisdictions with histories of voting discrimination to get federal approval before changing election rules. <strong class="ap-term">Shelby County v. Holder</strong> did not erase the Voting Rights Act, but it struck down the coverage formula that decided which jurisdictions needed preclearance. The effect was to weaken a major federal oversight tool.</p>
+            </div>
+            <h4>Modern Access Debates</h4>
+            <div class="body-copy">
+              <p>Modern cases and AP scenarios may involve voter ID, registration deadlines, polling-place closures, district maps, or majority-minority districts. A strong answer identifies the state’s claimed interest, such as preventing fraud or orderly administration, and then weighs the burden on voters. For race-related claims, look for evidence of discriminatory intent, racial effects, unusual procedure, or Voting Rights Act relevance.</p>
+            </div>
+            <h4>FRQ Move</h4>
+            <div class="body-copy">For polling-place closures, voter ID, or registration rules, weigh state interests against voter burdens and look for evidence of racial discrimination or VRA relevance.</div>
+          </article>
+
+          <article class="note-section accent-teal" id="note-casebank">
+            <div class="mini-label">07 · Case Bank</div>
+            <h3>Fast Case-to-Doctrine Map</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Incorporation</strong><div class="body-copy">Gitlow: speech and press trend; Mapp: exclusionary rule; Gideon: counsel; McDonald: Second Amendment.</div></div>
+              <div class="mini-note"><strong>Religion</strong><div class="body-copy">Engel: school prayer; Lemon: establishment framework; Smith: neutral laws; Yoder: religious education exemption.</div></div>
+              <div class="mini-note"><strong>Expression</strong><div class="body-copy">Brandenburg: incitement; Tinker: student speech; Barnette: compelled speech; Texas v. Johnson: flag burning; NYT v. U.S.: prior restraint.</div></div>
+              <div class="mini-note"><strong>Criminal Procedure</strong><div class="body-copy">Mapp: exclusion; Terry: stop-and-frisk; Miranda: warnings; Gideon: counsel.</div></div>
+              <div class="mini-note"><strong>Privacy and Guns</strong><div class="body-copy">Heller: individual gun right; McDonald: incorporation; Griswold: privacy; Dobbs: abortion returned largely to states; Obergefell: same-sex marriage.</div></div>
+              <div class="mini-note"><strong>Equal Protection</strong><div class="body-copy">Plessy: separate but equal; Brown: school segregation unconstitutional; U.S. v. Virginia: sex discrimination; SFFA: race-conscious admissions restricted.</div></div>
+              <div class="mini-note"><strong>Voting</strong><div class="body-copy">Baker: redistricting justiciable; Reynolds: equal population districts; Shelby County: VRA preclearance formula struck down.</div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="foundations">
+      <header class="page-header">
+        <span class="unit-tag">Foundations</span>
+        <h2>Civil Liberties, Civil Rights, and Incorporation</h2>
+        <p>Bill of Rights · state action · due process · equal protection</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="feature-card accent-teal">
+          <div class="mini-label">Two Questions</div>
+          <h3>Liberties vs. Rights</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Civil liberties</strong> ask whether government can restrict an individual: speech, searches, counsel, worship. <strong class="ap-term">Civil rights</strong> ask whether government treats people or groups equally, especially under the Fourteenth Amendment.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-blue">
+          <div class="mini-label">14th Amendment</div>
+          <h3>The Bridge to the States</h3>
+          <div class="feature-copy">
+            <p>Originally, the Bill of Rights restrained the national government. After the Fourteenth Amendment, the Court used the <strong class="ap-term">Due Process Clause</strong> to apply most protections to state and local governments through selective incorporation.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Threshold Issue</div>
+          <h3>State Action Matters</h3>
+          <div class="feature-copy">
+            <p>Most constitutional rights claims require government action. Private discrimination is often addressed through statutes such as the <strong class="ap-term">Civil Rights Act of 1964</strong>, while state discrimination may trigger direct Fourteenth Amendment review.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="scrutiny">
+      <header class="page-header">
+        <span class="unit-tag">Court Tests</span>
+        <h2>Scrutiny, Balancing, and Legal Standards</h2>
+        <p>Rational basis · intermediate scrutiny · strict scrutiny · time/place/manner</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Default</div>
+          <h3>Rational Basis</h3>
+          <div class="feature-copy">
+            <p>The government usually wins when the law is <strong class="ap-term">rationally related</strong> to a <strong class="ap-term">legitimate government interest</strong>. This is the lowest level of review and is used for most ordinary classifications.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Middle Tier</div>
+          <h3>Intermediate Scrutiny</h3>
+          <div class="feature-copy">
+            <p>Often used for sex discrimination, this asks whether the law is <strong class="ap-term">substantially related</strong> to an <strong class="ap-term">important government interest</strong>. <strong class="ap-term">United States v. Virginia</strong> is a useful anchor.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Hardest Test</div>
+          <h3>Strict Scrutiny</h3>
+          <div class="feature-copy">
+            <p>Race classifications and burdens on fundamental rights usually trigger strict scrutiny: the law must be <strong class="ap-term">narrowly tailored</strong> to a <strong class="ap-term">compelling government interest</strong>. The government usually has a difficult defense.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="religion">
+      <header class="page-header">
+        <span class="unit-tag">First Amendment</span>
+        <h2>Religion: Establishment and Free Exercise</h2>
+        <p>School prayer · Lemon · history and tradition · neutral laws</p>
+      </header>
+
+      <div class="grid-4">
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Establishment</div>
+          <h3>Government Sponsorship</h3>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">Establishment Clause</strong> bars government from establishing, endorsing, or coercing religious practice. <strong class="ap-term">Engel v. Vitale</strong> shows why government-led prayer in public schools is unconstitutional.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-purple">
+          <div class="mini-label">Historic Test</div>
+          <h3>Lemon and Its Shift</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Lemon v. Kurtzman</strong> asked about secular purpose, primary effect, and excessive entanglement. Newer cases, including <strong class="ap-term">Kennedy v. Bremerton</strong>, emphasize history and tradition more heavily.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-teal">
+          <div class="mini-label">Free Exercise</div>
+          <h3>Belief vs. Conduct</h3>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">Free Exercise Clause</strong> protects religious belief and some practice, but religious claims do not automatically override neutral laws that apply generally.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Neutral Laws</div>
+          <h3>Smith and Exemptions</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Employment Division v. Smith</strong> held that neutral, generally applicable laws do not always require religious exemptions. Legislatures may still create protections through laws like <strong class="ap-term">RFRA</strong>.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="expression">
+      <header class="page-header">
+        <span class="unit-tag">First Amendment</span>
+        <h2>Speech, Press, Assembly, Petition, and Association</h2>
+        <p>Content regulation · symbolic speech · prior restraint · defamation · protest</p>
+      </header>
+
+      <div class="grid-4">
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Speech</div>
+          <h3>Ideas Get the Most Protection</h3>
+          <div class="feature-copy">
+            <p>The Court is most suspicious when government targets ideas or viewpoints. <strong class="ap-term">Brandenburg v. Ohio</strong> protects advocacy unless it is directed to and likely to produce imminent lawless action.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Symbolic Speech</div>
+          <h3>Conduct Can Communicate</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Tinker v. Des Moines</strong> protects student armbands absent substantial disruption. <strong class="ap-term">Texas v. Johnson</strong> protects flag burning as political expression.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Press</div>
+          <h3>Prior Restraint Is Rarely Allowed</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">New York Times Co. v. United States</strong> creates a heavy presumption against censorship before publication. <strong class="ap-term">New York Times v. Sullivan</strong> protects criticism by requiring public officials to show actual malice in defamation cases.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-purple">
+          <div class="mini-label">Public Order</div>
+          <h3>Time, Place, and Manner</h3>
+          <div class="feature-copy">
+            <p>Government can use content-neutral rules for permits, noise, traffic, and safety, but it cannot deny a protest permit because officials dislike the message.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="accused">
+      <header class="page-header">
+        <span class="unit-tag">Criminal Procedure</span>
+        <h2>Rights of the Accused and Due Process</h2>
+        <p>Searches · exclusion · counsel · interrogation · punishment</p>
+      </header>
+
+      <div class="grid-4">
+        <article class="feature-card accent-teal">
+          <div class="mini-label">Fourth Amendment</div>
+          <h3>Searches and Seizures</h3>
+          <div class="feature-copy">
+            <p>Search warrants generally require <strong class="ap-term">probable cause</strong> and must state where police may search and what may be seized. Exceptions include consent, plain view, legal arrest, vehicle searches, and emergencies.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Evidence</div>
+          <h3>Mapp and Terry</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Mapp v. Ohio</strong> applies the exclusionary rule to states. <strong class="ap-term">Terry v. Ohio</strong> permits limited stop-and-frisk based on reasonable suspicion, not a vague hunch.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Fifth and Sixth</div>
+          <h3>Silence, Counsel, and Fair Trial</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Miranda v. Arizona</strong> requires warnings during custodial interrogation. <strong class="ap-term">Gideon v. Wainwright</strong> requires states to provide counsel for indigent felony defendants.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Eighth Amendment</div>
+          <h3>Bail, Fines, and Punishment</h3>
+          <div class="feature-copy">
+            <p>The Eighth Amendment bars excessive bail and fines and cruel and unusual punishment. Death penalty debates often turn on procedure, limits, and evolving standards of decency.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="privacy">
+      <header class="page-header">
+        <span class="unit-tag">Liberty and Privacy</span>
+        <h2>Second Amendment, Third Amendment, and Substantive Due Process</h2>
+        <p>Heller · McDonald · unenumerated rights · Griswold · Dobbs · Obergefell</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Second Amendment</div>
+          <h3>Individual Right and Incorporation</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">District of Columbia v. Heller</strong> recognized an individual right to possess firearms for lawful purposes such as home self-defense. <strong class="ap-term">McDonald v. Chicago</strong> incorporated that right against the states.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-purple">
+          <div class="mini-label">Unenumerated Rights</div>
+          <h3>Privacy as a Doctrine</h3>
+          <div class="feature-copy">
+            <p>The Constitution does not explicitly say "privacy," but cases such as <strong class="ap-term">Griswold v. Connecticut</strong> connect privacy to multiple amendments and substantive due process.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Modern Privacy</div>
+          <h3>Roe, Dobbs, Lawrence, Obergefell</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Dobbs v. Jackson Women's Health Organization</strong> overruled Roe and Casey on abortion. <strong class="ap-term">Lawrence</strong> and <strong class="ap-term">Obergefell</strong> remain central to due process and equal protection arguments about LGBTQ+ rights.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="equality">
+      <header class="page-header">
+        <span class="unit-tag">Civil Rights</span>
+        <h2>Equal Protection and the Struggle for Equality</h2>
+        <p>Reconstruction · segregation · intent · civil rights statutes · affirmative action</p>
+      </header>
+
+      <div class="grid-4">
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Reconstruction</div>
+          <h3>13th, 14th, and 15th</h3>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">Thirteenth Amendment</strong> abolished slavery, the Fourteenth created citizenship, due process, and equal protection, and the Fifteenth barred racial discrimination in voting.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Segregation</div>
+          <h3>Plessy to Brown</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Plessy v. Ferguson</strong> upheld "separate but equal." <strong class="ap-term">Brown v. Board of Education</strong> rejected school segregation and became a constitutional turning point.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Proof Problem</div>
+          <h3>Intent vs. Impact</h3>
+          <div class="feature-copy">
+            <p>Equal Protection claims often require evidence of discriminatory intent. Unequal effects may matter, but disparate impact alone is usually stronger under statutory frameworks than direct constitutional claims.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-purple">
+          <div class="mini-label">Race-Conscious Policy</div>
+          <h3>Affirmative Action</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Bakke</strong>, <strong class="ap-term">Grutter</strong>, and <strong class="ap-term">Students for Fair Admissions</strong> show how strict scrutiny governs race-conscious admissions policies.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="statutes">
+      <header class="page-header">
+        <span class="unit-tag">Civil Rights Statutes</span>
+        <h2>Law as an Enforcement Tool</h2>
+        <p>CRA 1964 · VRA · Title IX · ADA · fair housing · equal pay</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="feature-card accent-teal">
+          <div class="mini-label">Race and Public Life</div>
+          <h3>1964, 1965, 1968</h3>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">Civil Rights Act of 1964</strong> banned discrimination in public accommodations and employment. The <strong class="ap-term">Voting Rights Act of 1965</strong> attacked racial barriers to voting. The <strong class="ap-term">Fair Housing Act</strong> banned racial discrimination in housing.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Women and Education</div>
+          <h3>Equal Pay, Title VII, Title IX</h3>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">Equal Pay Act</strong>, Title VII of the 1964 Act, <strong class="ap-term">Title IX</strong>, and the <strong class="ap-term">Lilly Ledbetter Fair Pay Act</strong> all expand statutory protection against sex discrimination.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Disability and Age</div>
+          <h3>IDEA, ADA, and Age Protection</h3>
+          <div class="feature-copy">
+            <p>The <strong class="ap-term">Individuals with Disabilities Education Act</strong> protects educational access, while the <strong class="ap-term">Americans with Disabilities Act</strong> requires broad anti-discrimination and accessibility protections.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="voting">
+      <header class="page-header">
+        <span class="unit-tag">Voting Rights</span>
+        <h2>Political Equality and Access to the Ballot</h2>
+        <p>15th · 19th · 24th · 26th · preclearance · one person, one vote</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="feature-card accent-blue">
+          <div class="mini-label">Expansion</div>
+          <h3>Voting Amendments</h3>
+          <ul class="bullet-list body-copy">
+            <li><strong class="ap-term">15th Amendment</strong>: race cannot be used to deny voting rights.</li>
+            <li><strong class="ap-term">19th Amendment</strong>: women's suffrage.</li>
+            <li><strong class="ap-term">24th Amendment</strong>: bans poll taxes in federal elections.</li>
+            <li><strong class="ap-term">26th Amendment</strong>: lowers voting age to 18.</li>
+          </ul>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">VRA</div>
+          <h3>Federal Oversight</h3>
+          <div class="feature-copy">
+            <p>The Voting Rights Act of 1965 enforced the Fifteenth Amendment with tools against literacy tests and discrimination. <strong class="ap-term">Shelby County v. Holder</strong> struck down the coverage formula for preclearance.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-purple">
+          <div class="mini-label">Representation</div>
+          <h3>One Person, One Vote</h3>
+          <div class="feature-copy">
+            <p><strong class="ap-term">Baker v. Carr</strong> opened federal courts to redistricting disputes. <strong class="ap-term">Reynolds v. Sims</strong> advanced the principle that districts should be roughly equal in population.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="timeline">
+      <header class="page-header">
+        <span class="unit-tag">Rights Timeline</span>
+        <h2>Cases, Amendments, and Statutes That Reshaped Unit 3</h2>
+        <p>Horizontal rail · rights doctrine over time</p>
+      </header>
+
+      <div class="timeline-intro">Scroll across the key turning points from the Bill of Rights to modern debates over incorporation, equality, privacy, and voting access.</div>
+
+      <div class="timeline">
+        <article class="timeline-item">
+          <div class="timeline-year">1791</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Bill of Rights Ratified</strong>
+            <ul class="bullet-list">
+              <li>First 10 amendments become the starting point for civil liberties.</li>
+              <li>Originally understood mostly as limits on the national government.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1865-1870</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Reconstruction Amendments</strong>
+            <ul class="bullet-list">
+              <li>Abolish slavery, define citizenship, require equal protection, and protect race-based voting rights.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1896-1954</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Plessy to Brown</strong>
+            <ul class="bullet-list">
+              <li>Separate but equal gives way to Brown's rejection of school segregation.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1925</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Gitlow v. New York</strong>
+            <ul class="bullet-list">
+              <li>Key early marker in incorporating speech and press against the states.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1961-1966</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Mapp, Gideon, Miranda</strong>
+            <ul class="bullet-list">
+              <li>Criminal procedure rights become nationally enforceable against states.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1964-1965</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Civil Rights Act + Voting Rights Act</strong>
+            <ul class="bullet-list">
+              <li>Federal statutes become major civil rights enforcement tools.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">1969-1973</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Tinker, Brandenburg, Roe, Miller</strong>
+            <ul class="bullet-list">
+              <li>Speech, student rights, privacy, and obscenity standards take shape.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">2008-2010</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Heller + McDonald</strong>
+            <ul class="bullet-list">
+              <li>Individual Second Amendment right is recognized and incorporated.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">2013-2023</div>
+          <div class="timeline-copy">
+            <strong class="ap-term">Shelby, Dobbs, SFFA</strong>
+            <ul class="bullet-list">
+              <li>Voting oversight, abortion doctrine, and race-conscious admissions all shift.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Term Bank</span>
+        <h2>Glossary and Flashcards</h2>
+        <p>Filter rights, cases, clauses, standards, and civil rights statutes</p>
+      </header>
+
+      <div class="glossary-toolbar">
+        <input id="glossaryFilter" type="text" placeholder="Filter Unit 3 terms" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+      <div style="height: 26px;"></div>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <section class="tab-content" id="writing">
+      <header class="page-header">
+        <span class="unit-tag">FRQ Skills</span>
+        <h2>Building Rights and Liberties Answers</h2>
+        <p>Actor · right · test · outcome · evidence</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="feature-card accent-teal">
+          <div class="mini-label">Paragraph Model</div>
+          <h3>Actor -> Right -> Test -> Result</h3>
+          <div class="feature-copy">
+            <p>Start by proving there is government action, identify the constitutional right or statute, apply the right standard, and explain the likely outcome with one case or clause.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-gold">
+          <div class="mini-label">Case Use</div>
+          <h3>Cases Are Rules, Not Decorations</h3>
+          <div class="feature-copy">
+            <p>Name the case only after you know the legal principle. Example: <strong class="ap-term">Tinker</strong> is useful for public-school student expression, not every speech dispute.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-red">
+          <div class="mini-label">Common Error</div>
+          <h3>Constitutional vs. Statutory</h3>
+          <div class="feature-copy">
+            <p>Do not call every unfair private action unconstitutional. If the actor is private, your best answer may be a statute like the Civil Rights Act, ADA, Title IX, or VRA.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button" data-close="quizModal">Close</button>
+      <div class="modal-title">Unit 3 Quiz</div>
+      <div class="modal-sub">10 rights and liberties review questions</div>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button" data-close="essayModal">Close</button>
+      <div class="modal-title">Prompt Bank</div>
+      <div class="modal-sub">Civil liberties and civil rights argument outlines</div>
+      <div class="essay-list" id="essayTopics"></div>
+      <div class="essay-outline" id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", label: "Dashboard", icon: "◈", ambient: "radial-gradient(ellipse at 60% 10%, rgba(62,184,154,.13), transparent 65%)" },
+      { id: "notes", label: "Notes", icon: "☰", ambient: "radial-gradient(ellipse at 35% 18%, rgba(62,184,154,.14), transparent 65%)" },
+      { id: "foundations", label: "Foundations", icon: "✦", ambient: "radial-gradient(ellipse at 20% 20%, rgba(201,168,76,.12), transparent 65%)" },
+      { id: "scrutiny", label: "Scrutiny", icon: "▣", ambient: "radial-gradient(ellipse at 75% 25%, rgba(242,135,73,.12), transparent 65%)" },
+      { id: "religion", label: "Religion", icon: "◫", ambient: "radial-gradient(ellipse at 30% 65%, rgba(201,168,76,.12), transparent 65%)" },
+      { id: "expression", label: "Expression", icon: "↗", ambient: "radial-gradient(ellipse at 60% 50%, rgba(91,143,212,.12), transparent 65%)" },
+      { id: "accused", label: "Accused", icon: "◎", ambient: "radial-gradient(ellipse at 78% 35%, rgba(217,95,95,.12), transparent 65%)" },
+      { id: "privacy", label: "Privacy", icon: "◩", ambient: "radial-gradient(ellipse at 30% 35%, rgba(155,134,244,.12), transparent 65%)" },
+      { id: "equality", label: "Equality", icon: "⌘", ambient: "radial-gradient(ellipse at 55% 25%, rgba(62,184,154,.12), transparent 65%)" },
+      { id: "statutes", label: "Statutes", icon: "◆", ambient: "radial-gradient(ellipse at 50% 60%, rgba(242,135,73,.12), transparent 65%)" },
+      { id: "voting", label: "Voting", icon: "✎", ambient: "radial-gradient(ellipse at 70% 20%, rgba(91,143,212,.12), transparent 65%)" },
+      { id: "timeline", label: "Timeline", icon: "⇢", ambient: "radial-gradient(ellipse at 50% 45%, rgba(62,184,154,.12), transparent 65%)" },
+      { id: "glossary", label: "Glossary", icon: "◇", ambient: "radial-gradient(ellipse at 35% 20%, rgba(91,143,212,.12), transparent 65%)" },
+      { id: "writing", label: "Writing", icon: "✐", ambient: "radial-gradient(ellipse at 65% 28%, rgba(201,168,76,.12), transparent 65%)" }
+    ];
+
+    const glossaryTerms = [
+      { term: "Civil Liberties", def: "Protections from government action, such as speech, search, worship, and counsel rights.", tab: "foundations" },
+      { term: "Civil Rights", def: "Protections against discrimination and guarantees of equal citizenship and access.", tab: "foundations" },
+      { term: "Selective Incorporation", def: "Process by which the Supreme Court applied most Bill of Rights protections to states through the Fourteenth Amendment.", tab: "foundations" },
+      { term: "Due Process Clause", def: "Fourteenth Amendment clause used to apply many rights to states and protect fair procedures.", tab: "foundations" },
+      { term: "Equal Protection Clause", def: "Fourteenth Amendment command that states provide equal protection of the laws.", tab: "foundations" },
+      { term: "State Action", def: "Requirement that many constitutional claims involve government conduct or conduct fairly attributable to government.", tab: "foundations" },
+      { term: "Rational Basis Review", def: "Lowest scrutiny: law must be rationally related to a legitimate government interest.", tab: "scrutiny" },
+      { term: "Intermediate Scrutiny", def: "Middle scrutiny: law must be substantially related to an important government interest.", tab: "scrutiny" },
+      { term: "Strict Scrutiny", def: "Highest scrutiny: law must be narrowly tailored to a compelling government interest.", tab: "scrutiny" },
+      { term: "Establishment Clause", def: "First Amendment rule against government establishment, endorsement, or coercion of religion.", tab: "religion" },
+      { term: "Free Exercise Clause", def: "First Amendment protection for religious belief and some religious practice.", tab: "religion" },
+      { term: "Lemon Test", def: "Historic establishment test asking about secular purpose, primary effect, and excessive entanglement.", tab: "religion" },
+      { term: "Content-Based Restriction", def: "Speech rule targeting the message or viewpoint; highly suspect.", tab: "expression" },
+      { term: "Content-Neutral Restriction", def: "Speech rule focused on logistics such as time, place, and manner rather than message.", tab: "expression" },
+      { term: "Symbolic Speech", def: "Conduct that communicates a message and may receive First Amendment protection.", tab: "expression" },
+      { term: "Prior Restraint", def: "Government censorship before publication; strongly disfavored.", tab: "expression" },
+      { term: "Actual Malice", def: "Public-official defamation standard requiring knowledge of falsity or reckless disregard for truth.", tab: "expression" },
+      { term: "Probable Cause", def: "Reasonable basis to believe evidence of a crime will be found or a crime occurred.", tab: "accused" },
+      { term: "Reasonable Suspicion", def: "Lower standard allowing limited stops under Terry when facts suggest criminal activity.", tab: "accused" },
+      { term: "Exclusionary Rule", def: "Rule that illegally obtained evidence generally cannot be used at trial.", tab: "accused" },
+      { term: "Miranda Warning", def: "Custodial interrogation warning protecting silence and counsel rights.", tab: "accused" },
+      { term: "Substantive Due Process", def: "Doctrine protecting certain fundamental liberties from government interference.", tab: "privacy" },
+      { term: "Unenumerated Rights", def: "Rights not specifically listed in the Constitution but argued to be retained by the people.", tab: "privacy" },
+      { term: "De Jure Segregation", def: "Segregation created or required by law.", tab: "equality" },
+      { term: "De Facto Segregation", def: "Segregation resulting from social and economic patterns rather than explicit law.", tab: "equality" },
+      { term: "Discriminatory Intent", def: "Purposeful discrimination by government, often needed for Equal Protection claims.", tab: "equality" },
+      { term: "Disparate Impact", def: "Unequal effects of a policy even without explicit discriminatory purpose.", tab: "equality" },
+      { term: "Civil Rights Act of 1964", def: "Major statute banning discrimination in public accommodations, employment, and federally funded programs.", tab: "statutes" },
+      { term: "Title IX", def: "Statute banning sex discrimination in federally funded education programs.", tab: "statutes" },
+      { term: "Americans with Disabilities Act", def: "Statute prohibiting disability discrimination and requiring reasonable accommodations.", tab: "statutes" },
+      { term: "Voting Rights Act of 1965", def: "Federal law enforcing the Fifteenth Amendment and targeting racial barriers to voting.", tab: "voting" },
+      { term: "Preclearance", def: "Former VRA oversight mechanism requiring some jurisdictions to get federal approval before election-law changes.", tab: "voting" },
+      { term: "One Person, One Vote", def: "Principle that districts should have roughly equal populations so votes carry similar weight.", tab: "voting" }
+    ];
+
+    const flashcards = [
+      {
+        front: "What is the fastest way to distinguish civil liberties from civil rights?",
+        back: "Civil liberties ask whether government can restrict an individual. Civil rights ask whether people or groups are being treated equally."
+      },
+      {
+        front: "Why is the Fourteenth Amendment so important in Unit 3?",
+        back: "It applies many rights to the states through selective incorporation and supplies Equal Protection for civil rights claims."
+      },
+      {
+        front: "What should you do before applying a constitutional right?",
+        back: "Identify whether there is state action. If the actor is private, a statute may be more relevant than the Constitution."
+      },
+      {
+        front: "What is the Unit 3 FRQ habit?",
+        back: "Actor, right, test, outcome: identify the government actor, name the right, apply the standard, and explain the likely result."
+      }
+    ];
+
+    const quizQuestions = [
+      {
+        question: "Which amendment is the main constitutional bridge for applying Bill of Rights protections to the states?",
+        options: ["First Amendment", "Fifth Amendment", "Fourteenth Amendment", "Twenty-Sixth Amendment"],
+        correct: 2,
+        explanation: "Selective incorporation uses the Fourteenth Amendment Due Process Clause to apply many rights to state and local governments."
+      },
+      {
+        question: "Race classifications usually trigger which level of review?",
+        options: ["Rational basis", "Intermediate scrutiny", "Strict scrutiny", "No review"],
+        correct: 2,
+        explanation: "Race classifications are suspect and usually face strict scrutiny."
+      },
+      {
+        question: "Engel v. Vitale is most directly about",
+        options: ["School-sponsored prayer", "Flag burning", "Right to counsel", "College admissions"],
+        correct: 0,
+        explanation: "Engel held that government-directed prayer in public schools violates the Establishment Clause."
+      },
+      {
+        question: "Which case protects student symbolic speech unless it causes a material and substantial disruption?",
+        options: ["Tinker v. Des Moines", "Schenck v. United States", "Mapp v. Ohio", "Plessy v. Ferguson"],
+        correct: 0,
+        explanation: "Tinker protects student armbands as symbolic speech unless school officials can show substantial disruption."
+      },
+      {
+        question: "Prior restraint refers to",
+        options: ["A search after arrest", "Censorship before publication", "A civil jury trial", "A poll tax"],
+        correct: 1,
+        explanation: "Prior restraint is government censorship before publication and is strongly disfavored."
+      },
+      {
+        question: "Mapp v. Ohio is important because it",
+        options: ["Incorporated the exclusionary rule against the states", "Recognized same-sex marriage", "Upheld school prayer", "Created preclearance"],
+        correct: 0,
+        explanation: "Mapp applied the exclusionary rule to the states through incorporation."
+      },
+      {
+        question: "Miranda warnings are required during",
+        options: ["Every police interaction", "Every traffic stop", "Custodial interrogation", "Every trial"],
+        correct: 2,
+        explanation: "Miranda applies when a person is both in custody and being interrogated."
+      },
+      {
+        question: "Which case incorporated the Second Amendment against the states?",
+        options: ["District of Columbia v. Heller", "McDonald v. Chicago", "United States v. Lopez", "Gideon v. Wainwright"],
+        correct: 1,
+        explanation: "McDonald incorporated the Second Amendment through the Fourteenth Amendment."
+      },
+      {
+        question: "Brown v. Board of Education rejected",
+        options: ["Prior restraint", "Separate but equal in public schools", "Preclearance", "The actual malice standard"],
+        correct: 1,
+        explanation: "Brown held public school segregation unconstitutional, rejecting the logic of Plessy in education."
+      },
+      {
+        question: "Shelby County v. Holder is associated with",
+        options: ["Weakening the VRA preclearance system", "Creating Title IX", "Requiring counsel for indigent defendants", "Protecting flag burning"],
+        correct: 0,
+        explanation: "Shelby County struck down the VRA coverage formula used to decide which jurisdictions needed preclearance."
+      }
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Explain selective incorporation",
+        blocks: [
+          ["Claim", "Selective incorporation applies most Bill of Rights protections to state and local governments through the Fourteenth Amendment."],
+          ["Mechanism", "A person challenges state action, the Court asks whether the right is fundamental, and the Due Process Clause becomes the bridge."],
+          ["Evidence", "Use Gitlow for speech and press, Mapp for exclusionary rule, Gideon for counsel, or McDonald for the Second Amendment."],
+          ["Limit", "Not every clause has been incorporated, and incorporation occurred case by case over time."]
+        ]
+      },
+      {
+        label: "Analyze a speech restriction",
+        blocks: [
+          ["Claim", "The constitutionality of a speech restriction depends on whether government targets a message or regulates logistics."],
+          ["Mechanism", "Content-based rules receive heavy suspicion, while content-neutral time, place, and manner rules can be upheld if reasonable and fairly applied."],
+          ["Evidence", "Use Tinker for student expression, Brandenburg for incitement, Texas v. Johnson for symbolic speech, or New York Times Co. v. United States for prior restraint."],
+          ["Outcome", "A city denying a permit because it dislikes a message likely violates the First Amendment; neutral traffic permits are more defensible."]
+        ]
+      },
+      {
+        label: "Explain an Equal Protection claim",
+        blocks: [
+          ["Claim", "Equal Protection analysis asks whether government is classifying people and which level of scrutiny applies."],
+          ["Mechanism", "Race classifications usually trigger strict scrutiny; sex classifications usually trigger intermediate scrutiny; ordinary classifications usually receive rational basis review."],
+          ["Evidence", "Use Brown for racial segregation, United States v. Virginia for sex discrimination, or SFFA for race-conscious admissions."],
+          ["Nuance", "Disparate impact alone may not prove a constitutional violation without discriminatory intent, though statutes can matter."]
+        ]
+      },
+      {
+        label: "Apply rights of the accused",
+        blocks: [
+          ["Claim", "Criminal procedure rights limit how police investigate, interrogate, prosecute, and punish."],
+          ["Mechanism", "Fourth Amendment claims focus on reasonableness, warrants, probable cause, and exceptions; Fifth and Sixth Amendment claims focus on silence, counsel, and fair trial."],
+          ["Evidence", "Use Mapp for exclusion, Terry for stop-and-frisk, Miranda for custodial interrogation, and Gideon for counsel."],
+          ["Nuance", "The exclusionary rule is a remedy to deter misconduct, not a freestanding personal right."]
+        ]
+      }
+    ];
+
+    const nav = document.getElementById("sidebarNav");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const main = document.getElementById("main");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map((tab) => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>
+      `).join("");
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll(".tab-content").forEach((section) => {
+        section.classList.toggle("active", section.id === tabId);
+      });
+      document.querySelectorAll(".nav-btn").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tabId);
+      });
+      const tab = tabs.find((entry) => entry.id === tabId);
+      if (tab) ambientOverlay.style.background = tab.ambient;
+      main.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderGlossary(filter = "") {
+      const value = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter((term) => term.term.toLowerCase().includes(value) || term.def.toLowerCase().includes(value));
+      document.getElementById("glossaryGrid").innerHTML = items.map((item) => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map((card) => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div>
+                <div class="mini-label">Prompt</div>
+                <h3>${card.front}</h3>
+              </div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div>
+                <div class="mini-label">Answer</div>
+                <div class="body-copy">${card.back}</div>
+              </div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderEssayTopics() {
+      document.getElementById("essayTopics").innerHTML = essayOutlines.map((outline, index) => `
+        <button class="essay-topic-btn" type="button" data-essay-index="${index}">${outline.label}</button>
+      `).join("");
+      document.getElementById("essayOutline").classList.remove("show");
+      document.getElementById("essayOutline").innerHTML = "";
+    }
+
+    function selectEssay(index) {
+      document.querySelectorAll(".essay-topic-btn").forEach((btn) => {
+        btn.classList.toggle("active", Number(btn.dataset.essayIndex) === index);
+      });
+      const outline = essayOutlines[index];
+      document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) => `
+        <div class="essay-block">
+          <div class="essay-block-label">${label}</div>
+          <div class="essay-block-body">${body}</div>
+        </div>
+      `).join("");
+      document.getElementById("essayOutline").classList.add("show");
+    }
+
+    function renderQuizQuestion() {
+      const quizMount = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prevBest = Number(localStorage.getItem("apgopo_u3_best") || 0);
+        const best = Math.max(prevBest, pct);
+        localStorage.setItem("apgopo_u3_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        quizMount.innerHTML = `
+          <div class="quiz-status">Complete</div>
+          <div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div>
+          <div class="quiz-feedback">Review incorporation, First Amendment tests, rights of the accused, and Equal Protection if your misses clustered around a doctrine.</div>
+          <div style="margin-top:18px;"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>
+        `;
+        return;
+      }
+      quizLocked = false;
+      quizMount.innerHTML = `
+        <div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div>
+        <div class="quiz-question">${q.question}</div>
+        <div class="quiz-options">
+          ${q.options.map((option, index) => `<button class="quiz-option" type="button" data-option-index="${index}">${option}</button>`).join("")}
+        </div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div style="margin-top:18px;" id="quizNext"></div>
+      `;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+    function initBestScore() {
+      const best = localStorage.getItem("apgopo_u3_best");
+      bestScoreEl.textContent = best ? best + "%" : "--";
+    }
+
+    renderNav();
+    renderGlossary();
+    renderFlashcards();
+    renderEssayTopics();
+    initBestScore();
+
+    document.addEventListener("mousemove", (event) => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = event.clientX + "px";
+      cursor.style.top = event.clientY + "px";
+    });
+
+    document.addEventListener("mouseover", (event) => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      const interactive = event.target.closest("button, a, .flash-card, .glossary-card");
+      cursor.style.width = interactive ? "20px" : "12px";
+      cursor.style.height = interactive ? "20px" : "12px";
+    });
+
+    pinBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("pinned");
+      pinBtn.classList.toggle("pinned");
+      pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+    });
+
+    nav.addEventListener("click", (event) => {
+      const button = event.target.closest(".nav-btn");
+      if (!button) return;
+      switchTab(button.dataset.tab);
+    });
+
+    document.querySelectorAll(".note-jump").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.noteTarget);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("glossaryFilter").addEventListener("input", (event) => {
+      renderGlossary(event.target.value);
+    });
+
+    document.getElementById("flashGrid").addEventListener("click", (event) => {
+      const card = event.target.closest(".flash-card");
+      if (card) card.classList.toggle("flipped");
+    });
+
+    document.getElementById("openSearch").addEventListener("click", () => {
+      const panel = document.getElementById("sbSearchPanel");
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+    });
+
+    document.getElementById("sbInput").addEventListener("input", (event) => {
+      const query = event.target.value.toLowerCase().trim();
+      const matches = glossaryTerms.filter((entry) => entry.term.toLowerCase().includes(query) || entry.def.toLowerCase().includes(query)).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = matches.length ? matches.map((item) => `
+        <div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}">
+          <div class="sb-result-tab">${item.tab}</div>
+          <div class="sb-result-term">${item.term}</div>
+          <div class="sb-result-snip">${item.def}</div>
+        </div>
+      `).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+
+    document.getElementById("sbResults").addEventListener("click", (event) => {
+      const result = event.target.closest(".sb-result");
+      if (!result || !result.dataset.targetTab) return;
+      switchTab(result.dataset.targetTab);
+      document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = "";
+      document.getElementById("sbResults").innerHTML = "";
+      if (result.dataset.targetTab === "glossary") {
+        document.getElementById("glossaryFilter").value = result.dataset.targetTerm;
+        renderGlossary(result.dataset.targetTerm);
+      }
+    });
+
+    document.getElementById("glossaryGrid").addEventListener("click", (event) => {
+      const card = event.target.closest(".glossary-card");
+      if (!card) return;
+      switchTab(card.dataset.targetTab);
+    });
+
+    apToggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("ap-highlight");
+      apToggleBtn.classList.toggle("active");
+    });
+
+    document.getElementById("quizOpenBtn").addEventListener("click", () => {
+      quizIndex = 0;
+      quizScore = 0;
+      renderQuizQuestion();
+      openModal("quizModal");
+    });
+
+    document.getElementById("essayOpenBtn").addEventListener("click", () => {
+      renderEssayTopics();
+      openModal("essayModal");
+    });
+
+    document.getElementById("essayTopics").addEventListener("click", (event) => {
+      const button = event.target.closest(".essay-topic-btn");
+      if (!button) return;
+      selectEssay(Number(button.dataset.essayIndex));
+    });
+
+    document.getElementById("quizMount").addEventListener("click", (event) => {
+      const option = event.target.closest(".quiz-option");
+      if (option && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex];
+        const selected = Number(option.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((btn, index) => {
+          if (index === q.correct) btn.classList.add("correct");
+          if (index === selected && selected !== q.correct) btn.classList.add("wrong");
+        });
+        if (selected === q.correct) quizScore += 1;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (event.target.id === "nextQuizBtn") {
+        quizIndex += 1;
+        renderQuizQuestion();
+      }
+      if (event.target.id === "restartQuizBtn") {
+        quizIndex = 0;
+        quizScore = 0;
+        renderQuizQuestion();
+      }
+    });
+
+    document.querySelectorAll("[data-close]").forEach((button) => {
+      button.addEventListener("click", () => closeModal(button.dataset.close));
+    });
+
+    document.querySelectorAll(".modal").forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) modal.classList.remove("open");
+      });
+    });
+
+    main.addEventListener("scroll", () => {
+      const max = main.scrollHeight - main.clientHeight;
+      const pct = max > 0 ? (main.scrollTop / max) * 100 : 0;
+      document.getElementById("readingProgressFill").style.width = pct + "%";
+    });
+  </script>
+</body>
+</html>

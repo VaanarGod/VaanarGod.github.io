@@ -488,6 +488,110 @@
       text-transform: uppercase;
       margin-bottom: 8px;
     }
+
+    .course-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .notes-shell {
+      display: grid;
+      grid-template-columns: minmax(230px, 300px) 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .notes-index {
+      position: sticky;
+      top: 88px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255,255,255,.025);
+      padding: 18px;
+    }
+    .notes-index-title {
+      color: var(--accent, var(--blue));
+      font-size: 9px;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .note-jump {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-align: left;
+      text-transform: uppercase;
+      cursor: none;
+    }
+    .note-jump:last-child { border-bottom: none; }
+    .note-jump span:last-child { color: var(--muted); }
+    .note-jump:hover { color: var(--accent, var(--blue)); }
+    .notes-stack { display: grid; gap: 18px; }
+    .note-section {
+      scroll-margin-top: 110px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .note-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent, var(--blue));
+      opacity: .7;
+    }
+    .note-section h3 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 30px;
+      letter-spacing: .05em;
+      margin-bottom: 12px;
+    }
+    .note-section h4 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 21px;
+      letter-spacing: .05em;
+      margin: 18px 0 8px;
+    }
+    .note-section .body-copy + .body-copy { margin-top: 12px; }
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .mini-note {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.025);
+      padding: 16px;
+    }
+    .mini-note > strong {
+      display: block;
+      color: white;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 19px;
+      letter-spacing: .05em;
+      margin-bottom: 8px;
+    }
     .timeline-intro {
       margin-bottom: 18px;
       padding: 18px 20px;
@@ -763,6 +867,10 @@
   <main id="main">
     <div class="topbar">
       <div class="top-actions">
+        <a class="glass-btn course-link" href="index.html">Course Home</a>
+        <a class="glass-btn course-link" href="apgopo-unit1.html">Unit 1</a>
+        <a class="glass-btn course-link" href="apgopo-unit2.html">Unit 2</a>
+        <a class="glass-btn course-link" href="apgopo-unit3.html">Unit 3</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
@@ -825,6 +933,142 @@
       </div>
     </section>
 
+
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Knowt-Style Notes</span>
+        <h2>Unit 2 Notes Index</h2>
+        <p>Branches · lawmaking · bureaucracy · courts · conflict · statutes</p>
+      </header>
+
+      <div class="notes-shell">
+        <aside class="notes-index accent-blue" aria-label="Unit 2 notes index">
+          <div class="notes-index-title">Major Buckets</div>
+          <button class="note-jump" type="button" data-note-target="u2-note-powers"><span>Powers and Checks</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-congress"><span>Congress</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-president"><span>Presidency</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-bureaucracy"><span>Bureaucracy</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-judiciary"><span>Judiciary</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-conflict"><span>Conflict and Laws</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-casebank"><span>Case Bank</span><span>07</span></button>
+        </aside>
+
+        <div class="notes-stack">
+          <article class="note-section accent-blue" id="u2-note-powers">
+            <div class="mini-label">01 · Separation of Powers</div>
+            <h3>Powers, Checks, and Institutional Friction</h3>
+            <div class="body-copy">
+              <p>Unit 2 is about institutions that share power because the Constitution tries to prevent domination. <strong class="ap-term">Separation of powers</strong> gives Congress, the president, and courts different jobs. <strong class="ap-term">Checks and balances</strong> lets each branch limit, supervise, or reshape what the others do.</p>
+              <p>Conflict is not a glitch. The design expects disagreement over lawmaking, appointments, funding, war powers, executive privilege, judicial review, and implementation.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Power Types</strong><div class="body-copy">Enumerated powers are written in the Constitution, implied powers are inferred through necessary and proper logic, and inherent powers are often claimed by presidents in foreign affairs or national security.</div></div>
+              <div class="mini-note"><strong>Congress Checks</strong><div class="body-copy">Funding, oversight, subpoenas, confirmations, treaty ratification, impeachment, statutes, and jurisdiction rules.</div></div>
+              <div class="mini-note"><strong>President Checks</strong><div class="body-copy">Vetoes, agenda-setting, bargaining, executive orders, signing statements, and implementation choices.</div></div>
+              <div class="mini-note"><strong>Courts Check</strong><div class="body-copy">Judicial review lets courts invalidate unconstitutional laws or executive actions through actual cases.</div></div>
+            </div>
+            <h4>AP Move</h4>
+            <div class="body-copy">Name the specific power, explain the mechanism, then show how another branch responds.</div>
+          </article>
+
+          <article class="note-section accent-orange" id="u2-note-congress">
+            <div class="mini-label">02 · Congress</div>
+            <h3>Representation, Committees, and Lawmaking</h3>
+            <div class="body-copy">
+              <p>Congress writes laws, represents citizens, controls funding, confirms major officials through the Senate, and oversees executive implementation. Many Unit 2 scenarios begin in Congress because lawmaking and appropriations shape what the executive branch can actually do.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>House vs. Senate</strong><div class="body-copy">The House is population-based, has two-year terms, starts revenue bills, and impeaches. The Senate has equal state representation, six-year terms, confirmations, treaty ratification, and impeachment trials.</div></div>
+              <div class="mini-note"><strong>Districting</strong><div class="body-copy">The census leads to reapportionment and redistricting. Gerrymandering uses packing and cracking, while Baker and Shaw connect districting to Equal Protection limits.</div></div>
+              <div class="mini-note"><strong>Leadership</strong><div class="body-copy">The Speaker, majority/minority leaders, whips, committee chairs, and ranking members shape what gets attention and what reaches the floor.</div></div>
+              <div class="mini-note"><strong>Committees</strong><div class="body-copy">Standing committees handle most work. Hearings, markup, and pigeonholing decide whether bills advance or disappear.</div></div>
+              <div class="mini-note"><strong>House Rules</strong><div class="body-copy">The Rules Committee controls floor debate and amendments. Open rules allow amendments; closed rules block them.</div></div>
+              <div class="mini-note"><strong>Senate Delay</strong><div class="body-copy">Filibuster and cloture let Senate minorities slow or block action. Riders can be attached more freely than in the House.</div></div>
+            </div>
+            <h4>Bill to Law</h4>
+            <div class="body-copy">Bills are introduced by members, referred to committees, shaped through hearings and markup, debated under chamber rules, reconciled through conference committees if needed, and sent to the president for signature, veto, or possible pocket veto.</div>
+          </article>
+
+          <article class="note-section accent-purple" id="u2-note-president">
+            <div class="mini-label">03 · Presidency</div>
+            <h3>Formal Powers, Informal Powers, and Limits</h3>
+            <div class="body-copy">
+              <p>The presidency gives energy and unity to law execution, but the president is checked by Congress and courts. Formal powers come from Article II; informal power comes from visibility, party leadership, bargaining, and control of the executive branch.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Formal Powers</strong><div class="body-copy">Veto, Commander in Chief, appointments, treaties, pardons, State of the Union, and calling Congress into special session.</div></div>
+              <div class="mini-note"><strong>Informal Tools</strong><div class="body-copy">Bully pulpit, going public, agenda-setting, party leadership, bargaining, and electoral pressure.</div></div>
+              <div class="mini-note"><strong>Executive Orders</strong><div class="body-copy">Direct executive operations but must rest on constitutional or statutory authority and can be reversed or challenged.</div></div>
+              <div class="mini-note"><strong>Executive Privilege</strong><div class="body-copy">A limited confidentiality claim. U.S. v. Nixon shows it is not absolute in a criminal investigation.</div></div>
+              <div class="mini-note"><strong>Foreign Policy</strong><div class="body-copy">Treaties require Senate ratification; executive agreements do not. War powers are divided between Congress and the president.</div></div>
+              <div class="mini-note"><strong>EOP and Cabinet</strong><div class="body-copy">OMB, NSC, chief of staff, policy councils, and cabinet departments help presidents manage administration.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-teal" id="u2-note-bureaucracy">
+            <div class="mini-label">04 · Federal Bureaucracy</div>
+            <h3>Implementation, Discretion, and Accountability</h3>
+            <div class="body-copy">
+              <p>The bureaucracy turns laws into real policy. Congress often writes broad goals, then agencies define rules, enforce standards, administer programs, and apply expertise. This creates democratic tension because unelected officials make choices that affect policy outcomes.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Discretion</strong><div class="body-copy">Agencies make choices inside statutory boundaries because Congress cannot legislate every technical detail.</div></div>
+              <div class="mini-note"><strong>Rulemaking</strong><div class="body-copy">Agencies propose rules, gather comments, issue final regulations, and enforce them. Regulated groups may challenge rules in court.</div></div>
+              <div class="mini-note"><strong>Agency Types</strong><div class="body-copy">Cabinet departments, independent agencies, independent regulatory commissions, government corporations, and the Senior Executive Service.</div></div>
+              <div class="mini-note"><strong>Control Tools</strong><div class="body-copy">Presidents use appointments, directives, and OMB. Congress uses funding, statutes, confirmations, and oversight. Courts review legality.</div></div>
+              <div class="mini-note"><strong>Iron Triangles</strong><div class="body-copy">Stable relationships among agencies, congressional committees, and interest groups. Issue networks are broader and less stable.</div></div>
+              <div class="mini-note"><strong>Civil Service</strong><div class="body-copy">Pendleton created merit hiring; Hatch limits partisan activity to protect neutrality.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-gold" id="u2-note-judiciary">
+            <div class="mini-label">05 · Judiciary</div>
+            <h3>Federal Courts, Judicial Review, and Appointments</h3>
+            <div class="body-copy">
+              <p>Federal courts interpret laws and the Constitution through cases. The judiciary is powerful because of judicial review, but it depends on cases, standing, implementation by other actors, appointments, and institutional legitimacy.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Structure</strong><div class="body-copy">District courts are trial courts, courts of appeals review lower decisions, and the Supreme Court has limited original jurisdiction plus broad appellate influence.</div></div>
+              <div class="mini-note"><strong>Access</strong><div class="body-copy">Cases must be justiciable, litigants need standing, lower options are usually exhausted, and certiorari follows the rule of four.</div></div>
+              <div class="mini-note"><strong>Opinions</strong><div class="body-copy">Majority opinions control, concurrences agree with the result but not reasoning, dissents explain disagreement, and unanimous opinions carry special force.</div></div>
+              <div class="mini-note"><strong>Appointments</strong><div class="body-copy">Presidents nominate; the Senate confirms. Ideology, party control, interest groups, ABA ratings, and senatorial courtesy can matter.</div></div>
+              <div class="mini-note"><strong>Philosophy</strong><div class="body-copy">Judicial restraint favors deference; judicial activism is more willing to overturn laws or precedents.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-red" id="u2-note-conflict">
+            <div class="mini-label">06 · Conflict, Cooperation, and Statutes</div>
+            <h3>Institutions in Practice</h3>
+            <div class="body-copy">
+              <p>Unit 2 ultimately tests interaction. A law might begin with congressional bargaining, face a veto threat, become law through signature or override, be implemented by agencies, be overseen through hearings, and then be challenged in court.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Youngstown</strong><div class="body-copy">Presidential power is weakest when acting against Congress's expressed will.</div></div>
+              <div class="mini-note"><strong>Impeachment</strong><div class="body-copy">House impeaches by majority; Senate removes by two-thirds. Impeachment is political and constitutional.</div></div>
+              <div class="mini-note"><strong>Unified vs. Divided</strong><div class="body-copy">Unified government may make lawmaking easier; divided government increases veto threats, investigations, gridlock, and unilateral action.</div></div>
+              <div class="mini-note"><strong>Key Laws</strong><div class="body-copy">War Powers Resolution, Budget and Impoundment Control Act, FOIA, Pendleton, Hatch, ADA, VRA, NCLB, Patriot Act, and campaign finance laws show Congress shaping implementation.</div></div>
+            </div>
+            <h4>AP Paragraph Model</h4>
+            <div class="body-copy">Claim: identify a power. Mechanism: explain how it works. Interaction: explain how another branch can check, influence, or respond.</div>
+          </article>
+
+          <article class="note-section accent-blue" id="u2-note-casebank">
+            <div class="mini-label">07 · Case Bank</div>
+            <h3>Fast Case-to-Doctrine Map</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Marbury v. Madison</strong><div class="body-copy">Judicial review.</div></div>
+              <div class="mini-note"><strong>McCulloch v. Maryland</strong><div class="body-copy">Implied powers and national supremacy.</div></div>
+              <div class="mini-note"><strong>Baker v. Carr</strong><div class="body-copy">Redistricting claims can be heard in federal court.</div></div>
+              <div class="mini-note"><strong>Shaw v. Reno</strong><div class="body-copy">Race-based districting faces Equal Protection limits.</div></div>
+              <div class="mini-note"><strong>U.S. v. Nixon</strong><div class="body-copy">Executive privilege is limited.</div></div>
+              <div class="mini-note"><strong>Youngstown</strong><div class="body-copy">Limits unilateral presidential power against Congress.</div></div>
+              <div class="mini-note"><strong>INS v. Chadha</strong><div class="body-copy">Legislative veto violates bicameralism and presentment.</div></div>
+              <div class="mini-note"><strong>Clinton v. New York</strong><div class="body-copy">Line-item veto violates the constitutional lawmaking process.</div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
     <section class="tab-content" id="powers">
       <header class="page-header">
         <span class="unit-tag">Foundational Powers</span>
@@ -1305,6 +1549,7 @@
   <script>
     const tabs = [
       { id: "dashboard", label: "Dashboard", icon: "◈", ambient: "radial-gradient(ellipse at 60% 10%, rgba(91,143,212,.13), transparent 65%)" },
+      { id: "notes", label: "Notes", icon: "☰", ambient: "radial-gradient(ellipse at 35% 18%, rgba(91,143,212,.14), transparent 65%)" },
       { id: "powers", label: "Power Basics", icon: "✦", ambient: "radial-gradient(ellipse at 20% 20%, rgba(201,168,76,.12), transparent 65%)" },
       { id: "congress", label: "Congress", icon: "▣", ambient: "radial-gradient(ellipse at 75% 25%, rgba(242,135,73,.12), transparent 65%)" },
       { id: "leadership", label: "Leadership", icon: "◫", ambient: "radial-gradient(ellipse at 30% 65%, rgba(62,184,154,.12), transparent 65%)" },
@@ -1617,6 +1862,12 @@
       switchTab(button.dataset.tab);
     });
 
+    document.querySelectorAll(".note-jump").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.noteTarget);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
     document.getElementById("glossaryFilter").addEventListener("input", (event) => {
       renderGlossary(event.target.value);
     });

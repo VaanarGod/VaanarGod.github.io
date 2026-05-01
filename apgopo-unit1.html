@@ -608,6 +608,110 @@
       padding-left: 18px;
     }
     .timeline-copy li + li { margin-top: 6px; }
+
+    .course-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .notes-shell {
+      display: grid;
+      grid-template-columns: minmax(230px, 300px) 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .notes-index {
+      position: sticky;
+      top: 88px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255,255,255,.025);
+      padding: 18px;
+    }
+    .notes-index-title {
+      color: var(--accent, var(--blue));
+      font-size: 9px;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .note-jump {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-align: left;
+      text-transform: uppercase;
+      cursor: none;
+    }
+    .note-jump:last-child { border-bottom: none; }
+    .note-jump span:last-child { color: var(--muted); }
+    .note-jump:hover { color: var(--accent, var(--blue)); }
+    .notes-stack { display: grid; gap: 18px; }
+    .note-section {
+      scroll-margin-top: 110px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .note-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent, var(--blue));
+      opacity: .7;
+    }
+    .note-section h3 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 30px;
+      letter-spacing: .05em;
+      margin-bottom: 12px;
+    }
+    .note-section h4 {
+      font-family: "Bebas Neue", sans-serif;
+      color: white;
+      font-size: 21px;
+      letter-spacing: .05em;
+      margin: 18px 0 8px;
+    }
+    .note-section .body-copy + .body-copy { margin-top: 12px; }
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .mini-note {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.025);
+      padding: 16px;
+    }
+    .mini-note > strong {
+      display: block;
+      color: white;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 19px;
+      letter-spacing: .05em;
+      margin-bottom: 8px;
+    }
     .timeline-intro {
       margin-bottom: 18px;
       padding: 18px 20px;
@@ -883,6 +987,10 @@
   <main id="main">
     <div class="topbar">
       <div class="top-actions">
+        <a class="glass-btn course-link" href="index.html">Course Home</a>
+        <a class="glass-btn course-link" href="apgopo-unit1.html">Unit 1</a>
+        <a class="glass-btn course-link" href="apgopo-unit2.html">Unit 2</a>
+        <a class="glass-btn course-link" href="apgopo-unit3.html">Unit 3</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
@@ -970,6 +1078,126 @@
       </div>
     </section>
 
+
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Knowt-Style Notes</span>
+        <h2>Unit 1 Notes Index</h2>
+        <p>Founding ideas · constitutional structure · federalism · required documents</p>
+      </header>
+
+      <div class="notes-shell">
+        <aside class="notes-index accent-gold" aria-label="Unit 1 notes index">
+          <div class="notes-index-title">Major Buckets</div>
+          <button class="note-jump" type="button" data-note-target="u1-note-ideas"><span>Ideas and Democracy</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="u1-note-articles"><span>Articles and Convention</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="u1-note-ratification"><span>Ratification</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="u1-note-constitution"><span>Constitution</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="u1-note-federalism"><span>Federalism</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="u1-note-casebank"><span>Case Bank</span><span>06</span></button>
+        </aside>
+
+        <div class="notes-stack">
+          <article class="note-section accent-gold" id="u1-note-ideas">
+            <div class="mini-label">01 · Founding Ideas</div>
+            <h3>Enlightenment Ideas and Models of Democracy</h3>
+            <div class="body-copy">
+              <p>Unit 1 begins with a tension: the Founders wanted a government strong enough to solve national problems, but limited enough to prevent tyranny. Enlightenment ideas helped them imagine government as something people create for a purpose, not something rulers own by divine right.</p>
+              <p><strong class="ap-term">John Locke</strong> is the biggest influence for natural rights, social contract, consent of the governed, and revolution against abusive government. <strong class="ap-term">Montesquieu</strong> is the key thinker for separation of powers. <strong class="ap-term">Hobbes</strong> helps explain why people accept government for order, while Rousseau, Voltaire, and Diderot connect to public good, expression, religious liberty, and reason.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Natural Rights</strong><div class="body-copy">Rights exist because people are human; government protects them but does not create them. The Declaration uses this logic to justify independence.</div></div>
+              <div class="mini-note"><strong>Social Contract</strong><div class="body-copy">People consent to government for order and rights protection. If government breaks the contract, people may alter or abolish it.</div></div>
+              <div class="mini-note"><strong>Democracy Models</strong><div class="body-copy">Participatory democracy emphasizes broad engagement, pluralist democracy emphasizes group competition, and elite democracy argues power is concentrated among wealthy or educated elites.</div></div>
+              <div class="mini-note"><strong>Republicanism</strong><div class="body-copy">The U.S. is primarily representative. Citizens choose leaders, and those leaders filter public views into policy.</div></div>
+            </div>
+            <h4>AP Move</h4>
+            <div class="body-copy">When a prompt names a Founding idea, connect it to a structure: Locke to the Declaration, Montesquieu to separated branches, and republicanism to elected representation.</div>
+          </article>
+
+          <article class="note-section accent-red" id="u1-note-articles">
+            <div class="mini-label">02 · First Government and Constitution Making</div>
+            <h3>Articles of Confederation and the Constitutional Convention</h3>
+            <div class="body-copy">
+              <p>The <strong class="ap-term">Articles of Confederation</strong> created the first national government, but they reflected deep fear of central power. Congress was unicameral, each state had one vote, there was no president, no national court system, no power to tax directly, weak commerce power, and amendments required unanimous state approval.</p>
+              <p>The Articles were not useless. They helped the nation survive the Revolution, handled western lands through the Northwest Ordinance, and kept states loosely joined. But they failed at collective action: debt, trade conflict, military weakness, and inability to enforce national decisions.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Shays' Rebellion</strong><div class="body-copy">The uprising exposed the inability of the national government to maintain order and convinced many leaders that a stronger central government was necessary.</div></div>
+              <div class="mini-note"><strong>Virginia vs. New Jersey</strong><div class="body-copy">The Virginia Plan favored population-based representation and large states. The New Jersey Plan favored equal state representation and small states.</div></div>
+              <div class="mini-note"><strong>Great Compromise</strong><div class="body-copy">Created a bicameral Congress: House representation by population and Senate representation equal by state.</div></div>
+              <div class="mini-note"><strong>Three-Fifths Compromise</strong><div class="body-copy">Counted enslaved people as three-fifths for representation and taxation, increasing Southern political power and embedding slavery into constitutional bargaining.</div></div>
+              <div class="mini-note"><strong>Electoral College</strong><div class="body-copy">Balanced distrust of direct democracy, state influence, and executive selection by using electors allocated through congressional representation.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-blue" id="u1-note-ratification">
+            <div class="mini-label">03 · Ratification Debate</div>
+            <h3>Federalists, Anti-Federalists, and the Bill of Rights</h3>
+            <div class="body-copy">
+              <p>Ratification forced Americans to choose between a stronger national government and fear that such a government would endanger liberty. <strong class="ap-term">Federalists</strong> supported the Constitution because the Articles were too weak and because structure could restrain power. <strong class="ap-term">Anti-Federalists</strong> feared distant centralized authority, a strong executive, federal courts, a standing army, and the absence of explicit rights.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Federalist 10</strong><div class="body-copy">Madison argues factions are inevitable. A large republic controls faction effects by multiplying interests and making majority domination harder.</div></div>
+              <div class="mini-note"><strong>Federalist 51</strong><div class="body-copy">Madison explains checks and balances: because people are not angels, ambition must counteract ambition.</div></div>
+              <div class="mini-note"><strong>Brutus No. 1</strong><div class="body-copy">Warns that a large republic will be too distant, too powerful, and too likely to swallow state authority and individual liberty.</div></div>
+              <div class="mini-note"><strong>Federalist 70 and 78</strong><div class="body-copy">Hamilton defends a single energetic executive in 70 and an independent judiciary with judicial review logic in 78.</div></div>
+              <div class="mini-note"><strong>Bill of Rights</strong><div class="body-copy">The promise of explicit rights helped answer Anti-Federalist concerns and made ratification politically possible.</div></div>
+            </div>
+            <h4>AP Move</h4>
+            <div class="body-copy">Do not just name a paper. State the principle and apply it to the constitutional design in the prompt.</div>
+          </article>
+
+          <article class="note-section accent-purple" id="u1-note-constitution">
+            <div class="mini-label">04 · Constitutional Structure</div>
+            <h3>Principles Embedded in the Constitution</h3>
+            <div class="body-copy">
+              <p>The Constitution is short, but it creates a durable system through broad principles. Articles I, II, and III create Congress, the presidency, and the federal courts. The system is designed to be powerful enough to govern while forcing institutions to share authority.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Popular Sovereignty</strong><div class="body-copy">Authority comes from the people, expressed through elections, representation, and the Preamble's "We the People."</div></div>
+              <div class="mini-note"><strong>Limited Government</strong><div class="body-copy">Officials are bound by constitutional rules and enumerated powers. Limited government means restricted authority, not automatically small government.</div></div>
+              <div class="mini-note"><strong>Separation of Powers</strong><div class="body-copy">Congress makes laws, the president enforces them, and courts interpret them. Different branches have distinct jobs.</div></div>
+              <div class="mini-note"><strong>Checks and Balances</strong><div class="body-copy">Branches share tools: vetoes, confirmations, treaties, impeachment, judicial review, and overrides. Shared power prevents domination.</div></div>
+              <div class="mini-note"><strong>Amendment Process</strong><div class="body-copy">Change is possible but difficult: usually two-thirds of Congress and three-fourths of states. This balances stability and adaptability.</div></div>
+            </div>
+            <h4>Growth of Power</h4>
+            <div class="body-copy">Executive orders, executive agreements, judicial review, the Necessary and Proper Clause, and the Supremacy Clause all show how constitutional power grows through practice, interpretation, and institutional conflict.</div>
+          </article>
+
+          <article class="note-section accent-teal" id="u1-note-federalism">
+            <div class="mini-label">05 · Federalism</div>
+            <h3>Dividing Power Between Nation and States</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Federalism</strong> divides authority between national and state governments. It is a compromise between a unitary system and a confederation. National government handles powers like defense, currency, interstate commerce, naturalization, and treaties. States control areas like elections, local governments, public health, education, and policing.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Delegated Powers</strong><div class="body-copy">Powers listed for the national government, especially in Article I, Section 8.</div></div>
+              <div class="mini-note"><strong>Reserved Powers</strong><div class="body-copy">Powers kept by states under the Tenth Amendment. They are defined by what is not delegated to the national government.</div></div>
+              <div class="mini-note"><strong>Concurrent Powers</strong><div class="body-copy">Shared powers, including taxation, borrowing, courts, roads, and eminent domain.</div></div>
+              <div class="mini-note"><strong>Fiscal Federalism</strong><div class="body-copy">Categorical grants are narrow with rules; block grants are broader; mandates require states to act, sometimes without funding.</div></div>
+            </div>
+            <h4>Federalism Over Time</h4>
+            <div class="body-copy">Dual federalism imagines separate national and state spheres. Cooperative federalism features shared policy work. Federalism disputes often turn on the Necessary and Proper Clause, Commerce Clause, Supremacy Clause, and Tenth Amendment.</div>
+          </article>
+
+          <article class="note-section accent-gold" id="u1-note-casebank">
+            <div class="mini-label">06 · Case Bank</div>
+            <h3>Fast Case and Document Map</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Declaration</strong><div class="body-copy">Natural rights, consent, social contract, grievances, and right to revolution.</div></div>
+              <div class="mini-note"><strong>Federalist 10</strong><div class="body-copy">Large republic controls factions by multiplying interests.</div></div>
+              <div class="mini-note"><strong>Federalist 51</strong><div class="body-copy">Separation of powers and checks and balances prevent tyranny.</div></div>
+              <div class="mini-note"><strong>Brutus No. 1</strong><div class="body-copy">Large national republic threatens liberty and state authority.</div></div>
+              <div class="mini-note"><strong>Marbury v. Madison</strong><div class="body-copy">Establishes judicial review.</div></div>
+              <div class="mini-note"><strong>McCulloch v. Maryland</strong><div class="body-copy">Affirms implied powers and federal supremacy.</div></div>
+              <div class="mini-note"><strong>Gibbons v. Ogden</strong><div class="body-copy">Reads commerce power broadly in interstate matters.</div></div>
+              <div class="mini-note"><strong>United States v. Lopez</strong><div class="body-copy">Shows commerce power has limits.</div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
     <section class="tab-content" id="ideas">
       <header class="page-header">
         <span class="unit-tag">Foundations</span>
@@ -1580,6 +1808,7 @@
   <script>
     const tabs = [
       { id: "dashboard", label: "Dashboard", icon: "◈", ambient: "radial-gradient(ellipse at 60% 10%, rgba(201,168,76,.12), transparent 65%)" },
+      { id: "notes", label: "Notes", icon: "☰", ambient: "radial-gradient(ellipse at 35% 18%, rgba(201,168,76,.14), transparent 65%)" },
       { id: "ideas", label: "Founding Ideas", icon: "✦", ambient: "radial-gradient(ellipse at 20% 20%, rgba(91,143,212,.12), transparent 65%)" },
       { id: "democracy", label: "Democracy", icon: "◇", ambient: "radial-gradient(ellipse at 80% 20%, rgba(62,184,154,.12), transparent 65%)" },
       { id: "articles", label: "Articles", icon: "▣", ambient: "radial-gradient(ellipse at 25% 70%, rgba(217,95,95,.12), transparent 65%)" },
@@ -1893,6 +2122,12 @@
       switchTab(button.dataset.tab);
     });
 
+    document.querySelectorAll(".note-jump").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.noteTarget);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
     document.getElementById("glossaryFilter").addEventListener("input", (event) => {
       renderGlossary(event.target.value);
     });
