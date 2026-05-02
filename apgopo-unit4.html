@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Government and Politics - Unit 4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07080a;
+      --card: #0d0f12;
+      --border: rgba(255,255,255,0.07);
+      --text: #dde3ec;
+      --muted: #7a8699;
+      --gold: #c9a84c;
+      --teal: #3eb89a;
+      --blue: #5b8fd4;
+      --red: #d95f5f;
+      --orange: #f28749;
+      --purple: #9b86f4;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Mono", monospace;
+      overflow: hidden;
+      cursor: none;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .35;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--orange);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width .2s ease, height .2s ease;
+    }
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100;
+    }
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--orange);
+    }
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 10%, rgba(242,135,73,.13), transparent 65%);
+      opacity: .11;
+      pointer-events: none;
+      transition: background 1s ease;
+      z-index: 0;
+    }
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(5,6,8,.84);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(0.23,1,0.32,1);
+    }
+    #sidebar:hover, #sidebar.pinned { width: 268px; }
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .08em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+    }
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+    #pinBtn.pinned { color: var(--orange); border-color: rgba(242,135,73,.28); }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      border: 1px solid rgba(242,135,73,.22);
+      background: rgba(242,135,73,.08);
+      color: var(--orange);
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .logo-copy { opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+    .logo-copy h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 13px;
+      letter-spacing: .25em;
+      color: var(--orange);
+    }
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .search-wrap { position: relative; padding: 10px; }
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, border-color .2s ease;
+    }
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sb-search-trigger:hover { border-color: rgba(242,135,73,.24); }
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(242,135,73,.18);
+      background: rgba(8,10,13,.98);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s ease, transform .22s ease;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+    }
+    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+    }
+    #sbResults { max-height: 280px; overflow: auto; }
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      cursor: none;
+      transition: background .15s ease;
+    }
+    .sb-result:hover { background: rgba(242,135,73,.06); }
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--orange);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .sb-result-term {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 14px;
+      color: white;
+      letter-spacing: .04em;
+    }
+    .sb-result-snip {
+      font-family: "Crimson Pro", serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .nav-list { padding: 14px 0; }
+    .nav-btn {
+      width: 100%;
+      height: 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      border-left: 2px solid transparent;
+      color: var(--muted);
+      cursor: none;
+      font: inherit;
+      transition: color .22s ease, border-color .22s ease, background .22s ease;
+      position: relative;
+      padding-left: 8px;
+    }
+    .nav-btn::before {
+      content: attr(data-label);
+      position: absolute;
+      left: calc(100% + 12px);
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(8,10,13,.96);
+      border: 1px solid rgba(255,255,255,.11);
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(0,0,0,.5);
+    }
+    #sidebar:not(:hover):not(.pinned) .nav-btn:hover::before { opacity: 1; }
+    .nav-btn:hover { background: rgba(255,255,255,.03); color: white; }
+    .nav-btn.active { color: white; border-left-color: var(--orange); background: rgba(242,135,73,.08); }
+    .nav-icon {
+      font-size: 18px;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: .08em;
+    }
+    .nav-title {
+      font-size: 7px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #sidebar:hover .nav-title, #sidebar.pinned .nav-title { opacity: 1; }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 10px;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    #sidebar:hover .sidebar-footer, #sidebar.pinned .sidebar-footer { opacity: 1; }
+    .sb-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sb-action-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      font: inherit;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      transition: background .2s ease, color .2s ease;
+      text-align: center;
+    }
+    .sb-action-btn:hover { background: rgba(255,255,255,.04); color: white; }
+    .sb-action-btn.highlight { color: var(--orange); border-color: rgba(242,135,73,.28); }
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      position: relative;
+      z-index: 2;
+      padding: 0 80px 60px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeUp .35s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .header-area {
+      padding-top: 80px;
+      padding-bottom: 32px;
+      max-width: 1100px;
+    }
+    .mini-label {
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .page-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 52px;
+      letter-spacing: .08em;
+      margin-bottom: 16px;
+    }
+    .page-subtitle {
+      font-family: "Crimson Pro", serif;
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 760px;
+    }
+    .notes-content {
+      max-width: 920px;
+    }
+    .note-section {
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .note-section:last-child { border-bottom: none; }
+    .section-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 36px;
+      letter-spacing: .08em;
+      margin-bottom: 20px;
+      color: var(--orange);
+    }
+    .subsection {
+      margin-top: 28px;
+    }
+    .subsection h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 22px;
+      letter-spacing: .06em;
+      margin-bottom: 12px;
+      color: white;
+    }
+    .subsection h4 {
+      font-family: "DM Mono", monospace;
+      font-size: 13px;
+      letter-spacing: .1em;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: var(--orange);
+      text-transform: uppercase;
+    }
+    .body-copy {
+      font-family: "Crimson Pro", serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .body-copy:last-child { margin-bottom: 0; }
+    .body-copy strong { color: white; font-weight: 600; }
+    .body-copy em { color: var(--orange); font-style: italic; }
+    .term-list {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .term-card {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: background .2s ease;
+    }
+    .term-card:hover { background: rgba(255,255,255,.04); }
+    .term-card-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 18px;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+      color: var(--orange);
+    }
+    .term-card-body {
+      font-family: "Crimson Pro", serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+    .callout {
+      background: rgba(242,135,73,.06);
+      border: 1px solid rgba(242,135,73,.18);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .callout-label {
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .callout-body {
+      font-family: "Crimson Pro", serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .callout-body p { margin-bottom: 8px; }
+    .callout-body p:last-child { margin-bottom: 0; }
+    .callout-body ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .callout-body li {
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .callout-body li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .comp-card {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .comp-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 16px;
+      letter-spacing: .08em;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+    .comp-body {
+      font-family: "Crimson Pro", serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .note-jump-btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .note-jump-btn:hover {
+      background: rgba(242,135,73,.1);
+      color: var(--orange);
+      border-color: rgba(242,135,73,.28);
+    }
+    .glossary-filter-wrap {
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+    .glossary-filter-wrap input {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      letter-spacing: .08em;
+      transition: border-color .2s ease;
+      cursor: none;
+    }
+    .glossary-filter-wrap input:focus {
+      outline: none;
+      border-color: rgba(242,135,73,.4);
+    }
+    .glossary-grid {
+      display: grid;
+      gap: 14px;
+      max-width: 920px;
+    }
+    .glossary-card {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      cursor: none;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .glossary-card:hover {
+      background: rgba(242,135,73,.06);
+      border-color: rgba(242,135,73,.2);
+    }
+    .glossary-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .glossary-term {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 20px;
+      letter-spacing: .06em;
+      color: white;
+    }
+    .glossary-tag {
+      font-size: 8px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(242,135,73,.1);
+      border: 1px solid rgba(242,135,73,.22);
+    }
+    .glossary-def {
+      font-family: "Crimson Pro", serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+      max-width: 1200px;
+    }
+    .flash-card {
+      height: 220px;
+      perspective: 1400px;
+      cursor: none;
+    }
+    .flash-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform .5s cubic-bezier(0.4, 0.0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flash-card.flipped .flash-card-inner { transform: rotateY(180deg); }
+    .flash-front, .flash-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .flash-front {
+      background: linear-gradient(135deg, rgba(242,135,73,.08), rgba(242,135,73,.02));
+    }
+    .flash-back { transform: rotateY(180deg); }
+    .flash-tag {
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+    .flash-front h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 24px;
+      letter-spacing: .04em;
+      color: white;
+      line-height: 1.3;
+    }
+    .flash-hint {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-align: center;
+    }
+    .glass-btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: 1px solid rgba(242,135,73,.28);
+      background: rgba(242,135,73,.08);
+      color: var(--orange);
+      font: inherit;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .2s ease, border-color .2s ease;
+      font-weight: 600;
+    }
+    .glass-btn:hover {
+      background: rgba(242,135,73,.14);
+      border-color: rgba(242,135,73,.4);
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+      padding: 40px;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-inner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: auto;
+      padding: 40px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      font-size: 18px;
+      display: grid;
+      place-items: center;
+      transition: background .2s ease, color .2s ease;
+    }
+    .modal-close:hover { background: rgba(255,255,255,.06); color: white; }
+    .modal-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 32px;
+      letter-spacing: .08em;
+      margin-bottom: 24px;
+      color: var(--orange);
+    }
+    .quiz-status {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+    .quiz-question {
+      font-family: "Crimson Pro", serif;
+      font-size: 18px;
+      line-height: 1.6;
+      color: white;
+      margin-bottom: 24px;
+    }
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .quiz-option {
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      text-align: left;
+      cursor: none;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .quiz-option:hover { background: rgba(255,255,255,.05); }
+    .quiz-option.correct {
+      background: rgba(62,184,154,.15);
+      border-color: rgba(62,184,154,.4);
+      color: var(--teal);
+    }
+    .quiz-option.wrong {
+      background: rgba(217,95,95,.15);
+      border-color: rgba(217,95,95,.4);
+      color: var(--red);
+    }
+    .quiz-feedback {
+      font-family: "Crimson Pro", serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+    .essay-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .essay-topic-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font: inherit;
+      font-size: 11px;
+      letter-spacing: .12em;
+      cursor: none;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .essay-topic-btn:hover { background: rgba(255,255,255,.05); }
+    .essay-topic-btn.active {
+      background: rgba(242,135,73,.12);
+      border-color: rgba(242,135,73,.3);
+      color: var(--orange);
+    }
+    .essay-outline {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity .3s ease, max-height .3s ease;
+    }
+    .essay-outline.show {
+      opacity: 1;
+      max-height: 2000px;
+    }
+    .essay-block {
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .essay-block:last-child { border-bottom: none; }
+    .essay-block-label {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+    .essay-block-body {
+      font-family: "Crimson Pro", serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cursor { display: none; }
+      #sidebar { width: 100%; height: auto; position: static; }
+      #sidebar:hover, #sidebar.pinned { width: 100%; }
+      #main { padding: 20px; }
+      .flash-grid { grid-template-columns: 1fr; }
+      .comparison-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="ambientOverlay"></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">🗳️</div>
+      <div class="logo-copy">
+        <h1>AP GOV</h1>
+        <p>Unit 4 · Ideologies</p>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">
+        <span style="font-size: 14px;">🔍</span>
+        <span style="font-size: 9px; letter-spacing: .14em;">Search</span>
+      </button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="font-size: 14px;">🔍</span>
+          <input type="text" id="sbInput" placeholder="Search terms..." />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+
+    <nav class="nav-list" id="nav"></nav>
+
+    <div class="sidebar-footer">
+      <div class="sb-actions">
+        <button class="sb-action-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
+        <button class="sb-action-btn" id="essayOpenBtn" type="button">Essay Outlines</button>
+        <button class="sb-action-btn" id="apToggleBtn" type="button">Toggle AP</button>
+      </div>
+      <div style="margin-top: 14px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; text-align: center;">
+        <div style="font-size: 8px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px;">Best Score</div>
+        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--orange);" id="bestScore">--</div>
+      </div>
+    </div>
+  </aside>
+
+  <main id="main">
+    <!-- NOTES TAB -->
+    <div class="tab-content active" data-tab="notes">
+      <div class="header-area">
+        <div class="mini-label">Unit 4 of 5</div>
+        <h1 class="page-title">American Political Ideologies and Beliefs</h1>
+        <p class="page-subtitle">
+          Political culture, ideology, public opinion, polling, socialization, polarization, media framing, and how beliefs translate into policy debates.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <button class="note-jump-btn note-jump" data-note-target="culture">Political Culture</button>
+        <button class="note-jump-btn note-jump" data-note-target="ideology">Ideology Spectrum</button>
+        <button class="note-jump-btn note-jump" data-note-target="policy">Policy Debates</button>
+        <button class="note-jump-btn note-jump" data-note-target="socialization">Socialization</button>
+        <button class="note-jump-btn note-jump" data-note-target="demographics">Demographics</button>
+        <button class="note-jump-btn note-jump" data-note-target="polarization">Polarization</button>
+        <button class="note-jump-btn note-jump" data-note-target="polling">Public Opinion & Polling</button>
+        <button class="note-jump-btn note-jump" data-note-target="media">Media & Framing</button>
+        <button class="note-jump-btn note-jump" data-note-target="linkage">Linkage & Responsiveness</button>
+      </div>
+
+      <div class="notes-content">
+
+        <!-- SECTION 1: Political Culture -->
+        <section class="note-section" id="culture">
+          <h2 class="section-title">American Political Culture & Foundational Values</h2>
+          
+          <p class="body-copy">
+            <strong>Political culture</strong> is the set of shared values, beliefs, and expectations Americans hold about government and citizenship. It's not a party platform or specific law—it's the underlying "common sense" people use when judging what government should do and what good citizenship looks like.
+          </p>
+
+          <p class="body-copy">
+            Political culture sets the boundaries of legitimacy in American politics. Americans may argue intensely about <em>how much</em> government should do, but many still accept the Constitution, elections, and the idea that government must justify its power.
+          </p>
+
+          <div class="subsection">
+            <h3>Core American Values</h3>
+            
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Liberty</div>
+                <div class="term-card-body">
+                  Freedom from excessive government interference. Appears in debates about free speech, gun rights, privacy, religious freedom, and economic regulation. People prioritizing liberty often worry even well-intended policies can expand government power dangerously.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Equality</div>
+                <div class="term-card-body">
+                  People should have equal standing and opportunity. Can mean equality before the law (no unfair legal advantages), equality of opportunity (fair chance), or equality of outcomes (reducing major gaps). Political conflict often stems from disagreement over which definition government should pursue.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Individualism</div>
+                <div class="term-card-body">
+                  Individuals are responsible for their own well-being and should make their own choices. Often supports free markets and limited government, but can also support personal autonomy in social issues.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Democracy</div>
+                <div class="term-card-body">
+                  Government should be responsive to the people through elections and representation. In the U.S., mainly <strong>representative democracy</strong> (republicanism)—citizens choose officials to make policy rather than voting directly on every law.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Rule of Law</div>
+                <div class="term-card-body">
+                  Government and citizens are bound by laws applied consistently. Supports constitutional limits, due process, and the idea that leaders cannot act on personal will alone.
+                </div>
+              </div>
+            </div>
+
+            <p class="body-copy">
+              These values create predictable trade-offs. Policies increasing equality (redistributive social programs) may require higher taxes or more regulation, which some see as reducing liberty. Policies maximizing liberty (fewer business regulations) may increase inequality if advantages compound over time.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Attitudes About Government</h3>
+            
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Political Efficacy</div>
+                <div class="term-card-body">
+                  Belief that your participation matters. <strong>Internal efficacy</strong>: confidence in your own ability to understand and participate. <strong>External efficacy</strong>: belief that government will respond to public input. Low efficacy reduces voting, contacting officials, and staying informed.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Trust in Government</div>
+                <div class="term-card-body">
+                  General belief that government will do the right thing or act competently and fairly. Broader than approval of one leader. Low trust can lead people to resist even beneficial policies due to suspected waste, corruption, or incompetence.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Legitimacy</div>
+                <div class="term-card-body">
+                  Belief that government has the right to rule. Even when people dislike outcomes, legitimacy keeps them accepting lawful processes. Stability is threatened when groups stop accepting election outcomes or view institutions as inherently illegitimate.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Identify or apply a foundational value (liberty, equality, individualism) to explain a policy preference</li>
+                <li>Interpret graphs about trust/efficacy and predict participation or policy consequences</li>
+                <li>Don't treat "democracy" as only direct voting—recognize representation and constitutional limits</li>
+                <li>Explain political conflict as value trade-offs, not personality-based differences</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: Political Ideology -->
+        <section class="note-section" id="ideology">
+          <h2 class="section-title">Political Ideology & the U.S. Spectrum</h2>
+          
+          <p class="body-copy">
+            <strong>Political ideology</strong> is a consistent set of beliefs about what government should do. Ideology functions like a map: it helps connect positions on specific issues (taxes, abortion, regulation, climate policy) into a broader worldview.
+          </p>
+
+          <p class="body-copy">
+            <strong>Ideology vs. party identification:</strong> Ideology is what you believe; <strong>party identification (partisanship)</strong> is the party you feel attached to. They often overlap but not always. People can be economically conservative and socially liberal, or have weak ideology but strong party loyalty.
+          </p>
+
+          <div class="subsection">
+            <h3>The Main Categories</h3>
+
+            <div class="comparison-grid">
+              <div class="comp-card">
+                <div class="comp-title">Liberal</div>
+                <div class="comp-body">
+                  <strong>Economic:</strong> Stronger government role to address inequality—social welfare, regulation, progressive taxation.<br><br>
+                  <strong>Social:</strong> Support civil liberties protections, open to policy changes expanding rights for marginalized groups, stronger separation of church and state.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Conservative</div>
+                <div class="comp-body">
+                  <strong>Economic:</strong> Limited government role—lower taxes, less regulation, more market reliance. Often associated with <strong>laissez-faire</strong> principles.<br><br>
+                  <strong>Social:</strong> Emphasize tradition and social order. <strong>Social conservatives</strong> may support government involvement in social/moral issues while opposing federal economic regulation.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Moderate / Independent</div>
+                <div class="comp-body">
+                  Hold a mix of liberal and conservative views, prioritize compromise, or lean on "common sense" more than philosophical consistency. Many Americans don't fit neatly into one coherent ideological label.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Dimensions of Ideology</h3>
+            
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Economic Policy Dimension</div>
+                <div class="term-card-body">
+                  Taxes and spending, regulation of business, labor policy, social welfare programs. Liberals tend to support more government intervention; conservatives prefer market solutions.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Social Policy Dimension</div>
+                <div class="term-card-body">
+                  Civil rights and liberties, family/religion/morality questions, criminal justice, immigration, national identity. Positions here can cross-cut economic ideology, creating "economically conservative but socially liberal" voters and vice versa.
+                </div>
+              </div>
+            </div>
+
+            <p class="body-copy">
+              <strong>Ideological consistency</strong> means your views align across issues in a predictable pattern. People who are strongly ideological tend to be more politically active. Consistency also changes campaign incentives: candidates appeal to ideologically intense party members in <strong>primaries</strong>, but adopt more moderate messaging in <strong>general elections</strong>.
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Classify beliefs as liberal, conservative, or moderate based on issue positions</li>
+                <li>Explain how ideology influences voting behavior or partisan alignment</li>
+                <li>Don't confuse ideology with party identification—they correlate but aren't identical</li>
+                <li>Don't assume all Americans fit neatly into one label with consistent views</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: Policy Debates -->
+        <section class="note-section" id="policy">
+          <h2 class="section-title">Ideologies, Framing & Public Policy Debates</h2>
+          
+          <p class="body-copy">
+            Ideology becomes politically powerful when it turns into <strong>policy preferences</strong>. Many U.S. debates are disagreements about: (1) what the problem is, (2) whether government should be involved, and (3) which level of government should act.
+          </p>
+
+          <div class="subsection">
+            <h3>Limited vs. Active Government</h3>
+
+            <div class="comparison-grid">
+              <div class="comp-card">
+                <div class="comp-title">Limited Government</div>
+                <div class="comp-body">
+                  Government power threatens liberty. Markets and private institutions solve problems more efficiently. Decentralization (state/local control) fits diverse communities better.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Active Government</div>
+                <div class="comp-body">
+                  Markets can produce inequality and leave needs unmet. Collective problems (pollution, public health, infrastructure) require coordinated solutions. Government can protect rights and expand opportunity.
+                </div>
+              </div>
+            </div>
+
+            <p class="body-copy">
+              This is usually a disagreement about which risk is greater: government overreach versus leaving problems to private forces.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Common Policy Arenas</h3>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Economic Policy</div>
+                <div class="term-card-body">
+                  <strong>Redistribution:</strong> Using taxes/spending to reduce inequality.<br>
+                  <strong>Regulation:</strong> Rules for businesses to protect workers, consumers, environment.<br>
+                  Liberals argue these protect people from unfair outcomes; conservatives argue high taxes and heavy regulation reduce growth and innovation.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Social Policy</div>
+                <div class="term-card-body">
+                  Involves meaning of freedom and boundaries of rights. Whether public safety justifies restrictions; how rights should be expanded (laws, court decisions, amendments). Both sides claim "liberty" but stress different aspects—freedom from government interference vs. freedom from discrimination.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Federalism: Which Level Acts?</div>
+                <div class="term-card-body">
+                  Supporters of decentralization: states can tailor policies to local values.<br>
+                  Supporters of national standards: rights and services shouldn't depend on where you live.<br>
+                  People may agree on goals but disagree on implementation level.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Framing: How Ideology Shapes Persuasion</h3>
+            
+            <p class="body-copy">
+              <strong>Framing</strong> is presenting an issue to influence how people think about it. Political actors frame policies using values and emotionally loaded language.
+            </p>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Example Frames</div>
+                <div class="term-card-body">
+                  "Tax relief" frames taxes as a burden.<br>
+                  "Social safety net" frames welfare as protection.<br>
+                  "Pro-life" vs "pro-choice" emphasizes different moral priorities.<br><br>
+                  Stricter emissions rules: "protect public health" (equality theme) vs. "costly regulation limiting choice" (liberty theme).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Explain how a core value supports a particular policy argument</li>
+                <li>Analyze competing frames in passages and connect them to ideology</li>
+                <li>Don't ignore the "level of government" question (federal vs. state)</li>
+                <li>Recognize political language is strategic framing, not neutral</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: Political Socialization -->
+        <section class="note-section" id="socialization">
+          <h2 class="section-title">Political Socialization: Where Beliefs Come From</h2>
+          
+          <p class="body-copy">
+            <strong>Political socialization</strong> is the process by which people form political attitudes, values, and beliefs over time. People aren't born with views about taxes or the Supreme Court—they develop them through experiences and social influences.
+          </p>
+
+          <div class="subsection">
+            <h3>Major Agents of Political Socialization</h3>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Family</div>
+                <div class="term-card-body">
+                  Often the strongest early influence. Many people identify with the same party as their parents. Families transmit political interest and moral/ethical values. Not determinism—people can change—but family sets an early default.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Schools</div>
+                <div class="term-card-body">
+                  Teach civic norms (how government works, importance of voting, what rights mean). Can raise internal efficacy by making politics feel understandable.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Peers & Social Groups</div>
+                <div class="term-card-body">
+                  Shape which opinions feel socially acceptable. People often align with group norms to maintain relationships and identity.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Religion & Religious Institutions</div>
+                <div class="term-card-body">
+                  Shape moral values and community priorities through teachings, social networks, and identity.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Mass Media</div>
+                <div class="term-card-body">
+                  Traditional news, social media, podcasts, influencers. Influences what issues people think are important and what "facts" they encounter. Can increase knowledge but also intensify polarization through selective exposure and information bubbles.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Location & Community Context</div>
+                <div class="term-card-body">
+                  Rural, suburban, urban environments shape political experiences through local economy, cultural norms, diversity, policy needs. Rural areas on average tend toward more socially conservative environments; large cities often more liberal (with substantial regional variation).
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Higher Education</div>
+                <div class="term-card-body">
+                  Can cause large shifts by changing social networks, civic skills, and exposure to new ideas.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Political Events</div>
+                <div class="term-card-body">
+                  Wars, economic crises, major social movements can leave lasting impressions, especially on people in formative years.
+                </div>
+              </div>
+            </div>
+
+            <p class="body-copy">
+              Socialization isn't only learning opinions—it's learning what politics <em>means</em>, whether government is trustworthy, and whether participation is worthwhile.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Life-Cycle vs. Generational Effects</h3>
+
+            <div class="comparison-grid">
+              <div class="comp-card">
+                <div class="comp-title">Life-Cycle Effects</div>
+                <div class="comp-body">
+                  Changes that occur as people age and circumstances change (career, taxes, home ownership, parenthood).
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Generational (Cohort) Effects</div>
+                <div class="comp-body">
+                  People who come of age during the same period share lasting impressions. Example: cohort shaped by major downturn retaining stronger views about government's economic role.
+                </div>
+              </div>
+            </div>
+
+            <p class="body-copy">
+              These are often confused; you need evidence to claim one rather than the other.
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Identify which agent best explains a behavior or belief in scenarios</li>
+                <li>Explain how media environment changes could influence polarization/participation</li>
+                <li>Don't claim socialization is only "parents telling you what to think"—it's broader and ongoing</li>
+                <li>Don't confuse life-cycle change with generational replacement without explanation</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: Demographics -->
+        <section class="note-section" id="demographics">
+          <h2 class="section-title">Demographics, Group Identity & Cross-Pressures</h2>
+          
+          <p class="body-copy">
+            Demographic patterns in AP Gov are about <em>probabilities</em>, not stereotypes. Parties build coalitions by appealing to groups with shared interests, identities, or policy priorities. Unequal participation across groups can produce unequal responsiveness.
+          </p>
+
+          <div class="subsection">
+            <h3>How Demographics Connect to Beliefs</h3>
+            
+            <p class="body-copy">
+              Demographics influence beliefs through material interests (wages, healthcare costs), social identity (recognition and protection from discrimination), geography, and group-based socialization networks. <strong>Correlations are not destiny</strong>—people with similar backgrounds can differ due to ideology, religion, region, education, personal experience.
+            </p>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Age</div>
+                <div class="term-card-body">
+                  Correlates with issue salience. Younger voters: education costs, housing affordability. Older voters: retirement security. Changes can reflect life-cycle effects or generational effects.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Race & Ethnicity</div>
+                <div class="term-card-body">
+                  Can shape priorities through historical experience and policy impacts. Many racial/ethnic minority groups face lower average incomes and different institutional experiences, correlating with different party coalitions—but important variation by region, income, religion, immigration history.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Gender</div>
+                <div class="term-card-body">
+                  On average, women tend to express more liberal preferences on some social and safety-net issues, though the gap varies by issue and time period.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Education</div>
+                <div class="term-card-body">
+                  Often correlates with political engagement (turnout, knowledge) and shapes media consumption and networks.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Income & Class</div>
+                <div class="term-card-body">
+                  Can influence views on taxation and social programs, but not simply "high income conservative, low income liberal." Some higher-income Americans support liberal social goals while preferring fiscal conservatism; some lower-income Americans lean conservative except on specific economic supports.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Religion</div>
+                <div class="term-card-body">
+                  Shapes views on social issues and community responsibility. Religious networks mobilize participation. Broad patterns: Jewish Americans tend relatively liberal; evangelical Protestants tend more conservative; mainline Protestants more moderate; Catholics include both economic liberal tendencies and conservative social views. Generalizations, not rules.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Region & Community Type</div>
+                <div class="term-card-body">
+                  Urban/suburban/rural affects attitudes through economic structure, cultural norms, policy needs, density, diversity exposure. Common patterns: East Coast more liberal, South more conservative, West Coast polarized/mixed. Cities lean liberal; rural/small towns lean conservative.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Intersectionality</h3>
+            
+            <p class="body-copy">
+              <strong>Intersectionality</strong> (analytically) means political behavior is shaped by overlapping identities (race + religion + region + class, etc.). That overlap explains why predicting individual beliefs from one demographic trait is risky.
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Interpret tables/graphs showing opinion differences by demographic group</li>
+                <li>Explain why demographic trends might influence party coalitions or policy agendas</li>
+                <li>Don't treat demographic correlations as absolute rules about individuals</li>
+                <li>Don't ignore geography as a powerful factor interacting with race, class, culture</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6: Polarization -->
+        <section class="note-section" id="polarization">
+          <h2 class="section-title">Changes in Ideology Over Time: Polarization, Sorting, Realignment</h2>
+          
+          <p class="body-copy">
+            Political beliefs and party coalitions change over time. The meaning of "liberal" and "conservative," the groups within each party, and the level of polarization have all shifted.
+          </p>
+
+          <div class="subsection">
+            <h3>Key Concepts</h3>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Ideological Polarization</div>
+                <div class="term-card-body">
+                  When policy views (among public or elites) spread farther apart.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Partisan Polarization</div>
+                <div class="term-card-body">
+                  When Democrats and Republicans in government (and often voters) are more sharply divided with less overlap. Can increase even if many voters remain mixed, because party leaders and primary electorates pull parties toward clearer ideological brands.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Ideological Sorting</div>
+                <div class="term-card-body">
+                  Liberals increasingly identify as Democrats; conservatives increasingly identify as Republicans. Strengthens party labels as signals of worldview. Can intensify conflict. Doesn't necessarily mean everyone became more extreme—can reflect people "matching" party label to prior leanings or responding to parties changing positions.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Political Realignment</div>
+                <div class="term-card-body">
+                  Durable shift in party coalitions (groups switching party support), changing electoral map and policy priorities.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Dealignment</div>
+                <div class="term-card-body">
+                  Weakening party attachments—more independents, historically more split-ticket voting, reduced party loyalty.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Why Polarization & Sorting Can Increase</h3>
+            
+            <p class="body-copy">
+              Several mechanisms: media fragmentation and selective exposure, geographic sorting (people clustering into like-minded communities), party strategies emphasizing contrast, primary elections empowering ideologically intense voters. The exam rewards clear mechanism + evidence more than memorizing a single "magic cause."
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Describe trends in ideology or party ID using provided graphs</li>
+                <li>Explain causes of polarization/sorting using mechanisms (primaries, media, geography)</li>
+                <li>Distinguish between changes among voters and changes among political elites</li>
+                <li>Don't claim realignment without evidence of durable coalition shift</li>
+                <li>Don't confuse sorting (party-ideology matching) with extremism (moving to extremes)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7: Public Opinion & Polling -->
+        <section class="note-section" id="polling">
+          <h2 class="section-title">Public Opinion & Polling</h2>
+          
+          <p class="body-copy">
+            <strong>Public opinion</strong> is the collection of individual attitudes about government and politics. Not uniform—the <strong>general public</strong> tends to care more about issues directly affecting daily life. An issue doesn't need majority interest to become politically important.
+          </p>
+
+          <div class="subsection">
+            <h3>Characteristics of Public Opinion</h3>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Salience</div>
+                <div class="term-card-body">
+                  How important an issue is to a person or group.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Intensity</div>
+                <div class="term-card-body">
+                  How strongly people feel about an issue.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Stability</div>
+                <div class="term-card-body">
+                  How much public opinion changes (or doesn't) over time.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Issue Publics</div>
+                <div class="term-card-body">
+                  Smaller groups to whom an issue is highly important (guns, abortion, climate, etc.). Even if most people aren't deeply engaged, issue publics can influence politics through intense attention, activism, and voting.
+                </div>
+              </div>
+            </div>
+
+            <p class="body-copy">
+              An issue can have low salience for the general public but high intensity for an issue public—which often matters more for participation and pressure on officials.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Measuring Public Opinion</h3>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Elections</div>
+                <div class="term-card-body">
+                  Indirect measure—hard to translate into clear reading on any single policy because voters choose among candidates representing bundles of issues.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Referendum</div>
+                <div class="term-card-body">
+                  Policy submitted to popular vote to accept or reject legislation. Can measure opinion on a specific issue.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Public Opinion Polls</div>
+                <div class="term-card-body">
+                  Most frequent method. Estimate what a larger <strong>population</strong> thinks by surveying a smaller <strong>sample</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Random Sampling & Representativeness</h3>
+            
+            <p class="body-copy">
+              A poll is useful when the sample is <strong>representative</strong> of the population in relevant ways. <strong>Random sampling</strong> gives each person equal chance of selection, reducing systematic bias.
+            </p>
+
+            <p class="body-copy">
+              <strong>Stratified random sampling:</strong> Population divided into subgroups (strata), then sampled to reflect key demographics. Pollsters may <strong>weight</strong> results so final sample better matches population.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Types of Polls</h3>
+
+            <div class="comparison-grid">
+              <div class="comp-card">
+                <div class="comp-title">Benchmark Polls</div>
+                <div class="comp-body">
+                  Conducted when candidate initially announces. Provide baseline data; help campaign evaluate if chances improve over time.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Tracking Polls</div>
+                <div class="comp-body">
+                  Repeated over time with similar questions to detect shifts in opinion. Some use same sample; others keep same method but refresh respondents.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Entrance Polls</div>
+                <div class="comp-body">
+                  Collected on Election Day as voters go to cast their vote.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Exit Polls</div>
+                <div class="comp-body">
+                  Survey voters right after they vote. Analyze who voted for whom and why.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Common Polling Errors & Biases</h3>
+
+            <div class="term-list">
+              <div class="term-card">
+                <div class="term-card-title">Sampling Bias</div>
+                <div class="term-card-body">
+                  Sample not representative (e.g., only surveying landline users under-represents younger voters).
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Nonresponse Bias</div>
+                <div class="term-card-body">
+                  Certain kinds of people refuse to respond at different rates, and their views differ from responders.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Question Wording & Order</div>
+                <div class="term-card-body">
+                  Wording can push emotional reactions. Earlier questions can prime later answers.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Social Desirability Bias</div>
+                <div class="term-card-body">
+                  People give answers they think sound acceptable rather than what they believe.
+                </div>
+              </div>
+
+              <div class="term-card">
+                <div class="term-card-title">Push Polling</div>
+                <div class="term-card-body">
+                  Persuasion disguised as measurement. Uses leading or misleading questions to influence respondents, not gather data.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Sampling Error (Margin of Error)</h3>
+            
+            <p class="body-copy">
+              <strong>Sampling error</strong> describes how wrong poll results may be due to chance variation. Polls report a margin of error:
+            </p>
+
+            <p class="body-copy" style="text-align: center; font-size: 18px; margin: 20px 0;">
+              True support ≈ Poll estimate ± margin of error
+            </p>
+
+            <p class="body-copy">
+              Example: Poll reports 60% support with 4 percentage point margin → true support could plausibly be 56%–64%.
+            </p>
+
+            <p class="body-copy">
+              More respondents tends to lower sampling error, but sample size alone doesn't guarantee accuracy. <strong>Representativeness and bias matter more than raw numbers.</strong>
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Identify flaws in poll design (sampling, wording, nonresponse, push polling)</li>
+                <li>Interpret polling data in graphs and explain what conclusion is justified</li>
+                <li>Compare two polls and explain why results differ</li>
+                <li>Don't assume larger sample automatically means unbiased poll—selection matters more</li>
+                <li>Don't treat election outcomes as clean measure of opinion on single issue</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8: Media -->
+        <section class="note-section" id="media">
+          <h2 class="section-title">Mass Media & Framing</h2>
+          
+          <p class="body-copy">
+            Mass media is both a socialization agent and key influence on what the public pays attention to. Includes TV, radio, internet news, newspapers, magazines, websites, blogs, social media, and political podcasts.
+          </p>
+
+          <div class="subsection">
+            <h3>Agenda-Setting & Visibility</h3>
+            
+            <p class="body-copy">
+              Media can <strong>set the public agenda</strong> by choosing which stories to cover and ignore. Provides exposure to government and politicians; often encourages audiences to question government motives.
+            </p>
+
+            <p class="body-copy">
+              Media influence has grown over time, but effects aren't automatic. Most likely to affect opinion when opinion is volatile or when coverage is extensive and mostly positive/negative. In many cases effects are limited because media covers many stories simultaneously and Americans choose sources reinforcing existing beliefs.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Social Media & Grassroots Politics</h3>
+            
+            <p class="body-copy">
+              Social media has become a tool for grassroots political movements by lowering costs of organizing, fundraising, and messaging. Can increase participation and speed mobilization, but also reinforce echo chambers and misinformation.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Media Bias Debates</h3>
+            
+            <p class="body-copy">
+              Common debate: are news organizations ideologically biased? One perspective: less ideological bias in mainstream reporting than critics claim—many news organizations aim for objectivity to retain consumers across the spectrum. Complete objectivity is impossible.
+            </p>
+
+            <p class="body-copy">
+              Bias can emerge from structural pressures: simple stories are faster/less boring, limited time/space (especially TV) leads to short sound bites, choices about which sources to use shape framing.
+            </p>
+
+            <p class="body-copy">
+              Reporters relying on politicians/officials for information must balance access with independence. Journalists often more skeptical about politicians' motives than many Americans are.
+            </p>
+
+            <p class="body-copy">
+              Politicians try to influence coverage through planned events: photo ops, press releases, scheduling appearances based on audience demographics.
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Explain how agenda-setting changes what issues people consider important</li>
+                <li>Apply media effects (selective exposure, extensive coverage) to predict when media might shift opinion</li>
+                <li>Connect social media to grassroots mobilization or polarization</li>
+                <li>Don't claim media "controls" opinion in all cases—explain <em>when</em> effects are likely</li>
+                <li>Treat "bias" as structure, sourcing, and incentives, not only ideological intent</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 9: Linkage & Responsiveness -->
+        <section class="note-section" id="linkage">
+          <h2 class="section-title">From Public Opinion to Policy: Linkage & Responsiveness</h2>
+          
+          <p class="body-copy">
+            In theory, democratic government should respond to the public. In practice, responsiveness is complicated by institutions, competing interests, and unequal participation.
+          </p>
+
+          <div class="subsection">
+            <h3>Linkage Institutions</h3>
+            
+            <p class="body-copy">
+              <strong>Linkage institutions</strong> connect people to government: political parties, elections, interest groups, and media. Public opinion rarely becomes policy directly—it travels through these channels and influences platforms, lobbying, candidate strategies, and which issues remain visible.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Elections as Responsiveness Mechanism</h3>
+            
+            <p class="body-copy">
+              Elections translate public preferences into government personnel. Officials anticipating elections may adjust positions to match voters. However, elections are blunt instruments: voters choose among bundles of issues, turnout is unequal, district design and Electoral College complicate relationship between votes and outcomes.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Models of Representation</h3>
+
+            <div class="comparison-grid">
+              <div class="comp-card">
+                <div class="comp-title">Delegate Model</div>
+                <div class="comp-body">
+                  Representatives should follow constituent preferences closely.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Trustee Model</div>
+                <div class="comp-body">
+                  Representatives should use their judgment, especially when issues are complex or constituents are uninformed.
+                </div>
+              </div>
+
+              <div class="comp-card">
+                <div class="comp-title">Politico</div>
+                <div class="comp-body">
+                  Many officials shift between delegate and trustee styles depending on the issue and political risk.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3>Mandate Theory</h3>
+            
+            <p class="body-copy">
+              <strong>Mandate theory</strong> argues a winning candidate has public endorsement to carry out their platform. Mandates often claimed but hard to prove because voters may choose for party, personality, or one salient issue. Victory margins don't show agreement on each policy. Split control signals mixed preferences.
+            </p>
+          </div>
+
+          <div class="subsection">
+            <h3>Why Popular Policies Can Fail</h3>
+            
+            <p class="body-copy">
+              Even when a policy is popular, it may not pass because of:
+            </p>
+
+            <ul style="list-style: none; padding-left: 20px; font-family: 'Crimson Pro', serif; font-size: 16px; line-height: 1.75; color: var(--text);">
+              <li style="position: relative; margin-bottom: 8px; padding-left: 20px;">
+                <span style="position: absolute; left: 0; color: var(--orange);">→</span>
+                Multiple veto points from separation of powers and checks/balances
+              </li>
+              <li style="position: relative; margin-bottom: 8px; padding-left: 20px;">
+                <span style="position: absolute; left: 0; color: var(--orange);">→</span>
+                Senate rules (including filibuster dynamics)
+              </li>
+              <li style="position: relative; margin-bottom: 8px; padding-left: 20px;">
+                <span style="position: absolute; left: 0; color: var(--orange);">→</span>
+                Party polarization
+              </li>
+              <li style="position: relative; margin-bottom: 8px; padding-left: 20px;">
+                <span style="position: absolute; left: 0; color: var(--orange);">→</span>
+                Strong interest group opposition
+              </li>
+              <li style="position: relative; padding-left: 20px;">
+                <span style="position: absolute; left: 0; color: var(--orange);">→</span>
+                Low salience (support exists but not intense enough to mobilize)
+              </li>
+            </ul>
+          </div>
+
+          <div class="subsection">
+            <h3>Policy Feedback</h3>
+            
+            <p class="body-copy">
+              <strong>Policy feedback</strong> means policy can reshape public opinion and participation. Visible, widely used programs create beneficiaries who become more supportive and politically active to protect them. Complex or hidden policies may not be recognized as government action, reducing accountability.
+            </p>
+
+            <p class="body-copy">
+              This complicates the simple story that "public opinion causes policy"—policy can also shape public opinion by changing incentives, expectations, and group organization.
+            </p>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Exam Focus</div>
+            <div class="callout-body">
+              <ul>
+                <li>Explain how opinion influences policy through elections, parties, interest groups, media</li>
+                <li>Apply delegate/trustee/politico models to predict official behavior</li>
+                <li>Analyze why popular policy might fail in system with many veto points</li>
+                <li>Use salience and intensity to explain why issue publics can outweigh lukewarm majority</li>
+                <li>Don't treat opinion as direct instruction—it's filtered through institutions</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- GLOSSARY TAB -->
+    <div class="tab-content" data-tab="glossary">
+      <div class="header-area">
+        <div class="mini-label">Quick Reference</div>
+        <h1 class="page-title">Glossary</h1>
+        <p class="page-subtitle">Key terms and concepts from Unit 4</p>
+      </div>
+      <div class="glossary-filter-wrap">
+        <input type="text" id="glossaryFilter" placeholder="Filter terms..." />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </div>
+
+    <!-- FLASHCARDS TAB -->
+    <div class="tab-content" data-tab="flash">
+      <div class="header-area">
+        <div class="mini-label">Active Recall</div>
+        <h1 class="page-title">Flashcards</h1>
+        <p class="page-subtitle">Click any card to flip and reveal the definition</p>
+      </div>
+      <div class="flash-grid" id="flashGrid"></div>
+    </div>
+  </main>
+
+  <!-- MODALS -->
+  <div class="modal" id="quizModal">
+    <div class="modal-inner">
+      <button class="modal-close" data-close="quizModal" type="button">✕</button>
+      <h2 class="modal-title">Practice Quiz</h2>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="essayModal">
+    <div class="modal-inner">
+      <button class="modal-close" data-close="essayModal" type="button">✕</button>
+      <h2 class="modal-title">Essay Outlines</h2>
+      <div class="essay-topics" id="essayTopics"></div>
+      <div class="essay-outline" id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const pinBtn = document.getElementById("pinBtn");
+    const nav = document.getElementById("nav");
+    const main = document.getElementById("main");
+    const cursor = document.getElementById("cursor");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+
+    const navItems = [
+      { icon: "📖", label: "Notes", tab: "notes" },
+      { icon: "📚", label: "Glossary", tab: "glossary" },
+      { icon: "🃏", label: "Flashcards", tab: "flash" },
+    ];
+
+    const glossaryTerms = [
+      { tab: "notes", term: "Political Culture", def: "Set of shared values, beliefs, and expectations Americans hold about government and citizenship. Not a party platform or law—the underlying 'common sense' used when judging what government should do." },
+      { tab: "notes", term: "Liberty", def: "Freedom from excessive government interference. Appears in debates about free speech, gun rights, privacy, religious freedom, economic regulation." },
+      { tab: "notes", term: "Equality", def: "Belief people should have equal standing and opportunity. Can mean equality before the law, equality of opportunity, or equality of outcomes." },
+      { tab: "notes", term: "Individualism", def: "Belief that individuals are responsible for their own well-being and should make their own choices. Often supports free markets and limited government." },
+      { tab: "notes", term: "Political Efficacy", def: "Belief that your participation matters. Internal efficacy: confidence in your ability to participate. External efficacy: belief government will respond to public input." },
+      { tab: "notes", term: "Trust in Government", def: "General belief that government will do the right thing or act competently and fairly. Broader than approval of one leader." },
+      { tab: "notes", term: "Legitimacy", def: "Belief that government has the right to rule. Even when people dislike outcomes, legitimacy keeps them accepting lawful processes." },
+      { tab: "notes", term: "Political Ideology", def: "Consistent set of beliefs about what government should do. Functions like a map connecting positions on specific issues into a broader worldview." },
+      { tab: "notes", term: "Party Identification", def: "The political party you feel attached to. Often overlaps with ideology but not always. Can have weak ideology but strong party loyalty." },
+      { tab: "notes", term: "Liberal", def: "Generally support stronger government role in economy (social welfare, regulation, progressive taxation). Support civil liberties protections and policy changes expanding rights for marginalized groups." },
+      { tab: "notes", term: "Conservative", def: "Generally support limited government role in economy (lower taxes, less regulation, market reliance). Emphasize tradition and social order. Economic thought often associated with laissez-faire principles." },
+      { tab: "notes", term: "Moderate / Independent", def: "Hold a mix of liberal and conservative views, prioritize compromise, or lean on 'common sense' more than philosophical consistency." },
+      { tab: "notes", term: "Laissez-Faire", def: "Economic philosophy of minimal government interference in markets. Closely associated with conservative economic ideology." },
+      { tab: "notes", term: "Framing", def: "Presenting an issue in a way that influences how people think about it. Political actors frame policies using values and emotionally loaded language." },
+      { tab: "notes", term: "Political Socialization", def: "Process by which people form political attitudes, values, and beliefs over time through experiences and social influences." },
+      { tab: "notes", term: "Life-Cycle Effects", def: "Political changes that occur as people age and circumstances change (career, taxes, home ownership, parenthood)." },
+      { tab: "notes", term: "Generational (Cohort) Effects", def: "People who come of age during the same period share lasting impressions from major events (wars, economic crises, social movements)." },
+      { tab: "notes", term: "Intersectionality", def: "Political behavior shaped by overlapping identities (race + religion + region + class, etc.). Explains why predicting individual beliefs from one demographic trait is risky." },
+      { tab: "notes", term: "Ideological Polarization", def: "When policy views (among public or elites) spread farther apart." },
+      { tab: "notes", term: "Partisan Polarization", def: "When Democrats and Republicans in government (and often voters) are more sharply divided with less overlap." },
+      { tab: "notes", term: "Ideological Sorting", def: "Liberals increasingly identify as Democrats; conservatives increasingly identify as Republicans. Strengthens party labels as signals of worldview." },
+      { tab: "notes", term: "Political Realignment", def: "Durable shift in party coalitions (groups switching party support), changing electoral map and policy priorities." },
+      { tab: "notes", term: "Dealignment", def: "Weakening party attachments—more independents, more split-ticket voting historically, reduced party loyalty." },
+      { tab: "notes", term: "Public Opinion", def: "Collection of individual attitudes about government and politics. Not uniform—the general public tends to care more about issues directly affecting daily life." },
+      { tab: "notes", term: "Salience", def: "How important an issue is to a person or group." },
+      { tab: "notes", term: "Intensity", def: "How strongly people feel about an issue." },
+      { tab: "notes", term: "Issue Publics", def: "Smaller groups to whom an issue is highly important (guns, abortion, climate, etc.). Can influence politics through intense attention, activism, voting even when most people aren't deeply engaged." },
+      { tab: "notes", term: "Random Sampling", def: "Gives each person in target population equal chance of selection, reducing systematic bias in polling." },
+      { tab: "notes", term: "Stratified Random Sampling", def: "Population divided into subgroups (strata), then sampled to reflect key demographics. Pollsters may weight results to better match population." },
+      { tab: "notes", term: "Sampling Bias", def: "Sample not representative of population (e.g., only surveying landline users under-represents younger voters)." },
+      { tab: "notes", term: "Nonresponse Bias", def: "Certain kinds of people refuse to respond at different rates, and their views differ from responders." },
+      { tab: "notes", term: "Push Polling", def: "Persuasion disguised as measurement. Uses leading or misleading questions to influence respondents, not gather data." },
+      { tab: "notes", term: "Sampling Error (Margin of Error)", def: "How wrong poll results may be due to chance variation. Example: 60% support with 4-point margin means true support is likely 56–64%." },
+      { tab: "notes", term: "Agenda-Setting", def: "Media can set the public agenda by choosing which stories to cover and ignore. Provides exposure to government and politicians." },
+      { tab: "notes", term: "Linkage Institutions", def: "Connect people to government: political parties, elections, interest groups, and media. Public opinion travels through these channels to influence policy." },
+      { tab: "notes", term: "Delegate Model", def: "Representatives should follow constituent preferences closely." },
+      { tab: "notes", term: "Trustee Model", def: "Representatives should use their judgment, especially when issues are complex or constituents are uninformed." },
+      { tab: "notes", term: "Politico", def: "Officials who shift between delegate and trustee styles depending on the issue and political risk." },
+      { tab: "notes", term: "Mandate Theory", def: "Winning candidate has public endorsement to carry out their platform. Often claimed but hard to prove—voters may choose for party, personality, or one salient issue." },
+      { tab: "notes", term: "Policy Feedback", def: "Policy can reshape public opinion and participation. Visible programs create beneficiaries who become more supportive and politically active. Complex policies may not be recognized as government action." },
+    ];
+
+    const flashcards = [
+      { front: "Political Culture", back: "Set of shared values, beliefs, and expectations Americans hold about government and citizenship." },
+      { front: "Liberty vs. Equality Trade-off", back: "Policies increasing equality (redistributive programs) may require higher taxes/regulation, which some see as reducing liberty. Policies maximizing liberty (fewer regulations) may increase inequality if advantages compound." },
+      { front: "Political Efficacy", back: "Belief that your participation matters. Internal: confidence in your ability to participate. External: belief government will respond to input." },
+      { front: "Political Ideology", back: "Consistent set of beliefs about what government should do. Functions like a map connecting issue positions into a broader worldview." },
+      { front: "Liberal Economic Views", back: "Support stronger government role in economy to address inequality: social welfare programs, regulation of business, progressive taxation." },
+      { front: "Conservative Economic Views", back: "Support limited government role in economy: lower taxes, less regulation, more market reliance. Associated with laissez-faire principles." },
+      { front: "Social Conservatives", back: "May support government involvement in social/moral issues even while opposing most federal economic regulations." },
+      { front: "Ideological Consistency", back: "Views align across issues in predictable pattern. Strongly ideological people tend to be more politically active." },
+      { front: "Framing", back: "Presenting an issue to influence how people think about it. Example: 'tax relief' frames taxes as burden; 'social safety net' frames welfare as protection." },
+      { front: "Political Socialization", back: "Process by which people form political attitudes, values, beliefs over time through experiences and social influences." },
+      { front: "Major Socialization Agents", back: "Family, schools, peers/social groups, religion, mass media, location/community, higher education, political events." },
+      { front: "Life-Cycle vs. Generational Effects", back: "Life-cycle: changes as people age (career, taxes, parenthood). Generational: people coming of age during same period share lasting impressions from major events." },
+      { front: "Intersectionality (Analytical)", back: "Political behavior shaped by overlapping identities (race + religion + region + class, etc.). Why predicting individual beliefs from one trait is risky." },
+      { front: "Ideological Sorting", back: "Liberals increasingly identify as Democrats; conservatives as Republicans. Strengthens party labels as worldview signals. Can intensify conflict." },
+      { front: "Partisan Polarization", back: "Democrats and Republicans in government (and often voters) more sharply divided with less overlap. Can increase even if many voters remain mixed." },
+      { front: "Political Realignment", back: "Durable shift in party coalitions (groups switching party support), changing electoral map and policy priorities." },
+      { front: "Issue Publics", back: "Smaller groups to whom an issue is highly important. Can influence politics through intense attention, activism, voting even when most aren't deeply engaged." },
+      { front: "Random Sampling", back: "Gives each person in target population equal chance of selection, reducing systematic bias in polling." },
+      { front: "Sampling Bias", back: "Sample not representative of population. Example: only surveying landline users under-represents younger voters." },
+      { front: "Push Polling", back: "Persuasion disguised as measurement. Uses leading/misleading questions to influence respondents, not gather data." },
+      { front: "Sampling Error (Margin of Error)", back: "How wrong poll results may be due to chance variation. Example: 60% ± 4 points means true support likely 56–64%." },
+      { front: "Agenda-Setting", back: "Media sets public agenda by choosing which stories to cover and ignore. Most likely to affect opinion when coverage is extensive and mostly positive/negative." },
+      { front: "Linkage Institutions", back: "Connect people to government: political parties, elections, interest groups, media. Public opinion travels through these to influence policy." },
+      { front: "Delegate vs. Trustee", back: "Delegate: follow constituent preferences closely. Trustee: use judgment, especially when issues are complex or constituents uninformed." },
+      { front: "Mandate Theory", back: "Winning candidate has public endorsement for their platform. Often claimed but hard to prove—voters may choose for party, personality, or one issue." },
+      { front: "Policy Feedback", back: "Policy can reshape opinion and participation. Visible programs create beneficiaries who become supportive/active. Complex policies may not be recognized as government action." },
+    ];
+
+    const quizQuestions = [
+      {
+        question: "A poll shows 55% support for a policy with a margin of error of ±4%. What is the most accurate conclusion?",
+        options: [
+          "The policy has majority support",
+          "True support could be as low as 51% or as high as 59%",
+          "The sample was too small",
+          "The poll is biased"
+        ],
+        correct: 1,
+        explanation: "Margin of error means true support ≈ 55% ± 4%, so it could range from 51% to 59%. We can't definitively say it has majority support since it could be 51%."
+      },
+      {
+        question: "Which agent of political socialization is typically the strongest early influence on partisan identification?",
+        options: [
+          "Schools",
+          "Media",
+          "Family",
+          "Peers"
+        ],
+        correct: 2,
+        explanation: "Family is often the strongest early influence. Many people identify with the same party as their parents, though people can and do change."
+      },
+      {
+        question: "A voter supports universal healthcare but opposes gun control. This best illustrates:",
+        options: [
+          "Ideological consistency",
+          "Cross-cutting cleavages or mixed ideology",
+          "Political apathy",
+          "Partisan polarization"
+        ],
+        correct: 1,
+        explanation: "This shows cross-cutting cleavages or mixed ideology—liberal on healthcare, conservative on guns. Not everyone fits neatly into one ideological category."
+      },
+      {
+        question: "Which polling error occurs when certain types of selected people refuse to respond at different rates?",
+        options: [
+          "Sampling bias",
+          "Nonresponse bias",
+          "Question wording bias",
+          "Social desirability bias"
+        ],
+        correct: 1,
+        explanation: "Nonresponse bias occurs when certain kinds of people refuse to respond at different rates, and their views differ from responders."
+      },
+      {
+        question: "A person believes their vote won't make a difference and government won't respond to citizens. This reflects low:",
+        options: [
+          "Internal efficacy only",
+          "External efficacy only",
+          "Both internal and external efficacy",
+          "Political legitimacy"
+        ],
+        correct: 2,
+        explanation: "'My vote won't make a difference' = low internal efficacy (doubt about own ability). 'Government won't respond' = low external efficacy (doubt government will listen)."
+      },
+      {
+        question: "Framing a tax increase as 'revenue enhancement' versus 'tax burden' is an example of:",
+        options: [
+          "Agenda-setting",
+          "Political framing",
+          "Push polling",
+          "Sampling bias"
+        ],
+        correct: 1,
+        explanation: "This is political framing—presenting the same policy in different ways to influence how people think about it by highlighting different values."
+      },
+      {
+        question: "Liberals increasingly identifying as Democrats and conservatives as Republicans describes:",
+        options: [
+          "Ideological polarization",
+          "Ideological sorting",
+          "Political realignment",
+          "Dealignment"
+        ],
+        correct: 1,
+        explanation: "Ideological sorting is when people 'match' their party label to their ideology—liberals → Democrats, conservatives → Republicans. Strengthens party as worldview signal."
+      },
+      {
+        question: "A cohort shaped by the Great Depression retaining stronger support for government economic intervention illustrates:",
+        options: [
+          "Life-cycle effects",
+          "Generational (cohort) effects",
+          "Political socialization through media",
+          "Partisan polarization"
+        ],
+        correct: 1,
+        explanation: "Generational (cohort) effects occur when people who come of age during the same period share lasting impressions from major events like the Great Depression."
+      },
+      {
+        question: "Media is MOST likely to affect public opinion when:",
+        options: [
+          "People already have strong opinions",
+          "Coverage is extensive and mostly one-sided (positive or negative)",
+          "The issue has low salience",
+          "Multiple competing stories are covered simultaneously"
+        ],
+        correct: 1,
+        explanation: "Media effects are strongest when coverage is extensive and mostly positive or negative. Effects are limited when people have strong prior opinions or when many stories compete."
+      },
+      {
+        question: "A representative who votes according to constituent preferences on high-salience issues but uses personal judgment on technical matters is acting as a:",
+        options: [
+          "Delegate",
+          "Trustee",
+          "Politico",
+          "Partisan"
+        ],
+        correct: 2,
+        explanation: "A politico shifts between delegate style (following constituents) and trustee style (using judgment) depending on the issue and political risk."
+      }
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Ideology & Policy Preferences",
+        blocks: [
+          ["Claim", "Political ideology shapes policy preferences by providing a consistent framework for evaluating government action."],
+          ["Evidence & Reasoning", "Liberals generally support stronger government role in economy (social welfare, regulation, progressive taxation) because they prioritize equality and believe markets can produce unfair outcomes. Conservatives generally prefer limited government (lower taxes, less regulation) because they prioritize liberty and believe government intervention threatens individual freedom and market efficiency. This explains why the same policy proposal (e.g., stricter emissions rules) can look necessary to one side and threatening to the other—they're applying different value priorities."],
+          ["Connection to Democratic Theory", "This ideological diversity reflects core tensions in American political culture between liberty and equality. The challenge for democratic government is responding to public opinion when the public holds competing value frameworks. Responsiveness becomes complicated by these fundamental disagreements about government's proper role."]
+        ]
+      },
+      {
+        label: "Polling Accuracy & Bias",
+        blocks: [
+          ["Claim", "Even well-designed polls can produce inaccurate results due to sampling bias, nonresponse bias, and question wording."],
+          ["Evidence & Explanation", "Sampling bias occurs when the sample isn't representative (e.g., only surveying landline users under-represents younger voters). Nonresponse bias happens when certain types of people refuse to respond at different rates, and their views differ from responders. Question wording and order can also push emotional reactions or prime answers. A larger sample doesn't automatically mean an unbiased poll—representativeness matters more than raw numbers."],
+          ["Impact on Democracy", "Inaccurate polls can mislead officials about public preferences and distort media coverage by suggesting false consensus or divisions. This affects democratic responsiveness because elected officials may adjust positions based on flawed data. Citizens should evaluate poll methodology (who was surveyed, how questions were worded, margin of error) rather than treating any single poll as 'the truth.'"]
+        ]
+      },
+      {
+        label: "Media & Agenda-Setting",
+        blocks: [
+          ["Claim", "Mass media influences which issues the public considers important through agenda-setting, but effects are limited by selective exposure and competing coverage."],
+          ["Evidence & Mechanism", "Media sets the public agenda by choosing which stories to cover and ignore. Extensive positive or negative coverage is most likely to shift opinion, especially on issues where public opinion is volatile. However, effects are limited because: (1) media covers many stories simultaneously, (2) Americans increasingly choose sources that reinforce existing beliefs (selective exposure), and (3) people with strong prior opinions resist contradictory information."],
+          ["Modern Context", "Social media has amplified both agenda-setting power (stories can go viral quickly) and selective exposure (algorithms create echo chambers). This can increase polarization by reinforcing existing beliefs while also enabling grassroots movements to raise issue salience rapidly through lower-cost organizing and messaging."]
+        ]
+      },
+      {
+        label: "Political Socialization & Participation",
+        blocks: [
+          ["Claim", "Political socialization through family, education, and media shapes both what people believe and whether they participate."],
+          ["Mechanism", "Socialization isn't only learning opinions—it's learning what politics means, whether government is trustworthy, and whether participation is worthwhile. People who learn politics is understandable and responsive develop higher internal and external efficacy, making them more likely to vote or contact officials. People who learn politics is corrupt or pointless may disengage or participate in nontraditional ways (protests, boycotts)."],
+          ["Unequal Participation Consequences", "Unequal socialization across groups (by family political engagement, education quality, media access) contributes to unequal participation. This affects democratic responsiveness: if low-income workers vote at lower rates due to lower efficacy, officials may respond more to highly organized opposition even when policies would benefit the majority. The mechanism is unequal political activity shaped by socialization experiences, not just individual choice."]
+        ]
+      }
+    ];
+
+    function renderNav() {
+      nav.innerHTML = navItems.map((item) => `
+        <button class="nav-btn ${item.tab === 'notes' ? 'active' : ''}" type="button" data-tab="${item.tab}" data-label="${item.label}">
+          <div class="nav-icon">${item.icon}</div>
+          <div class="nav-title">${item.label}</div>
+        </button>
+      `).join("");
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab-content").forEach((el) => el.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach((el) => el.classList.remove("active"));
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
+      const tabContent = document.querySelector(`.tab-content[data-tab="${tabName}"]`);
+      if (tabContent) tabContent.classList.add("active");
+      main.scrollTop = 0;
+    }
+
+    function renderGlossary(filter = "") {
+      const filtered = filter
+        ? glossaryTerms.filter((item) => item.term.toLowerCase().includes(filter.toLowerCase()) || item.def.toLowerCase().includes(filter.toLowerCase()))
+        : glossaryTerms;
+      document.getElementById("glossaryGrid").innerHTML = filtered.map((item) => `
+        <article class="glossary-card" data-target-tab="${item.tab}">
+          <div class="glossary-card-header">
+            <h3 class="glossary-term">${item.term}</h3>
+            <span class="glossary-tag">${item.tab}</span>
+          </div>
+          <p class="glossary-def">${item.def}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map((card) => `
+        <article class="flash-card">
+          <div class="flash-card-inner">
+            <div class="flash-front">
+              <div>
+                <div class="flash-tag">Term</div>
+                <h3>${card.front}</h3>
+              </div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div>
+                <div class="mini-label">Answer</div>
+                <div class="body-copy">${card.back}</div>
+              </div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderEssayTopics() {
+      document.getElementById("essayTopics").innerHTML = essayOutlines.map((outline, index) => `
+        <button class="essay-topic-btn" type="button" data-essay-index="${index}">${outline.label}</button>
+      `).join("");
+      document.getElementById("essayOutline").classList.remove("show");
+      document.getElementById("essayOutline").innerHTML = "";
+    }
+
+    function selectEssay(index) {
+      document.querySelectorAll(".essay-topic-btn").forEach((btn) => {
+        btn.classList.toggle("active", Number(btn.dataset.essayIndex) === index);
+      });
+      const outline = essayOutlines[index];
+      document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) => `
+        <div class="essay-block">
+          <div class="essay-block-label">${label}</div>
+          <div class="essay-block-body">${body}</div>
+        </div>
+      `).join("");
+      document.getElementById("essayOutline").classList.add("show");
+    }
+
+    function renderQuizQuestion() {
+      const quizMount = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prevBest = Number(localStorage.getItem("apgopo_u4_best") || 0);
+        const best = Math.max(prevBest, pct);
+        localStorage.setItem("apgopo_u4_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        quizMount.innerHTML = `
+          <div class="quiz-status">Complete</div>
+          <div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div>
+          <div class="quiz-feedback">Review political culture values, ideology dimensions, polling methodology, and linkage institutions if misses clustered around these topics.</div>
+          <div style="margin-top:18px;"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>
+        `;
+        return;
+      }
+      quizLocked = false;
+      quizMount.innerHTML = `
+        <div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div>
+        <div class="quiz-question">${q.question}</div>
+        <div class="quiz-options">
+          ${q.options.map((option, index) => `<button class="quiz-option" type="button" data-option-index="${index}">${option}</button>`).join("")}
+        </div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div style="margin-top:18px;" id="quizNext"></div>
+      `;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+    function initBestScore() {
+      const best = localStorage.getItem("apgopo_u4_best");
+      bestScoreEl.textContent = best ? best + "%" : "--";
+    }
+
+    renderNav();
+    renderGlossary();
+    renderFlashcards();
+    renderEssayTopics();
+    initBestScore();
+
+    document.addEventListener("mousemove", (event) => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = event.clientX + "px";
+      cursor.style.top = event.clientY + "px";
+    });
+
+    document.addEventListener("mouseover", (event) => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      const interactive = event.target.closest("button, a, .flash-card, .glossary-card");
+      cursor.style.width = interactive ? "20px" : "12px";
+      cursor.style.height = interactive ? "20px" : "12px";
+    });
+
+    pinBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("pinned");
+      pinBtn.classList.toggle("pinned");
+      pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+    });
+
+    nav.addEventListener("click", (event) => {
+      const button = event.target.closest(".nav-btn");
+      if (!button) return;
+      switchTab(button.dataset.tab);
+    });
+
+    document.querySelectorAll(".note-jump").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.noteTarget);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("glossaryFilter").addEventListener("input", (event) => {
+      renderGlossary(event.target.value);
+    });
+
+    document.getElementById("flashGrid").addEventListener("click", (event) => {
+      const card = event.target.closest(".flash-card");
+      if (card) card.classList.toggle("flipped");
+    });
+
+    document.getElementById("openSearch").addEventListener("click", () => {
+      const panel = document.getElementById("sbSearchPanel");
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+    });
+
+    document.getElementById("sbInput").addEventListener("input", (event) => {
+      const query = event.target.value.toLowerCase().trim();
+      const matches = glossaryTerms.filter((entry) => entry.term.toLowerCase().includes(query) || entry.def.toLowerCase().includes(query)).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = matches.length ? matches.map((item) => `
+        <div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}">
+          <div class="sb-result-tab">${item.tab}</div>
+          <div class="sb-result-term">${item.term}</div>
+          <div class="sb-result-snip">${item.def}</div>
+        </div>
+      `).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+
+    document.getElementById("sbResults").addEventListener("click", (event) => {
+      const result = event.target.closest(".sb-result");
+      if (!result || !result.dataset.targetTab) return;
+      switchTab(result.dataset.targetTab);
+      document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = "";
+      document.getElementById("sbResults").innerHTML = "";
+      if (result.dataset.targetTab === "glossary") {
+        document.getElementById("glossaryFilter").value = result.dataset.targetTerm;
+        renderGlossary(result.dataset.targetTerm);
+      }
+    });
+
+    document.getElementById("glossaryGrid").addEventListener("click", (event) => {
+      const card = event.target.closest(".glossary-card");
+      if (!card) return;
+      switchTab(card.dataset.targetTab);
+    });
+
+    apToggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("ap-highlight");
+      apToggleBtn.classList.toggle("active");
+    });
+
+    document.getElementById("quizOpenBtn").addEventListener("click", () => {
+      quizIndex = 0;
+      quizScore = 0;
+      renderQuizQuestion();
+      openModal("quizModal");
+    });
+
+    document.getElementById("essayOpenBtn").addEventListener("click", () => {
+      renderEssayTopics();
+      openModal("essayModal");
+    });
+
+    document.getElementById("essayTopics").addEventListener("click", (event) => {
+      const button = event.target.closest(".essay-topic-btn");
+      if (!button) return;
+      selectEssay(Number(button.dataset.essayIndex));
+    });
+
+    document.getElementById("quizMount").addEventListener("click", (event) => {
+      const option = event.target.closest(".quiz-option");
+      if (option && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex];
+        const selected = Number(option.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((btn, index) => {
+          if (index === q.correct) btn.classList.add("correct");
+          if (index === selected && selected !== q.correct) btn.classList.add("wrong");
+        });
+        if (selected === q.correct) quizScore += 1;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (event.target.id === "nextQuizBtn") {
+        quizIndex += 1;
+        renderQuizQuestion();
+      }
+      if (event.target.id === "restartQuizBtn") {
+        quizIndex = 0;
+        quizScore = 0;
+        renderQuizQuestion();
+      }
+    });
+
+    document.querySelectorAll("[data-close]").forEach((button) => {
+      button.addEventListener("click", () => closeModal(button.dataset.close));
+    });
+
+    document.querySelectorAll(".modal").forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) modal.classList.remove("open");
+      });
+    });
+
+    main.addEventListener("scroll", () => {
+      const max = main.scrollHeight - main.clientHeight;
+      const pct = max > 0 ? (main.scrollTop / max) * 100 : 0;
+      document.getElementById("readingProgressFill").style.width = pct + "%";
+    });
+  </script>
+</body>
+</html>
