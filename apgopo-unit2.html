@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AP Government and Politics — Unit 2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
       --bg: #07080a;
       --card: #0d0f12;
-      --border: rgba(255,255,255,0.07);
+      --border: rgba(255, 255, 255, 0.07);
       --text: #dde3ec;
       --muted: #7a8699;
       --gold: #c9a84c;
@@ -22,7 +32,11 @@
       --orange: #f28749;
       --purple: #9b86f4;
     }
-    html { scroll-behavior: smooth; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -32,6 +46,7 @@
       overflow: hidden;
       cursor: none;
     }
+
     body::before {
       content: "";
       position: fixed;
@@ -41,6 +56,7 @@
       pointer-events: none;
       z-index: 1;
     }
+
     #cursor {
       position: fixed;
       width: 12px;
@@ -53,6 +69,7 @@
       mix-blend-mode: difference;
       transition: width .2s ease, height .2s ease;
     }
+
     #readingProgress {
       position: fixed;
       top: 0;
@@ -61,33 +78,41 @@
       height: 2px;
       z-index: 100;
     }
+
     #readingProgressFill {
       width: 0%;
       height: 100%;
       background: var(--blue);
     }
+
     #ambientOverlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(ellipse at 60% 10%, rgba(91,143,212,.13), transparent 65%);
+      background: radial-gradient(ellipse at 60% 10%, rgba(91, 143, 212, .13), transparent 65%);
       opacity: .11;
       pointer-events: none;
       transition: background 1s ease;
       z-index: 0;
     }
+
     #sidebar {
       width: 72px;
       height: 100vh;
       flex-shrink: 0;
-      background: rgba(5,6,8,.84);
+      background: rgba(5, 6, 8, .84);
       border-right: 1px solid var(--border);
       backdrop-filter: blur(24px);
       overflow: hidden;
       position: relative;
       z-index: 10;
-      transition: width .4s cubic-bezier(0.23,1,0.32,1);
+      transition: width .4s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    #sidebar:hover, #sidebar.pinned { width: 268px; }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 268px;
+    }
+
     #pinBtn {
       position: absolute;
       top: 12px;
@@ -104,8 +129,17 @@
       cursor: none;
       transition: opacity .25s ease, color .2s ease, border-color .2s ease;
     }
-    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
-    #pinBtn.pinned { color: var(--blue); border-color: rgba(91,143,212,.28); }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1;
+    }
+
+    #pinBtn.pinned {
+      color: var(--blue);
+      border-color: rgba(91, 143, 212, .28);
+    }
+
     .sidebar-logo {
       display: flex;
       align-items: center;
@@ -114,26 +148,37 @@
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
+
     .logo-icon {
       width: 36px;
       height: 36px;
       display: grid;
       place-items: center;
       border-radius: 10px;
-      border: 1px solid rgba(91,143,212,.22);
-      background: rgba(91,143,212,.08);
+      border: 1px solid rgba(91, 143, 212, .22);
+      background: rgba(91, 143, 212, .08);
       color: var(--blue);
       flex-shrink: 0;
       font-size: 14px;
     }
-    .logo-copy { opacity: 0; transition: opacity .25s ease; }
-    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1;
+    }
+
     .logo-copy h1 {
       font-family: "Bebas Neue", sans-serif;
       font-size: 13px;
       letter-spacing: .25em;
       color: var(--blue);
     }
+
     .logo-copy p {
       color: var(--muted);
       font-size: 9px;
@@ -141,7 +186,12 @@
       text-transform: uppercase;
       margin-top: 3px;
     }
-    .search-wrap { position: relative; padding: 10px; }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px;
+    }
+
     .sb-search-trigger {
       width: 100%;
       display: flex;
@@ -150,25 +200,31 @@
       padding: 10px 14px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
       color: var(--muted);
       cursor: none;
       opacity: 0;
       pointer-events: none;
       transition: opacity .25s ease, border-color .2s ease;
     }
-    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
       opacity: 1;
       pointer-events: auto;
     }
-    .sb-search-trigger:hover { border-color: rgba(91,143,212,.24); }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(91, 143, 212, .24);
+    }
+
     #sbSearchPanel {
       position: absolute;
       top: calc(100% - 4px);
       left: 10px;
       right: 10px;
-      border: 1px solid rgba(91,143,212,.18);
-      background: rgba(8,10,13,.98);
+      border: 1px solid rgba(91, 143, 212, .18);
+      background: rgba(8, 10, 13, .98);
       border-radius: 12px;
       overflow: hidden;
       opacity: 0;
@@ -176,16 +232,23 @@
       transform: translateY(-8px);
       transition: opacity .22s ease, transform .22s ease;
       z-index: 80;
-      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
     }
-    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
     #sbSearchInner {
       display: flex;
       align-items: center;
       gap: 8px;
       padding: 10px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
     }
+
     #sbInput {
       flex: 1;
       border: none;
@@ -197,15 +260,27 @@
       outline: none;
       cursor: none;
     }
-    #sbResults { max-height: 280px; overflow: auto; }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto;
+    }
+
     .sb-result {
       padding: 11px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
       cursor: none;
       transition: background .15s ease;
     }
-    .sb-result:hover { background: rgba(91,143,212,.06); }
-    .sb-result:last-child { border-bottom: none; }
+
+    .sb-result:hover {
+      background: rgba(91, 143, 212, .06);
+    }
+
+    .sb-result:last-child {
+      border-bottom: none;
+    }
+
     .sb-result-tab {
       font-size: 8px;
       color: var(--blue);
@@ -213,12 +288,14 @@
       text-transform: uppercase;
       margin-bottom: 3px;
     }
+
     .sb-result-term {
       font-family: "Bebas Neue", sans-serif;
       font-size: 14px;
       color: white;
       letter-spacing: .04em;
     }
+
     .sb-result-snip {
       font-family: "Crimson Pro", serif;
       font-size: 12px;
@@ -226,11 +303,13 @@
       line-height: 1.45;
       margin-top: 2px;
     }
+
     nav {
       height: calc(100vh - 176px);
       padding: 0 10px 14px;
       overflow: auto;
     }
+
     .nav-btn {
       width: 100%;
       display: flex;
@@ -246,9 +325,21 @@
       transition: background .2s ease, color .2s ease;
       position: relative;
     }
-    .nav-btn:hover { background: rgba(255,255,255,.03); color: #aeb7c6; }
-    .nav-btn.active { background: rgba(91,143,212,.09); color: var(--blue); }
-    .nav-btn.active .nav-indicator { opacity: 1; }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .03);
+      color: #aeb7c6;
+    }
+
+    .nav-btn.active {
+      background: rgba(91, 143, 212, .09);
+      color: var(--blue);
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1;
+    }
+
     .nav-indicator {
       position: absolute;
       left: 0;
@@ -258,6 +349,7 @@
       border-radius: 5px;
       opacity: 0;
     }
+
     .nav-label {
       font-size: 10px;
       letter-spacing: .18em;
@@ -265,7 +357,12 @@
       opacity: 0;
       transition: opacity .25s ease;
     }
-    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1;
+    }
+
     .sidebar-footer {
       position: absolute;
       left: 0;
@@ -282,8 +379,17 @@
       overflow: hidden;
       white-space: nowrap;
     }
-    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s ease; }
-    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    #sidebar:hover .sidebar-footer span:last-child,
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1;
+    }
+
     .dot {
       width: 6px;
       height: 6px;
@@ -292,6 +398,7 @@
       animation: blink 2s ease-in-out infinite;
       flex-shrink: 0;
     }
+
     #main {
       flex: 1;
       height: 100vh;
@@ -300,6 +407,7 @@
       position: relative;
       z-index: 2;
     }
+
     .topbar {
       position: sticky;
       top: 0;
@@ -312,11 +420,18 @@
       padding: 8px 0 20px;
       backdrop-filter: blur(8px);
     }
-    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .glass-btn, #scoreTracker {
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .glass-btn,
+    #scoreTracker {
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .05);
       color: var(--muted);
       padding: 9px 14px;
       font: inherit;
@@ -328,19 +443,34 @@
       transition: border-color .2s ease, color .2s ease, background .2s ease;
       white-space: nowrap;
     }
-    .glass-btn:hover, #scoreTracker:hover { color: var(--blue); border-color: rgba(91,143,212,.28); }
+
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--blue);
+      border-color: rgba(91, 143, 212, .28);
+    }
+
     .glass-btn.active {
       color: var(--blue);
-      border-color: rgba(91,143,212,.34);
-      background: rgba(91,143,212,.09);
+      border-color: rgba(91, 143, 212, .34);
+      background: rgba(91, 143, 212, .09);
     }
-    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(0.23,1,0.32,1); }
-    .tab-content.active { display: block; }
+
+    .tab-content {
+      display: none;
+      animation: fadeUp .45s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     .page-header {
       margin-bottom: 34px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
     }
+
     .unit-tag {
       display: block;
       color: var(--blue);
@@ -349,6 +479,7 @@
       text-transform: uppercase;
       margin-bottom: 10px;
     }
+
     .page-header h2 {
       font-family: "Bebas Neue", sans-serif;
       font-size: clamp(38px, 5vw, 62px);
@@ -356,6 +487,7 @@
       line-height: .96;
       color: white;
     }
+
     .page-header p {
       margin-top: 10px;
       color: var(--muted);
@@ -363,13 +495,32 @@
       letter-spacing: .18em;
       text-transform: uppercase;
     }
-    .hero-grid, .grid-3, .grid-4, .glossary-grid, .flash-grid, .timeline {
+
+    .hero-grid,
+    .grid-3,
+    .grid-4,
+    .glossary-grid,
+    .flash-grid,
+    .timeline {
       display: grid;
       gap: 22px;
     }
-    .hero-grid { grid-template-columns: 1.15fr .85fr; margin-bottom: 26px; }
-    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-    .grid-4, .glossary-grid, .flash-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+    .hero-grid {
+      grid-template-columns: 1.15fr .85fr;
+      margin-bottom: 26px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .grid-4,
+    .glossary-grid,
+    .flash-grid {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
     .timeline {
       display: flex;
       gap: 18px;
@@ -378,7 +529,11 @@
       scroll-snap-type: x mandatory;
       scrollbar-width: thin;
     }
-    .card, .feature-card, .timeline-item, .flash-card {
+
+    .card,
+    .feature-card,
+    .timeline-item,
+    .flash-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
@@ -387,12 +542,18 @@
       overflow: hidden;
       transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
     }
-    .card:hover, .feature-card:hover, .timeline-item:hover, .flash-card:hover {
+
+    .card:hover,
+    .feature-card:hover,
+    .timeline-item:hover,
+    .flash-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255,255,255,.14);
-      box-shadow: 0 20px 48px rgba(0,0,0,.35);
+      border-color: rgba(255, 255, 255, .14);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, .35);
     }
-    .card::before, .feature-card::before {
+
+    .card::before,
+    .feature-card::before {
       content: "";
       position: absolute;
       top: 0;
@@ -402,64 +563,120 @@
       background: var(--accent, var(--blue));
       opacity: .7;
     }
-    .accent-blue { --accent: var(--blue); }
-    .accent-gold { --accent: var(--gold); }
-    .accent-teal { --accent: var(--teal); }
-    .accent-red { --accent: var(--red); }
-    .accent-orange { --accent: var(--orange); }
-    .accent-purple { --accent: var(--purple); }
-    .card-sub, .mini-label {
+
+    .accent-blue {
+      --accent: var(--blue);
+    }
+
+    .accent-gold {
+      --accent: var(--gold);
+    }
+
+    .accent-teal {
+      --accent: var(--teal);
+    }
+
+    .accent-red {
+      --accent: var(--red);
+    }
+
+    .accent-orange {
+      --accent: var(--orange);
+    }
+
+    .accent-purple {
+      --accent: var(--purple);
+    }
+
+    .card-sub,
+    .mini-label {
       color: var(--accent, var(--blue));
       font-size: 9px;
       letter-spacing: .35em;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
-    .card-title, .feature-card h3, .timeline-year, .flash-front h3, .writing-title {
+
+    .card-title,
+    .feature-card h3,
+    .timeline-year,
+    .flash-front h3,
+    .writing-title {
       font-family: "Bebas Neue", sans-serif;
       color: white;
       letter-spacing: .05em;
     }
-    .card-title { font-size: 30px; margin-bottom: 16px; }
-    .feature-card h3, .writing-title { font-size: 24px; margin-bottom: 12px; }
-    .timeline-year { font-size: 24px; margin-bottom: 8px; }
-    .body-copy, .feature-copy, .timeline-copy {
+
+    .card-title {
+      font-size: 30px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3,
+    .writing-title {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .timeline-year {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .body-copy,
+    .feature-copy,
+    .timeline-copy {
       font-family: "Crimson Pro", serif;
       color: var(--muted);
       line-height: 1.82;
       font-size: 15px;
     }
-    .body-copy p + p, .feature-copy p + p { margin-top: 12px; }
-    .bullet-list { padding-left: 18px; }
-    .bullet-list li + li { margin-top: 8px; }
+
+    .body-copy p+p,
+    .feature-copy p+p {
+      margin-top: 12px;
+    }
+
+    .bullet-list {
+      padding-left: 18px;
+    }
+
+    .bullet-list li+li {
+      margin-top: 8px;
+    }
+
     .tag-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 18px;
     }
+
     .tag {
       padding: 4px 9px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.07);
-      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255, 255, 255, .07);
+      background: rgba(255, 255, 255, .03);
       color: var(--muted);
       font-size: 7px;
       letter-spacing: .18em;
       text-transform: uppercase;
     }
+
     .dash-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 22px;
     }
+
     .stat-box {
       border-radius: 16px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       padding: 16px;
     }
+
     .stat-box span {
       display: block;
       color: var(--muted);
@@ -468,19 +685,22 @@
       text-transform: uppercase;
       margin-bottom: 8px;
     }
+
     .stat-box strong {
       font-family: "Bebas Neue", sans-serif;
       font-size: 26px;
       letter-spacing: .06em;
       color: white;
     }
+
     .focus-callout {
       margin-top: 22px;
       padding: 18px;
       border-radius: 16px;
-      border: 1px solid rgba(91,143,212,.18);
-      background: rgba(91,143,212,.05);
+      border: 1px solid rgba(91, 143, 212, .18);
+      background: rgba(91, 143, 212, .05);
     }
+
     .focus-callout .label {
       color: var(--blue);
       font-size: 8px;
@@ -495,20 +715,23 @@
       align-items: center;
       justify-content: center;
     }
+
     .notes-shell {
       display: grid;
       grid-template-columns: minmax(230px, 300px) 1fr;
       gap: 24px;
       align-items: start;
     }
+
     .notes-index {
       position: sticky;
       top: 88px;
       border: 1px solid var(--border);
       border-radius: 20px;
-      background: rgba(255,255,255,.025);
+      background: rgba(255, 255, 255, .025);
       padding: 18px;
     }
+
     .notes-index-title {
       color: var(--accent, var(--blue));
       font-size: 9px;
@@ -516,6 +739,7 @@
       text-transform: uppercase;
       margin-bottom: 14px;
     }
+
     .note-jump {
       width: 100%;
       display: flex;
@@ -524,7 +748,7 @@
       gap: 12px;
       padding: 11px 0;
       border: none;
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
       background: transparent;
       color: var(--text);
       font: inherit;
@@ -534,10 +758,24 @@
       text-transform: uppercase;
       cursor: none;
     }
-    .note-jump:last-child { border-bottom: none; }
-    .note-jump span:last-child { color: var(--muted); }
-    .note-jump:hover { color: var(--accent, var(--blue)); }
-    .notes-stack { display: grid; gap: 18px; }
+
+    .note-jump:last-child {
+      border-bottom: none;
+    }
+
+    .note-jump span:last-child {
+      color: var(--muted);
+    }
+
+    .note-jump:hover {
+      color: var(--accent, var(--blue));
+    }
+
+    .notes-stack {
+      display: grid;
+      gap: 18px;
+    }
+
     .note-section {
       scroll-margin-top: 110px;
       border: 1px solid var(--border);
@@ -547,6 +785,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .note-section::before {
       content: "";
       position: absolute;
@@ -557,6 +796,7 @@
       background: var(--accent, var(--blue));
       opacity: .7;
     }
+
     .note-section h3 {
       font-family: "Bebas Neue", sans-serif;
       color: white;
@@ -564,6 +804,7 @@
       letter-spacing: .05em;
       margin-bottom: 12px;
     }
+
     .note-section h4 {
       font-family: "Bebas Neue", sans-serif;
       color: white;
@@ -571,20 +812,26 @@
       letter-spacing: .05em;
       margin: 18px 0 8px;
     }
-    .note-section .body-copy + .body-copy { margin-top: 12px; }
+
+    .note-section .body-copy+.body-copy {
+      margin-top: 12px;
+    }
+
     .note-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
       margin-top: 16px;
     }
+
     .mini-note {
       border: 1px solid var(--border);
       border-radius: 16px;
-      background: rgba(255,255,255,.025);
+      background: rgba(255, 255, 255, .025);
       padding: 16px;
     }
-    .mini-note > strong {
+
+    .mini-note>strong {
       display: block;
       color: white;
       font-family: "Bebas Neue", sans-serif;
@@ -592,27 +839,37 @@
       letter-spacing: .05em;
       margin-bottom: 8px;
     }
+
     .timeline-intro {
       margin-bottom: 18px;
       padding: 18px 20px;
-      border: 1px solid rgba(91,143,212,.14);
+      border: 1px solid rgba(91, 143, 212, .14);
       border-radius: 16px;
-      background: rgba(91,143,212,.04);
+      background: rgba(91, 143, 212, .04);
       font-size: 10px;
       letter-spacing: .18em;
       text-transform: uppercase;
       color: var(--blue);
     }
+
     .timeline-item {
       min-width: 320px;
       max-width: 360px;
       flex: 0 0 320px;
       scroll-snap-align: start;
-      border-left: 2px solid rgba(91,143,212,.24);
-      background: linear-gradient(180deg, rgba(91,143,212,.05), transparent 40%), var(--card);
+      border-left: 2px solid rgba(91, 143, 212, .24);
+      background: linear-gradient(180deg, rgba(91, 143, 212, .05), transparent 40%), var(--card);
     }
-    .timeline-copy ul { margin-top: 10px; padding-left: 18px; }
-    .timeline-copy li + li { margin-top: 6px; }
+
+    .timeline-copy ul {
+      margin-top: 10px;
+      padding-left: 18px;
+    }
+
+    .timeline-copy li+li {
+      margin-top: 6px;
+    }
+
     .glossary-toolbar {
       display: flex;
       align-items: center;
@@ -621,11 +878,12 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
+
     .glossary-toolbar input {
       min-width: 260px;
       border: 1px solid var(--border);
       border-radius: 10px;
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
       color: var(--text);
       padding: 11px 14px;
       font: inherit;
@@ -634,6 +892,7 @@
       outline: none;
       cursor: none;
     }
+
     .glossary-card h4 {
       font-family: "Bebas Neue", sans-serif;
       color: white;
@@ -641,11 +900,13 @@
       letter-spacing: .04em;
       margin-bottom: 12px;
     }
+
     .flash-card {
       perspective: 1000px;
       cursor: none;
       min-height: 240px;
     }
+
     .flash-inner {
       position: relative;
       width: 100%;
@@ -654,8 +915,13 @@
       transform-style: preserve-3d;
       transition: transform .55s ease;
     }
-    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
-    .flash-front, .flash-back {
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flash-front,
+    .flash-back {
       position: absolute;
       inset: 0;
       backface-visibility: hidden;
@@ -664,36 +930,47 @@
       justify-content: space-between;
       gap: 14px;
     }
-    .flash-back { transform: rotateY(180deg); }
+
+    .flash-back {
+      transform: rotateY(180deg);
+    }
+
     .flash-hint {
       color: var(--muted);
       font-size: 8px;
       letter-spacing: .22em;
       text-transform: uppercase;
     }
+
     .modal {
       position: fixed;
       inset: 0;
       display: grid;
       place-items: center;
-      background: rgba(3,4,6,.74);
+      background: rgba(3, 4, 6, .74);
       backdrop-filter: blur(16px);
       opacity: 0;
       pointer-events: none;
       transition: opacity .22s ease;
       z-index: 120;
     }
-    .modal.open { opacity: 1; pointer-events: auto; }
+
+    .modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .modal-box {
       width: min(760px, calc(100vw - 32px));
       max-height: min(84vh, 920px);
       overflow: auto;
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: rgba(10,12,16,.96);
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(10, 12, 16, .96);
       padding: 28px;
-      box-shadow: 0 36px 90px rgba(0,0,0,.55);
+      box-shadow: 0 36px 90px rgba(0, 0, 0, .55);
     }
+
     .modal-close {
       float: right;
       border: 1px solid var(--border);
@@ -706,6 +983,7 @@
       letter-spacing: .14em;
       cursor: none;
     }
+
     .modal-title {
       font-family: "Bebas Neue", sans-serif;
       color: white;
@@ -713,6 +991,7 @@
       letter-spacing: .06em;
       margin-bottom: 8px;
     }
+
     .modal-sub {
       color: var(--blue);
       font-size: 9px;
@@ -720,6 +999,7 @@
       text-transform: uppercase;
       margin-bottom: 22px;
     }
+
     .quiz-status {
       color: var(--muted);
       font-size: 10px;
@@ -727,6 +1007,7 @@
       text-transform: uppercase;
       margin-bottom: 18px;
     }
+
     .quiz-question {
       font-family: "Crimson Pro", serif;
       color: white;
@@ -734,14 +1015,19 @@
       line-height: 1.35;
       margin-bottom: 20px;
     }
-    .quiz-options { display: grid; gap: 10px; }
+
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+    }
+
     .quiz-option {
       width: 100%;
       text-align: left;
       padding: 14px 16px;
       border: 1px solid var(--border);
       border-radius: 14px;
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
       color: var(--text);
       font: inherit;
       font-size: 11px;
@@ -749,9 +1035,21 @@
       cursor: none;
       transition: border-color .2s ease, background .2s ease;
     }
-    .quiz-option:hover { border-color: rgba(91,143,212,.22); }
-    .quiz-option.correct { border-color: rgba(62,184,154,.35); background: rgba(62,184,154,.08); }
-    .quiz-option.wrong { border-color: rgba(217,95,95,.35); background: rgba(217,95,95,.08); }
+
+    .quiz-option:hover {
+      border-color: rgba(91, 143, 212, .22);
+    }
+
+    .quiz-option.correct {
+      border-color: rgba(62, 184, 154, .35);
+      background: rgba(62, 184, 154, .08);
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(217, 95, 95, .35);
+      background: rgba(217, 95, 95, .08);
+    }
+
     .quiz-feedback {
       margin-top: 18px;
       font-family: "Crimson Pro", serif;
@@ -759,14 +1057,20 @@
       line-height: 1.7;
       font-size: 15px;
     }
-    .essay-list { display: grid; gap: 10px; margin-bottom: 20px; }
+
+    .essay-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
     .essay-topic-btn {
       width: 100%;
       text-align: left;
       padding: 12px 14px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
       color: var(--text);
       font: inherit;
       font-size: 10px;
@@ -774,18 +1078,29 @@
       cursor: none;
       transition: border-color .2s ease, background .2s ease;
     }
-    .essay-topic-btn:hover, .essay-topic-btn.active {
-      border-color: rgba(91,143,212,.26);
-      background: rgba(91,143,212,.08);
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      border-color: rgba(91, 143, 212, .26);
+      background: rgba(91, 143, 212, .08);
     }
-    .essay-outline { display: none; gap: 14px; }
-    .essay-outline.show { display: grid; }
+
+    .essay-outline {
+      display: none;
+      gap: 14px;
+    }
+
+    .essay-outline.show {
+      display: grid;
+    }
+
     .essay-block {
       border-radius: 16px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.025);
+      background: rgba(255, 255, 255, .025);
       padding: 18px;
     }
+
     .essay-block-label {
       color: var(--blue);
       font-size: 8px;
@@ -793,47 +1108,131 @@
       text-transform: uppercase;
       margin-bottom: 9px;
     }
+
     .essay-block-body {
       font-family: "Crimson Pro", serif;
       color: var(--muted);
       line-height: 1.78;
       font-size: 15px;
     }
+
     strong.ap-term {
       color: #a8ccff;
       font-weight: 600;
     }
+
     body.ap-highlight strong.ap-term {
-      background: rgba(91,143,212,.12);
+      background: rgba(91, 143, 212, .12);
       padding: 0 3px;
       border-radius: 3px;
-      box-shadow: 0 0 10px rgba(91,143,212,.15);
+      box-shadow: 0 0 10px rgba(91, 143, 212, .15);
     }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .2;
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     @media (max-width: 1020px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .dash-stats { grid-template-columns: 1fr; }
-      #main { padding-left: 26px; padding-right: 26px; }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dash-stats {
+        grid-template-columns: 1fr;
+      }
+
+      #main {
+        padding-left: 26px;
+        padding-right: 26px;
+      }
     }
+
     @media (max-width: 760px) {
-      body { cursor: auto; overflow: auto; display: block; }
-      #cursor, #readingProgress { display: none; }
-      #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
-      #sidebar:hover, #sidebar.pinned { width: 100%; }
-      .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important; }
-      #pinBtn { display: none; }
-      nav { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      #main { height: auto; overflow: visible; }
-      .topbar { position: static; }
-      .glossary-toolbar input { min-width: 100%; width: 100%; }
+      body {
+        cursor: auto;
+        overflow: auto;
+        display: block;
+      }
+
+      #cursor,
+      #readingProgress {
+        display: none;
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      #sidebar:hover,
+      #sidebar.pinned {
+        width: 100%;
+      }
+
+      .logo-copy,
+      .nav-label,
+      .sidebar-footer span:last-child,
+      .sb-search-trigger {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+
+      #pinBtn {
+        display: none;
+      }
+
+      nav {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      #main {
+        height: auto;
+        overflow: visible;
+      }
+
+      .topbar {
+        position: static;
+      }
+
+      .glossary-toolbar input {
+        min-width: 100%;
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
   <div id="cursor"></div>
   <div id="ambientOverlay"></div>
-  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
 
   <aside id="sidebar">
     <button id="pinBtn" type="button">Pin</button>
@@ -867,7 +1266,7 @@
   <main id="main">
     <div class="topbar">
       <div class="top-actions">
-        <a class="glass-btn course-link" href="index.html">Course Home</a>
+        <a class="glass-btn course-link" href="gopo-index.html">Course Home</a>
         <a class="glass-btn course-link" href="apgopo-unit1.html">Unit 1</a>
         <a class="glass-btn course-link" href="apgopo-unit2.html">Unit 2</a>
         <a class="glass-btn course-link" href="apgopo-unit3.html">Unit 3</a>
@@ -890,8 +1289,12 @@
           <div class="card-sub">Core Strategy</div>
           <div class="card-title">How the Constitution Prevents Domination</div>
           <div class="body-copy">
-            <p>The constitutional system divides governing authority so that no single person or institution can control the whole state. <strong class="ap-term">Separation of powers</strong> assigns different jobs to the branches, while <strong class="ap-term">checks and balances</strong> lets each branch limit the others.</p>
-            <p>That design makes conflict normal. Major change usually requires bargaining across institutions, not just a single election result or one powerful leader.</p>
+            <p>The constitutional system divides governing authority so that no single person or institution can control
+              the whole state. <strong class="ap-term">Separation of powers</strong> assigns different jobs to the
+              branches, while <strong class="ap-term">checks and balances</strong> lets each branch limit the others.
+            </p>
+            <p>That design makes conflict normal. Major change usually requires bargaining across institutions, not just
+              a single election result or one powerful leader.</p>
           </div>
           <div class="dash-stats">
             <div class="stat-box">
@@ -909,7 +1312,8 @@
           </div>
           <div class="focus-callout">
             <div class="label">Exam Lens</div>
-            <div class="body-copy">Strong Unit 2 answers name the specific power, explain the mechanism, and then show how another branch responds.</div>
+            <div class="body-copy">Strong Unit 2 answers name the specific power, explain the mechanism, and then show
+              how another branch responds.</div>
           </div>
         </article>
 
@@ -917,10 +1321,12 @@
           <div class="card-sub">Fast Review</div>
           <div class="card-title">What You Need To Be Able To Do</div>
           <ul class="bullet-list body-copy">
-            <li>Distinguish <strong class="ap-term">enumerated</strong>, <strong class="ap-term">implied</strong>, and <strong class="ap-term">inherent</strong> powers.</li>
+            <li>Distinguish <strong class="ap-term">enumerated</strong>, <strong class="ap-term">implied</strong>, and
+              <strong class="ap-term">inherent</strong> powers.</li>
             <li>Explain House vs. Senate differences and how they shape lawmaking.</li>
             <li>Show how committees, party leadership, and rules control what reaches the floor.</li>
-            <li>Connect cases like <strong class="ap-term">U.S. v. Nixon</strong> and <strong class="ap-term">Youngstown</strong> to limits on presidential power.</li>
+            <li>Connect cases like <strong class="ap-term">U.S. v. Nixon</strong> and <strong
+                class="ap-term">Youngstown</strong> to limits on presidential power.</li>
             <li>Explain how bureaucracy and courts turn statutes into real policy outcomes.</li>
           </ul>
           <div class="tag-row">
@@ -944,13 +1350,20 @@
       <div class="notes-shell">
         <aside class="notes-index accent-blue" aria-label="Unit 2 notes index">
           <div class="notes-index-title">Major Buckets</div>
-          <button class="note-jump" type="button" data-note-target="u2-note-powers"><span>Powers and Checks</span><span>01</span></button>
-          <button class="note-jump" type="button" data-note-target="u2-note-congress"><span>Congress</span><span>02</span></button>
-          <button class="note-jump" type="button" data-note-target="u2-note-president"><span>Presidency</span><span>03</span></button>
-          <button class="note-jump" type="button" data-note-target="u2-note-bureaucracy"><span>Bureaucracy</span><span>04</span></button>
-          <button class="note-jump" type="button" data-note-target="u2-note-judiciary"><span>Judiciary</span><span>05</span></button>
-          <button class="note-jump" type="button" data-note-target="u2-note-conflict"><span>Conflict and Laws</span><span>06</span></button>
-          <button class="note-jump" type="button" data-note-target="u2-note-casebank"><span>Case Bank</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-powers"><span>Powers and
+              Checks</span><span>01</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="u2-note-congress"><span>Congress</span><span>02</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="u2-note-president"><span>Presidency</span><span>03</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="u2-note-bureaucracy"><span>Bureaucracy</span><span>04</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="u2-note-judiciary"><span>Judiciary</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-conflict"><span>Conflict and
+              Laws</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="u2-note-casebank"><span>Case
+              Bank</span><span>07</span></button>
         </aside>
 
         <div class="notes-stack">
@@ -958,50 +1371,111 @@
             <div class="mini-label">01 · Separation of Powers</div>
             <h3>Powers, Checks, and Institutional Friction</h3>
             <div class="body-copy">
-              <p>Unit 2 is about institutions that share power because the Constitution tries to prevent domination. <strong class="ap-term">Separation of powers</strong> gives Congress, the president, and courts different jobs. <strong class="ap-term">Checks and balances</strong> lets each branch limit, supervise, or reshape what the others do.</p>
-              <p>Conflict is not a glitch. The design expects disagreement over lawmaking, appointments, funding, war powers, executive privilege, judicial review, and implementation.</p>
+              <p>Unit 2 is about institutions that share power because the Constitution tries to prevent domination.
+                <strong class="ap-term">Separation of powers</strong> gives Congress, the president, and courts
+                different jobs. <strong class="ap-term">Checks and balances</strong> lets each branch limit, supervise,
+                or reshape what the others do.</p>
+              <p>Conflict is not a glitch. The design expects disagreement over lawmaking, appointments, funding, war
+                powers, executive privilege, judicial review, and implementation.</p>
             </div>
             <div class="note-grid">
-              <div class="mini-note"><strong>Power Types</strong><div class="body-copy">Enumerated powers are written in the Constitution, implied powers are inferred through necessary and proper logic, and inherent powers are often claimed by presidents in foreign affairs or national security.</div></div>
-              <div class="mini-note"><strong>Congress Checks</strong><div class="body-copy">Funding, oversight, subpoenas, confirmations, treaty ratification, impeachment, statutes, and jurisdiction rules.</div></div>
-              <div class="mini-note"><strong>President Checks</strong><div class="body-copy">Vetoes, agenda-setting, bargaining, executive orders, signing statements, and implementation choices.</div></div>
-              <div class="mini-note"><strong>Courts Check</strong><div class="body-copy">Judicial review lets courts invalidate unconstitutional laws or executive actions through actual cases.</div></div>
+              <div class="mini-note"><strong>Power Types</strong>
+                <div class="body-copy">Enumerated powers are written in the Constitution, implied powers are inferred
+                  through necessary and proper logic, and inherent powers are often claimed by presidents in foreign
+                  affairs or national security.</div>
+              </div>
+              <div class="mini-note"><strong>Congress Checks</strong>
+                <div class="body-copy">Funding, oversight, subpoenas, confirmations, treaty ratification, impeachment,
+                  statutes, and jurisdiction rules.</div>
+              </div>
+              <div class="mini-note"><strong>President Checks</strong>
+                <div class="body-copy">Vetoes, agenda-setting, bargaining, executive orders, signing statements, and
+                  implementation choices.</div>
+              </div>
+              <div class="mini-note"><strong>Courts Check</strong>
+                <div class="body-copy">Judicial review lets courts invalidate unconstitutional laws or executive actions
+                  through actual cases.</div>
+              </div>
             </div>
             <h4>AP Move</h4>
-            <div class="body-copy">Name the specific power, explain the mechanism, then show how another branch responds.</div>
+            <div class="body-copy">Name the specific power, explain the mechanism, then show how another branch
+              responds.</div>
           </article>
 
           <article class="note-section accent-orange" id="u2-note-congress">
             <div class="mini-label">02 · Congress</div>
             <h3>Representation, Committees, and Lawmaking</h3>
             <div class="body-copy">
-              <p>Congress writes laws, represents citizens, controls funding, confirms major officials through the Senate, and oversees executive implementation. Many Unit 2 scenarios begin in Congress because lawmaking and appropriations shape what the executive branch can actually do.</p>
+              <p>Congress writes laws, represents citizens, controls funding, confirms major officials through the
+                Senate, and oversees executive implementation. Many Unit 2 scenarios begin in Congress because lawmaking
+                and appropriations shape what the executive branch can actually do.</p>
             </div>
             <div class="note-grid">
-              <div class="mini-note"><strong>House vs. Senate</strong><div class="body-copy">The House is population-based, has two-year terms, starts revenue bills, and impeaches. The Senate has equal state representation, six-year terms, confirmations, treaty ratification, and impeachment trials.</div></div>
-              <div class="mini-note"><strong>Districting</strong><div class="body-copy">The census leads to reapportionment and redistricting. Gerrymandering uses packing and cracking, while Baker and Shaw connect districting to Equal Protection limits.</div></div>
-              <div class="mini-note"><strong>Leadership</strong><div class="body-copy">The Speaker, majority/minority leaders, whips, committee chairs, and ranking members shape what gets attention and what reaches the floor.</div></div>
-              <div class="mini-note"><strong>Committees</strong><div class="body-copy">Standing committees handle most work. Hearings, markup, and pigeonholing decide whether bills advance or disappear.</div></div>
-              <div class="mini-note"><strong>House Rules</strong><div class="body-copy">The Rules Committee controls floor debate and amendments. Open rules allow amendments; closed rules block them.</div></div>
-              <div class="mini-note"><strong>Senate Delay</strong><div class="body-copy">Filibuster and cloture let Senate minorities slow or block action. Riders can be attached more freely than in the House.</div></div>
+              <div class="mini-note"><strong>House vs. Senate</strong>
+                <div class="body-copy">The House is population-based, has two-year terms, starts revenue bills, and
+                  impeaches. The Senate has equal state representation, six-year terms, confirmations, treaty
+                  ratification, and impeachment trials.</div>
+              </div>
+              <div class="mini-note"><strong>Districting</strong>
+                <div class="body-copy">The census leads to reapportionment and redistricting. Gerrymandering uses
+                  packing and cracking, while Baker and Shaw connect districting to Equal Protection limits.</div>
+              </div>
+              <div class="mini-note"><strong>Leadership</strong>
+                <div class="body-copy">The Speaker, majority/minority leaders, whips, committee chairs, and ranking
+                  members shape what gets attention and what reaches the floor.</div>
+              </div>
+              <div class="mini-note"><strong>Committees</strong>
+                <div class="body-copy">Standing committees handle most work. Hearings, markup, and pigeonholing decide
+                  whether bills advance or disappear.</div>
+              </div>
+              <div class="mini-note"><strong>House Rules</strong>
+                <div class="body-copy">The Rules Committee controls floor debate and amendments. Open rules allow
+                  amendments; closed rules block them.</div>
+              </div>
+              <div class="mini-note"><strong>Senate Delay</strong>
+                <div class="body-copy">Filibuster and cloture let Senate minorities slow or block action. Riders can be
+                  attached more freely than in the House.</div>
+              </div>
             </div>
             <h4>Bill to Law</h4>
-            <div class="body-copy">Bills are introduced by members, referred to committees, shaped through hearings and markup, debated under chamber rules, reconciled through conference committees if needed, and sent to the president for signature, veto, or possible pocket veto.</div>
+            <div class="body-copy">Bills are introduced by members, referred to committees, shaped through hearings and
+              markup, debated under chamber rules, reconciled through conference committees if needed, and sent to the
+              president for signature, veto, or possible pocket veto.</div>
           </article>
 
           <article class="note-section accent-purple" id="u2-note-president">
             <div class="mini-label">03 · Presidency</div>
             <h3>Formal Powers, Informal Powers, and Limits</h3>
             <div class="body-copy">
-              <p>The presidency gives energy and unity to law execution, but the president is checked by Congress and courts. Formal powers come from Article II; informal power comes from visibility, party leadership, bargaining, and control of the executive branch.</p>
+              <p>The presidency gives energy and unity to law execution, but the president is checked by Congress and
+                courts. Formal powers come from Article II; informal power comes from visibility, party leadership,
+                bargaining, and control of the executive branch.</p>
             </div>
             <div class="note-grid">
-              <div class="mini-note"><strong>Formal Powers</strong><div class="body-copy">Veto, Commander in Chief, appointments, treaties, pardons, State of the Union, and calling Congress into special session.</div></div>
-              <div class="mini-note"><strong>Informal Tools</strong><div class="body-copy">Bully pulpit, going public, agenda-setting, party leadership, bargaining, and electoral pressure.</div></div>
-              <div class="mini-note"><strong>Executive Orders</strong><div class="body-copy">Direct executive operations but must rest on constitutional or statutory authority and can be reversed or challenged.</div></div>
-              <div class="mini-note"><strong>Executive Privilege</strong><div class="body-copy">A limited confidentiality claim. U.S. v. Nixon shows it is not absolute in a criminal investigation.</div></div>
-              <div class="mini-note"><strong>Foreign Policy</strong><div class="body-copy">Treaties require Senate ratification; executive agreements do not. War powers are divided between Congress and the president.</div></div>
-              <div class="mini-note"><strong>EOP and Cabinet</strong><div class="body-copy">OMB, NSC, chief of staff, policy councils, and cabinet departments help presidents manage administration.</div></div>
+              <div class="mini-note"><strong>Formal Powers</strong>
+                <div class="body-copy">Veto, Commander in Chief, appointments, treaties, pardons, State of the Union,
+                  and calling Congress into special session.</div>
+              </div>
+              <div class="mini-note"><strong>Informal Tools</strong>
+                <div class="body-copy">Bully pulpit, going public, agenda-setting, party leadership, bargaining, and
+                  electoral pressure.</div>
+              </div>
+              <div class="mini-note"><strong>Executive Orders</strong>
+                <div class="body-copy">Direct executive operations but must rest on constitutional or statutory
+                  authority and can be reversed or challenged.</div>
+              </div>
+              <div class="mini-note"><strong>Executive Privilege</strong>
+                <div class="body-copy">A limited confidentiality claim. U.S. v. Nixon shows it is not absolute in a
+                  criminal investigation.</div>
+              </div>
+              <div class="mini-note"><strong>Foreign Policy</strong>
+                <div class="body-copy">Treaties require Senate ratification; executive agreements do not. War powers are
+                  divided between Congress and the president.</div>
+              </div>
+              <div class="mini-note"><strong>EOP and Cabinet</strong>
+                <div class="body-copy">OMB, NSC, chief of staff, policy councils, and cabinet departments help
+                  presidents manage administration.</div>
+              </div>
             </div>
           </article>
 
@@ -1009,15 +1483,35 @@
             <div class="mini-label">04 · Federal Bureaucracy</div>
             <h3>Implementation, Discretion, and Accountability</h3>
             <div class="body-copy">
-              <p>The bureaucracy turns laws into real policy. Congress often writes broad goals, then agencies define rules, enforce standards, administer programs, and apply expertise. This creates democratic tension because unelected officials make choices that affect policy outcomes.</p>
+              <p>The bureaucracy turns laws into real policy. Congress often writes broad goals, then agencies define
+                rules, enforce standards, administer programs, and apply expertise. This creates democratic tension
+                because unelected officials make choices that affect policy outcomes.</p>
             </div>
             <div class="note-grid">
-              <div class="mini-note"><strong>Discretion</strong><div class="body-copy">Agencies make choices inside statutory boundaries because Congress cannot legislate every technical detail.</div></div>
-              <div class="mini-note"><strong>Rulemaking</strong><div class="body-copy">Agencies propose rules, gather comments, issue final regulations, and enforce them. Regulated groups may challenge rules in court.</div></div>
-              <div class="mini-note"><strong>Agency Types</strong><div class="body-copy">Cabinet departments, independent agencies, independent regulatory commissions, government corporations, and the Senior Executive Service.</div></div>
-              <div class="mini-note"><strong>Control Tools</strong><div class="body-copy">Presidents use appointments, directives, and OMB. Congress uses funding, statutes, confirmations, and oversight. Courts review legality.</div></div>
-              <div class="mini-note"><strong>Iron Triangles</strong><div class="body-copy">Stable relationships among agencies, congressional committees, and interest groups. Issue networks are broader and less stable.</div></div>
-              <div class="mini-note"><strong>Civil Service</strong><div class="body-copy">Pendleton created merit hiring; Hatch limits partisan activity to protect neutrality.</div></div>
+              <div class="mini-note"><strong>Discretion</strong>
+                <div class="body-copy">Agencies make choices inside statutory boundaries because Congress cannot
+                  legislate every technical detail.</div>
+              </div>
+              <div class="mini-note"><strong>Rulemaking</strong>
+                <div class="body-copy">Agencies propose rules, gather comments, issue final regulations, and enforce
+                  them. Regulated groups may challenge rules in court.</div>
+              </div>
+              <div class="mini-note"><strong>Agency Types</strong>
+                <div class="body-copy">Cabinet departments, independent agencies, independent regulatory commissions,
+                  government corporations, and the Senior Executive Service.</div>
+              </div>
+              <div class="mini-note"><strong>Control Tools</strong>
+                <div class="body-copy">Presidents use appointments, directives, and OMB. Congress uses funding,
+                  statutes, confirmations, and oversight. Courts review legality.</div>
+              </div>
+              <div class="mini-note"><strong>Iron Triangles</strong>
+                <div class="body-copy">Stable relationships among agencies, congressional committees, and interest
+                  groups. Issue networks are broader and less stable.</div>
+              </div>
+              <div class="mini-note"><strong>Civil Service</strong>
+                <div class="body-copy">Pendleton created merit hiring; Hatch limits partisan activity to protect
+                  neutrality.</div>
+              </div>
             </div>
           </article>
 
@@ -1025,14 +1519,31 @@
             <div class="mini-label">05 · Judiciary</div>
             <h3>Federal Courts, Judicial Review, and Appointments</h3>
             <div class="body-copy">
-              <p>Federal courts interpret laws and the Constitution through cases. The judiciary is powerful because of judicial review, but it depends on cases, standing, implementation by other actors, appointments, and institutional legitimacy.</p>
+              <p>Federal courts interpret laws and the Constitution through cases. The judiciary is powerful because of
+                judicial review, but it depends on cases, standing, implementation by other actors, appointments, and
+                institutional legitimacy.</p>
             </div>
             <div class="note-grid">
-              <div class="mini-note"><strong>Structure</strong><div class="body-copy">District courts are trial courts, courts of appeals review lower decisions, and the Supreme Court has limited original jurisdiction plus broad appellate influence.</div></div>
-              <div class="mini-note"><strong>Access</strong><div class="body-copy">Cases must be justiciable, litigants need standing, lower options are usually exhausted, and certiorari follows the rule of four.</div></div>
-              <div class="mini-note"><strong>Opinions</strong><div class="body-copy">Majority opinions control, concurrences agree with the result but not reasoning, dissents explain disagreement, and unanimous opinions carry special force.</div></div>
-              <div class="mini-note"><strong>Appointments</strong><div class="body-copy">Presidents nominate; the Senate confirms. Ideology, party control, interest groups, ABA ratings, and senatorial courtesy can matter.</div></div>
-              <div class="mini-note"><strong>Philosophy</strong><div class="body-copy">Judicial restraint favors deference; judicial activism is more willing to overturn laws or precedents.</div></div>
+              <div class="mini-note"><strong>Structure</strong>
+                <div class="body-copy">District courts are trial courts, courts of appeals review lower decisions, and
+                  the Supreme Court has limited original jurisdiction plus broad appellate influence.</div>
+              </div>
+              <div class="mini-note"><strong>Access</strong>
+                <div class="body-copy">Cases must be justiciable, litigants need standing, lower options are usually
+                  exhausted, and certiorari follows the rule of four.</div>
+              </div>
+              <div class="mini-note"><strong>Opinions</strong>
+                <div class="body-copy">Majority opinions control, concurrences agree with the result but not reasoning,
+                  dissents explain disagreement, and unanimous opinions carry special force.</div>
+              </div>
+              <div class="mini-note"><strong>Appointments</strong>
+                <div class="body-copy">Presidents nominate; the Senate confirms. Ideology, party control, interest
+                  groups, ABA ratings, and senatorial courtesy can matter.</div>
+              </div>
+              <div class="mini-note"><strong>Philosophy</strong>
+                <div class="body-copy">Judicial restraint favors deference; judicial activism is more willing to
+                  overturn laws or precedents.</div>
+              </div>
             </div>
           </article>
 
@@ -1040,30 +1551,62 @@
             <div class="mini-label">06 · Conflict, Cooperation, and Statutes</div>
             <h3>Institutions in Practice</h3>
             <div class="body-copy">
-              <p>Unit 2 ultimately tests interaction. A law might begin with congressional bargaining, face a veto threat, become law through signature or override, be implemented by agencies, be overseen through hearings, and then be challenged in court.</p>
+              <p>Unit 2 ultimately tests interaction. A law might begin with congressional bargaining, face a veto
+                threat, become law through signature or override, be implemented by agencies, be overseen through
+                hearings, and then be challenged in court.</p>
             </div>
             <div class="note-grid">
-              <div class="mini-note"><strong>Youngstown</strong><div class="body-copy">Presidential power is weakest when acting against Congress's expressed will.</div></div>
-              <div class="mini-note"><strong>Impeachment</strong><div class="body-copy">House impeaches by majority; Senate removes by two-thirds. Impeachment is political and constitutional.</div></div>
-              <div class="mini-note"><strong>Unified vs. Divided</strong><div class="body-copy">Unified government may make lawmaking easier; divided government increases veto threats, investigations, gridlock, and unilateral action.</div></div>
-              <div class="mini-note"><strong>Key Laws</strong><div class="body-copy">War Powers Resolution, Budget and Impoundment Control Act, FOIA, Pendleton, Hatch, ADA, VRA, NCLB, Patriot Act, and campaign finance laws show Congress shaping implementation.</div></div>
+              <div class="mini-note"><strong>Youngstown</strong>
+                <div class="body-copy">Presidential power is weakest when acting against Congress's expressed will.
+                </div>
+              </div>
+              <div class="mini-note"><strong>Impeachment</strong>
+                <div class="body-copy">House impeaches by majority; Senate removes by two-thirds. Impeachment is
+                  political and constitutional.</div>
+              </div>
+              <div class="mini-note"><strong>Unified vs. Divided</strong>
+                <div class="body-copy">Unified government may make lawmaking easier; divided government increases veto
+                  threats, investigations, gridlock, and unilateral action.</div>
+              </div>
+              <div class="mini-note"><strong>Key Laws</strong>
+                <div class="body-copy">War Powers Resolution, Budget and Impoundment Control Act, FOIA, Pendleton,
+                  Hatch, ADA, VRA, NCLB, Patriot Act, and campaign finance laws show Congress shaping implementation.
+                </div>
+              </div>
             </div>
             <h4>AP Paragraph Model</h4>
-            <div class="body-copy">Claim: identify a power. Mechanism: explain how it works. Interaction: explain how another branch can check, influence, or respond.</div>
+            <div class="body-copy">Claim: identify a power. Mechanism: explain how it works. Interaction: explain how
+              another branch can check, influence, or respond.</div>
           </article>
 
           <article class="note-section accent-blue" id="u2-note-casebank">
             <div class="mini-label">07 · Case Bank</div>
             <h3>Fast Case-to-Doctrine Map</h3>
             <div class="note-grid">
-              <div class="mini-note"><strong>Marbury v. Madison</strong><div class="body-copy">Judicial review.</div></div>
-              <div class="mini-note"><strong>McCulloch v. Maryland</strong><div class="body-copy">Implied powers and national supremacy.</div></div>
-              <div class="mini-note"><strong>Baker v. Carr</strong><div class="body-copy">Redistricting claims can be heard in federal court.</div></div>
-              <div class="mini-note"><strong>Shaw v. Reno</strong><div class="body-copy">Race-based districting faces Equal Protection limits.</div></div>
-              <div class="mini-note"><strong>U.S. v. Nixon</strong><div class="body-copy">Executive privilege is limited.</div></div>
-              <div class="mini-note"><strong>Youngstown</strong><div class="body-copy">Limits unilateral presidential power against Congress.</div></div>
-              <div class="mini-note"><strong>INS v. Chadha</strong><div class="body-copy">Legislative veto violates bicameralism and presentment.</div></div>
-              <div class="mini-note"><strong>Clinton v. New York</strong><div class="body-copy">Line-item veto violates the constitutional lawmaking process.</div></div>
+              <div class="mini-note"><strong>Marbury v. Madison</strong>
+                <div class="body-copy">Judicial review.</div>
+              </div>
+              <div class="mini-note"><strong>McCulloch v. Maryland</strong>
+                <div class="body-copy">Implied powers and national supremacy.</div>
+              </div>
+              <div class="mini-note"><strong>Baker v. Carr</strong>
+                <div class="body-copy">Redistricting claims can be heard in federal court.</div>
+              </div>
+              <div class="mini-note"><strong>Shaw v. Reno</strong>
+                <div class="body-copy">Race-based districting faces Equal Protection limits.</div>
+              </div>
+              <div class="mini-note"><strong>U.S. v. Nixon</strong>
+                <div class="body-copy">Executive privilege is limited.</div>
+              </div>
+              <div class="mini-note"><strong>Youngstown</strong>
+                <div class="body-copy">Limits unilateral presidential power against Congress.</div>
+              </div>
+              <div class="mini-note"><strong>INS v. Chadha</strong>
+                <div class="body-copy">Legislative veto violates bicameralism and presentment.</div>
+              </div>
+              <div class="mini-note"><strong>Clinton v. New York</strong>
+                <div class="body-copy">Line-item veto violates the constitutional lawmaking process.</div>
+              </div>
             </div>
           </article>
         </div>
@@ -1081,7 +1624,10 @@
           <div class="mini-label">Power Sources</div>
           <h3>Enumerated, Implied, Inherent</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">Enumerated powers</strong> are written directly into the Constitution. <strong class="ap-term">Implied powers</strong> are inferred from listed powers, usually through the <strong class="ap-term">Necessary and Proper Clause</strong>. <strong class="ap-term">Inherent powers</strong> are claimed as powers of a sovereign nation and often appear in foreign policy or national security.</p>
+            <p><strong class="ap-term">Enumerated powers</strong> are written directly into the Constitution. <strong
+                class="ap-term">Implied powers</strong> are inferred from listed powers, usually through the <strong
+                class="ap-term">Necessary and Proper Clause</strong>. <strong class="ap-term">Inherent powers</strong>
+              are claimed as powers of a sovereign nation and often appear in foreign policy or national security.</p>
           </div>
         </article>
 
@@ -1091,7 +1637,8 @@
           <ul class="bullet-list body-copy">
             <li>Congress uses appropriations, hearings, confirmations, treaties, and impeachment.</li>
             <li>The president uses the veto, bargaining, agenda-setting, and sometimes signing statements.</li>
-            <li>Courts use <strong class="ap-term">judicial review</strong> through actual cases, not direct commands.</li>
+            <li>Courts use <strong class="ap-term">judicial review</strong> through actual cases, not direct commands.
+            </li>
           </ul>
         </article>
 
@@ -1099,7 +1646,9 @@
           <div class="mini-label">Misconception Check</div>
           <h3>Co-Equal Does Not Mean Identical</h3>
           <div class="feature-copy">
-            <p>The branches are co-equal in legitimacy, but not interchangeable in powers. Presidents cannot rewrite statutes, Congress cannot order a court to decide a case a certain way, and the Supreme Court rules on constitutionality rather than “overruling” Congress as if it were a legislature.</p>
+            <p>The branches are co-equal in legitimacy, but not interchangeable in powers. Presidents cannot rewrite
+              statutes, Congress cannot order a court to decide a case a certain way, and the Supreme Court rules on
+              constitutionality rather than “overruling” Congress as if it were a legislature.</p>
           </div>
         </article>
       </div>
@@ -1117,21 +1666,27 @@
           <div class="mini-label">Two Chambers</div>
           <h3>House vs. Senate</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">Bicameralism</strong> creates a House built for responsiveness and a Senate built for stability. The House starts revenue bills and impeaches; the Senate confirms appointments, ratifies treaties, and conducts impeachment trials.</p>
+            <p><strong class="ap-term">Bicameralism</strong> creates a House built for responsiveness and a Senate built
+              for stability. The House starts revenue bills and impeaches; the Senate confirms appointments, ratifies
+              treaties, and conducts impeachment trials.</p>
           </div>
         </article>
         <article class="feature-card accent-orange">
           <div class="mini-label">Districting</div>
           <h3>Census, Reapportionment, Redistricting</h3>
           <div class="feature-copy">
-            <p>The census determines how House seats are divided among states. After apportionment, states redraw districts, which opens the door to <strong class="ap-term">gerrymandering</strong> through <strong class="ap-term">packing</strong> and <strong class="ap-term">cracking</strong>.</p>
+            <p>The census determines how House seats are divided among states. After apportionment, states redraw
+              districts, which opens the door to <strong class="ap-term">gerrymandering</strong> through <strong
+                class="ap-term">packing</strong> and <strong class="ap-term">cracking</strong>.</p>
           </div>
         </article>
         <article class="feature-card accent-purple">
           <div class="mini-label">Representation Styles</div>
           <h3>Delegate vs. Trustee</h3>
           <div class="feature-copy">
-            <p>Under the <strong class="ap-term">delegate model</strong>, members follow district preferences closely. Under the <strong class="ap-term">trustee model</strong>, members use personal judgment even when constituents disagree.</p>
+            <p>Under the <strong class="ap-term">delegate model</strong>, members follow district preferences closely.
+              Under the <strong class="ap-term">trustee model</strong>, members use personal judgment even when
+              constituents disagree.</p>
           </div>
         </article>
       </div>
@@ -1149,28 +1704,34 @@
           <div class="mini-label">House</div>
           <h3>Structured Chamber</h3>
           <div class="feature-copy">
-            <p>The <strong class="ap-term">Speaker of the House</strong> controls agenda flow and committee influence inside the majority party. Majority and minority leaders shape strategy, while <strong class="ap-term">whips</strong> count votes and pressure members.</p>
+            <p>The <strong class="ap-term">Speaker of the House</strong> controls agenda flow and committee influence
+              inside the majority party. Majority and minority leaders shape strategy, while <strong
+                class="ap-term">whips</strong> count votes and pressure members.</p>
           </div>
         </article>
         <article class="feature-card accent-gold">
           <div class="mini-label">Senate</div>
           <h3>Individual Leverage</h3>
           <div class="feature-copy">
-            <p>The Senate majority leader is the key agenda broker, but the chamber’s looser rules give individual senators more room to delay or reshape legislation.</p>
+            <p>The Senate majority leader is the key agenda broker, but the chamber’s looser rules give individual
+              senators more room to delay or reshape legislation.</p>
           </div>
         </article>
         <article class="feature-card accent-teal">
           <div class="mini-label">Committees</div>
           <h3>Gatekeepers of Congress</h3>
           <div class="feature-copy">
-            <p>Most bills live or die in committees. Hearings, expert testimony, and <strong class="ap-term">markup</strong> sessions determine whether legislation is rewritten, advanced, or <strong class="ap-term">pigeonholed</strong>.</p>
+            <p>Most bills live or die in committees. Hearings, expert testimony, and <strong
+                class="ap-term">markup</strong> sessions determine whether legislation is rewritten, advanced, or
+              <strong class="ap-term">pigeonholed</strong>.</p>
           </div>
         </article>
         <article class="feature-card accent-red">
           <div class="mini-label">Oversight</div>
           <h3>Continuous, Not Rare</h3>
           <div class="feature-copy">
-            <p>Congress supervises the executive through hearings, investigations, subpoenas, budgets, and statutory revisions. Oversight is one of its strongest ongoing checks.</p>
+            <p>Congress supervises the executive through hearings, investigations, subpoenas, budgets, and statutory
+              revisions. Oversight is one of its strongest ongoing checks.</p>
           </div>
         </article>
       </div>
@@ -1188,21 +1749,27 @@
           <div class="mini-label">Committees First</div>
           <h3>Where Bills Usually Change or Die</h3>
           <div class="feature-copy">
-            <p>Bills are introduced by members, referred to committees, and usually shaped there before the public sees them. Many never escape committee unless pressure, leadership, or in the House a <strong class="ap-term">discharge petition</strong> changes that.</p>
+            <p>Bills are introduced by members, referred to committees, and usually shaped there before the public sees
+              them. Many never escape committee unless pressure, leadership, or in the House a <strong
+                class="ap-term">discharge petition</strong> changes that.</p>
           </div>
         </article>
         <article class="feature-card accent-gold">
           <div class="mini-label">House vs. Senate Rules</div>
           <h3>Tight House, Loose Senate</h3>
           <div class="feature-copy">
-            <p>The House Rules Committee tightly manages floor debate and amendments. The Senate allows extended debate, making the <strong class="ap-term">filibuster</strong> and <strong class="ap-term">cloture</strong> central to minority leverage.</p>
+            <p>The House Rules Committee tightly manages floor debate and amendments. The Senate allows extended debate,
+              making the <strong class="ap-term">filibuster</strong> and <strong class="ap-term">cloture</strong>
+              central to minority leverage.</p>
           </div>
         </article>
         <article class="feature-card accent-red">
           <div class="mini-label">Presidential Stage</div>
           <h3>Sign, Veto, or Pocket Veto</h3>
           <div class="feature-copy">
-            <p>After bicameral passage, the president may sign or veto. If the president does nothing for ten days and Congress adjourns, the result is a <strong class="ap-term">pocket veto</strong>, which cannot be overridden.</p>
+            <p>After bicameral passage, the president may sign or veto. If the president does nothing for ten days and
+              Congress adjourns, the result is a <strong class="ap-term">pocket veto</strong>, which cannot be
+              overridden.</p>
           </div>
         </article>
       </div>
@@ -1222,7 +1789,8 @@
           <ul class="bullet-list body-copy">
             <li>Veto legislation.</li>
             <li>Serve as <strong class="ap-term">Commander in Chief</strong>.</li>
-            <li>Negotiate treaties and appoint judges, ambassadors, and executive officers, often with Senate confirmation.</li>
+            <li>Negotiate treaties and appoint judges, ambassadors, and executive officers, often with Senate
+              confirmation.</li>
             <li>Issue pardons and reprieves for federal offenses.</li>
           </ul>
         </article>
@@ -1230,14 +1798,19 @@
           <div class="mini-label">Political Tools</div>
           <h3>Informal Powers</h3>
           <div class="feature-copy">
-            <p>Modern presidents rely on agenda-setting, bargaining, party leadership, and the <strong class="ap-term">bully pulpit</strong>. Under <strong class="ap-term">unified government</strong>, bargaining may be easier; under <strong class="ap-term">divided government</strong>, veto threats and unilateral tools become more important.</p>
+            <p>Modern presidents rely on agenda-setting, bargaining, party leadership, and the <strong
+                class="ap-term">bully pulpit</strong>. Under <strong class="ap-term">unified government</strong>,
+              bargaining may be easier; under <strong class="ap-term">divided government</strong>, veto threats and
+              unilateral tools become more important.</p>
           </div>
         </article>
         <article class="feature-card accent-red">
           <div class="mini-label">Unilateral Action</div>
           <h3>Executive Orders and Privilege</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">Executive orders</strong> direct executive operations but must rest on constitutional or statutory authority. <strong class="ap-term">Executive privilege</strong> exists, but <strong class="ap-term">U.S. v. Nixon</strong> shows it is not absolute.</p>
+            <p><strong class="ap-term">Executive orders</strong> direct executive operations but must rest on
+              constitutional or statutory authority. <strong class="ap-term">Executive privilege</strong> exists, but
+              <strong class="ap-term">U.S. v. Nixon</strong> shows it is not absolute.</p>
           </div>
         </article>
       </div>
@@ -1255,28 +1828,35 @@
           <div class="mini-label">Core Job</div>
           <h3>Implementation and Regulation</h3>
           <div class="feature-copy">
-            <p>Bureaucracies translate statutes into real policy through implementation, regulation, and expertise. Agencies matter because Congress cannot legislate every technical detail.</p>
+            <p>Bureaucracies translate statutes into real policy through implementation, regulation, and expertise.
+              Agencies matter because Congress cannot legislate every technical detail.</p>
           </div>
         </article>
         <article class="feature-card accent-blue">
           <div class="mini-label">Agency Power</div>
           <h3>Discretion</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">Discretionary authority</strong> means agencies make choices inside legal boundaries. The same law can produce different outcomes depending on enforcement priorities and rule design.</p>
+            <p><strong class="ap-term">Discretionary authority</strong> means agencies make choices inside legal
+              boundaries. The same law can produce different outcomes depending on enforcement priorities and rule
+              design.</p>
           </div>
         </article>
         <article class="feature-card accent-gold">
           <div class="mini-label">Control</div>
           <h3>Presidents, Congress, Courts</h3>
           <div class="feature-copy">
-            <p>Presidents influence agencies through appointments, directives, and the <strong class="ap-term">OMB</strong>. Congress uses funding and oversight. Courts review whether agency action stays within statutory and constitutional limits.</p>
+            <p>Presidents influence agencies through appointments, directives, and the <strong
+                class="ap-term">OMB</strong>. Congress uses funding and oversight. Courts review whether agency action
+              stays within statutory and constitutional limits.</p>
           </div>
         </article>
         <article class="feature-card accent-orange">
           <div class="mini-label">Policy Networks</div>
           <h3>Iron Triangles and Issue Networks</h3>
           <div class="feature-copy">
-            <p>An <strong class="ap-term">iron triangle</strong> links an agency, a congressional committee, and an interest group in a mutually beneficial relationship. <strong class="ap-term">Issue networks</strong> are broader and more fluid.</p>
+            <p>An <strong class="ap-term">iron triangle</strong> links an agency, a congressional committee, and an
+              interest group in a mutually beneficial relationship. <strong class="ap-term">Issue networks</strong> are
+              broader and more fluid.</p>
           </div>
         </article>
       </div>
@@ -1294,21 +1874,26 @@
           <div class="mini-label">Access to the Court</div>
           <h3>Justiciability and Standing</h3>
           <div class="feature-copy">
-            <p>The Supreme Court only hears <strong class="ap-term">justiciable</strong> disputes. Litigants need <strong class="ap-term">standing</strong>, lower court paths are usually exhausted, and the Court normally takes a case by granting <strong class="ap-term">certiorari</strong> under the <strong class="ap-term">rule of four</strong>.</p>
+            <p>The Supreme Court only hears <strong class="ap-term">justiciable</strong> disputes. Litigants need
+              <strong class="ap-term">standing</strong>, lower court paths are usually exhausted, and the Court normally
+              takes a case by granting <strong class="ap-term">certiorari</strong> under the <strong
+                class="ap-term">rule of four</strong>.</p>
           </div>
         </article>
         <article class="feature-card accent-blue">
           <div class="mini-label">Review Power</div>
           <h3>Marbury and Judicial Review</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">Marbury v. Madison</strong> established judicial review, making the Court the final interpreter of constitutionality in cases that come before it.</p>
+            <p><strong class="ap-term">Marbury v. Madison</strong> established judicial review, making the Court the
+              final interpreter of constitutionality in cases that come before it.</p>
           </div>
         </article>
         <article class="feature-card accent-red">
           <div class="mini-label">Types of Cases</div>
           <h3>Criminal vs. Civil</h3>
           <div class="feature-copy">
-            <p>Criminal law requires proof beyond a reasonable doubt and may end in punishment. Civil law usually uses a preponderance standard and often ends with damages or equitable relief.</p>
+            <p>Criminal law requires proof beyond a reasonable doubt and may end in punishment. Civil law usually uses a
+              preponderance standard and often ends with damages or equitable relief.</p>
           </div>
         </article>
       </div>
@@ -1326,28 +1911,33 @@
           <div class="mini-label">Shared Power</div>
           <h3>Appointments and Confirmations</h3>
           <div class="feature-copy">
-            <p>The president nominates many judges and executive officials, but the Senate confirms. This forces strategic nominations and creates leverage for senators.</p>
+            <p>The president nominates many judges and executive officials, but the Senate confirms. This forces
+              strategic nominations and creates leverage for senators.</p>
           </div>
         </article>
         <article class="feature-card accent-gold">
           <div class="mini-label">Foreign Policy</div>
           <h3>Treaties vs. Executive Agreements</h3>
           <div class="feature-copy">
-            <p>Treaties require Senate ratification by two-thirds. <strong class="ap-term">Executive agreements</strong> bypass that step, making them easier to conclude but often more vulnerable politically.</p>
+            <p>Treaties require Senate ratification by two-thirds. <strong class="ap-term">Executive agreements</strong>
+              bypass that step, making them easier to conclude but often more vulnerable politically.</p>
           </div>
         </article>
         <article class="feature-card accent-red">
           <div class="mini-label">Presidential Limits</div>
           <h3>Youngstown and Nixon</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">Youngstown Sheet & Tube v. Sawyer</strong> shows presidents are weakest when acting against Congress. <strong class="ap-term">U.S. v. Nixon</strong> shows executive privilege is limited in a judicial proceeding.</p>
+            <p><strong class="ap-term">Youngstown Sheet & Tube v. Sawyer</strong> shows presidents are weakest when
+              acting against Congress. <strong class="ap-term">U.S. v. Nixon</strong> shows executive privilege is
+              limited in a judicial proceeding.</p>
           </div>
         </article>
         <article class="feature-card accent-purple">
           <div class="mini-label">Removal Power</div>
           <h3>Impeachment</h3>
           <div class="feature-copy">
-            <p>The House impeaches by majority vote; the Senate removes by a two-thirds vote. Impeachment is a constitutional remedy, but it also unfolds as a political process.</p>
+            <p>The House impeaches by majority vote; the Senate removes by a two-thirds vote. Impeachment is a
+              constitutional remedy, but it also unfolds as a political process.</p>
           </div>
         </article>
       </div>
@@ -1365,21 +1955,27 @@
           <div class="mini-label">Civil Service</div>
           <h3>Pendleton and Hatch</h3>
           <div class="feature-copy">
-            <p>The <strong class="ap-term">Pendleton Act</strong> moved federal hiring toward merit and away from the spoils system. The <strong class="ap-term">Hatch Act</strong> limited partisan activity by federal employees to preserve bureaucratic neutrality.</p>
+            <p>The <strong class="ap-term">Pendleton Act</strong> moved federal hiring toward merit and away from the
+              spoils system. The <strong class="ap-term">Hatch Act</strong> limited partisan activity by federal
+              employees to preserve bureaucratic neutrality.</p>
           </div>
         </article>
         <article class="feature-card accent-gold">
           <div class="mini-label">Congressional Control</div>
           <h3>War Powers and Budgeting</h3>
           <div class="feature-copy">
-            <p>The <strong class="ap-term">War Powers Resolution</strong> tried to limit unilateral presidential military action. The <strong class="ap-term">Budget and Impoundment Control Act</strong> strengthened Congress against presidents refusing to spend appropriated funds.</p>
+            <p>The <strong class="ap-term">War Powers Resolution</strong> tried to limit unilateral presidential
+              military action. The <strong class="ap-term">Budget and Impoundment Control Act</strong> strengthened
+              Congress against presidents refusing to spend appropriated funds.</p>
           </div>
         </article>
         <article class="feature-card accent-teal">
           <div class="mini-label">Transparency and Implementation</div>
           <h3>FOIA, Voting Rights, NCLB</h3>
           <div class="feature-copy">
-            <p><strong class="ap-term">FOIA</strong> expanded access to government records. The <strong class="ap-term">Voting Rights Act</strong> and <strong class="ap-term">No Child Left Behind</strong> show how statutes can increase federal implementation burdens and oversight over states and agencies.</p>
+            <p><strong class="ap-term">FOIA</strong> expanded access to government records. The <strong
+                class="ap-term">Voting Rights Act</strong> and <strong class="ap-term">No Child Left Behind</strong>
+              show how statutes can increase federal implementation burdens and oversight over states and agencies.</p>
           </div>
         </article>
       </div>
@@ -1392,7 +1988,8 @@
         <p>Horizontal rail · cases and laws that reshaped branch power</p>
       </header>
 
-      <div class="timeline-intro">Scroll across the branch-building timeline from the founding structure to modern fights over bureaucracy, war powers, and executive limits.</div>
+      <div class="timeline-intro">Scroll across the branch-building timeline from the founding structure to modern
+        fights over bureaucracy, war powers, and executive limits.</div>
 
       <div class="timeline">
         <article class="timeline-item">
@@ -1506,21 +2103,24 @@
           <div class="mini-label">Paragraph Model</div>
           <h3>Power → Mechanism → Check</h3>
           <div class="feature-copy">
-            <p>Start with the branch power, explain how it operates, then show how another branch can limit or influence it. That structure keeps the answer causal instead of definition-heavy.</p>
+            <p>Start with the branch power, explain how it operates, then show how another branch can limit or influence
+              it. That structure keeps the answer causal instead of definition-heavy.</p>
           </div>
         </article>
         <article class="feature-card accent-gold">
           <div class="mini-label">Case Use</div>
           <h3>Do More Than Name-Drop</h3>
           <div class="feature-copy">
-            <p>Name the case, state the principle, and apply it to the scenario. Example: <strong class="ap-term">U.S. v. Nixon</strong> means executive privilege exists but can be overcome in a criminal proceeding.</p>
+            <p>Name the case, state the principle, and apply it to the scenario. Example: <strong class="ap-term">U.S.
+                v. Nixon</strong> means executive privilege exists but can be overcome in a criminal proceeding.</p>
           </div>
         </article>
         <article class="feature-card accent-red">
           <div class="mini-label">Common Error</div>
           <h3>Do Not Confuse Strategy with Power</h3>
           <div class="feature-copy">
-            <p>“Going public” is an informal strategy, not a constitutional power. A president can pressure Congress politically, but cannot legislate unilaterally.</p>
+            <p>“Going public” is an informal strategy, not a constitutional power. A president can pressure Congress
+              politically, but cannot legislate unilaterally.</p>
           </div>
         </article>
       </div>
@@ -1979,4 +2579,5 @@
     });
   </script>
 </body>
+
 </html>

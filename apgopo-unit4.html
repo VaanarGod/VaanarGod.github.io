@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AP Government and Politics - Unit 4</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
       --bg: #07080a;
       --card: #0d0f12;
-      --border: rgba(255,255,255,0.07);
+      --border: rgba(255, 255, 255, 0.07);
       --text: #dde3ec;
       --muted: #7a8699;
       --gold: #c9a84c;
@@ -22,7 +32,11 @@
       --orange: #f28749;
       --purple: #9b86f4;
     }
-    html { scroll-behavior: smooth; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -32,6 +46,7 @@
       overflow: hidden;
       cursor: none;
     }
+
     body::before {
       content: "";
       position: fixed;
@@ -41,6 +56,7 @@
       pointer-events: none;
       z-index: 1;
     }
+
     #cursor {
       position: fixed;
       width: 12px;
@@ -53,6 +69,7 @@
       mix-blend-mode: difference;
       transition: width .2s ease, height .2s ease;
     }
+
     #readingProgress {
       position: fixed;
       top: 0;
@@ -61,33 +78,41 @@
       height: 2px;
       z-index: 100;
     }
+
     #readingProgressFill {
       width: 0%;
       height: 100%;
       background: var(--orange);
     }
+
     #ambientOverlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(ellipse at 60% 10%, rgba(242,135,73,.13), transparent 65%);
+      background: radial-gradient(ellipse at 60% 10%, rgba(242, 135, 73, .13), transparent 65%);
       opacity: .11;
       pointer-events: none;
       transition: background 1s ease;
       z-index: 0;
     }
+
     #sidebar {
       width: 72px;
       height: 100vh;
       flex-shrink: 0;
-      background: rgba(5,6,8,.84);
+      background: rgba(5, 6, 8, .84);
       border-right: 1px solid var(--border);
       backdrop-filter: blur(24px);
       overflow: hidden;
       position: relative;
       z-index: 10;
-      transition: width .4s cubic-bezier(0.23,1,0.32,1);
+      transition: width .4s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    #sidebar:hover, #sidebar.pinned { width: 268px; }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 268px;
+    }
+
     #pinBtn {
       position: absolute;
       top: 12px;
@@ -104,8 +129,17 @@
       cursor: none;
       transition: opacity .25s ease, color .2s ease, border-color .2s ease;
     }
-    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
-    #pinBtn.pinned { color: var(--orange); border-color: rgba(242,135,73,.28); }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1;
+    }
+
+    #pinBtn.pinned {
+      color: var(--orange);
+      border-color: rgba(242, 135, 73, .28);
+    }
+
     .sidebar-logo {
       display: flex;
       align-items: center;
@@ -114,26 +148,37 @@
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
+
     .logo-icon {
       width: 36px;
       height: 36px;
       display: grid;
       place-items: center;
       border-radius: 10px;
-      border: 1px solid rgba(242,135,73,.22);
-      background: rgba(242,135,73,.08);
+      border: 1px solid rgba(242, 135, 73, .22);
+      background: rgba(242, 135, 73, .08);
       color: var(--orange);
       flex-shrink: 0;
       font-size: 14px;
     }
-    .logo-copy { opacity: 0; transition: opacity .25s ease; }
-    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1;
+    }
+
     .logo-copy h1 {
       font-family: "Bebas Neue", sans-serif;
       font-size: 13px;
       letter-spacing: .25em;
       color: var(--orange);
     }
+
     .logo-copy p {
       color: var(--muted);
       font-size: 9px;
@@ -141,7 +186,12 @@
       text-transform: uppercase;
       margin-top: 3px;
     }
-    .search-wrap { position: relative; padding: 10px; }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px;
+    }
+
     .sb-search-trigger {
       width: 100%;
       display: flex;
@@ -150,25 +200,31 @@
       padding: 10px 14px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
       color: var(--muted);
       cursor: none;
       opacity: 0;
       pointer-events: none;
       transition: opacity .25s ease, border-color .2s ease;
     }
-    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
       opacity: 1;
       pointer-events: auto;
     }
-    .sb-search-trigger:hover { border-color: rgba(242,135,73,.24); }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(242, 135, 73, .24);
+    }
+
     #sbSearchPanel {
       position: absolute;
       top: calc(100% - 4px);
       left: 10px;
       right: 10px;
-      border: 1px solid rgba(242,135,73,.18);
-      background: rgba(8,10,13,.98);
+      border: 1px solid rgba(242, 135, 73, .18);
+      background: rgba(8, 10, 13, .98);
       border-radius: 12px;
       overflow: hidden;
       opacity: 0;
@@ -176,16 +232,23 @@
       transform: translateY(-8px);
       transition: opacity .22s ease, transform .22s ease;
       z-index: 80;
-      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
     }
-    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
     #sbSearchInner {
       display: flex;
       align-items: center;
       gap: 8px;
       padding: 10px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
     }
+
     #sbInput {
       flex: 1;
       border: none;
@@ -197,14 +260,23 @@
       outline: none;
       cursor: none;
     }
-    #sbResults { max-height: 280px; overflow: auto; }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto;
+    }
+
     .sb-result {
       padding: 11px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
       cursor: none;
       transition: background .15s ease;
     }
-    .sb-result:hover { background: rgba(242,135,73,.06); }
+
+    .sb-result:hover {
+      background: rgba(242, 135, 73, .06);
+    }
+
     .sb-result-tab {
       font-size: 8px;
       color: var(--orange);
@@ -212,19 +284,25 @@
       text-transform: uppercase;
       margin-bottom: 3px;
     }
+
     .sb-result-term {
       font-family: "Bebas Neue", sans-serif;
       font-size: 14px;
       color: white;
       letter-spacing: .04em;
     }
+
     .sb-result-snip {
       font-family: "Crimson Pro", serif;
       font-size: 12px;
       color: var(--muted);
       line-height: 1.45;
     }
-    .nav-list { padding: 14px 0; }
+
+    .nav-list {
+      padding: 14px 0;
+    }
+
     .nav-btn {
       width: 100%;
       height: 52px;
@@ -243,14 +321,15 @@
       position: relative;
       padding-left: 8px;
     }
+
     .nav-btn::before {
       content: attr(data-label);
       position: absolute;
       left: calc(100% + 12px);
       padding: 6px 12px;
       border-radius: 8px;
-      background: rgba(8,10,13,.96);
-      border: 1px solid rgba(255,255,255,.11);
+      background: rgba(8, 10, 13, .96);
+      border: 1px solid rgba(255, 255, 255, .11);
       font-size: 9px;
       letter-spacing: .16em;
       text-transform: uppercase;
@@ -259,16 +338,30 @@
       pointer-events: none;
       transition: opacity .2s ease;
       z-index: 10;
-      box-shadow: 0 4px 20px rgba(0,0,0,.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
     }
-    #sidebar:not(:hover):not(.pinned) .nav-btn:hover::before { opacity: 1; }
-    .nav-btn:hover { background: rgba(255,255,255,.03); color: white; }
-    .nav-btn.active { color: white; border-left-color: var(--orange); background: rgba(242,135,73,.08); }
+
+    #sidebar:not(:hover):not(.pinned) .nav-btn:hover::before {
+      opacity: 1;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .03);
+      color: white;
+    }
+
+    .nav-btn.active {
+      color: white;
+      border-left-color: var(--orange);
+      background: rgba(242, 135, 73, .08);
+    }
+
     .nav-icon {
       font-size: 18px;
       font-family: "Bebas Neue", sans-serif;
       letter-spacing: .08em;
     }
+
     .nav-title {
       font-size: 7px;
       letter-spacing: .2em;
@@ -276,7 +369,12 @@
       opacity: 0;
       transition: opacity .25s ease;
     }
-    #sidebar:hover .nav-title, #sidebar.pinned .nav-title { opacity: 1; }
+
+    #sidebar:hover .nav-title,
+    #sidebar.pinned .nav-title {
+      opacity: 1;
+    }
+
     .sidebar-footer {
       margin-top: auto;
       padding: 10px;
@@ -284,12 +382,18 @@
       opacity: 0;
       transition: opacity .25s ease;
     }
-    #sidebar:hover .sidebar-footer, #sidebar.pinned .sidebar-footer { opacity: 1; }
+
+    #sidebar:hover .sidebar-footer,
+    #sidebar.pinned .sidebar-footer {
+      opacity: 1;
+    }
+
     .sb-actions {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
+
     .sb-action-btn {
       width: 100%;
       padding: 10px;
@@ -305,8 +409,17 @@
       transition: background .2s ease, color .2s ease;
       text-align: center;
     }
-    .sb-action-btn:hover { background: rgba(255,255,255,.04); color: white; }
-    .sb-action-btn.highlight { color: var(--orange); border-color: rgba(242,135,73,.28); }
+
+    .sb-action-btn:hover {
+      background: rgba(255, 255, 255, .04);
+      color: white;
+    }
+
+    .sb-action-btn.highlight {
+      color: var(--orange);
+      border-color: rgba(242, 135, 73, .28);
+    }
+
     #main {
       flex: 1;
       height: 100vh;
@@ -315,14 +428,34 @@
       z-index: 2;
       padding: 0 80px 60px;
     }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeUp .35s ease; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeUp .35s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
     .header-area {
       padding-top: 80px;
       padding-bottom: 32px;
       max-width: 1100px;
     }
+
     .mini-label {
       font-size: 8px;
       letter-spacing: .22em;
@@ -330,12 +463,14 @@
       color: var(--muted);
       margin-bottom: 12px;
     }
+
     .page-title {
       font-family: "Bebas Neue", sans-serif;
       font-size: 52px;
       letter-spacing: .08em;
       margin-bottom: 16px;
     }
+
     .page-subtitle {
       font-family: "Crimson Pro", serif;
       font-size: 18px;
@@ -343,15 +478,21 @@
       line-height: 1.55;
       max-width: 760px;
     }
+
     .notes-content {
       max-width: 920px;
     }
+
     .note-section {
       margin-bottom: 64px;
       padding-bottom: 48px;
       border-bottom: 1px solid var(--border);
     }
-    .note-section:last-child { border-bottom: none; }
+
+    .note-section:last-child {
+      border-bottom: none;
+    }
+
     .section-title {
       font-family: "Bebas Neue", sans-serif;
       font-size: 36px;
@@ -359,9 +500,11 @@
       margin-bottom: 20px;
       color: var(--orange);
     }
+
     .subsection {
       margin-top: 28px;
     }
+
     .subsection h3 {
       font-family: "Bebas Neue", sans-serif;
       font-size: 22px;
@@ -369,6 +512,7 @@
       margin-bottom: 12px;
       color: white;
     }
+
     .subsection h4 {
       font-family: "DM Mono", monospace;
       font-size: 13px;
@@ -378,6 +522,7 @@
       color: var(--orange);
       text-transform: uppercase;
     }
+
     .body-copy {
       font-family: "Crimson Pro", serif;
       font-size: 16px;
@@ -385,22 +530,39 @@
       color: var(--text);
       margin-bottom: 14px;
     }
-    .body-copy:last-child { margin-bottom: 0; }
-    .body-copy strong { color: white; font-weight: 600; }
-    .body-copy em { color: var(--orange); font-style: italic; }
+
+    .body-copy:last-child {
+      margin-bottom: 0;
+    }
+
+    .body-copy strong {
+      color: white;
+      font-weight: 600;
+    }
+
+    .body-copy em {
+      color: var(--orange);
+      font-style: italic;
+    }
+
     .term-list {
       display: grid;
       gap: 12px;
       margin: 20px 0;
     }
+
     .term-card {
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px 20px;
       transition: background .2s ease;
     }
-    .term-card:hover { background: rgba(255,255,255,.04); }
+
+    .term-card:hover {
+      background: rgba(255, 255, 255, .04);
+    }
+
     .term-card-title {
       font-family: "Bebas Neue", sans-serif;
       font-size: 18px;
@@ -408,19 +570,22 @@
       margin-bottom: 6px;
       color: var(--orange);
     }
+
     .term-card-body {
       font-family: "Crimson Pro", serif;
       font-size: 15px;
       line-height: 1.65;
       color: var(--muted);
     }
+
     .callout {
-      background: rgba(242,135,73,.06);
-      border: 1px solid rgba(242,135,73,.18);
+      background: rgba(242, 135, 73, .06);
+      border: 1px solid rgba(242, 135, 73, .18);
       border-radius: 12px;
       padding: 20px 24px;
       margin: 24px 0;
     }
+
     .callout-label {
       font-size: 8px;
       letter-spacing: .22em;
@@ -429,41 +594,54 @@
       margin-bottom: 10px;
       font-weight: 600;
     }
+
     .callout-body {
       font-family: "Crimson Pro", serif;
       font-size: 15px;
       line-height: 1.65;
       color: var(--text);
     }
-    .callout-body p { margin-bottom: 8px; }
-    .callout-body p:last-child { margin-bottom: 0; }
+
+    .callout-body p {
+      margin-bottom: 8px;
+    }
+
+    .callout-body p:last-child {
+      margin-bottom: 0;
+    }
+
     .callout-body ul {
       list-style: none;
       padding-left: 0;
     }
+
     .callout-body li {
       padding-left: 20px;
       position: relative;
       margin-bottom: 6px;
     }
+
     .callout-body li::before {
       content: "→";
       position: absolute;
       left: 0;
       color: var(--orange);
     }
+
     .comparison-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 14px;
       margin: 20px 0;
     }
+
     .comp-card {
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 18px 20px;
     }
+
     .comp-title {
       font-family: "Bebas Neue", sans-serif;
       font-size: 16px;
@@ -471,17 +649,19 @@
       color: var(--orange);
       margin-bottom: 8px;
     }
+
     .comp-body {
       font-family: "Crimson Pro", serif;
       font-size: 14px;
       line-height: 1.6;
       color: var(--muted);
     }
+
     .note-jump-btn {
       padding: 7px 16px;
       border-radius: 8px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
+      background: rgba(255, 255, 255, .03);
       color: var(--muted);
       font: inherit;
       font-size: 10px;
@@ -492,21 +672,24 @@
       margin-right: 8px;
       margin-bottom: 8px;
     }
+
     .note-jump-btn:hover {
-      background: rgba(242,135,73,.1);
+      background: rgba(242, 135, 73, .1);
       color: var(--orange);
-      border-color: rgba(242,135,73,.28);
+      border-color: rgba(242, 135, 73, .28);
     }
+
     .glossary-filter-wrap {
       margin-bottom: 32px;
       max-width: 520px;
     }
+
     .glossary-filter-wrap input {
       width: 100%;
       padding: 14px 20px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       color: var(--text);
       font: inherit;
       font-size: 13px;
@@ -514,39 +697,46 @@
       transition: border-color .2s ease;
       cursor: none;
     }
+
     .glossary-filter-wrap input:focus {
       outline: none;
-      border-color: rgba(242,135,73,.4);
+      border-color: rgba(242, 135, 73, .4);
     }
+
     .glossary-grid {
       display: grid;
       gap: 14px;
       max-width: 920px;
     }
+
     .glossary-card {
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 20px 24px;
       cursor: none;
       transition: background .2s ease, border-color .2s ease;
     }
+
     .glossary-card:hover {
-      background: rgba(242,135,73,.06);
-      border-color: rgba(242,135,73,.2);
+      background: rgba(242, 135, 73, .06);
+      border-color: rgba(242, 135, 73, .2);
     }
+
     .glossary-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
     }
+
     .glossary-term {
       font-family: "Bebas Neue", sans-serif;
       font-size: 20px;
       letter-spacing: .06em;
       color: white;
     }
+
     .glossary-tag {
       font-size: 8px;
       letter-spacing: .18em;
@@ -554,26 +744,30 @@
       color: var(--orange);
       padding: 4px 10px;
       border-radius: 6px;
-      background: rgba(242,135,73,.1);
-      border: 1px solid rgba(242,135,73,.22);
+      background: rgba(242, 135, 73, .1);
+      border: 1px solid rgba(242, 135, 73, .22);
     }
+
     .glossary-def {
       font-family: "Crimson Pro", serif;
       font-size: 15px;
       line-height: 1.7;
       color: var(--muted);
     }
+
     .flash-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 18px;
       max-width: 1200px;
     }
+
     .flash-card {
       height: 220px;
       perspective: 1400px;
       cursor: none;
     }
+
     .flash-card-inner {
       position: relative;
       width: 100%;
@@ -581,8 +775,13 @@
       transition: transform .5s cubic-bezier(0.4, 0.0, 0.2, 1);
       transform-style: preserve-3d;
     }
-    .flash-card.flipped .flash-card-inner { transform: rotateY(180deg); }
-    .flash-front, .flash-back {
+
+    .flash-card.flipped .flash-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flash-front,
+    .flash-back {
       position: absolute;
       inset: 0;
       backface-visibility: hidden;
@@ -594,16 +793,22 @@
       flex-direction: column;
       justify-content: space-between;
     }
+
     .flash-front {
-      background: linear-gradient(135deg, rgba(242,135,73,.08), rgba(242,135,73,.02));
+      background: linear-gradient(135deg, rgba(242, 135, 73, .08), rgba(242, 135, 73, .02));
     }
-    .flash-back { transform: rotateY(180deg); }
+
+    .flash-back {
+      transform: rotateY(180deg);
+    }
+
     .flash-tag {
       font-size: 8px;
       letter-spacing: .2em;
       text-transform: uppercase;
       color: var(--orange);
     }
+
     .flash-front h3 {
       font-family: "Bebas Neue", sans-serif;
       font-size: 24px;
@@ -611,17 +816,19 @@
       color: white;
       line-height: 1.3;
     }
+
     .flash-hint {
       font-size: 10px;
       color: var(--muted);
       letter-spacing: .12em;
       text-align: center;
     }
+
     .glass-btn {
       padding: 12px 24px;
       border-radius: 10px;
-      border: 1px solid rgba(242,135,73,.28);
-      background: rgba(242,135,73,.08);
+      border: 1px solid rgba(242, 135, 73, .28);
+      background: rgba(242, 135, 73, .08);
       color: var(--orange);
       font: inherit;
       font-size: 11px;
@@ -631,14 +838,16 @@
       transition: background .2s ease, border-color .2s ease;
       font-weight: 600;
     }
+
     .glass-btn:hover {
-      background: rgba(242,135,73,.14);
-      border-color: rgba(242,135,73,.4);
+      background: rgba(242, 135, 73, .14);
+      border-color: rgba(242, 135, 73, .4);
     }
+
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.85);
+      background: rgba(0, 0, 0, .85);
       backdrop-filter: blur(8px);
       z-index: 200;
       display: flex;
@@ -649,7 +858,12 @@
       transition: opacity .3s ease;
       padding: 40px;
     }
-    .modal.open { opacity: 1; pointer-events: auto; }
+
+    .modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .modal-inner {
       background: var(--card);
       border: 1px solid var(--border);
@@ -661,6 +875,7 @@
       padding: 40px;
       position: relative;
     }
+
     .modal-close {
       position: absolute;
       top: 20px;
@@ -677,7 +892,12 @@
       place-items: center;
       transition: background .2s ease, color .2s ease;
     }
-    .modal-close:hover { background: rgba(255,255,255,.06); color: white; }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, .06);
+      color: white;
+    }
+
     .modal-title {
       font-family: "Bebas Neue", sans-serif;
       font-size: 32px;
@@ -685,6 +905,7 @@
       margin-bottom: 24px;
       color: var(--orange);
     }
+
     .quiz-status {
       font-size: 9px;
       letter-spacing: .18em;
@@ -692,6 +913,7 @@
       color: var(--orange);
       margin-bottom: 12px;
     }
+
     .quiz-question {
       font-family: "Crimson Pro", serif;
       font-size: 18px;
@@ -699,17 +921,19 @@
       color: white;
       margin-bottom: 24px;
     }
+
     .quiz-options {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 20px;
     }
+
     .quiz-option {
       padding: 14px 20px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       color: var(--text);
       font: inherit;
       font-size: 14px;
@@ -717,34 +941,42 @@
       cursor: none;
       transition: background .2s ease, border-color .2s ease;
     }
-    .quiz-option:hover { background: rgba(255,255,255,.05); }
+
+    .quiz-option:hover {
+      background: rgba(255, 255, 255, .05);
+    }
+
     .quiz-option.correct {
-      background: rgba(62,184,154,.15);
-      border-color: rgba(62,184,154,.4);
+      background: rgba(62, 184, 154, .15);
+      border-color: rgba(62, 184, 154, .4);
       color: var(--teal);
     }
+
     .quiz-option.wrong {
-      background: rgba(217,95,95,.15);
-      border-color: rgba(217,95,95,.4);
+      background: rgba(217, 95, 95, .15);
+      border-color: rgba(217, 95, 95, .4);
       color: var(--red);
     }
+
     .quiz-feedback {
       font-family: "Crimson Pro", serif;
       font-size: 14px;
       line-height: 1.65;
       color: var(--muted);
     }
+
     .essay-topics {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 32px;
     }
+
     .essay-topic-btn {
       padding: 10px 18px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
+      background: rgba(255, 255, 255, .02);
       color: var(--muted);
       font: inherit;
       font-size: 11px;
@@ -752,28 +984,39 @@
       cursor: none;
       transition: background .2s ease, border-color .2s ease, color .2s ease;
     }
-    .essay-topic-btn:hover { background: rgba(255,255,255,.05); }
+
+    .essay-topic-btn:hover {
+      background: rgba(255, 255, 255, .05);
+    }
+
     .essay-topic-btn.active {
-      background: rgba(242,135,73,.12);
-      border-color: rgba(242,135,73,.3);
+      background: rgba(242, 135, 73, .12);
+      border-color: rgba(242, 135, 73, .3);
       color: var(--orange);
     }
+
     .essay-outline {
       opacity: 0;
       max-height: 0;
       overflow: hidden;
       transition: opacity .3s ease, max-height .3s ease;
     }
+
     .essay-outline.show {
       opacity: 1;
       max-height: 2000px;
     }
+
     .essay-block {
       margin-bottom: 24px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
     }
-    .essay-block:last-child { border-bottom: none; }
+
+    .essay-block:last-child {
+      border-bottom: none;
+    }
+
     .essay-block-label {
       font-size: 9px;
       letter-spacing: .18em;
@@ -781,26 +1024,54 @@
       color: var(--orange);
       margin-bottom: 8px;
     }
+
     .essay-block-body {
       font-family: "Crimson Pro", serif;
       font-size: 15px;
       line-height: 1.7;
       color: var(--text);
     }
+
     @media (max-width: 768px) {
-      body { cursor: auto; }
-      #cursor { display: none; }
-      #sidebar { width: 100%; height: auto; position: static; }
-      #sidebar:hover, #sidebar.pinned { width: 100%; }
-      #main { padding: 20px; }
-      .flash-grid { grid-template-columns: 1fr; }
-      .comparison-grid { grid-template-columns: 1fr; }
+      body {
+        cursor: auto;
+      }
+
+      #cursor {
+        display: none;
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+      }
+
+      #sidebar:hover,
+      #sidebar.pinned {
+        width: 100%;
+      }
+
+      #main {
+        padding: 20px;
+      }
+
+      .flash-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <div id="cursor"></div>
-  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
   <div id="ambientOverlay"></div>
 
   <aside id="sidebar">
@@ -835,21 +1106,35 @@
         <button class="sb-action-btn" id="essayOpenBtn" type="button">Essay Outlines</button>
         <button class="sb-action-btn" id="apToggleBtn" type="button">Toggle AP</button>
       </div>
-      <div style="margin-top: 14px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; text-align: center;">
-        <div style="font-size: 8px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px;">Best Score</div>
-        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--orange);" id="bestScore">--</div>
+      <div
+        style="margin-top: 14px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; text-align: center;">
+        <div
+          style="font-size: 8px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px;">
+          Best Score</div>
+        <div style="font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--orange);" id="bestScore">--
+        </div>
       </div>
     </div>
   </aside>
 
   <main id="main">
+    <div class="topbar" style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="top-actions">
+        <a class="glass-btn course-link" href="gopo-index.html">Course Home</a>
+        <a class="glass-btn course-link" href="apgopo-unit1.html">Unit 1</a>
+        <a class="glass-btn course-link" href="apgopo-unit2.html">Unit 2</a>
+        <a class="glass-btn course-link" href="apgopo-unit3.html">Unit 3</a>
+        <a class="glass-btn course-link" href="apgopo-unit4.html">Unit 4</a>
+      </div>
+    </div>
     <!-- NOTES TAB -->
     <div class="tab-content active" data-tab="notes">
       <div class="header-area">
         <div class="mini-label">Unit 4 of 5</div>
         <h1 class="page-title">American Political Ideologies and Beliefs</h1>
         <p class="page-subtitle">
-          Political culture, ideology, public opinion, polling, socialization, polarization, media framing, and how beliefs translate into policy debates.
+          Political culture, ideology, public opinion, polling, socialization, polarization, media framing, and how
+          beliefs translate into policy debates.
         </p>
       </div>
 
@@ -870,82 +1155,102 @@
         <!-- SECTION 1: Political Culture -->
         <section class="note-section" id="culture">
           <h2 class="section-title">American Political Culture & Foundational Values</h2>
-          
+
           <p class="body-copy">
-            <strong>Political culture</strong> is the set of shared values, beliefs, and expectations Americans hold about government and citizenship. It's not a party platform or specific law—it's the underlying "common sense" people use when judging what government should do and what good citizenship looks like.
+            <strong>Political culture</strong> is the set of shared values, beliefs, and expectations Americans hold
+            about government and citizenship. It's not a party platform or specific law—it's the underlying "common
+            sense" people use when judging what government should do and what good citizenship looks like.
           </p>
 
           <p class="body-copy">
-            Political culture sets the boundaries of legitimacy in American politics. Americans may argue intensely about <em>how much</em> government should do, but many still accept the Constitution, elections, and the idea that government must justify its power.
+            Political culture sets the boundaries of legitimacy in American politics. Americans may argue intensely
+            about <em>how much</em> government should do, but many still accept the Constitution, elections, and the
+            idea that government must justify its power.
           </p>
 
           <div class="subsection">
             <h3>Core American Values</h3>
-            
+
             <div class="term-list">
               <div class="term-card">
                 <div class="term-card-title">Liberty</div>
                 <div class="term-card-body">
-                  Freedom from excessive government interference. Appears in debates about free speech, gun rights, privacy, religious freedom, and economic regulation. People prioritizing liberty often worry even well-intended policies can expand government power dangerously.
+                  Freedom from excessive government interference. Appears in debates about free speech, gun rights,
+                  privacy, religious freedom, and economic regulation. People prioritizing liberty often worry even
+                  well-intended policies can expand government power dangerously.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Equality</div>
                 <div class="term-card-body">
-                  People should have equal standing and opportunity. Can mean equality before the law (no unfair legal advantages), equality of opportunity (fair chance), or equality of outcomes (reducing major gaps). Political conflict often stems from disagreement over which definition government should pursue.
+                  People should have equal standing and opportunity. Can mean equality before the law (no unfair legal
+                  advantages), equality of opportunity (fair chance), or equality of outcomes (reducing major gaps).
+                  Political conflict often stems from disagreement over which definition government should pursue.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Individualism</div>
                 <div class="term-card-body">
-                  Individuals are responsible for their own well-being and should make their own choices. Often supports free markets and limited government, but can also support personal autonomy in social issues.
+                  Individuals are responsible for their own well-being and should make their own choices. Often supports
+                  free markets and limited government, but can also support personal autonomy in social issues.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Democracy</div>
                 <div class="term-card-body">
-                  Government should be responsive to the people through elections and representation. In the U.S., mainly <strong>representative democracy</strong> (republicanism)—citizens choose officials to make policy rather than voting directly on every law.
+                  Government should be responsive to the people through elections and representation. In the U.S.,
+                  mainly <strong>representative democracy</strong> (republicanism)—citizens choose officials to make
+                  policy rather than voting directly on every law.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Rule of Law</div>
                 <div class="term-card-body">
-                  Government and citizens are bound by laws applied consistently. Supports constitutional limits, due process, and the idea that leaders cannot act on personal will alone.
+                  Government and citizens are bound by laws applied consistently. Supports constitutional limits, due
+                  process, and the idea that leaders cannot act on personal will alone.
                 </div>
               </div>
             </div>
 
             <p class="body-copy">
-              These values create predictable trade-offs. Policies increasing equality (redistributive social programs) may require higher taxes or more regulation, which some see as reducing liberty. Policies maximizing liberty (fewer business regulations) may increase inequality if advantages compound over time.
+              These values create predictable trade-offs. Policies increasing equality (redistributive social programs)
+              may require higher taxes or more regulation, which some see as reducing liberty. Policies maximizing
+              liberty (fewer business regulations) may increase inequality if advantages compound over time.
             </p>
           </div>
 
           <div class="subsection">
             <h3>Attitudes About Government</h3>
-            
+
             <div class="term-list">
               <div class="term-card">
                 <div class="term-card-title">Political Efficacy</div>
                 <div class="term-card-body">
-                  Belief that your participation matters. <strong>Internal efficacy</strong>: confidence in your own ability to understand and participate. <strong>External efficacy</strong>: belief that government will respond to public input. Low efficacy reduces voting, contacting officials, and staying informed.
+                  Belief that your participation matters. <strong>Internal efficacy</strong>: confidence in your own
+                  ability to understand and participate. <strong>External efficacy</strong>: belief that government will
+                  respond to public input. Low efficacy reduces voting, contacting officials, and staying informed.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Trust in Government</div>
                 <div class="term-card-body">
-                  General belief that government will do the right thing or act competently and fairly. Broader than approval of one leader. Low trust can lead people to resist even beneficial policies due to suspected waste, corruption, or incompetence.
+                  General belief that government will do the right thing or act competently and fairly. Broader than
+                  approval of one leader. Low trust can lead people to resist even beneficial policies due to suspected
+                  waste, corruption, or incompetence.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Legitimacy</div>
                 <div class="term-card-body">
-                  Belief that government has the right to rule. Even when people dislike outcomes, legitimacy keeps them accepting lawful processes. Stability is threatened when groups stop accepting election outcomes or view institutions as inherently illegitimate.
+                  Belief that government has the right to rule. Even when people dislike outcomes, legitimacy keeps them
+                  accepting lawful processes. Stability is threatened when groups stop accepting election outcomes or
+                  view institutions as inherently illegitimate.
                 </div>
               </div>
             </div>
@@ -955,9 +1260,11 @@
             <div class="callout-label">Exam Focus</div>
             <div class="callout-body">
               <ul>
-                <li>Identify or apply a foundational value (liberty, equality, individualism) to explain a policy preference</li>
+                <li>Identify or apply a foundational value (liberty, equality, individualism) to explain a policy
+                  preference</li>
                 <li>Interpret graphs about trust/efficacy and predict participation or policy consequences</li>
-                <li>Don't treat "democracy" as only direct voting—recognize representation and constitutional limits</li>
+                <li>Don't treat "democracy" as only direct voting—recognize representation and constitutional limits
+                </li>
                 <li>Explain political conflict as value trade-offs, not personality-based differences</li>
               </ul>
             </div>
@@ -967,13 +1274,18 @@
         <!-- SECTION 2: Political Ideology -->
         <section class="note-section" id="ideology">
           <h2 class="section-title">Political Ideology & the U.S. Spectrum</h2>
-          
+
           <p class="body-copy">
-            <strong>Political ideology</strong> is a consistent set of beliefs about what government should do. Ideology functions like a map: it helps connect positions on specific issues (taxes, abortion, regulation, climate policy) into a broader worldview.
+            <strong>Political ideology</strong> is a consistent set of beliefs about what government should do. Ideology
+            functions like a map: it helps connect positions on specific issues (taxes, abortion, regulation, climate
+            policy) into a broader worldview.
           </p>
 
           <p class="body-copy">
-            <strong>Ideology vs. party identification:</strong> Ideology is what you believe; <strong>party identification (partisanship)</strong> is the party you feel attached to. They often overlap but not always. People can be economically conservative and socially liberal, or have weak ideology but strong party loyalty.
+            <strong>Ideology vs. party identification:</strong> Ideology is what you believe; <strong>party
+              identification (partisanship)</strong> is the party you feel attached to. They often overlap but not
+            always. People can be economically conservative and socially liberal, or have weak ideology but strong party
+            loyalty.
           </p>
 
           <div class="subsection">
@@ -983,23 +1295,28 @@
               <div class="comp-card">
                 <div class="comp-title">Liberal</div>
                 <div class="comp-body">
-                  <strong>Economic:</strong> Stronger government role to address inequality—social welfare, regulation, progressive taxation.<br><br>
-                  <strong>Social:</strong> Support civil liberties protections, open to policy changes expanding rights for marginalized groups, stronger separation of church and state.
+                  <strong>Economic:</strong> Stronger government role to address inequality—social welfare, regulation,
+                  progressive taxation.<br><br>
+                  <strong>Social:</strong> Support civil liberties protections, open to policy changes expanding rights
+                  for marginalized groups, stronger separation of church and state.
                 </div>
               </div>
 
               <div class="comp-card">
                 <div class="comp-title">Conservative</div>
                 <div class="comp-body">
-                  <strong>Economic:</strong> Limited government role—lower taxes, less regulation, more market reliance. Often associated with <strong>laissez-faire</strong> principles.<br><br>
-                  <strong>Social:</strong> Emphasize tradition and social order. <strong>Social conservatives</strong> may support government involvement in social/moral issues while opposing federal economic regulation.
+                  <strong>Economic:</strong> Limited government role—lower taxes, less regulation, more market reliance.
+                  Often associated with <strong>laissez-faire</strong> principles.<br><br>
+                  <strong>Social:</strong> Emphasize tradition and social order. <strong>Social conservatives</strong>
+                  may support government involvement in social/moral issues while opposing federal economic regulation.
                 </div>
               </div>
 
               <div class="comp-card">
                 <div class="comp-title">Moderate / Independent</div>
                 <div class="comp-body">
-                  Hold a mix of liberal and conservative views, prioritize compromise, or lean on "common sense" more than philosophical consistency. Many Americans don't fit neatly into one coherent ideological label.
+                  Hold a mix of liberal and conservative views, prioritize compromise, or lean on "common sense" more
+                  than philosophical consistency. Many Americans don't fit neatly into one coherent ideological label.
                 </div>
               </div>
             </div>
@@ -1007,25 +1324,31 @@
 
           <div class="subsection">
             <h3>Dimensions of Ideology</h3>
-            
+
             <div class="term-list">
               <div class="term-card">
                 <div class="term-card-title">Economic Policy Dimension</div>
                 <div class="term-card-body">
-                  Taxes and spending, regulation of business, labor policy, social welfare programs. Liberals tend to support more government intervention; conservatives prefer market solutions.
+                  Taxes and spending, regulation of business, labor policy, social welfare programs. Liberals tend to
+                  support more government intervention; conservatives prefer market solutions.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Social Policy Dimension</div>
                 <div class="term-card-body">
-                  Civil rights and liberties, family/religion/morality questions, criminal justice, immigration, national identity. Positions here can cross-cut economic ideology, creating "economically conservative but socially liberal" voters and vice versa.
+                  Civil rights and liberties, family/religion/morality questions, criminal justice, immigration,
+                  national identity. Positions here can cross-cut economic ideology, creating "economically conservative
+                  but socially liberal" voters and vice versa.
                 </div>
               </div>
             </div>
 
             <p class="body-copy">
-              <strong>Ideological consistency</strong> means your views align across issues in a predictable pattern. People who are strongly ideological tend to be more politically active. Consistency also changes campaign incentives: candidates appeal to ideologically intense party members in <strong>primaries</strong>, but adopt more moderate messaging in <strong>general elections</strong>.
+              <strong>Ideological consistency</strong> means your views align across issues in a predictable pattern.
+              People who are strongly ideological tend to be more politically active. Consistency also changes campaign
+              incentives: candidates appeal to ideologically intense party members in <strong>primaries</strong>, but
+              adopt more moderate messaging in <strong>general elections</strong>.
             </p>
           </div>
 
@@ -1045,9 +1368,11 @@
         <!-- SECTION 3: Policy Debates -->
         <section class="note-section" id="policy">
           <h2 class="section-title">Ideologies, Framing & Public Policy Debates</h2>
-          
+
           <p class="body-copy">
-            Ideology becomes politically powerful when it turns into <strong>policy preferences</strong>. Many U.S. debates are disagreements about: (1) what the problem is, (2) whether government should be involved, and (3) which level of government should act.
+            Ideology becomes politically powerful when it turns into <strong>policy preferences</strong>. Many U.S.
+            debates are disagreements about: (1) what the problem is, (2) whether government should be involved, and (3)
+            which level of government should act.
           </p>
 
           <div class="subsection">
@@ -1057,20 +1382,23 @@
               <div class="comp-card">
                 <div class="comp-title">Limited Government</div>
                 <div class="comp-body">
-                  Government power threatens liberty. Markets and private institutions solve problems more efficiently. Decentralization (state/local control) fits diverse communities better.
+                  Government power threatens liberty. Markets and private institutions solve problems more efficiently.
+                  Decentralization (state/local control) fits diverse communities better.
                 </div>
               </div>
 
               <div class="comp-card">
                 <div class="comp-title">Active Government</div>
                 <div class="comp-body">
-                  Markets can produce inequality and leave needs unmet. Collective problems (pollution, public health, infrastructure) require coordinated solutions. Government can protect rights and expand opportunity.
+                  Markets can produce inequality and leave needs unmet. Collective problems (pollution, public health,
+                  infrastructure) require coordinated solutions. Government can protect rights and expand opportunity.
                 </div>
               </div>
             </div>
 
             <p class="body-copy">
-              This is usually a disagreement about which risk is greater: government overreach versus leaving problems to private forces.
+              This is usually a disagreement about which risk is greater: government overreach versus leaving problems
+              to private forces.
             </p>
           </div>
 
@@ -1083,14 +1411,17 @@
                 <div class="term-card-body">
                   <strong>Redistribution:</strong> Using taxes/spending to reduce inequality.<br>
                   <strong>Regulation:</strong> Rules for businesses to protect workers, consumers, environment.<br>
-                  Liberals argue these protect people from unfair outcomes; conservatives argue high taxes and heavy regulation reduce growth and innovation.
+                  Liberals argue these protect people from unfair outcomes; conservatives argue high taxes and heavy
+                  regulation reduce growth and innovation.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Social Policy</div>
                 <div class="term-card-body">
-                  Involves meaning of freedom and boundaries of rights. Whether public safety justifies restrictions; how rights should be expanded (laws, court decisions, amendments). Both sides claim "liberty" but stress different aspects—freedom from government interference vs. freedom from discrimination.
+                  Involves meaning of freedom and boundaries of rights. Whether public safety justifies restrictions;
+                  how rights should be expanded (laws, court decisions, amendments). Both sides claim "liberty" but
+                  stress different aspects—freedom from government interference vs. freedom from discrimination.
                 </div>
               </div>
 
@@ -1107,9 +1438,10 @@
 
           <div class="subsection">
             <h3>Framing: How Ideology Shapes Persuasion</h3>
-            
+
             <p class="body-copy">
-              <strong>Framing</strong> is presenting an issue to influence how people think about it. Political actors frame policies using values and emotionally loaded language.
+              <strong>Framing</strong> is presenting an issue to influence how people think about it. Political actors
+              frame policies using values and emotionally loaded language.
             </p>
 
             <div class="term-list">
@@ -1119,7 +1451,8 @@
                   "Tax relief" frames taxes as a burden.<br>
                   "Social safety net" frames welfare as protection.<br>
                   "Pro-life" vs "pro-choice" emphasizes different moral priorities.<br><br>
-                  Stricter emissions rules: "protect public health" (equality theme) vs. "costly regulation limiting choice" (liberty theme).
+                  Stricter emissions rules: "protect public health" (equality theme) vs. "costly regulation limiting
+                  choice" (liberty theme).
                 </div>
               </div>
             </div>
@@ -1141,9 +1474,11 @@
         <!-- SECTION 4: Political Socialization -->
         <section class="note-section" id="socialization">
           <h2 class="section-title">Political Socialization: Where Beliefs Come From</h2>
-          
+
           <p class="body-copy">
-            <strong>Political socialization</strong> is the process by which people form political attitudes, values, and beliefs over time. People aren't born with views about taxes or the Supreme Court—they develop them through experiences and social influences.
+            <strong>Political socialization</strong> is the process by which people form political attitudes, values,
+            and beliefs over time. People aren't born with views about taxes or the Supreme Court—they develop them
+            through experiences and social influences.
           </p>
 
           <div class="subsection">
@@ -1153,21 +1488,25 @@
               <div class="term-card">
                 <div class="term-card-title">Family</div>
                 <div class="term-card-body">
-                  Often the strongest early influence. Many people identify with the same party as their parents. Families transmit political interest and moral/ethical values. Not determinism—people can change—but family sets an early default.
+                  Often the strongest early influence. Many people identify with the same party as their parents.
+                  Families transmit political interest and moral/ethical values. Not determinism—people can change—but
+                  family sets an early default.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Schools</div>
                 <div class="term-card-body">
-                  Teach civic norms (how government works, importance of voting, what rights mean). Can raise internal efficacy by making politics feel understandable.
+                  Teach civic norms (how government works, importance of voting, what rights mean). Can raise internal
+                  efficacy by making politics feel understandable.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Peers & Social Groups</div>
                 <div class="term-card-body">
-                  Shape which opinions feel socially acceptable. People often align with group norms to maintain relationships and identity.
+                  Shape which opinions feel socially acceptable. People often align with group norms to maintain
+                  relationships and identity.
                 </div>
               </div>
 
@@ -1181,14 +1520,18 @@
               <div class="term-card">
                 <div class="term-card-title">Mass Media</div>
                 <div class="term-card-body">
-                  Traditional news, social media, podcasts, influencers. Influences what issues people think are important and what "facts" they encounter. Can increase knowledge but also intensify polarization through selective exposure and information bubbles.
+                  Traditional news, social media, podcasts, influencers. Influences what issues people think are
+                  important and what "facts" they encounter. Can increase knowledge but also intensify polarization
+                  through selective exposure and information bubbles.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Location & Community Context</div>
                 <div class="term-card-body">
-                  Rural, suburban, urban environments shape political experiences through local economy, cultural norms, diversity, policy needs. Rural areas on average tend toward more socially conservative environments; large cities often more liberal (with substantial regional variation).
+                  Rural, suburban, urban environments shape political experiences through local economy, cultural norms,
+                  diversity, policy needs. Rural areas on average tend toward more socially conservative environments;
+                  large cities often more liberal (with substantial regional variation).
                 </div>
               </div>
 
@@ -1202,13 +1545,15 @@
               <div class="term-card">
                 <div class="term-card-title">Political Events</div>
                 <div class="term-card-body">
-                  Wars, economic crises, major social movements can leave lasting impressions, especially on people in formative years.
+                  Wars, economic crises, major social movements can leave lasting impressions, especially on people in
+                  formative years.
                 </div>
               </div>
             </div>
 
             <p class="body-copy">
-              Socialization isn't only learning opinions—it's learning what politics <em>means</em>, whether government is trustworthy, and whether participation is worthwhile.
+              Socialization isn't only learning opinions—it's learning what politics <em>means</em>, whether government
+              is trustworthy, and whether participation is worthwhile.
             </p>
           </div>
 
@@ -1226,7 +1571,8 @@
               <div class="comp-card">
                 <div class="comp-title">Generational (Cohort) Effects</div>
                 <div class="comp-body">
-                  People who come of age during the same period share lasting impressions. Example: cohort shaped by major downturn retaining stronger views about government's economic role.
+                  People who come of age during the same period share lasting impressions. Example: cohort shaped by
+                  major downturn retaining stronger views about government's economic role.
                 </div>
               </div>
             </div>
@@ -1252,65 +1598,82 @@
         <!-- SECTION 5: Demographics -->
         <section class="note-section" id="demographics">
           <h2 class="section-title">Demographics, Group Identity & Cross-Pressures</h2>
-          
+
           <p class="body-copy">
-            Demographic patterns in AP Gov are about <em>probabilities</em>, not stereotypes. Parties build coalitions by appealing to groups with shared interests, identities, or policy priorities. Unequal participation across groups can produce unequal responsiveness.
+            Demographic patterns in AP Gov are about <em>probabilities</em>, not stereotypes. Parties build coalitions
+            by appealing to groups with shared interests, identities, or policy priorities. Unequal participation across
+            groups can produce unequal responsiveness.
           </p>
 
           <div class="subsection">
             <h3>How Demographics Connect to Beliefs</h3>
-            
+
             <p class="body-copy">
-              Demographics influence beliefs through material interests (wages, healthcare costs), social identity (recognition and protection from discrimination), geography, and group-based socialization networks. <strong>Correlations are not destiny</strong>—people with similar backgrounds can differ due to ideology, religion, region, education, personal experience.
+              Demographics influence beliefs through material interests (wages, healthcare costs), social identity
+              (recognition and protection from discrimination), geography, and group-based socialization networks.
+              <strong>Correlations are not destiny</strong>—people with similar backgrounds can differ due to ideology,
+              religion, region, education, personal experience.
             </p>
 
             <div class="term-list">
               <div class="term-card">
                 <div class="term-card-title">Age</div>
                 <div class="term-card-body">
-                  Correlates with issue salience. Younger voters: education costs, housing affordability. Older voters: retirement security. Changes can reflect life-cycle effects or generational effects.
+                  Correlates with issue salience. Younger voters: education costs, housing affordability. Older voters:
+                  retirement security. Changes can reflect life-cycle effects or generational effects.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Race & Ethnicity</div>
                 <div class="term-card-body">
-                  Can shape priorities through historical experience and policy impacts. Many racial/ethnic minority groups face lower average incomes and different institutional experiences, correlating with different party coalitions—but important variation by region, income, religion, immigration history.
+                  Can shape priorities through historical experience and policy impacts. Many racial/ethnic minority
+                  groups face lower average incomes and different institutional experiences, correlating with different
+                  party coalitions—but important variation by region, income, religion, immigration history.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Gender</div>
                 <div class="term-card-body">
-                  On average, women tend to express more liberal preferences on some social and safety-net issues, though the gap varies by issue and time period.
+                  On average, women tend to express more liberal preferences on some social and safety-net issues,
+                  though the gap varies by issue and time period.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Education</div>
                 <div class="term-card-body">
-                  Often correlates with political engagement (turnout, knowledge) and shapes media consumption and networks.
+                  Often correlates with political engagement (turnout, knowledge) and shapes media consumption and
+                  networks.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Income & Class</div>
                 <div class="term-card-body">
-                  Can influence views on taxation and social programs, but not simply "high income conservative, low income liberal." Some higher-income Americans support liberal social goals while preferring fiscal conservatism; some lower-income Americans lean conservative except on specific economic supports.
+                  Can influence views on taxation and social programs, but not simply "high income conservative, low
+                  income liberal." Some higher-income Americans support liberal social goals while preferring fiscal
+                  conservatism; some lower-income Americans lean conservative except on specific economic supports.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Religion</div>
                 <div class="term-card-body">
-                  Shapes views on social issues and community responsibility. Religious networks mobilize participation. Broad patterns: Jewish Americans tend relatively liberal; evangelical Protestants tend more conservative; mainline Protestants more moderate; Catholics include both economic liberal tendencies and conservative social views. Generalizations, not rules.
+                  Shapes views on social issues and community responsibility. Religious networks mobilize participation.
+                  Broad patterns: Jewish Americans tend relatively liberal; evangelical Protestants tend more
+                  conservative; mainline Protestants more moderate; Catholics include both economic liberal tendencies
+                  and conservative social views. Generalizations, not rules.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Region & Community Type</div>
                 <div class="term-card-body">
-                  Urban/suburban/rural affects attitudes through economic structure, cultural norms, policy needs, density, diversity exposure. Common patterns: East Coast more liberal, South more conservative, West Coast polarized/mixed. Cities lean liberal; rural/small towns lean conservative.
+                  Urban/suburban/rural affects attitudes through economic structure, cultural norms, policy needs,
+                  density, diversity exposure. Common patterns: East Coast more liberal, South more conservative, West
+                  Coast polarized/mixed. Cities lean liberal; rural/small towns lean conservative.
                 </div>
               </div>
             </div>
@@ -1318,9 +1681,11 @@
 
           <div class="subsection">
             <h3>Intersectionality</h3>
-            
+
             <p class="body-copy">
-              <strong>Intersectionality</strong> (analytically) means political behavior is shaped by overlapping identities (race + religion + region + class, etc.). That overlap explains why predicting individual beliefs from one demographic trait is risky.
+              <strong>Intersectionality</strong> (analytically) means political behavior is shaped by overlapping
+              identities (race + religion + region + class, etc.). That overlap explains why predicting individual
+              beliefs from one demographic trait is risky.
             </p>
           </div>
 
@@ -1340,9 +1705,10 @@
         <!-- SECTION 6: Polarization -->
         <section class="note-section" id="polarization">
           <h2 class="section-title">Changes in Ideology Over Time: Polarization, Sorting, Realignment</h2>
-          
+
           <p class="body-copy">
-            Political beliefs and party coalitions change over time. The meaning of "liberal" and "conservative," the groups within each party, and the level of polarization have all shifted.
+            Political beliefs and party coalitions change over time. The meaning of "liberal" and "conservative," the
+            groups within each party, and the level of polarization have all shifted.
           </p>
 
           <div class="subsection">
@@ -1359,28 +1725,35 @@
               <div class="term-card">
                 <div class="term-card-title">Partisan Polarization</div>
                 <div class="term-card-body">
-                  When Democrats and Republicans in government (and often voters) are more sharply divided with less overlap. Can increase even if many voters remain mixed, because party leaders and primary electorates pull parties toward clearer ideological brands.
+                  When Democrats and Republicans in government (and often voters) are more sharply divided with less
+                  overlap. Can increase even if many voters remain mixed, because party leaders and primary electorates
+                  pull parties toward clearer ideological brands.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Ideological Sorting</div>
                 <div class="term-card-body">
-                  Liberals increasingly identify as Democrats; conservatives increasingly identify as Republicans. Strengthens party labels as signals of worldview. Can intensify conflict. Doesn't necessarily mean everyone became more extreme—can reflect people "matching" party label to prior leanings or responding to parties changing positions.
+                  Liberals increasingly identify as Democrats; conservatives increasingly identify as Republicans.
+                  Strengthens party labels as signals of worldview. Can intensify conflict. Doesn't necessarily mean
+                  everyone became more extreme—can reflect people "matching" party label to prior leanings or responding
+                  to parties changing positions.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Political Realignment</div>
                 <div class="term-card-body">
-                  Durable shift in party coalitions (groups switching party support), changing electoral map and policy priorities.
+                  Durable shift in party coalitions (groups switching party support), changing electoral map and policy
+                  priorities.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Dealignment</div>
                 <div class="term-card-body">
-                  Weakening party attachments—more independents, historically more split-ticket voting, reduced party loyalty.
+                  Weakening party attachments—more independents, historically more split-ticket voting, reduced party
+                  loyalty.
                 </div>
               </div>
             </div>
@@ -1388,9 +1761,12 @@
 
           <div class="subsection">
             <h3>Why Polarization & Sorting Can Increase</h3>
-            
+
             <p class="body-copy">
-              Several mechanisms: media fragmentation and selective exposure, geographic sorting (people clustering into like-minded communities), party strategies emphasizing contrast, primary elections empowering ideologically intense voters. The exam rewards clear mechanism + evidence more than memorizing a single "magic cause."
+              Several mechanisms: media fragmentation and selective exposure, geographic sorting (people clustering into
+              like-minded communities), party strategies emphasizing contrast, primary elections empowering
+              ideologically intense voters. The exam rewards clear mechanism + evidence more than memorizing a single
+              "magic cause."
             </p>
           </div>
 
@@ -1411,9 +1787,11 @@
         <!-- SECTION 7: Public Opinion & Polling -->
         <section class="note-section" id="polling">
           <h2 class="section-title">Public Opinion & Polling</h2>
-          
+
           <p class="body-copy">
-            <strong>Public opinion</strong> is the collection of individual attitudes about government and politics. Not uniform—the <strong>general public</strong> tends to care more about issues directly affecting daily life. An issue doesn't need majority interest to become politically important.
+            <strong>Public opinion</strong> is the collection of individual attitudes about government and politics. Not
+            uniform—the <strong>general public</strong> tends to care more about issues directly affecting daily life.
+            An issue doesn't need majority interest to become politically important.
           </p>
 
           <div class="subsection">
@@ -1444,13 +1822,16 @@
               <div class="term-card">
                 <div class="term-card-title">Issue Publics</div>
                 <div class="term-card-body">
-                  Smaller groups to whom an issue is highly important (guns, abortion, climate, etc.). Even if most people aren't deeply engaged, issue publics can influence politics through intense attention, activism, and voting.
+                  Smaller groups to whom an issue is highly important (guns, abortion, climate, etc.). Even if most
+                  people aren't deeply engaged, issue publics can influence politics through intense attention,
+                  activism, and voting.
                 </div>
               </div>
             </div>
 
             <p class="body-copy">
-              An issue can have low salience for the general public but high intensity for an issue public—which often matters more for participation and pressure on officials.
+              An issue can have low salience for the general public but high intensity for an issue public—which often
+              matters more for participation and pressure on officials.
             </p>
           </div>
 
@@ -1461,21 +1842,24 @@
               <div class="term-card">
                 <div class="term-card-title">Elections</div>
                 <div class="term-card-body">
-                  Indirect measure—hard to translate into clear reading on any single policy because voters choose among candidates representing bundles of issues.
+                  Indirect measure—hard to translate into clear reading on any single policy because voters choose among
+                  candidates representing bundles of issues.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Referendum</div>
                 <div class="term-card-body">
-                  Policy submitted to popular vote to accept or reject legislation. Can measure opinion on a specific issue.
+                  Policy submitted to popular vote to accept or reject legislation. Can measure opinion on a specific
+                  issue.
                 </div>
               </div>
 
               <div class="term-card">
                 <div class="term-card-title">Public Opinion Polls</div>
                 <div class="term-card-body">
-                  Most frequent method. Estimate what a larger <strong>population</strong> thinks by surveying a smaller <strong>sample</strong>.
+                  Most frequent method. Estimate what a larger <strong>population</strong> thinks by surveying a smaller
+                  <strong>sample</strong>.
                 </div>
               </div>
             </div>
@@ -1483,13 +1867,16 @@
 
           <div class="subsection">
             <h3>Random Sampling & Representativeness</h3>
-            
+
             <p class="body-copy">
-              A poll is useful when the sample is <strong>representative</strong> of the population in relevant ways. <strong>Random sampling</strong> gives each person equal chance of selection, reducing systematic bias.
+              A poll is useful when the sample is <strong>representative</strong> of the population in relevant ways.
+              <strong>Random sampling</strong> gives each person equal chance of selection, reducing systematic bias.
             </p>
 
             <p class="body-copy">
-              <strong>Stratified random sampling:</strong> Population divided into subgroups (strata), then sampled to reflect key demographics. Pollsters may <strong>weight</strong> results so final sample better matches population.
+              <strong>Stratified random sampling:</strong> Population divided into subgroups (strata), then sampled to
+              reflect key demographics. Pollsters may <strong>weight</strong> results so final sample better matches
+              population.
             </p>
           </div>
 
@@ -1500,14 +1887,16 @@
               <div class="comp-card">
                 <div class="comp-title">Benchmark Polls</div>
                 <div class="comp-body">
-                  Conducted when candidate initially announces. Provide baseline data; help campaign evaluate if chances improve over time.
+                  Conducted when candidate initially announces. Provide baseline data; help campaign evaluate if chances
+                  improve over time.
                 </div>
               </div>
 
               <div class="comp-card">
                 <div class="comp-title">Tracking Polls</div>
                 <div class="comp-body">
-                  Repeated over time with similar questions to detect shifts in opinion. Some use same sample; others keep same method but refresh respondents.
+                  Repeated over time with similar questions to detect shifts in opinion. Some use same sample; others
+                  keep same method but refresh respondents.
                 </div>
               </div>
 
@@ -1562,7 +1951,8 @@
               <div class="term-card">
                 <div class="term-card-title">Push Polling</div>
                 <div class="term-card-body">
-                  Persuasion disguised as measurement. Uses leading or misleading questions to influence respondents, not gather data.
+                  Persuasion disguised as measurement. Uses leading or misleading questions to influence respondents,
+                  not gather data.
                 </div>
               </div>
             </div>
@@ -1570,9 +1960,10 @@
 
           <div class="subsection">
             <h3>Sampling Error (Margin of Error)</h3>
-            
+
             <p class="body-copy">
-              <strong>Sampling error</strong> describes how wrong poll results may be due to chance variation. Polls report a margin of error:
+              <strong>Sampling error</strong> describes how wrong poll results may be due to chance variation. Polls
+              report a margin of error:
             </p>
 
             <p class="body-copy" style="text-align: center; font-size: 18px; margin: 20px 0;">
@@ -1580,11 +1971,13 @@
             </p>
 
             <p class="body-copy">
-              Example: Poll reports 60% support with 4 percentage point margin → true support could plausibly be 56%–64%.
+              Example: Poll reports 60% support with 4 percentage point margin → true support could plausibly be
+              56%–64%.
             </p>
 
             <p class="body-copy">
-              More respondents tends to lower sampling error, but sample size alone doesn't guarantee accuracy. <strong>Representativeness and bias matter more than raw numbers.</strong>
+              More respondents tends to lower sampling error, but sample size alone doesn't guarantee accuracy.
+              <strong>Representativeness and bias matter more than raw numbers.</strong>
             </p>
           </div>
 
@@ -1605,48 +1998,60 @@
         <!-- SECTION 8: Media -->
         <section class="note-section" id="media">
           <h2 class="section-title">Mass Media & Framing</h2>
-          
+
           <p class="body-copy">
-            Mass media is both a socialization agent and key influence on what the public pays attention to. Includes TV, radio, internet news, newspapers, magazines, websites, blogs, social media, and political podcasts.
+            Mass media is both a socialization agent and key influence on what the public pays attention to. Includes
+            TV, radio, internet news, newspapers, magazines, websites, blogs, social media, and political podcasts.
           </p>
 
           <div class="subsection">
             <h3>Agenda-Setting & Visibility</h3>
-            
+
             <p class="body-copy">
-              Media can <strong>set the public agenda</strong> by choosing which stories to cover and ignore. Provides exposure to government and politicians; often encourages audiences to question government motives.
+              Media can <strong>set the public agenda</strong> by choosing which stories to cover and ignore. Provides
+              exposure to government and politicians; often encourages audiences to question government motives.
             </p>
 
             <p class="body-copy">
-              Media influence has grown over time, but effects aren't automatic. Most likely to affect opinion when opinion is volatile or when coverage is extensive and mostly positive/negative. In many cases effects are limited because media covers many stories simultaneously and Americans choose sources reinforcing existing beliefs.
+              Media influence has grown over time, but effects aren't automatic. Most likely to affect opinion when
+              opinion is volatile or when coverage is extensive and mostly positive/negative. In many cases effects are
+              limited because media covers many stories simultaneously and Americans choose sources reinforcing existing
+              beliefs.
             </p>
           </div>
 
           <div class="subsection">
             <h3>Social Media & Grassroots Politics</h3>
-            
+
             <p class="body-copy">
-              Social media has become a tool for grassroots political movements by lowering costs of organizing, fundraising, and messaging. Can increase participation and speed mobilization, but also reinforce echo chambers and misinformation.
+              Social media has become a tool for grassroots political movements by lowering costs of organizing,
+              fundraising, and messaging. Can increase participation and speed mobilization, but also reinforce echo
+              chambers and misinformation.
             </p>
           </div>
 
           <div class="subsection">
             <h3>Media Bias Debates</h3>
-            
+
             <p class="body-copy">
-              Common debate: are news organizations ideologically biased? One perspective: less ideological bias in mainstream reporting than critics claim—many news organizations aim for objectivity to retain consumers across the spectrum. Complete objectivity is impossible.
+              Common debate: are news organizations ideologically biased? One perspective: less ideological bias in
+              mainstream reporting than critics claim—many news organizations aim for objectivity to retain consumers
+              across the spectrum. Complete objectivity is impossible.
             </p>
 
             <p class="body-copy">
-              Bias can emerge from structural pressures: simple stories are faster/less boring, limited time/space (especially TV) leads to short sound bites, choices about which sources to use shape framing.
+              Bias can emerge from structural pressures: simple stories are faster/less boring, limited time/space
+              (especially TV) leads to short sound bites, choices about which sources to use shape framing.
             </p>
 
             <p class="body-copy">
-              Reporters relying on politicians/officials for information must balance access with independence. Journalists often more skeptical about politicians' motives than many Americans are.
+              Reporters relying on politicians/officials for information must balance access with independence.
+              Journalists often more skeptical about politicians' motives than many Americans are.
             </p>
 
             <p class="body-copy">
-              Politicians try to influence coverage through planned events: photo ops, press releases, scheduling appearances based on audience demographics.
+              Politicians try to influence coverage through planned events: photo ops, press releases, scheduling
+              appearances based on audience demographics.
             </p>
           </div>
 
@@ -1655,7 +2060,8 @@
             <div class="callout-body">
               <ul>
                 <li>Explain how agenda-setting changes what issues people consider important</li>
-                <li>Apply media effects (selective exposure, extensive coverage) to predict when media might shift opinion</li>
+                <li>Apply media effects (selective exposure, extensive coverage) to predict when media might shift
+                  opinion</li>
                 <li>Connect social media to grassroots mobilization or polarization</li>
                 <li>Don't claim media "controls" opinion in all cases—explain <em>when</em> effects are likely</li>
                 <li>Treat "bias" as structure, sourcing, and incentives, not only ideological intent</li>
@@ -1667,24 +2073,30 @@
         <!-- SECTION 9: Linkage & Responsiveness -->
         <section class="note-section" id="linkage">
           <h2 class="section-title">From Public Opinion to Policy: Linkage & Responsiveness</h2>
-          
+
           <p class="body-copy">
-            In theory, democratic government should respond to the public. In practice, responsiveness is complicated by institutions, competing interests, and unequal participation.
+            In theory, democratic government should respond to the public. In practice, responsiveness is complicated by
+            institutions, competing interests, and unequal participation.
           </p>
 
           <div class="subsection">
             <h3>Linkage Institutions</h3>
-            
+
             <p class="body-copy">
-              <strong>Linkage institutions</strong> connect people to government: political parties, elections, interest groups, and media. Public opinion rarely becomes policy directly—it travels through these channels and influences platforms, lobbying, candidate strategies, and which issues remain visible.
+              <strong>Linkage institutions</strong> connect people to government: political parties, elections, interest
+              groups, and media. Public opinion rarely becomes policy directly—it travels through these channels and
+              influences platforms, lobbying, candidate strategies, and which issues remain visible.
             </p>
           </div>
 
           <div class="subsection">
             <h3>Elections as Responsiveness Mechanism</h3>
-            
+
             <p class="body-copy">
-              Elections translate public preferences into government personnel. Officials anticipating elections may adjust positions to match voters. However, elections are blunt instruments: voters choose among bundles of issues, turnout is unequal, district design and Electoral College complicate relationship between votes and outcomes.
+              Elections translate public preferences into government personnel. Officials anticipating elections may
+              adjust positions to match voters. However, elections are blunt instruments: voters choose among bundles of
+              issues, turnout is unequal, district design and Electoral College complicate relationship between votes
+              and outcomes.
             </p>
           </div>
 
@@ -1702,7 +2114,8 @@
               <div class="comp-card">
                 <div class="comp-title">Trustee Model</div>
                 <div class="comp-body">
-                  Representatives should use their judgment, especially when issues are complex or constituents are uninformed.
+                  Representatives should use their judgment, especially when issues are complex or constituents are
+                  uninformed.
                 </div>
               </div>
 
@@ -1717,20 +2130,24 @@
 
           <div class="subsection">
             <h3>Mandate Theory</h3>
-            
+
             <p class="body-copy">
-              <strong>Mandate theory</strong> argues a winning candidate has public endorsement to carry out their platform. Mandates often claimed but hard to prove because voters may choose for party, personality, or one salient issue. Victory margins don't show agreement on each policy. Split control signals mixed preferences.
+              <strong>Mandate theory</strong> argues a winning candidate has public endorsement to carry out their
+              platform. Mandates often claimed but hard to prove because voters may choose for party, personality, or
+              one salient issue. Victory margins don't show agreement on each policy. Split control signals mixed
+              preferences.
             </p>
           </div>
 
           <div class="subsection">
             <h3>Why Popular Policies Can Fail</h3>
-            
+
             <p class="body-copy">
               Even when a policy is popular, it may not pass because of:
             </p>
 
-            <ul style="list-style: none; padding-left: 20px; font-family: 'Crimson Pro', serif; font-size: 16px; line-height: 1.75; color: var(--text);">
+            <ul
+              style="list-style: none; padding-left: 20px; font-family: 'Crimson Pro', serif; font-size: 16px; line-height: 1.75; color: var(--text);">
               <li style="position: relative; margin-bottom: 8px; padding-left: 20px;">
                 <span style="position: absolute; left: 0; color: var(--orange);">→</span>
                 Multiple veto points from separation of powers and checks/balances
@@ -1756,13 +2173,16 @@
 
           <div class="subsection">
             <h3>Policy Feedback</h3>
-            
+
             <p class="body-copy">
-              <strong>Policy feedback</strong> means policy can reshape public opinion and participation. Visible, widely used programs create beneficiaries who become more supportive and politically active to protect them. Complex or hidden policies may not be recognized as government action, reducing accountability.
+              <strong>Policy feedback</strong> means policy can reshape public opinion and participation. Visible,
+              widely used programs create beneficiaries who become more supportive and politically active to protect
+              them. Complex or hidden policies may not be recognized as government action, reducing accountability.
             </p>
 
             <p class="body-copy">
-              This complicates the simple story that "public opinion causes policy"—policy can also shape public opinion by changing incentives, expectations, and group organization.
+              This complicates the simple story that "public opinion causes policy"—policy can also shape public opinion
+              by changing incentives, expectations, and group organization.
             </p>
           </div>
 
@@ -2328,4 +2748,5 @@
     });
   </script>
 </body>
+
 </html>
