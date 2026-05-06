@@ -1,0 +1,830 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Computer Science Principles — Big Idea 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07080a; --card: #0d0f12; --card2: #12161c;
+      --border: rgba(255,255,255,.07); --text: #dde3ec; --muted: #7a8699;
+      --cyan: #3eb8d4; --teal: #3eb89a; --blue: #5b8fd4;
+      --red: #d95f5f; --orange: #f28749; --purple: #9b86f4; --green: #4caf7d;
+    }
+    html { scroll-behavior: smooth; }
+    body { min-height:100vh; display:flex; background:var(--bg); color:var(--text); font-family:"DM Mono",monospace; overflow:hidden; cursor:none; }
+    body::before { content:""; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity:.35; pointer-events:none; z-index:1; }
+    #cursor { position:fixed; width:12px; height:12px; border-radius:50%; background:var(--cyan); pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:width .2s ease, height .2s ease; }
+    #readingProgress { position:fixed; top:0; left:72px; right:0; height:2px; z-index:100; }
+    #readingProgressFill { width:0%; height:100%; background:var(--cyan); }
+    #ambientOverlay { position:fixed; inset:0; background:radial-gradient(ellipse at 60% 10%, rgba(62,184,212,.12), transparent 65%); opacity:.1; pointer-events:none; transition:background 1s ease, opacity .25s ease; z-index:0; }
+    #sidebar { width:72px; height:100vh; flex-shrink:0; background:rgba(5,6,8,.84); border-right:1px solid var(--border); backdrop-filter:blur(24px); overflow:hidden; position:relative; z-index:10; transition:width .4s cubic-bezier(0.23,1,0.32,1); }
+    #sidebar:hover, #sidebar.pinned { width:264px; }
+    #pinBtn { position:absolute; top:12px; right:10px; padding:4px 7px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); font:inherit; font-size:8px; letter-spacing:.08em; opacity:0; cursor:none; transition:opacity .25s ease, color .2s ease, border-color .2s ease; }
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity:1; }
+    #pinBtn.pinned { color:var(--cyan); border-color:rgba(62,184,212,.24); }
+    .sidebar-logo { display:flex; align-items:center; gap:14px; padding:18px; border-bottom:1px solid var(--border); white-space:nowrap; }
+    .logo-icon { width:36px; height:36px; display:grid; place-items:center; border-radius:10px; border:1px solid rgba(62,184,212,.2); background:rgba(62,184,212,.07); color:var(--cyan); flex-shrink:0; font-size:11px; font-weight:bold; }
+    .logo-copy { opacity:0; transition:opacity .25s ease; }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity:1; }
+    .logo-copy h1 { font-family:"Bebas Neue",sans-serif; font-size:13px; letter-spacing:.25em; color:var(--cyan); }
+    .logo-copy p { color:var(--muted); font-size:9px; letter-spacing:.14em; text-transform:uppercase; margin-top:3px; }
+    .search-wrap { position:relative; padding:10px; }
+    .sb-search-trigger { width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--muted); cursor:none; opacity:0; pointer-events:none; transition:opacity .25s ease, border-color .2s ease; }
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger { opacity:1; pointer-events:auto; }
+    .sb-search-trigger:hover { border-color:rgba(62,184,212,.2); }
+    #sbSearchPanel { position:absolute; top:calc(100% - 4px); left:10px; right:10px; border:1px solid rgba(62,184,212,.18); background:rgba(8,10,13,.98); border-radius:12px; overflow:hidden; opacity:0; pointer-events:none; transform:translateY(-8px); transition:opacity .22s ease, transform .22s ease; z-index:80; box-shadow:0 18px 60px rgba(0,0,0,.65); }
+    #sbSearchPanel.open { opacity:1; pointer-events:auto; transform:translateY(0); }
+    #sbSearchInner { display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.05); }
+    #sbInput { flex:1; border:none; background:transparent; color:var(--text); font:inherit; font-size:10px; letter-spacing:.1em; outline:none; cursor:none; }
+    #sbResults { max-height:280px; overflow:auto; }
+    .sb-result { padding:11px 14px; border-bottom:1px solid rgba(255,255,255,.04); cursor:none; transition:background .15s ease; }
+    .sb-result:hover { background:rgba(62,184,212,.06); }
+    .sb-result:last-child { border-bottom:none; }
+    .sb-result-tab { font-size:8px; color:var(--cyan); letter-spacing:.22em; text-transform:uppercase; margin-bottom:3px; }
+    .sb-result-term { font-family:"Bebas Neue",sans-serif; font-size:14px; color:white; letter-spacing:.04em; }
+    .sb-result-snip { font-family:"Crimson Pro",serif; font-size:12px; color:var(--muted); line-height:1.45; margin-top:2px; }
+    nav { height:calc(100vh - 176px); padding:0 10px 14px; overflow:auto; }
+    .nav-btn { width:100%; display:flex; align-items:center; gap:14px; padding:10px 14px; border:none; border-radius:10px; background:transparent; color:var(--muted); cursor:none; white-space:nowrap; transition:background .2s ease, color .2s ease; position:relative; }
+    .nav-btn:hover { background:rgba(255,255,255,.03); color:#aeb7c6; }
+    .nav-btn.active { background:rgba(62,184,212,.07); color:var(--cyan); }
+    .nav-btn.active .nav-indicator { opacity:1; }
+    .nav-indicator { position:absolute; left:0; width:2px; height:24px; background:var(--cyan); border-radius:5px; opacity:0; }
+    .nav-label { font-size:10px; letter-spacing:.18em; text-transform:uppercase; opacity:0; transition:opacity .25s ease; }
+    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity:1; }
+    .sidebar-footer { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; gap:10px; padding:14px 18px; border-top:1px solid var(--border); color:var(--muted); font-size:9px; letter-spacing:.1em; overflow:hidden; white-space:nowrap; }
+    .sidebar-footer span:last-child { opacity:0; transition:opacity .25s ease; }
+    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity:1; }
+    .dot { width:6px; height:6px; border-radius:50%; background:var(--teal); animation:blink 2s ease-in-out infinite; flex-shrink:0; }
+    #main { flex:1; height:100vh; overflow-y:auto; padding:36px 54px 80px; position:relative; z-index:2; }
+    .topbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:24px; padding:8px 0 20px; backdrop-filter:blur(8px); }
+    .top-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .glass-btn, #scoreTracker { border-radius:10px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); color:var(--muted); padding:9px 14px; font:inherit; font-size:9px; letter-spacing:.18em; text-transform:uppercase; cursor:none; backdrop-filter:blur(12px); transition:border-color .2s ease, color .2s ease, background .2s ease; white-space:nowrap; text-decoration:none; display:inline-block; }
+    .glass-btn:hover, #scoreTracker:hover { color:var(--cyan); border-color:rgba(62,184,212,.26); }
+    .glass-btn.active { color:var(--cyan); border-color:rgba(62,184,212,.32); background:rgba(62,184,212,.08); }
+    .tab-content { display:none; animation:fadeUp .45s cubic-bezier(0.23,1,0.32,1); }
+    .tab-content.active { display:block; }
+    .page-header { margin-bottom:34px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+    .unit-tag { display:block; color:var(--cyan); font-size:10px; letter-spacing:.35em; text-transform:uppercase; margin-bottom:10px; }
+    .page-header h2 { font-family:"Bebas Neue",sans-serif; font-size:clamp(38px,5vw,62px); letter-spacing:.08em; line-height:.96; color:white; }
+    .page-header p { margin-top:10px; color:var(--muted); font-size:11px; letter-spacing:.18em; text-transform:uppercase; }
+    .hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:22px; margin-bottom:26px; }
+    .principle-grid, .federal-grid, .glossary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:22px; }
+    .case-grid, .democracy-grid, .writing-grid, .flash-grid, .structure-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px; }
+    .exam-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:22px; }
+    .card, .feature-card, .principle-card, .case-card, .exam-card, .flash-card, .timeline-item, .writing-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:28px; position:relative; overflow:hidden; transition:transform .24s ease, border-color .24s ease, box-shadow .24s ease; }
+    .card:hover, .feature-card:hover, .principle-card:hover, .case-card:hover, .exam-card:hover, .flash-card:hover, .timeline-item:hover, .writing-card:hover { transform:translateY(-2px); border-color:rgba(255,255,255,.14); box-shadow:0 20px 48px rgba(0,0,0,.35); }
+    .hero-card::before, .feature-card::before, .principle-card::before, .case-card::before, .exam-card::before, .writing-card::before { content:""; position:absolute; left:0; right:0; top:0; height:2px; background:var(--accent,var(--cyan)); opacity:.6; }
+    .hero-card { --accent:var(--cyan); }
+    .accent-cyan { --accent:var(--cyan); } .accent-blue { --accent:var(--blue); } .accent-teal { --accent:var(--teal); }
+    .accent-red { --accent:var(--red); } .accent-orange { --accent:var(--orange); } .accent-purple { --accent:var(--purple); } .accent-green { --accent:var(--green); }
+    .card-sub { color:var(--accent,var(--cyan)); font-size:9px; letter-spacing:.35em; text-transform:uppercase; margin-bottom:8px; }
+    .card-title { font-family:"Bebas Neue",sans-serif; font-size:28px; letter-spacing:.05em; color:white; margin-bottom:16px; }
+    .body-copy, .bullet-list, .timeline-copy, .case-copy, .writing-copy, .exam-copy, .feature-copy { font-family:"Crimson Pro",serif; color:var(--muted); line-height:1.82; font-size:15px; }
+    .body-copy p+p, .feature-copy p+p, .case-copy p+p, .writing-copy p+p, .exam-copy p+p { margin-top:12px; }
+    .bullet-list { padding-left:18px; }
+    .bullet-list li+li { margin-top:10px; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:18px; }
+    .tag { padding:4px 9px; border-radius:999px; border:1px solid rgba(255,255,255,.07); background:rgba(255,255,255,.03); color:var(--muted); font-size:7px; letter-spacing:.18em; text-transform:uppercase; }
+    .dash-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:22px; }
+    .stat-box { border-radius:16px; border:1px solid var(--border); background:rgba(255,255,255,.02); padding:16px; }
+    .stat-box span { display:block; color:var(--muted); font-size:8px; letter-spacing:.24em; text-transform:uppercase; margin-bottom:8px; }
+    .stat-box strong { font-family:"Bebas Neue",sans-serif; font-size:26px; letter-spacing:.06em; color:white; }
+    .focus-callout { margin-top:22px; padding:14px 18px; border-radius:14px; border:1px solid rgba(62,184,212,.14); background:rgba(62,184,212,.04); }
+    .focus-callout .label { color:var(--cyan); font-size:8px; letter-spacing:.3em; text-transform:uppercase; margin-bottom:6px; }
+    .mini-label { color:var(--muted); font-size:8px; letter-spacing:.3em; text-transform:uppercase; margin-bottom:12px; }
+    /* Notes */
+    .notes-shell { display:grid; grid-template-columns:200px 1fr; gap:28px; align-items:start; }
+    .notes-index { position:sticky; top:0; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; }
+    .notes-index-title { font-size:8px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .note-jump { display:flex; justify-content:space-between; align-items:center; width:100%; padding:8px 10px; border:none; border-radius:8px; background:transparent; color:var(--muted); font:inherit; font-size:9px; letter-spacing:.08em; cursor:none; transition:background .2s ease, color .2s ease; }
+    .note-jump:hover { background:rgba(255,255,255,.04); color:var(--text); }
+    .note-jump span:last-child { color:var(--cyan); font-family:"Bebas Neue",sans-serif; font-size:14px; }
+    .notes-stack { display:grid; gap:22px; }
+    .note-section { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--accent,var(--cyan)); border-radius:16px; padding:26px; }
+    .note-section h3 { font-family:"Bebas Neue",sans-serif; font-size:22px; letter-spacing:.06em; color:white; margin-bottom:14px; }
+    .note-section h4 { font-family:"Bebas Neue",sans-serif; font-size:16px; letter-spacing:.06em; color:var(--cyan); margin:18px 0 8px; }
+    .note-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-top:18px; }
+    .mini-note { background:rgba(255,255,255,.025); border:1px solid var(--border); border-radius:12px; padding:14px; }
+    .mini-note strong { display:block; color:var(--text); font-size:11px; letter-spacing:.06em; margin-bottom:6px; }
+    .code-block { font-family:"DM Mono",monospace; font-size:11px; background:rgba(0,0,0,.35); border:1px solid var(--border); border-radius:10px; padding:14px 16px; color:#8de8f8; line-height:1.7; margin-top:14px; white-space:pre; overflow-x:auto; }
+    /* Glossary */
+    .glossary-toolbar { display:flex; gap:12px; align-items:center; margin-bottom:20px; }
+    .glossary-toolbar input { flex:1; background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; color:var(--text); font:inherit; font-size:10px; letter-spacing:.08em; padding:10px 14px; outline:none; cursor:none; min-width:220px; transition:border-color .2s ease; }
+    .glossary-toolbar input:focus { border-color:rgba(62,184,212,.24); }
+    .glossary-card { background:var(--card2); border-radius:14px; padding:20px; }
+    .glossary-card h4 { font-family:"Bebas Neue",sans-serif; font-size:18px; letter-spacing:.06em; color:white; margin-bottom:8px; }
+    /* Flashcards */
+    .flash-grid { margin-top:8px; }
+    .flash-card { perspective:900px; min-height:180px; cursor:none; }
+    .flash-inner { width:100%; height:100%; min-height:180px; transition:transform .55s ease; transform-style:preserve-3d; position:relative; }
+    .flash-card.flipped .flash-inner { transform:rotateY(180deg); }
+    .flash-front, .flash-back { position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; border:1px solid var(--border); background:var(--card2); padding:22px; display:flex; flex-direction:column; justify-content:space-between; }
+    .flash-back { transform:rotateY(180deg); border-color:rgba(62,184,212,.18); background:rgba(62,184,212,.05); }
+    .flash-front h3, .flash-back h3 { font-family:"Bebas Neue",sans-serif; font-size:18px; letter-spacing:.06em; color:white; margin-bottom:8px; }
+    .flash-hint { font-size:9px; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; margin-top:10px; }
+    /* Exam */
+    .exam-card { background:var(--card2); }
+    /* Modals */
+    .modal { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.72); backdrop-filter:blur(10px); align-items:center; justify-content:center; padding:20px; }
+    .modal.open { display:flex; }
+    .modal-box { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:32px; max-width:660px; width:100%; max-height:80vh; overflow-y:auto; position:relative; }
+    .modal-title { font-family:"Bebas Neue",sans-serif; font-size:26px; letter-spacing:.08em; color:white; margin-bottom:20px; }
+    .modal-close { position:absolute; top:16px; right:16px; border:1px solid var(--border); border-radius:8px; background:transparent; color:var(--muted); font:inherit; font-size:10px; letter-spacing:.1em; padding:6px 10px; cursor:none; }
+    .modal-close:hover { color:var(--text); border-color:rgba(255,255,255,.18); }
+    /* Quiz */
+    .quiz-status { font-size:9px; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; margin-bottom:14px; }
+    .quiz-question { font-family:"Crimson Pro",serif; font-size:18px; color:var(--text); line-height:1.6; margin-bottom:20px; }
+    .quiz-options { display:grid; gap:10px; }
+    .quiz-option { width:100%; text-align:left; padding:14px 16px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.03); color:var(--text); font:inherit; font-size:11px; letter-spacing:.04em; cursor:none; transition:border-color .2s ease, background .2s ease; }
+    .quiz-option:hover { border-color:rgba(62,184,212,.2); }
+    .quiz-option.correct { border-color:rgba(62,184,154,.35); background:rgba(62,184,154,.08); }
+    .quiz-option.wrong { border-color:rgba(217,95,95,.35); background:rgba(217,95,95,.08); }
+    .quiz-feedback { margin-top:18px; font-family:"Crimson Pro",serif; color:var(--muted); line-height:1.7; font-size:15px; }
+    .quiz-next { margin-top:18px; }
+    /* Essay */
+    .essay-list { display:grid; gap:10px; margin-bottom:20px; }
+    .essay-topic-btn { width:100%; text-align:left; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,.03); color:var(--text); font:inherit; font-size:10px; letter-spacing:.08em; cursor:none; transition:border-color .2s ease, background .2s ease; }
+    .essay-topic-btn:hover, .essay-topic-btn.active { border-color:rgba(62,184,212,.24); background:rgba(62,184,212,.07); }
+    .essay-outline { display:none; gap:14px; }
+    .essay-outline.show { display:grid; }
+    .essay-block { border-radius:16px; border:1px solid var(--border); background:rgba(255,255,255,.025); padding:18px; }
+    .essay-block-label { color:var(--cyan); font-size:8px; letter-spacing:.3em; text-transform:uppercase; margin-bottom:9px; }
+    .essay-block-body { font-family:"Crimson Pro",serif; color:var(--muted); line-height:1.78; font-size:15px; }
+    strong.ap-term { color:#8de8f8; font-weight:600; }
+    body.ap-highlight strong.ap-term { background:rgba(62,184,212,.12); padding:0 3px; border-radius:3px; box-shadow:0 0 10px rgba(62,184,212,.15); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @media(max-width:1020px){.hero-grid{grid-template-columns:1fr} .dash-stats{grid-template-columns:1fr} #main{padding-left:26px;padding-right:26px} .notes-shell{grid-template-columns:1fr}}
+    @media(max-width:760px){body{cursor:auto;overflow:auto;display:block} #cursor,#readingProgress{display:none} #sidebar{width:100%;height:auto;border-right:none;border-bottom:1px solid var(--border)} #sidebar:hover,#sidebar.pinned{width:100%} .logo-copy,.nav-label,.sidebar-footer span:last-child,.sb-search-trigger{opacity:1!important;pointer-events:auto!important} #pinBtn{display:none} nav{height:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px} #main{height:auto;overflow:visible} .topbar{position:static} .glossary-toolbar input{min-width:100%;width:100%}}
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="ambientOverlay"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">CSP</div>
+      <div class="logo-copy">
+        <h1>CSP BIG IDEA 2</h1>
+        <p>Data & Analysis</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Big Idea 2</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color:var(--cyan);font-size:12px;">⌕</span>
+          <input id="sbInput" type="text" placeholder="Find concepts, terms, or topics" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer"><span class="dot"></span><span>Study Mode Active</span></div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <a class="glass-btn" href="apcsp-unit1.html">Big Idea 1</a>
+        <a class="glass-btn" href="apcsp-unit2.html" style="color:var(--cyan);border-color:rgba(62,184,212,.32);">Big Idea 2</a>
+        <a class="glass-btn" href="apcsp-unit3.html">Big Idea 3</a>
+        <a class="glass-btn" href="apcsp-unit4.html">Big Idea 4</a>
+        <a class="glass-btn" href="apcsp-unit5.html">Big Idea 5</a>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+      </div>
+      <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Big Idea 2 · Data & Analysis</span>
+        <h2>From Bits to Insight</h2>
+        <p>Binary · Compression · Data Analysis · Metadata · Cleaning Data</p>
+      </header>
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Core Frame</div>
+          <div class="card-title">What Big Idea 2 Is Really About</div>
+          <div class="body-copy">
+            <p>Big Idea 2 builds the bridge between raw bits and meaningful information. Everything a computer handles — text, images, audio, video — begins as patterns of <strong class="ap-term">binary</strong> (0s and 1s). Understanding how data is <strong class="ap-term">represented</strong>, <strong class="ap-term">compressed</strong>, and <strong class="ap-term">analyzed</strong> is central to AP CSP.</p>
+            <p>At its core, Big Idea 2 asks: how do computers store information, how do we reduce it efficiently, and how do we extract knowledge from massive datasets?</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Study Sections</span><strong>11</strong></div>
+            <div class="stat-box"><span>Key Concepts</span><strong>8</strong></div>
+            <div class="stat-box"><span>Quiz Items</span><strong>10</strong></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Know lossless vs. lossy compression cold, understand binary place value and overflow, and be able to distinguish correlation from causation in data analysis questions.</div>
+          </div>
+        </article>
+        <article class="card feature-card accent-blue">
+          <div class="card-sub">Fast Review</div>
+          <div class="card-title">What You Must Be Able To Explain</div>
+          <ul class="bullet-list">
+            <li>How <strong class="ap-term">binary</strong> represents numbers, text, images, and audio — and why bits are the universal unit.</li>
+            <li>The difference between <strong class="ap-term">lossless</strong> (exact recovery) and <strong class="ap-term">lossy</strong> (some data discarded) compression, and when each is appropriate.</li>
+            <li>How <strong class="ap-term">overflow</strong> occurs when a value exceeds the maximum representable by a fixed number of bits.</li>
+            <li>What <strong class="ap-term">metadata</strong> is and how it provides context — and privacy risks.</li>
+            <li>Why <strong class="ap-term">data cleaning</strong> is a prerequisite for meaningful analysis.</li>
+            <li>How to distinguish <strong class="ap-term">correlation</strong> from <strong class="ap-term">causation</strong> in a data scenario.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Binary</span><span class="tag">Compression</span><span class="tag">Data Analysis</span><span class="tag">Metadata</span><span class="tag">Cleaning</span>
+          </div>
+        </article>
+      </div>
+      <div class="exam-grid">
+        <article class="exam-card accent-red">
+          <div class="mini-label">Common Mistakes</div>
+          <h3>Avoid These</h3>
+          <ul class="bullet-list">
+            <li>Thinking all compression reduces quality — only <strong class="ap-term">lossy</strong> compression does; <strong class="ap-term">lossless</strong> preserves everything.</li>
+            <li>Confusing number of bits with the maximum value — 8 bits maxes at 255, not 8.</li>
+            <li>Treating correlation as proof of causation without checking for confounding factors.</li>
+            <li>Assuming "more data = better conclusions" — biased data stays biased regardless of volume.</li>
+            <li>Forgetting that removing obvious identifiers does not fully anonymize data; metadata can still expose individuals.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-teal">
+          <div class="mini-label">Study Strategy</div>
+          <h3>Best Order To Review</h3>
+          <ul class="bullet-list">
+            <li>Start with binary fundamentals: place value, bits → bytes, 2<sup>n</sup> patterns.</li>
+            <li>Practice converting binary ↔ decimal both ways until it feels automatic.</li>
+            <li>Study lossless vs. lossy compression with concrete examples (RLE, JPEG).</li>
+            <li>Move to data analysis: cleaning, metadata, and the programs-with-data pipeline.</li>
+            <li>Finish with correlation vs. causation and privacy ethics around data.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Big Idea 2 Notes Index</h2>
+        <p>Binary · Compression · Extraction · Metadata · Cleaning · Programs with Data</p>
+      </header>
+      <div class="notes-shell">
+        <aside class="notes-index" aria-label="Big Idea 2 notes index">
+          <div class="notes-index-title">Major Buckets</div>
+          <button class="note-jump" type="button" data-note-target="n-binary"><span>Binary Numbers</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-convert"><span>Conversion</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-encoding"><span>Encoding Data</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-compression"><span>Compression</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-extraction"><span>Extracting Info</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-programs"><span>Programs & Data</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-metadata"><span>Metadata</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-cleaning"><span>Cleaning Data</span><span>08</span></button>
+        </aside>
+        <div class="notes-stack">
+
+          <article class="note-section accent-cyan" id="n-binary">
+            <div class="mini-label">01 · Binary Numbers</div>
+            <h3>Why Everything Is 0s and 1s</h3>
+            <div class="body-copy">
+              <p>A <strong class="ap-term">bit</strong> is a single binary digit (0 or 1). A <strong class="ap-term">byte</strong> is 8 bits. Computer hardware reliably distinguishes only two physical states (high/low voltage), so binary is the universal language of computing — connecting hardware, software, and networks.</p>
+              <p>With <strong class="ap-term">n bits</strong>, there are <strong class="ap-term">2<sup>n</sup></strong> possible patterns. More bits means more patterns — which can represent bigger numbers, more characters, more colors, and so on.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>1 bit</strong><div class="body-copy">2<sup>1</sup> = 2 patterns: 0 or 1</div></div>
+              <div class="mini-note"><strong>8 bits (1 byte)</strong><div class="body-copy">2<sup>8</sup> = 256 patterns: 0–255</div></div>
+              <div class="mini-note"><strong>Overflow</strong><div class="body-copy">When a value exceeds the maximum for a fixed number of bits, the result "wraps around" and becomes incorrect. With 8 bits, max is 255; trying to store 256 causes overflow.</div></div>
+              <div class="mini-note"><strong>Key Misconception</strong><div class="body-copy">More bits means more patterns — not just bigger numbers. It can mean more colors, more characters, more precision in audio.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-blue" id="n-convert">
+            <div class="mini-label">02 · Binary ↔ Decimal Conversion</div>
+            <h3>Reading and Writing Binary</h3>
+            <div class="body-copy">
+              <p>Binary is a <strong class="ap-term">base-2 positional system</strong>. Each position represents a power of 2, counted right to left starting at 2<sup>0</sup> = 1.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Place Values</strong><div class="body-copy">…64 | 32 | 16 | 8 | 4 | 2 | 1 (right to left, each doubles).</div></div>
+              <div class="mini-note"><strong>Binary → Decimal</strong><div class="body-copy">Add up place values where there's a 1. Example: 10110 → 16+4+2 = 22.</div></div>
+              <div class="mini-note"><strong>Decimal → Binary</strong><div class="body-copy">Subtract the largest power of 2 that fits, record a 1, repeat. Example: 37 → 32+4+1 = 100101.</div></div>
+              <div class="mini-note"><strong>Common Error</strong><div class="body-copy">Don't treat binary digits as base-10 digits. You must use powers-of-2 place values.</div></div>
+            </div>
+            <h4>Worked Example: 10110₂</h4>
+            <div class="code-block">Positions: 16  8  4  2  1
+Bits:        1  0  1  1  0
+Value:      16 + 0 + 4 + 2 + 0 = 22</div>
+            <h4>Worked Example: 37₁₀ → Binary</h4>
+            <div class="code-block">37 - 32 = 5  → place 1 at 32
+ 5 -  4 = 1  → place 1 at  4
+ 1 -  1 = 0  → place 1 at  1
+Zeros at 16, 8, 2 → result: 1 0 0 1 0 1</div>
+          </article>
+
+          <article class="note-section accent-purple" id="n-encoding">
+            <div class="mini-label">03 · Encoding Data Types</div>
+            <h3>How Text, Images, and Sound Become Bits</h3>
+            <div class="body-copy">
+              <p>Binary doesn't only represent numbers. Any data can be encoded as bits as long as both sender and receiver agree on the <strong class="ap-term">encoding scheme</strong>.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Text</strong><div class="body-copy">Each character is assigned a number (like ASCII or Unicode), then stored in binary. If sender and receiver use different mappings, characters display incorrectly.</div></div>
+              <div class="mini-note"><strong>Images</strong><div class="body-copy">Made of <strong class="ap-term">pixels</strong>. Each pixel's color is stored in bits. <strong class="ap-term">Color depth</strong> (bits per pixel) determines how many colors are possible: b bits → 2<sup>b</sup> colors. Higher depth + higher resolution = larger file.</div></div>
+              <div class="mini-note"><strong>Audio</strong><div class="body-copy">Captured by <strong class="ap-term">sampling</strong>: measuring air pressure at regular intervals. <strong class="ap-term">Sample rate</strong> (samples/sec) and <strong class="ap-term">bit depth</strong> (bits/sample) control quality and file size.</div></div>
+              <div class="mini-note"><strong>AP Move</strong><div class="body-copy">Higher quality always means larger files. This creates the tradeoff that motivates compression.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-orange" id="n-compression">
+            <div class="mini-label">04 · Data Compression</div>
+            <h3>Lossless vs. Lossy — The Critical Distinction</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Data compression</strong> encodes information using fewer bits. It matters for storage (how much fits on a device), speed (how fast files transfer), and cost. But compression trades size against compute time — and sometimes quality.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Lossless</strong><div class="body-copy">Reduces size while preserving all data. Decompressing gives back the exact original. Best for: text, code, legal documents, any data where every bit matters. Idea: find and eliminate redundancy.</div></div>
+              <div class="mini-note"><strong>Lossy</strong><div class="body-copy">Permanently removes information (usually details humans barely notice). Smaller files, but not reversible. Best for: photos, audio, video — where "good enough" quality is acceptable.</div></div>
+              <div class="mini-note"><strong>RLE (Run-Length Encoding)</strong><div class="body-copy">A lossless technique. Stores "value + count" instead of repeating values. Works well for data with long repeated runs; can backfire if data changes frequently.</div></div>
+              <div class="mini-note"><strong>Dictionary Compression</strong><div class="body-copy">Replaces repeated sequences with short references. The dictionary is stored alongside compressed data so the original can be perfectly reconstructed.</div></div>
+            </div>
+            <h4>Choosing Between Lossless and Lossy</h4>
+            <div class="body-copy">
+              <p>Ask: does every bit matter? Medical images, blueprints, legal text → lossless. Streaming video, social media photos → lossy is acceptable to save bandwidth. Compression never magically removes meaning; it either changes the representation (lossless) or discards some information (lossy).</p>
+            </div>
+          </article>
+
+          <article class="note-section accent-teal" id="n-extraction">
+            <div class="mini-label">05 · Extracting Information from Data</div>
+            <h3>Turning Raw Data Into Insight</h3>
+            <div class="body-copy">
+              <p>Modern computing generates massive datasets. <strong class="ap-term">Extracting information</strong> means using computational tools to find patterns, test hypotheses, and support decisions. But data analysis has risks: bias, misleading summaries, and confusing <strong class="ap-term">correlation</strong> with <strong class="ap-term">causation</strong>.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Summaries & Aggregation</strong><div class="body-copy">Counts, totals, averages, min/max. An average can hide important variation — two groups can have the same mean but very different distributions.</div></div>
+              <div class="mini-note"><strong>Trends, Clusters, Outliers</strong><div class="body-copy">Computers scan large datasets for patterns humans would miss. Outliers can be errors or the most important data points — always investigate before deleting.</div></div>
+              <div class="mini-note"><strong>Visualization</strong><div class="body-copy">Charts and graphs reveal patterns quickly, but they can mislead if axes are manipulated or context is missing. Same data → different graphs → different impressions.</div></div>
+              <div class="mini-note"><strong>Correlation ≠ Causation</strong><div class="body-copy">Two variables can move together because of a third factor, coincidence, or reversed causation. Example: ice cream sales and drowning rise together because of hot weather — not because ice cream causes drowning.</div></div>
+            </div>
+            <h4>Sampling and Bias</h4>
+            <div class="body-copy">
+              <p>When you can't collect all data, you use a <strong class="ap-term">sample</strong>. <strong class="ap-term">Sampling bias</strong> occurs when certain groups are systematically excluded. More data does not fix bias — a huge biased dataset is still biased.</p>
+            </div>
+          </article>
+
+          <article class="note-section accent-green" id="n-programs">
+            <div class="mini-label">06 · Using Programs with Data</div>
+            <h3>The Analysis Pipeline</h3>
+            <div class="body-copy">
+              <p>Programs enable data analysis at scale: a person can't inspect millions of rows, but a program can. Programs are fast and consistent, but they follow your instructions literally — mistakes in code or data produce wrong results without any error.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Filter</strong><div class="body-copy">Keep only rows matching a condition. Critical distinction: filtering keeps data that matches; it does not change values.</div></div>
+              <div class="mini-note"><strong>Count vs. Sum</strong><div class="body-copy">Counting increments by 1 per match. Summing adds the value itself. A common exam trap: confusing a loop that counts items with one that sums them.</div></div>
+              <div class="mini-note"><strong>Average</strong><div class="body-copy">Requires both total sum and count. Missing/invalid entries can silently corrupt the result unless you clean data first.</div></div>
+              <div class="mini-note"><strong>Exact String Matching</strong><div class="body-copy">Programs match categories exactly. "NY" ≠ "New York" ≠ "ny". This is why cleaning is a prerequisite — inconsistent strings split counts that should be combined.</div></div>
+            </div>
+            <h4>Pseudocode: Filtering and Counting</h4>
+            <div class="code-block">temps ← [72, 68, 75, 70, 80, 65]
+countHot ← 0
+
+FOR EACH t IN temps
+  IF t > 72
+    countHot ← countHot + 1
+
+DISPLAY(countHot)   // outputs 2</div>
+          </article>
+
+          <article class="note-section accent-red" id="n-metadata">
+            <div class="mini-label">07 · Metadata</div>
+            <h3>Data About Data</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Metadata</strong> is information that describes other data — it provides context that makes a dataset interpretable and usable. Without metadata, a column of numbers is meaningless.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Descriptive Metadata</strong><div class="body-copy">Identifies and explains the data: column names, descriptions, keywords, dataset title.</div></div>
+              <div class="mini-note"><strong>Structural Metadata</strong><div class="body-copy">How data is organized: data types, table schema, file format, relationships between tables.</div></div>
+              <div class="mini-note"><strong>Administrative Metadata</strong><div class="body-copy">Rules and provenance: who collected it, when updated, licensing, access permissions, privacy notes.</div></div>
+              <div class="mini-note"><strong>Privacy Risk</strong><div class="body-copy">Metadata can reveal sensitive information even when obvious identifiers are removed. A photo's GPS coordinates, timestamps, or camera model can re-identify individuals or reveal locations.</div></div>
+            </div>
+            <h4>AP Move on Metadata</h4>
+            <div class="body-copy">
+              <p>On exam questions: identify what metadata is present or missing, explain how its absence makes interpretation unreliable, and reason about whether metadata creates privacy risk. Coded categories (1, 2, 3) require metadata to interpret — computing a numerical average of category codes produces meaningless results.</p>
+            </div>
+          </article>
+
+          <article class="note-section accent-cyan" id="n-cleaning">
+            <div class="mini-label">08 · Cleaning Data</div>
+            <h3>Making Data Fit for Analysis</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Cleaning data</strong> means detecting and resolving problems so a dataset can be reliably analyzed. Real-world data is messy — it comes from people typing, sensors glitching, and systems merging. Cleaning is defined by metadata: what "clean" means depends on what the data should represent.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Missing Values</strong><div class="body-copy">Options: exclude from calculations, impute (fill with estimate), or remove rows. Each approach has tradeoffs — dropping rows can bias results if missing values cluster in one group.</div></div>
+              <div class="mini-note"><strong>Inconsistent Categories</strong><div class="body-copy">"CA", "ca", "California" must be standardized before grouping. Programs compare exact strings — inconsistency silently splits counts.</div></div>
+              <div class="mini-note"><strong>Duplicate Records</strong><div class="body-copy">Sometimes errors (system glitch), sometimes real repeated events (multiple measurements). Metadata about collection method helps you decide whether to remove them.</div></div>
+              <div class="mini-note"><strong>Mixed Types & Impossible Values</strong><div class="body-copy">Numeric column containing text, negative ages, temperatures of 999. Require validation rules and investigation — not automatic deletion.</div></div>
+            </div>
+            <h4>Common Cleaning Pitfalls</h4>
+            <div class="body-copy">
+              <p>Treating missing values as zeros (drastically skews averages), deleting outliers without investigating them, and assuming the program ran so the data must be fine. Many data errors produce plausible-looking but wrong results — no crash, no warning.</p>
+            </div>
+          </article>
+
+        </div><!-- /notes-stack -->
+      </div><!-- /notes-shell -->
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Glossary</span>
+        <h2>Big Idea 2 Key Terms</h2>
+        <p>Search and filter all vocabulary for this unit</p>
+      </header>
+      <div class="glossary-toolbar">
+        <input id="glossaryFilter" type="text" placeholder="Filter terms…" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Flashcards</span>
+        <h2>Big Idea 2 Flashcards</h2>
+        <p>Click any card to reveal the answer</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM PREP -->
+    <section class="tab-content" id="examprep">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>AP Exam Strategies</h2>
+        <p>High-yield patterns and common traps for Big Idea 2</p>
+      </header>
+      <div class="exam-grid">
+        <article class="exam-card accent-cyan">
+          <div class="mini-label">Binary & Representation</div>
+          <h3>High-Yield Patterns</h3>
+          <ul class="bullet-list">
+            <li>Given n bits, how many distinct values? → 2<sup>n</sup></li>
+            <li>Given x values needed, minimum bits? → smallest n where 2<sup>n</sup> ≥ x</li>
+            <li>Convert binary to decimal using place values (don't guess).</li>
+            <li>Max value with n bits = 2<sup>n</sup> − 1 (not 2<sup>n</sup>).</li>
+            <li>Overflow: value exceeds storage capacity → result wraps or corrupts.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-orange">
+          <div class="mini-label">Compression</div>
+          <h3>Lossless vs. Lossy</h3>
+          <ul class="bullet-list">
+            <li>Lossless: exact recovery, good for text/code/legal. Exploits redundancy.</li>
+            <li>Lossy: smaller files, not reversible, good for photos/video/audio.</li>
+            <li>RLE example: 111111000011 → "6 ones, 4 zeros, 2 ones".</li>
+            <li>Compression may increase compute time even while reducing file size.</li>
+            <li>Compression cannot always make files smaller — if data has no redundancy, lossless may fail to compress.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-purple">
+          <div class="mini-label">Data Analysis</div>
+          <h3>Reasoning About Data</h3>
+          <ul class="bullet-list">
+            <li>Correlation ≠ Causation — always ask: is there a third factor? Is the direction reversed?</li>
+            <li>Sampling bias: missing groups → biased conclusions regardless of sample size.</li>
+            <li>Outliers: investigate before removing. May be the most important data points.</li>
+            <li>Visualization can mislead: check axis scales and missing context.</li>
+            <li>Averages hide variation — two datasets can have identical means with very different distributions.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-teal">
+          <div class="mini-label">Metadata & Privacy</div>
+          <h3>Privacy Implications</h3>
+          <ul class="bullet-list">
+            <li>Metadata (timestamps, GPS, camera model) can re-identify individuals even after names are removed.</li>
+            <li>Combining datasets can reveal information neither dataset disclosed alone.</li>
+            <li>Coded categories (1/2/3) should not be treated as quantities — metadata tells you what they mean.</li>
+            <li>A "blank" can mean missing, not applicable, or redacted — metadata defines the difference.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-red">
+          <div class="mini-label">Programs with Data</div>
+          <h3>Trace and Predict Output</h3>
+          <ul class="bullet-list">
+            <li>Know the difference between counting (+1 each time) and summing (+value each time).</li>
+            <li>Filters keep matching rows — they don't change values.</li>
+            <li>Programs match strings exactly — "NY" ≠ "New York".</li>
+            <li>Invalid/missing data in a list can silently corrupt averages.</li>
+            <li>A program running without an error does not mean the output is correct.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-green">
+          <div class="mini-label">Cleaning Data</div>
+          <h3>Cleaning Decision Tradeoffs</h3>
+          <ul class="bullet-list">
+            <li>Dropping rows with missing data is only safe if missing data is random and rare.</li>
+            <li>If missing data clusters in one group, dropping those rows biases the dataset.</li>
+            <li>Imputing values (filling with estimates) hides uncertainty and can distort distributions.</li>
+            <li>Standardizing categories is required before grouping/counting — "ca" and "CA" are different strings.</li>
+            <li>Document all cleaning changes as new metadata so others can interpret results correctly.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- QUIZ MODAL -->
+    <div class="modal" id="quizModal">
+      <div class="modal-box">
+        <div class="modal-title">Big Idea 2 Quiz</div>
+        <button class="modal-close" data-close="quizModal" type="button">✕ Close</button>
+        <div id="quizMount"></div>
+      </div>
+    </div>
+
+    <!-- ESSAY MODAL -->
+    <div class="modal" id="essayModal">
+      <div class="modal-box">
+        <div class="modal-title">Prompt Bank</div>
+        <button class="modal-close" data-close="essayModal" type="button">✕ Close</button>
+        <div class="essay-list" id="essayTopics"></div>
+        <div class="essay-outline" id="essayOutline"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const tabs = [
+      { id:"dashboard", icon:"◈", label:"Dashboard", ambient:"radial-gradient(ellipse at 60% 10%, rgba(62,184,212,.14), transparent 65%)" },
+      { id:"notes",     icon:"≡",  label:"Notes",     ambient:"radial-gradient(ellipse at 30% 20%, rgba(91,143,212,.12), transparent 65%)" },
+      { id:"glossary",  icon:"⊞",  label:"Glossary",  ambient:"radial-gradient(ellipse at 70% 30%, rgba(155,134,244,.10), transparent 65%)" },
+      { id:"flashcards",icon:"⧉",  label:"Flashcards",ambient:"radial-gradient(ellipse at 50% 50%, rgba(62,184,154,.10), transparent 65%)" },
+      { id:"examprep",  icon:"◎",  label:"Exam Prep", ambient:"radial-gradient(ellipse at 40% 10%, rgba(242,135,73,.10), transparent 65%)" },
+    ];
+
+    const glossaryTerms = [
+      { tab:"notes", term:"Bit", def:"A single binary digit — either 0 or 1. The fundamental unit of information in computing." },
+      { tab:"notes", term:"Byte", def:"A group of 8 bits. With 8 bits, there are 2⁸ = 256 possible patterns (values 0–255)." },
+      { tab:"notes", term:"Binary", def:"A base-2 number system using only 0 and 1. Each position represents a power of 2." },
+      { tab:"notes", term:"Overflow", def:"An error that occurs when a computation produces a value too large to store in the available bits, causing the result to wrap around or become incorrect." },
+      { tab:"notes", term:"Data Compression", def:"The process of encoding information using fewer bits than the original representation, to reduce storage or transmission cost." },
+      { tab:"notes", term:"Lossless Compression", def:"Compression that preserves all original data so the exact original can be reconstructed from the compressed form." },
+      { tab:"notes", term:"Lossy Compression", def:"Compression that permanently removes some information (usually imperceptible) to achieve smaller file sizes. Cannot recover the exact original." },
+      { tab:"notes", term:"Run-Length Encoding (RLE)", def:"A lossless compression scheme that stores repeated values as 'value + count' instead of repeating the value. Effective for data with long runs of identical values." },
+      { tab:"notes", term:"Pixel", def:"A single point of color in a digital image. The more pixels, the higher the resolution. Each pixel's color is represented by bits." },
+      { tab:"notes", term:"Color Depth", def:"The number of bits used to represent each pixel's color. More bits → more possible colors. b bits → 2ᵇ distinct colors." },
+      { tab:"notes", term:"Sample Rate", def:"In digital audio, the number of sound samples captured per second. Higher sample rate = more accurate sound representation, larger file." },
+      { tab:"notes", term:"Bit Depth (Audio)", def:"The number of bits per audio sample. More bits = more precise measurement of sound amplitude." },
+      { tab:"notes", term:"Metadata", def:"Data that describes other data. Provides context such as meaning, units, collection method, format, and constraints." },
+      { tab:"notes", term:"Data Dictionary", def:"A metadata document that lists each field in a dataset and explains its name, meaning, data type, units, allowed values, and how missing values are coded." },
+      { tab:"notes", term:"EXIF Data", def:"Metadata stored inside photo files, including timestamp, camera model, exposure settings, and GPS location (if enabled)." },
+      { tab:"notes", term:"Data Cleaning", def:"The process of detecting and fixing (or appropriately handling) problems in a dataset — missing values, duplicates, inconsistent formats, impossible values — so it can be reliably analyzed." },
+      { tab:"notes", term:"Correlation", def:"A statistical relationship where two variables change in relation to each other. Correlation does not prove causation." },
+      { tab:"notes", term:"Causation", def:"A relationship where one variable directly causes changes in another. Requires more than observing correlation." },
+      { tab:"notes", term:"Sampling Bias", def:"A flaw in data collection where some groups are systematically excluded from the sample, causing conclusions that don't represent the full population." },
+      { tab:"notes", term:"Imputation", def:"Replacing missing data values with estimates (e.g., group average). Can maintain sample size but may hide uncertainty or distort distributions." },
+      { tab:"notes", term:"Aggregation", def:"Combining many data values into a summary — counts, totals, averages, min/max. Useful for insight but can hide variation within groups." },
+      { tab:"notes", term:"Outlier", def:"A data value far from typical values. May indicate a data error or a genuinely important rare event. Always investigate before removing." },
+      { tab:"notes", term:"Trend", def:"A general direction in which data values change over time — increasing, decreasing, or stable — identifiable across a dataset." },
+    ];
+
+    const flashcards = [
+      { front:"What is a bit, and what is a byte?", back:"A bit is a single binary digit (0 or 1). A byte is 8 bits. With n bits there are 2ⁿ possible patterns." },
+      { front:"With 8 bits, what is the maximum value you can store?", back:"255 (2⁸ − 1 = 255). Maximum is 2ⁿ − 1, not 2ⁿ. Trying to store 256 in 8 bits causes overflow." },
+      { front:"Convert 10110₂ to decimal.", back:"Place values (right to left): 1, 2, 4, 8, 16. Bits: 0,1,1,0,1 → 16+4+2 = 22. Answer: 22₁₀." },
+      { front:"What is the difference between lossless and lossy compression?", back:"Lossless preserves all data — exact original recoverable (good for text/code). Lossy permanently discards some data — smaller files, not reversible (good for photos/video)." },
+      { front:"What is Run-Length Encoding (RLE)?", back:"A lossless compression technique that stores 'value + count' instead of repeating values. Example: 111110000 → '5 ones, 4 zeros'. Works best on data with long repeated runs." },
+      { front:"What is metadata and why does it matter?", back:"Metadata is data that describes other data — column names, units, collection method, format. Without it, values are uninterpretable. It can also create privacy risks (e.g., GPS in photos)." },
+      { front:"What is correlation vs. causation?", back:"Correlation: two variables move together. Causation: one directly causes the other. Correlation does not prove causation — a third factor, coincidence, or reversed direction may explain it." },
+      { front:"Why doesn't removing obvious identifiers fully anonymize data?", back:"Metadata (timestamps, location, device info) and combining datasets can still re-identify individuals even after names are removed." },
+      { front:"What is sampling bias?", back:"When certain groups are systematically excluded from a sample. More data does not fix bias — a huge biased dataset still produces biased conclusions." },
+      { front:"What are the risks of treating missing values as zeros?", back:"Averaging zeros instead of excluding the missing data dramatically skews the mean downward. Missing values should be excluded, imputed with justification, or the impact should be documented." },
+      { front:"In a program that processes data, what is the difference between counting and summing?", back:"Counting: adds 1 per matching item (how many). Summing: adds the value of each item (total amount). A common exam trap confuses these two patterns." },
+      { front:"Why does inconsistent text (e.g., 'CA' vs 'California') cause errors in data analysis?", back:"Programs compare strings exactly. 'CA' and 'California' are different values, so grouping by state would split what should be one category into two separate counts." },
+    ];
+
+    const quizQuestions = [
+      { question:"A computer uses 4 bits to store a color value. How many distinct colors can it represent?", options:["4","8","16","32"], correct:2, explanation:"With n bits, there are 2ⁿ possible patterns. 2⁴ = 16 distinct colors." },
+      { question:"Which of the following best describes overflow?", options:["When a value is rounded to fewer decimal places","When a computed result exceeds the range of bits available to store it","When two programs share the same memory","When a compression algorithm removes data permanently"], correct:1, explanation:"Overflow occurs when a value is too large for the fixed number of bits allocated, causing the stored result to wrap around or become incorrect." },
+      { question:"A file compressed using lossless compression is later decompressed. What is true about the decompressed file?", options:["It will be slightly lower quality than the original","It will be exactly identical to the original","It will be smaller than the original","It will lose some metadata"], correct:1, explanation:"Lossless compression preserves all data. Decompression produces the exact original file." },
+      { question:"A student notices that cities with more ice cream shops have higher rates of sunburn. The student concludes that ice cream causes sunburn. What is wrong with this reasoning?", options:["The student did not visualize the data correctly","Correlation was mistaken for causation; hot weather likely explains both","The student's sample size was too small","The student used the wrong type of compression"], correct:1, explanation:"This is a classic correlation vs. causation error. A third factor (hot weather) increases both ice cream consumption and sunburn. One does not cause the other." },
+      { question:"A dataset has the column 'grade' with values: 'A', 'a', 'A+', 'A'. A program groups by grade and counts. Which issue will occur?", options:["The program will crash","'A' and 'a' will be counted as the same grade","'A' and 'a' will be treated as different categories","The program will automatically fix the capitalization"], correct:2, explanation:"Programs compare strings exactly. 'A' and 'a' are different values, so they will be grouped as separate categories — splitting a count that should be combined. Data cleaning (standardizing case) is required first." },
+      { question:"Which of the following is an example of metadata?", options:["The pixel colors in an image","The binary representation of a number","The GPS coordinates stored with a photo file","The compression algorithm applied to a video"], correct:2, explanation:"GPS coordinates stored with a photo are metadata — data that describes the photo (when and where it was taken) rather than the image content itself." },
+      { question:"An analyst drops all rows with missing income data before computing the average income of survey respondents. What is the main risk of this approach?", options:["The average will always be higher than the true value","If lower-income respondents leave more blanks, the sample becomes biased toward higher incomes","The remaining dataset will be too large to analyze","Missing data cannot be detected by programs"], correct:1, explanation:"If missingness is not random — for example, if lower-income respondents skip the income field more often — removing incomplete rows overrepresents higher-income respondents, biasing the average upward." },
+      { question:"Run-length encoding compresses '000001111111100' as '5 zeros, 8 ones, 2 zeros'. For which input would RLE work LEAST effectively?", options:["An all-white image with long horizontal bands","A random noise image with rapidly alternating values","A simple black-and-white logo with large solid regions","A binary file with long repeated sequences"], correct:1, explanation:"RLE exploits long runs of repeated values. If values alternate rapidly (like random noise), there are no long runs — RLE produces 'count' metadata for every value and may actually make the file larger." },
+      { question:"What does it mean for a program to 'filter' a dataset?", options:["Change the values of selected rows","Remove rows that do not match a specified condition and keep only those that do","Sort the dataset by a column value","Replace missing values with estimates"], correct:1, explanation:"Filtering keeps only rows that match a condition and discards the rest. Values themselves are not changed — only which rows are included in further analysis." },
+      { question:"A researcher removes a person's name and email from a medical dataset before sharing it. Is the data now fully anonymous?", options:["Yes, because names and emails are the only identifying fields","No, because combining the dataset with other public data or using metadata like ZIP code and birthdate can re-identify individuals","Yes, as long as the dataset is encrypted","No, because all medical data is permanently identifiable"], correct:1, explanation:"Removing obvious identifiers does not guarantee anonymity. Metadata (timestamps, location, age, ZIP code) and cross-referencing with other datasets can re-identify individuals even without names or emails." },
+    ];
+
+    const essayOutlines = [
+      {
+        label:"Explain why lossless compression should be preferred over lossy for archiving legal documents",
+        blocks:[
+          ["Claim","Lossless compression is the correct choice for archiving legal documents because it guarantees exact recovery of all data."],
+          ["Evidence","Lossless compression removes only redundancy (repeated patterns), never discarding any information. When decompressed, the file is byte-for-byte identical to the original. Lossy compression permanently removes data, so recovery is impossible."],
+          ["Reasoning","Because legal documents require every character to be preserved exactly — a single changed word can alter legal meaning — any loss of data is unacceptable. Lossless methods ensure authenticity and completeness."],
+          ["Counter & Refute","Lossy compression produces smaller files, but the tradeoff of risking data integrity is not acceptable in legal contexts where the exact original must be provable."]
+        ]
+      },
+      {
+        label:"Describe how metadata creates privacy risks even after obvious identifiers are removed from a dataset",
+        blocks:[
+          ["Claim","Removing names and emails from a dataset does not guarantee anonymity because metadata and indirect identifiers can still re-identify individuals."],
+          ["Evidence","A photo's EXIF data contains timestamps, GPS coordinates, and camera model. A medical dataset may include ZIP code, birthdate, and gender — enough fields to uniquely identify most people in a small area. Combining datasets compounds the risk."],
+          ["Reasoning","Because modern datasets are detailed and cross-referenceable, even 'anonymized' records can be matched to public data. Researchers have repeatedly re-identified individuals in supposedly anonymous health and location datasets."],
+          ["Application","Responsible data practice requires minimizing collection, considering which metadata is stored and shared, and evaluating re-identification risk — not just removing obvious fields."]
+        ]
+      },
+      {
+        label:"Explain why correlation does not imply causation, using a specific data scenario",
+        blocks:[
+          ["Claim","Observing that two variables are correlated does not prove that one causes the other, because alternative explanations almost always exist."],
+          ["Evidence","Ice cream sales and drowning incidents both rise in summer. Shoe size and reading ability correlate in children. In both cases, a third variable (temperature, age) explains the relationship — not a direct causal link."],
+          ["Reasoning","Correlation only shows that variables change together. Causation requires a mechanism, controlled study design, and ruling out confounders. Data analysis alone cannot distinguish between the two."],
+          ["Exam Application","When interpreting a data scenario on the AP exam, always ask: is there a third factor? Could the direction be reversed? Just because two things trend together does not mean an intervention on one would change the other."]
+        ]
+      },
+      {
+        label:"Explain how data cleaning affects the validity of computational analysis",
+        blocks:[
+          ["Claim","Data cleaning is a prerequisite for valid analysis because dirty data produces plausible-looking but incorrect results — programs run without errors but compute meaningless outputs."],
+          ["Evidence","Inconsistent category labels ('CA' vs 'California') split counts that should be combined. Missing values treated as zeros skew averages. Duplicate rows inflate totals. Programs match data literally, so these issues silently corrupt results."],
+          ["Reasoning","Because programs apply rules consistently to whatever input they receive, the burden of ensuring data quality falls entirely on the analyst. Garbage in → garbage out, with no crash to signal the problem."],
+          ["Tradeoff","Cleaning decisions have tradeoffs: dropping rows risks bias if missing data is not random; imputing values hides uncertainty. Every cleaning decision should be documented as metadata."]
+        ]
+      }
+    ];
+
+    const nav = document.getElementById("sidebarNav");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const mainEl = document.getElementById("main");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map(tab => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>`).join("");
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === tabId));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+      const tab = tabs.find(t => t.id === tabId);
+      if (tab) ambientOverlay.style.background = tab.ambient;
+      mainEl.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function renderGlossary(filter = "") {
+      const val = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(val) || t.def.toLowerCase().includes(val));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map(card => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${card.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${card.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    function renderEssayTopics() {
+      document.getElementById("essayTopics").innerHTML = essayOutlines.map((o,i) =>
+        `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+      document.getElementById("essayOutline").classList.remove("show");
+      document.getElementById("essayOutline").innerHTML = "";
+    }
+
+    function selectEssay(index) {
+      document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === index));
+      const outline = essayOutlines[index];
+      document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label,body]) =>
+        `<div class="essay-block"><div class="essay-block-label">${label}</div><div class="essay-block-body">${body}</div></div>`).join("");
+      document.getElementById("essayOutline").classList.add("show");
+    }
+
+    function renderQuizQuestion() {
+      const quizMount = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prevBest = Number(localStorage.getItem("apcsp_bi2_best") || 0);
+        const best = Math.max(prevBest, pct);
+        localStorage.setItem("apcsp_bi2_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review binary place value, lossless vs. lossy, and correlation vs. causation if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+        return;
+      }
+      quizLocked = false;
+      quizMount.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o,i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function initBestScore() { const best = localStorage.getItem("apcsp_bi2_best"); bestScoreEl.textContent = best ? best + "%" : "--"; }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+    });
+    document.addEventListener("mouseover", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      const interactive = e.target.closest("button, a, .flash-card, .glossary-card");
+      cursor.style.width = interactive ? "20px" : "12px";
+      cursor.style.height = interactive ? "20px" : "12px";
+    });
+
+    pinBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned");
+      pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+    });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => {
+      const t = document.getElementById(b.dataset.noteTarget); if (t) t.scrollIntoView({ behavior:"smooth", block:"start" });
+    }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+
+    document.getElementById("openSearch").addEventListener("click", () => {
+      const panel = document.getElementById("sbSearchPanel");
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+    });
+    document.getElementById("sbInput").addEventListener("input", e => {
+      const query = e.target.value.toLowerCase().trim();
+      const matches = glossaryTerms.filter(t => t.term.toLowerCase().includes(query) || t.def.toLowerCase().includes(query)).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = matches.length ? matches.map(item => `<div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}"><div class="sb-result-tab">${item.tab}</div><div class="sb-result-term">${item.term}</div><div class="sb-result-snip">${item.def}</div></div>`).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+    document.getElementById("sbResults").addEventListener("click", e => {
+      const result = e.target.closest(".sb-result"); if (!result || !result.dataset.targetTab) return;
+      switchTab(result.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+      if (result.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = result.dataset.targetTerm; renderGlossary(result.dataset.targetTerm); }
+    });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
+    document.getElementById("quizMount").addEventListener("click", e => {
+      const option = e.target.closest(".quiz-option");
+      if (option && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex]; const selected = Number(option.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((btn,i) => { if (i === q.correct) btn.classList.add("correct"); if (i === selected && selected !== q.correct) btn.classList.add("wrong"); });
+        if (selected === q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+      if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+    });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+    mainEl.addEventListener("scroll", () => {
+      const max = mainEl.scrollHeight - mainEl.clientHeight;
+      const pct = max > 0 ? (mainEl.scrollTop / max) * 100 : 0;
+      document.getElementById("readingProgressFill").style.width = pct + "%";
+    });
+  </script>
+</body>
+</html>
