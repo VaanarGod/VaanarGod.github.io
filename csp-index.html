@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>AP Computer Science Principles — Select Your Unit</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=Syncopate:wght@400;700&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        :root {
+            --bg: #060a06;
+            --text: #e2ead8;
+            --muted: #3a4535;
+            --mid: #5a6b52;
+            --border: rgba(255, 255, 255, .055);
+            --rad: 16px;
+            --g: #5b8fd4;
+            --g-dim: rgba(91, 143, 212, .08);
+            --g-border: rgba(91, 143, 212, .22);
+            --g-glow: rgba(91, 143, 212, .14);
+            --u1: #5b8fd4;
+            --u2: #4a9fd4;
+            --u3: #7ec8d4;
+            --u4: #a8d4d4;
+            --u5: #d4a8a8;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: none
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: .025;
+            pointer-events: none;
+            z-index: 1
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(91, 143, 212, .01) 1px, transparent 1px), linear-gradient(90deg, rgba(91, 143, 212, .01) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
+            pointer-events: none;
+            z-index: 1
+        }
+
+        /* CURSOR */
+        #cur {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, .9);
+            mix-blend-mode: difference;
+            transition: width .18s, height .18s, background .3s, box-shadow .3s
+        }
+
+        #cur.big {
+            width: 22px;
+            height: 22px;
+            background: var(--hc, var(--g));
+            box-shadow: 0 0 20px var(--hc, var(--g))
+        }
+
+        /* LOADER */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #030603;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity .9s cubic-bezier(.4, 0, .2, 1), visibility .9s
+        }
+
+        #loader.gone {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none
+        }
+
+        #loader::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(91, 143, 212, .016) 3px, rgba(91, 143, 212, .016) 4px);
+            animation: scanPan 8s linear infinite;
+            pointer-events: none
+        }
+
+        @keyframes scanPan {
+            0% {
+                background-position: 0 0
+            }
+
+            100% {
+                background-position: 0 400px
+            }
+        }
+
+        .loader-scene {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .loader-glow-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(91, 143, 212, .18) 0%, rgba(91, 143, 212, .04) 55%, transparent 75%);
+            animation: ring-pulse 2.5s ease-in-out infinite alternate;
+            filter: blur(18px)
+        }
+
+        @keyframes ring-pulse {
+            0% {
+                transform: scale(.88);
+                opacity: .7
+            }
+
+            100% {
+                transform: scale(1.14);
+                opacity: 1
+            }
+        }
+
+        .loader-icon {
+            position: relative;
+            z-index: 2;
+            font-size: 72px;
+            animation: cap-float 3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 14px rgba(91, 143, 212, .7))
+        }
+
+        @keyframes cap-float {
+            0% {
+                transform: translateY(0) rotate(-1.5deg)
+            }
+
+            100% {
+                transform: translateY(-12px) rotate(1.5deg)
+            }
+        }
+
+        .loader-orbit {
+            position: absolute;
+            inset: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(91, 143, 212, .18);
+            animation: orbit-spin 12s linear infinite
+        }
+
+        .loader-orbit::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--g);
+            box-shadow: 0 0 10px var(--g)
+        }
+
+        @keyframes orbit-spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .loader-orbit2 {
+            position: absolute;
+            inset: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(91, 143, 212, .1);
+            animation: orbit-spin 7s linear infinite reverse
+        }
+
+        .loader-orbit2::before {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(91, 143, 212, .6);
+            box-shadow: 0 0 8px var(--g)
+        }
+
+        .loader-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            color: #fff;
+            margin-bottom: 4px;
+            text-align: center;
+            position: relative;
+            z-index: 2
+        }
+
+        .loader-sub {
+            font-family: 'Crimson Pro', serif;
+            font-style: italic;
+            font-size: 16px;
+            color: var(--g);
+            opacity: .7;
+            margin-bottom: 6px;
+            text-align: center;
+            position: relative;
+            z-index: 2
+        }
+
+        .loader-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            letter-spacing: .45em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 28px;
+            text-align: center;
+            position: relative;
+            z-index: 2
+        }
+
+        .loader-bar-wrap {
+            width: 280px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 10px
+        }
+
+        .loader-segs {
+            display: flex;
+            gap: 3px;
+            height: 4px
+        }
+
+        .loader-seg {
+            flex: 1;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, .06);
+            position: relative;
+            overflow: hidden
+        }
+
+        .loader-seg-fill {
+            position: absolute;
+            inset: 0;
+            border-radius: 3px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .28s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .loader-seg:nth-child(1) .loader-seg-fill {
+            background: #5b8fd4;
+            box-shadow: 0 0 7px #5b8fd4
+        }
+
+        .loader-seg:nth-child(2) .loader-seg-fill {
+            background: #4a9fd4
+        }
+
+        .loader-seg:nth-child(3) .loader-seg-fill {
+            background: #3da0d4
+        }
+
+        .loader-seg:nth-child(4) .loader-seg-fill {
+            background: #2d90d4
+        }
+
+        .loader-seg:nth-child(5) .loader-seg-fill {
+            background: #1d80d4
+        }
+
+        .loader-status {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-align: center;
+            height: 14px;
+            position: relative;
+            z-index: 2
+        }
+
+        /* CANVAS */
+        #particleCanvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        /* AMBIENT ORB */
+        #bg-orb {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            transition: all 1.2s cubic-bezier(.23, 1, .32, 1)
+        }
+
+        #bg-orb.u1h {
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(91, 143, 212, .09), transparent 70%)
+        }
+
+        #bg-orb.u2h {
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(74, 159, 212, .08), transparent 70%)
+        }
+
+        #bg-orb.u3h {
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(126, 200, 212, .08), transparent 70%)
+        }
+
+        #bg-orb.u4h {
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(168, 212, 212, .08), transparent 70%)
+        }
+
+        #bg-orb.u5h {
+            background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(212, 168, 168, .08), transparent 70%)
+        }
+
+        /* MAIN */
+        #main {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity .6s ease
+        }
+
+        #main.show {
+            opacity: 1
+        }
+
+        header {
+            padding: 28px 52px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .hd-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px
+        }
+
+        .hd-sup {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: .45em;
+            text-transform: uppercase;
+            color: var(--g);
+            opacity: .8
+        }
+
+        .hd-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            color: #fff
+        }
+
+        .hd-title-link {
+            text-decoration: none;
+            color: inherit
+        }
+
+        .hd-right {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--muted)
+        }
+
+        /* UNIT GRID */
+        .unit-grid-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 40px 0
+        }
+
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 1600px
+        }
+
+        /* UNIT CARD */
+        .ucard {
+            position: relative;
+            border-radius: var(--rad);
+            border: 1px solid var(--border);
+            background: rgba(8, 14, 8, .6);
+            padding: 22px 18px 20px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            cursor: none;
+            transition: border-color .3s, transform .3s, box-shadow .3s;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 220px
+        }
+
+        .ucard::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .4s;
+            background: var(--card-glow, transparent)
+        }
+
+        .ucard:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .5)
+        }
+
+        .ucard:hover::before {
+            opacity: 1
+        }
+
+        /* per-unit accent lines */
+        .u1 {
+            --card-accent: var(--u1);
+            --card-glow: radial-gradient(ellipse at 30% 0%, rgba(91, 143, 212, .1), transparent 65%)
+        }
+
+        .u2 {
+            --card-accent: var(--u2);
+            --card-glow: radial-gradient(ellipse at 30% 0%, rgba(74, 159, 212, .1), transparent 65%)
+        }
+
+        .u3 {
+            --card-accent: var(--u3);
+            --card-glow: radial-gradient(ellipse at 30% 0%, rgba(126, 200, 212, .08), transparent 65%)
+        }
+
+        .u4 {
+            --card-accent: var(--u4);
+            --card-glow: radial-gradient(ellipse at 30% 0%, rgba(168, 212, 212, .08), transparent 65%)
+        }
+
+        .u5 {
+            --card-accent: var(--u5);
+            --card-glow: radial-gradient(ellipse at 30% 0%, rgba(212, 168, 168, .08), transparent 65%)
+        }
+
+        .ucard::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--card-accent);
+            opacity: .55;
+            transition: opacity .3s
+        }
+
+        .ucard:hover::after {
+            opacity: 1
+        }
+
+        /* shimmer */
+        .shimmer {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .4s;
+            background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .04) 50%, transparent 65%);
+            background-size: 200% 100%;
+            animation: shimmer-move 2.2s linear infinite
+        }
+
+        .ucard:hover .shimmer {
+            opacity: 1
+        }
+
+        @keyframes shimmer-move {
+            0% {
+                background-position: 200% 0
+            }
+
+            100% {
+                background-position: -200% 0
+            }
+        }
+
+        .uc-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 7.5px;
+            letter-spacing: .35em;
+            text-transform: uppercase;
+            color: var(--card-accent);
+            opacity: .85
+        }
+
+        .uc-era {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(13px, 1.1vw, 18px);
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.15;
+            margin-top: 3px
+        }
+
+        .uc-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(10px, .85vw, 12.5px);
+            color: var(--mid);
+            line-height: 1.5;
+            flex: 1;
+            margin-top: 4px
+        }
+
+        .uc-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: auto;
+            padding-top: 8px
+        }
+
+        .uc-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 6.5px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            padding: 3px 7px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, .07);
+            color: var(--muted)
+        }
+
+        .ucard:hover .uc-tag {
+            border-color: rgba(255, 255, 255, .13);
+            color: var(--mid)
+        }
+
+        .uc-cta {
+            font-family: 'DM Mono', monospace;
+            font-size: 7.5px;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 10px;
+            transition: color .2s
+        }
+
+        .ucard:hover .uc-cta {
+            color: var(--card-accent)
+        }
+
+        .uc-arrow {
+            display: inline-block;
+            transition: transform .2s
+        }
+
+        .ucard:hover .uc-arrow {
+            transform: translateX(4px)
+        }
+
+        /* COMING SOON badge */
+        .cs-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: 'DM Mono', monospace;
+            font-size: 6px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            padding: 3px 7px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: var(--muted)
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 14px 52px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            letter-spacing: .25em;
+            text-transform: uppercase;
+            color: var(--muted)
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="particleCanvas"></canvas>
+    <div id="bg-orb"></div>
+    <div id="cur"></div>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-scene">
+            <div class="loader-glow-ring"></div>
+            <div class="loader-orbit"></div>
+            <div class="loader-orbit2"></div>
+            <div class="loader-icon">💻</div>
+        </div>
+        <div class="loader-title">AP COMPUTER SCIENCE</div>
+        <div class="loader-sub">Principles &amp; Practices</div>
+        <div class="loader-tag">Science · 5 Units · Full Study Guide</div>
+        <div class="loader-bar-wrap">
+            <div class="loader-segs">
+                <div class="loader-seg">
+                    <div class="loader-seg-fill"></div>
+                </div>
+                <div class="loader-seg">
+                    <div class="loader-seg-fill"></div>
+                </div>
+                <div class="loader-seg">
+                    <div class="loader-seg-fill"></div>
+                </div>
+                <div class="loader-seg">
+                    <div class="loader-seg-fill"></div>
+                </div>
+                <div class="loader-seg">
+                    <div class="loader-seg-fill"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loader-status" id="loaderStatus">&nbsp;</div>
+    </div>
+
+    <div id="main">
+        <header>
+            <div class="hd-left">
+                <span class="hd-sup">AP Computer Science</span>
+                <a href="index.html" class="hd-title-link"><span class="hd-title">AP CSP STUDY GUIDE</span></a>
+            </div>
+            <div class="hd-right">Select a Unit to Begin</div>
+        </header>
+
+        <section class="unit-grid-wrap">
+            <div class="unit-grid">
+
+                <a class="ucard u1" href="csp-unit1.html" onmouseenter="cardHover(this,'u1h','#5b8fd4')"
+                    onmouseleave="cardOut()">
+                    <div class="shimmer"></div>
+                    <div class="uc-num">Unit 1 · Computational Thinking</div>
+                    <div class="uc-era">The<br />Foundation</div>
+                    <div class="uc-name">Creative development, abstraction, data and information, algorithms,
+                        programming</div>
+                    <div class="uc-tags"><span class="uc-tag">Abstraction</span><span
+                            class="uc-tag">Algorithms</span><span class="uc-tag">Programming</span></div>
+                    <div class="uc-cta">Enter Unit 1 <span class="uc-arrow">→</span></div>
+                </a>
+
+                <a class="ucard u2" href="csp-unit2.html" onmouseenter="cardHover(this,'u2h','#4a9fd4')"
+                    onmouseleave="cardOut()">
+                    <div class="shimmer"></div>
+                    <div class="uc-num">Unit 2 · Data</div>
+                    <div class="uc-era">Data &amp;<br />Information</div>
+                    <div class="uc-name">Binary data, data compression, extracting information, data visualization</div>
+                    <div class="uc-tags"><span class="uc-tag">Binary</span><span class="uc-tag">Compression</span><span
+                            class="uc-tag">Visualization</span></div>
+                    <div class="uc-cta">Enter Unit 2 <span class="uc-arrow">→</span></div>
+                </a>
+
+                <a class="ucard u3" href="csp-unit3.html" onmouseenter="cardHover(this,'u3h','#7ec8d4')"
+                    onmouseleave="cardOut()">
+                    <div class="shimmer"></div>
+                    <div class="uc-num">Unit 3 · Algorithms</div>
+                    <div class="uc-era">Algorithms &amp;<br />Programming</div>
+                    <div class="uc-name">Algorithm efficiency, searching and sorting, developing algorithms</div>
+                    <div class="uc-tags"><span class="uc-tag">Efficiency</span><span
+                            class="uc-tag">Searching</span><span class="uc-tag">Sorting</span></div>
+                    <div class="uc-cta">Enter Unit 3 <span class="uc-arrow">→</span></div>
+                </a>
+
+                <a class="ucard u4" href="csp-unit4.html" onmouseenter="cardHover(this,'u4h','#a8d4d4')"
+                    onmouseleave="cardOut()">
+                    <div class="shimmer"></div>
+                    <div class="uc-num">Unit 4 · Systems</div>
+                    <div class="uc-era">Computer<br />Systems</div>
+                    <div class="uc-name">Computer components, networks, internet, cybersecurity</div>
+                    <div class="uc-tags"><span class="uc-tag">Hardware</span><span class="uc-tag">Networks</span><span
+                            class="uc-tag">Security</span></div>
+                    <div class="uc-cta">Enter Unit 4 <span class="uc-arrow">→</span></div>
+                </a>
+
+                <a class="ucard u5" href="csp-unit5.html" onmouseenter="cardHover(this,'u5h','#d4a8a8')"
+                    onmouseleave="cardOut()">
+                    <div class="shimmer"></div>
+                    <div class="uc-num">Unit 5 · Impact</div>
+                    <div class="uc-era">Impact of<br />Computing</div>
+                    <div class="uc-name">Beneficial and harmful effects, computing bias, legal and ethical concerns
+                    </div>
+                    <div class="uc-tags"><span class="uc-tag">Ethics</span><span class="uc-tag">Bias</span><span
+                            class="uc-tag">Privacy</span></div>
+                    <div class="uc-cta">Enter Unit 5 <span class="uc-arrow">→</span></div>
+                </a>
+
+            </div>
+        </section>
+        <footer>
+            <span>AP Computer Science Principles</span><span>·</span><span>2025 Study Guide</span><span>·</span><a
+                href="https://knowt.com/exams/AP/AP-Computer-Science-Principles"
+                style="color:var(--g);text-decoration:none;">Knowt Practice</a>
+        </footer>
+    </div>
+
+    <script>
+        const cur = document.getElementById('cur');
+        if (window.matchMedia('(pointer:fine)').matches) {
+            document.addEventListener('mousemove', e => { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px' });
+            document.addEventListener('mousedown', () => { cur.style.width = '20px'; cur.style.height = '20px' });
+            document.addEventListener('mouseup', () => { cur.style.width = '12px'; cur.style.height = '12px' });
+        }
+        let hoveredUnit = null;
+        const bgOrb = document.getElementById('bg-orb');
+        function cardHover(el, cls, color) { hoveredUnit = cls; bgOrb.className = cls; cur.classList.add('big'); cur.style.setProperty('--hc', color) }
+        function cardOut() { hoveredUnit = null; bgOrb.className = ''; cur.classList.remove('big') }
+
+        // LOADER
+        const segs = document.querySelectorAll('.loader-seg-fill');
+        const statuses = ['Mapping algorithms…', 'Loading data structures…', 'Calibrating networks…', 'Securing systems…', 'Ready.'];
+        let si = 0;
+        function fillNext() { if (si < segs.length) { segs[si].style.transform = 'scaleX(1)'; document.getElementById('loaderStatus').textContent = statuses[si]; si++; setTimeout(fillNext, 300 + Math.random() * 180); } }
+        setTimeout(fillNext, 380);
+        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('loader').classList.add('gone'); setTimeout(() => document.getElementById('main').classList.add('show'), 280); }, 2600) });
+
+        // PARTICLES — CSP computer symbols
+        const canvas = document.getElementById('particleCanvas'), ctx = canvas.getContext('2d');
+        let W, H;
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+        const UNIT_COLORS = { u1h: [91, 143, 212], u2h: [74, 159, 212], u3h: [126, 200, 212], u4h: [168, 212, 212], u5h: [212, 168, 168] };
+        const DEFAULT_RGB = [91, 143, 212];
+        function getParticleRGB(u) { return UNIT_COLORS[u] || DEFAULT_RGB }
+
+        class Particle {
+            constructor() { this.init(true) }
+            init(scatter) {
+                this.x = Math.random() * W; this.y = scatter ? Math.random() * H : H + 50;
+                this.size = 13 + Math.random() * 16; this.speed = 0.18 + Math.random() * 0.44;
+                this.drift = (Math.random() - .5) * .32; this.rot = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - .5) * .011; this.baseAlpha = 0.2 + Math.random() * .38;
+                this.type = ['code', 'binary', 'circuit', 'pixel'][Math.floor(Math.random() * 4)];
+                const zone = Math.floor(this.x / (W / 5));
+                this.unitZone = ['u1h', 'u2h', 'u3h', 'u4h', 'u5h'][Math.min(zone, 4)];
+            }
+            update() { this.y -= this.speed; this.x += this.drift; this.rot += this.rotSpeed; if (this.y < -55) this.init(false) }
+            draw() {
+                let alpha = this.baseAlpha;
+                if (hoveredUnit) { alpha = hoveredUnit === this.unitZone ? Math.min(this.baseAlpha * 2.6, 1) : this.baseAlpha * .1 }
+                if (alpha < .01) return;
+                const rgb = hoveredUnit ? getParticleRGB(hoveredUnit) : DEFAULT_RGB;
+                const [r, g, b] = rgb;
+                const col = `rgba(${r},${g},${b},${alpha})`;
+                const colF = `rgba(${r},${g},${b},${alpha * .5})`;
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot);
+                ctx.strokeStyle = col; ctx.fillStyle = colF; ctx.lineWidth = 1.4;
+
+                if (this.type === 'code') {
+                    // code brackets
+                    ctx.lineWidth = 1.2;
+                    ctx.beginPath(); ctx.moveTo(-this.size * .4, -this.size * .5); ctx.lineTo(-this.size * .2, -this.size * .5); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-this.size * .4, this.size * .5); ctx.lineTo(-this.size * .2, this.size * .5); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-this.size * .4, -this.size * .5); ctx.lineTo(-this.size * .4, this.size * .5); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(this.size * .4, -this.size * .5); ctx.lineTo(this.size * .2, -this.size * .5); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(this.size * .4, this.size * .5); ctx.lineTo(this.size * .2, this.size * .5); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(this.size * .4, -this.size * .5); ctx.lineTo(this.size * .4, this.size * .5); ctx.stroke();
+                    // code lines
+                    ctx.lineWidth = .8;
+                    ctx.beginPath(); ctx.moveTo(-this.size * .3, -this.size * .3); ctx.lineTo(this.size * .3, -this.size * .3); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-this.size * .3, 0); ctx.lineTo(this.size * .3, 0); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-this.size * .3, this.size * .3); ctx.lineTo(this.size * .3, this.size * .3); ctx.stroke();
+                } else if (this.type === 'binary') {
+                    // binary digits
+                    ctx.font = `${this.size * .4}px monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('01', 0, -this.size * .2); ctx.fillText('10', 0, this.size * .2);
+                } else if (this.type === 'circuit') {
+                    // simple circuit
+                    ctx.lineWidth = 1.2;
+                    ctx.beginPath(); ctx.arc(0, 0, this.size * .3, 0, Math.PI * 2); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(-this.size * .5, 0); ctx.lineTo(-this.size * .3, 0); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(this.size * .5, 0); ctx.lineTo(this.size * .3, 0); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, -this.size * .5); ctx.lineTo(0, -this.size * .3); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, this.size * .5); ctx.lineTo(0, this.size * .3); ctx.stroke();
+                } else if (this.type === 'pixel') {
+                    // pixel art square
+                    const ps = this.size * .1;
+                    for (let x = -2; x <= 2; x++) { for (let y = -2; y <= 2; y++) { if (Math.abs(x) + Math.abs(y) <= 2) { ctx.fillRect(x * ps - ps / 2, y * ps - ps / 2, ps, ps); } } }
+                }
+                ctx.restore();
+            }
+        }
+        const particles = [];
+        for (let i = 0; i < 72; i++)particles.push(new Particle());
+        function animate() { ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw() }); requestAnimationFrame(animate); }
+        animate();
+    </script>
+</body>
+
+</html>
