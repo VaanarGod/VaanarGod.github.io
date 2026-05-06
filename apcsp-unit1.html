@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Computer Science Principles — Big Idea 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07080a;
+      --card: #0d0f12;
+      --card2: #12161c;
+      --border: rgba(255,255,255,.07);
+      --text: #dde3ec;
+      --muted: #7a8699;
+      --cyan: #3eb8d4;
+      --teal: #3eb89a;
+      --blue: #5b8fd4;
+      --red: #d95f5f;
+      --orange: #f28749;
+      --purple: #9b86f4;
+      --green: #4caf7d;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Mono", monospace;
+      overflow: hidden;
+      cursor: none;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity:.35; pointer-events:none; z-index:1;
+    }
+    #cursor {
+      position: fixed; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--cyan); pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%); mix-blend-mode: difference;
+      transition: width .2s ease, height .2s ease;
+    }
+    #readingProgress { position: fixed; top: 0; left: 72px; right: 0; height: 2px; z-index: 100; }
+    #readingProgressFill { width: 0%; height: 100%; background: var(--cyan); }
+    #ambientOverlay {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 60% 10%, rgba(62,184,212,.12), transparent 65%);
+      opacity: .1; pointer-events: none; transition: background 1s ease, opacity .25s ease; z-index: 0;
+    }
+    #sidebar {
+      width: 72px; height: 100vh; flex-shrink: 0;
+      background: rgba(5,6,8,.84); border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px); overflow: hidden; position: relative; z-index: 10;
+      transition: width .4s cubic-bezier(0.23,1,0.32,1);
+    }
+    #sidebar:hover, #sidebar.pinned { width: 264px; }
+    #pinBtn {
+      position: absolute; top: 12px; right: 10px; padding: 4px 7px;
+      border-radius: 6px; border: 1px solid var(--border); background: transparent;
+      color: var(--muted); font: inherit; font-size: 8px; letter-spacing: .08em;
+      opacity: 0; cursor: none; transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+    }
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+    #pinBtn.pinned { color: var(--cyan); border-color: rgba(62,184,212,.24); }
+    .sidebar-logo { display: flex; align-items: center; gap: 14px; padding: 18px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .logo-icon {
+      width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px;
+      border: 1px solid rgba(62,184,212,.2); background: rgba(62,184,212,.07);
+      color: var(--cyan); flex-shrink: 0; font-size: 11px; font-weight: bold;
+    }
+    .logo-copy { opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+    .logo-copy h1 { font-family: "Bebas Neue", sans-serif; font-size: 13px; letter-spacing: .25em; color: var(--cyan); }
+    .logo-copy p { color: var(--muted); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; margin-top: 3px; }
+    .search-wrap { position: relative; padding: 10px; }
+    .sb-search-trigger {
+      width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,.03);
+      color: var(--muted); cursor: none; opacity: 0; pointer-events: none;
+      transition: opacity .25s ease, border-color .2s ease;
+    }
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger { opacity: 1; pointer-events: auto; }
+    .sb-search-trigger:hover { border-color: rgba(62,184,212,.2); }
+    #sbSearchPanel {
+      position: absolute; top: calc(100% - 4px); left: 10px; right: 10px;
+      border: 1px solid rgba(62,184,212,.18); background: rgba(8,10,13,.98);
+      border-radius: 12px; overflow: hidden; opacity: 0; pointer-events: none;
+      transform: translateY(-8px); transition: opacity .22s ease, transform .22s ease;
+      z-index: 80; box-shadow: 0 18px 60px rgba(0,0,0,.65);
+    }
+    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    #sbSearchInner { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.05); }
+    #sbInput { flex: 1; border: none; background: transparent; color: var(--text); font: inherit; font-size: 10px; letter-spacing: .1em; outline: none; cursor: none; }
+    #sbResults { max-height: 280px; overflow: auto; }
+    .sb-result { padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,.04); cursor: none; transition: background .15s ease; }
+    .sb-result:hover { background: rgba(62,184,212,.06); }
+    .sb-result:last-child { border-bottom: none; }
+    .sb-result-tab { font-size: 8px; color: var(--cyan); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 3px; }
+    .sb-result-term { font-family: "Bebas Neue", sans-serif; font-size: 14px; color: white; letter-spacing: .04em; }
+    .sb-result-snip { font-family: "Crimson Pro", serif; font-size: 12px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+    nav { height: calc(100vh - 176px); padding: 0 10px 14px; overflow: auto; }
+    .nav-btn {
+      width: 100%; display: flex; align-items: center; gap: 14px; padding: 10px 14px;
+      border: none; border-radius: 10px; background: transparent; color: var(--muted);
+      cursor: none; white-space: nowrap; transition: background .2s ease, color .2s ease; position: relative;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.03); color: #aeb7c6; }
+    .nav-btn.active { background: rgba(62,184,212,.07); color: var(--cyan); }
+    .nav-btn.active .nav-indicator { opacity: 1; }
+    .nav-indicator { position: absolute; left: 0; width: 2px; height: 24px; background: var(--cyan); border-radius: 5px; opacity: 0; }
+    .nav-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+    .sidebar-footer {
+      position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center;
+      gap: 10px; padding: 14px 18px; border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 9px; letter-spacing: .1em; overflow: hidden; white-space: nowrap;
+    }
+    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s ease; }
+    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
+    #main { flex: 1; height: 100vh; overflow-y: auto; padding: 36px 54px 80px; position: relative; z-index: 2; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20; display: flex; align-items: center;
+      justify-content: space-between; gap: 14px; margin-bottom: 24px; padding: 8px 0 20px;
+      backdrop-filter: blur(8px);
+    }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .glass-btn, #scoreTracker {
+      border-radius: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);
+      color: var(--muted); padding: 9px 14px; font: inherit; font-size: 9px; letter-spacing: .18em;
+      text-transform: uppercase; cursor: none; backdrop-filter: blur(12px);
+      transition: border-color .2s ease, color .2s ease, background .2s ease; white-space: nowrap;
+    }
+    .glass-btn:hover, #scoreTracker:hover { color: var(--cyan); border-color: rgba(62,184,212,.26); }
+    .glass-btn.active { color: var(--cyan); border-color: rgba(62,184,212,.32); background: rgba(62,184,212,.08); }
+    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(0.23,1,0.32,1); }
+    .tab-content.active { display: block; }
+    .page-header { margin-bottom: 34px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .unit-tag { display: block; color: var(--cyan); font-size: 10px; letter-spacing: .35em; text-transform: uppercase; margin-bottom: 10px; }
+    .page-header h2 { font-family: "Bebas Neue", sans-serif; font-size: clamp(38px,5vw,62px); letter-spacing: .08em; line-height: .96; color: white; }
+    .page-header p { margin-top: 10px; color: var(--muted); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; margin-bottom: 26px; }
+    .principle-grid, .federal-grid, .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 22px; }
+    .case-grid, .democracy-grid, .writing-grid, .flash-grid, .structure-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 22px; }
+    .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px,1fr)); gap: 22px; }
+    .card, .feature-card, .principle-card, .case-card, .exam-card, .flash-card, .timeline-item, .writing-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px;
+      position: relative; overflow: hidden; transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+    .card:hover, .feature-card:hover, .principle-card:hover, .case-card:hover,
+    .exam-card:hover, .flash-card:hover, .timeline-item:hover, .writing-card:hover {
+      transform: translateY(-2px); border-color: rgba(255,255,255,.14); box-shadow: 0 20px 48px rgba(0,0,0,.35);
+    }
+    .hero-card::before, .feature-card::before, .principle-card::before, .case-card::before, .exam-card::before, .writing-card::before {
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+      background: var(--accent, var(--cyan)); opacity: .6;
+    }
+    .hero-card { --accent: var(--cyan); }
+    .accent-cyan { --accent: var(--cyan); }
+    .accent-blue { --accent: var(--blue); }
+    .accent-teal { --accent: var(--teal); }
+    .accent-red { --accent: var(--red); }
+    .accent-orange { --accent: var(--orange); }
+    .accent-purple { --accent: var(--purple); }
+    .accent-green { --accent: var(--green); }
+    .card-sub { color: var(--accent, var(--cyan)); font-size: 9px; letter-spacing: .35em; text-transform: uppercase; margin-bottom: 8px; }
+    .card-title { font-family: "Bebas Neue", sans-serif; font-size: 28px; letter-spacing: .05em; color: white; margin-bottom: 16px; }
+    .body-copy, .bullet-list, .timeline-copy, .case-copy, .writing-copy, .exam-copy, .feature-copy {
+      font-family: "Crimson Pro", serif; color: var(--muted); line-height: 1.82; font-size: 15px;
+    }
+    .body-copy p+p, .feature-copy p+p, .case-copy p+p, .writing-copy p+p, .exam-copy p+p { margin-top: 12px; }
+    .bullet-list { padding-left: 18px; }
+    .bullet-list li+li { margin-top: 10px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+    .tag { padding: 4px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.03); color: var(--muted); font-size: 7px; letter-spacing: .18em; text-transform: uppercase; }
+    .dash-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 22px; }
+    .stat-box { border-radius: 16px; border: 1px solid var(--border); background: rgba(255,255,255,.02); padding: 16px; }
+    .stat-box span { display: block; color: var(--muted); font-size: 8px; letter-spacing: .24em; text-transform: uppercase; margin-bottom: 8px; }
+    .stat-box strong { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: .06em; color: white; }
+    .focus-callout { margin-top: 22px; padding: 18px; border-radius: 16px; border: 1px solid rgba(62,184,212,.16); background: rgba(62,184,212,.05); }
+    .focus-callout .label { color: var(--cyan); font-size: 8px; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 8px; }
+    .principle-card h3, .case-card h3, .exam-card h3, .flash-front h3, .timeline-year, .writing-card h3 {
+      font-family: "Bebas Neue", sans-serif; color: white; letter-spacing: .05em;
+    }
+    .principle-card h3, .case-card h3, .exam-card h3, .writing-card h3 { font-size: 24px; margin-bottom: 12px; }
+    .timeline-year { font-size: 26px; margin-bottom: 8px; }
+    .mini-label { color: var(--cyan); font-size: 8px; letter-spacing: .24em; text-transform: uppercase; margin-bottom: 7px; }
+    .two-col-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    .list-panel { padding: 16px; border-radius: 16px; border: 1px solid var(--border); background: rgba(255,255,255,.02); }
+    .list-panel h4 { color: white; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; margin-bottom: 10px; }
+    .list-panel ul { padding-left: 18px; font-family: "Crimson Pro", serif; color: var(--muted); line-height: 1.7; font-size: 14px; }
+    .timeline { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+    .timeline-item {
+      min-width: 300px; max-width: 340px; flex: 0 0 300px;
+      border-left: 2px solid rgba(62,184,212,.22); padding-left: 24px; scroll-snap-align: start;
+      background: linear-gradient(180deg, rgba(62,184,212,.04), transparent 40%), var(--card);
+    }
+    .timeline-copy { margin-top: 8px; }
+    .timeline-copy ul { margin-top: 10px; padding-left: 18px; }
+    .timeline-copy li+li { margin-top: 6px; }
+    .course-link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+    .notes-shell { display: grid; grid-template-columns: minmax(230px,300px) 1fr; gap: 24px; align-items: start; }
+    .notes-index { position: sticky; top: 88px; border: 1px solid var(--border); border-radius: 20px; background: rgba(255,255,255,.025); padding: 18px; }
+    .notes-index-title { color: var(--cyan); font-size: 9px; letter-spacing: .32em; text-transform: uppercase; margin-bottom: 14px; }
+    .note-jump {
+      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 11px 0; border: none; border-bottom: 1px solid rgba(255,255,255,.06); background: transparent;
+      color: var(--text); font: inherit; font-size: 10px; letter-spacing: .12em; text-align: left;
+      text-transform: uppercase; cursor: none;
+    }
+    .note-jump:last-child { border-bottom: none; }
+    .note-jump span:last-child { color: var(--muted); }
+    .note-jump:hover { color: var(--cyan); }
+    .notes-stack { display: grid; gap: 18px; }
+    .note-section { scroll-margin-top: 110px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); padding: 28px; position: relative; overflow: hidden; }
+    .note-section::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent, var(--cyan)); opacity: .7; }
+    .note-section h3 { font-family: "Bebas Neue", sans-serif; color: white; font-size: 30px; letter-spacing: .05em; margin-bottom: 12px; }
+    .note-section h4 { font-family: "Bebas Neue", sans-serif; color: white; font-size: 21px; letter-spacing: .05em; margin: 18px 0 8px; }
+    .note-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; margin-top: 16px; }
+    .mini-note { border: 1px solid var(--border); border-radius: 16px; background: rgba(255,255,255,.025); padding: 16px; }
+    .mini-note > strong { display: block; color: white; font-family: "Bebas Neue", sans-serif; font-size: 19px; letter-spacing: .05em; margin-bottom: 8px; }
+    .timeline-intro { margin-bottom: 18px; padding: 18px 20px; border: 1px solid rgba(62,184,212,.14); border-radius: 16px; background: rgba(62,184,212,.04); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--cyan); }
+    .glossary-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .glossary-toolbar input { min-width: 260px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255,255,255,.03); color: var(--text); padding: 11px 14px; font: inherit; font-size: 10px; letter-spacing: .1em; outline: none; cursor: none; }
+    .glossary-card h4 { font-family: "Bebas Neue", sans-serif; color: white; font-size: 22px; letter-spacing: .04em; margin-bottom: 12px; }
+    .flash-card { perspective: 1000px; cursor: none; min-height: 240px; }
+    .flash-inner { position: relative; width: 100%; height: 100%; min-height: 184px; transform-style: preserve-3d; transition: transform .55s ease; }
+    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+    .flash-front, .flash-back { position: absolute; inset: 0; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+    .flash-back { transform: rotateY(180deg); }
+    .flash-hint { color: var(--muted); font-size: 8px; letter-spacing: .22em; text-transform: uppercase; }
+    .modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(3,4,6,.74); backdrop-filter: blur(16px); opacity: 0; pointer-events: none; transition: opacity .22s ease; z-index: 120; }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-box { width: min(760px, calc(100vw - 32px)); max-height: min(84vh,920px); overflow: auto; border-radius: 20px; border: 1px solid rgba(255,255,255,.1); background: rgba(10,12,16,.96); padding: 28px; box-shadow: 0 36px 90px rgba(0,0,0,.55); }
+    .modal-close { float: right; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--muted); padding: 8px 10px; font: inherit; font-size: 9px; letter-spacing: .14em; cursor: none; }
+    .modal-title { font-family: "Bebas Neue", sans-serif; color: white; font-size: 38px; letter-spacing: .06em; margin-bottom: 8px; }
+    .modal-sub { color: var(--cyan); font-size: 9px; letter-spacing: .28em; text-transform: uppercase; margin-bottom: 22px; }
+    .quiz-status { color: var(--muted); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 18px; }
+    .quiz-question { font-family: "Crimson Pro", serif; color: white; font-size: 24px; line-height: 1.35; margin-bottom: 20px; }
+    .quiz-options { display: grid; gap: 10px; }
+    .quiz-option { width: 100%; text-align: left; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; background: rgba(255,255,255,.03); color: var(--text); font: inherit; font-size: 11px; letter-spacing: .04em; cursor: none; transition: border-color .2s ease, background .2s ease; }
+    .quiz-option:hover { border-color: rgba(62,184,212,.2); }
+    .quiz-option.correct { border-color: rgba(62,184,154,.35); background: rgba(62,184,154,.08); }
+    .quiz-option.wrong { border-color: rgba(217,95,95,.35); background: rgba(217,95,95,.08); }
+    .quiz-feedback { margin-top: 18px; font-family: "Crimson Pro", serif; color: var(--muted); line-height: 1.7; font-size: 15px; }
+    .quiz-next { margin-top: 18px; }
+    .essay-list { display: grid; gap: 10px; margin-bottom: 20px; }
+    .essay-topic-btn { width: 100%; text-align: left; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,.03); color: var(--text); font: inherit; font-size: 10px; letter-spacing: .08em; cursor: none; transition: border-color .2s ease, background .2s ease; }
+    .essay-topic-btn:hover, .essay-topic-btn.active { border-color: rgba(62,184,212,.24); background: rgba(62,184,212,.07); }
+    .essay-outline { display: none; gap: 14px; }
+    .essay-outline.show { display: grid; }
+    .essay-block { border-radius: 16px; border: 1px solid var(--border); background: rgba(255,255,255,.025); padding: 18px; }
+    .essay-block-label { color: var(--cyan); font-size: 8px; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 9px; }
+    .essay-block-body { font-family: "Crimson Pro", serif; color: var(--muted); line-height: 1.78; font-size: 15px; }
+    strong.ap-term { color: #8de8f8; font-weight: 600; }
+    body.ap-highlight strong.ap-term { background: rgba(62,184,212,.12); padding: 0 3px; border-radius: 3px; box-shadow: 0 0 10px rgba(62,184,212,.15); }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.2} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)} }
+    @media (max-width: 1020px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .dash-stats, .two-col-list { grid-template-columns: 1fr; }
+      #main { padding-left: 26px; padding-right: 26px; }
+    }
+    @media (max-width: 760px) {
+      body { cursor: auto; overflow: auto; display: block; }
+      #cursor, #readingProgress { display: none; }
+      #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      #sidebar:hover, #sidebar.pinned { width: 100%; }
+      .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important; }
+      #pinBtn { display: none; }
+      nav { height: auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+      #main { height: auto; overflow: visible; }
+      .topbar { position: static; }
+      .glossary-toolbar input { min-width: 100%; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="ambientOverlay"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">CSP</div>
+      <div class="logo-copy">
+        <h1>CSP BIG IDEA 1</h1>
+        <p>Collaboration & Program Design</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Big Idea 1</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color: var(--cyan); font-size: 12px;">⌕</span>
+          <input id="sbInput" type="text" placeholder="Find concepts, algorithms, or terms" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <span class="dot"></span>
+      <span>Study Mode Active</span>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <a class="glass-btn course-link" href="#">Course Home</a>
+        <a class="glass-btn course-link" href="#">Big Idea 1</a>
+        <a class="glass-btn course-link" href="#">Big Idea 2</a>
+        <a class="glass-btn course-link" href="#">Big Idea 3</a>
+        <a class="glass-btn course-link" href="#">Big Idea 4</a>
+        <a class="glass-btn course-link" href="#">Big Idea 5</a>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+      </div>
+      <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Big Idea 1 · Collaboration and Program Design</span>
+        <h2>Creativity and Collaboration in Computing</h2>
+        <p>Computational artifacts · collaboration · program function · purpose · development</p>
+      </header>
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Core Frame</div>
+          <div class="card-title">What Big Idea 1 Is Really About</div>
+          <div class="body-copy">
+            <p>Big Idea 1 establishes that computing is fundamentally a human and creative endeavor. Computers and programs don't just happen — they are designed by people, for people, through <strong class="ap-term">collaboration</strong>.</p>
+            <p>Everything here connects to how programs are developed: <strong class="ap-term">computational artifacts</strong>, <strong class="ap-term">program purpose vs. function</strong>, <strong class="ap-term">iterative development</strong>, and how working with others improves the final product.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Study Sections</span><strong>9</strong></div>
+            <div class="stat-box"><span>Key Concepts</span><strong>6</strong></div>
+            <div class="stat-box"><span>Quiz Items</span><strong>8</strong></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">On the AP exam, know the difference between purpose and function, and why collaboration matters for better programs.</div>
+          </div>
+        </article>
+        <article class="card feature-card accent-blue">
+          <div class="card-sub">Fast Review</div>
+          <div class="card-title">What You Must Be Able To Explain</div>
+          <ul class="bullet-list">
+            <li>How <strong class="ap-term">computing innovation</strong> reflects creativity and human design choices.</li>
+            <li>The difference between a program's <strong class="ap-term">purpose</strong> (intended goal) and its <strong class="ap-term">function</strong> (what it actually does).</li>
+            <li>Why <strong class="ap-term">collaboration</strong> produces better programs and how it works in practice.</li>
+            <li>What a <strong class="ap-term">computational artifact</strong> is and examples of each type.</li>
+            <li>How the <strong class="ap-term">program development process</strong> uses iteration and testing.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Artifacts</span>
+            <span class="tag">Collaboration</span>
+            <span class="tag">Program Design</span>
+            <span class="tag">Iteration</span>
+          </div>
+        </article>
+      </div>
+      <div class="exam-grid">
+        <article class="exam-card accent-red">
+          <div class="mini-label">Common Mistakes</div>
+          <h3>Avoid These</h3>
+          <ul class="bullet-list">
+            <li>Confusing <strong class="ap-term">purpose</strong> (the why) with <strong class="ap-term">function</strong> (the what).</li>
+            <li>Thinking collaboration is just "working together" — it has specific benefits like catching errors and diverse perspectives.</li>
+            <li>Forgetting that <strong class="ap-term">computational artifacts</strong> include code, images, audio, and video, not just programs.</li>
+            <li>Treating program development as a linear one-time process rather than an iterative cycle.</li>
+          </ul>
+        </article>
+        <article class="exam-card accent-teal">
+          <div class="mini-label">Study Strategy</div>
+          <h3>Best Order To Review</h3>
+          <ul class="bullet-list">
+            <li>Start with computing innovation and what counts as a computational artifact.</li>
+            <li>Nail the purpose vs. function distinction cold.</li>
+            <li>Study collaboration benefits and practices.</li>
+            <li>Finish with program development, testing, and the create performance task.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Big Idea 1 Notes Index</h2>
+        <p>Computing innovation · artifacts · collaboration · development process</p>
+      </header>
+      <div class="notes-shell">
+        <aside class="notes-index" aria-label="Big Idea 1 notes index">
+          <div class="notes-index-title">Major Buckets</div>
+          <button class="note-jump" type="button" data-note-target="n-innovation"><span>Computing Innovation</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-artifacts"><span>Computational Artifacts</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-purpose"><span>Purpose vs. Function</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-collab"><span>Collaboration</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-development"><span>Program Development</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-create"><span>Create Performance Task</span><span>06</span></button>
+        </aside>
+        <div class="notes-stack">
+          <article class="note-section accent-cyan" id="n-innovation">
+            <div class="mini-label">01 · Computing Innovation</div>
+            <h3>What Is a Computing Innovation?</h3>
+            <div class="body-copy">
+              <p>A <strong class="ap-term">computing innovation</strong> is any product, system, or process that includes a <strong class="ap-term">program as an integral part</strong> of its function. This distinguishes it from tools that are merely computerized.</p>
+              <p>Innovations can be <strong class="ap-term">physical</strong> (like a self-driving car), <strong class="ap-term">nonphysical computing software</strong> (like a mobile app), or <strong class="ap-term">nonphysical computing concepts</strong> (like e-commerce or social media).</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Physical</strong><div class="body-copy">Hardware with embedded programs. Examples: smart thermostat, GPS device, robotic arm.</div></div>
+              <div class="mini-note"><strong>Software</strong><div class="body-copy">Programs that run on general devices. Examples: a word processor, a photo editing app, a game.</div></div>
+              <div class="mini-note"><strong>Concepts</strong><div class="body-copy">Systems enabled by computing. Examples: online banking, e-commerce, social networks.</div></div>
+              <div class="mini-note"><strong>Key Distinction</strong><div class="body-copy">The program must be integral, not incidental. A digital clock is computerized; a fitness tracker that syncs and analyzes data is a computing innovation.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-blue" id="n-artifacts">
+            <div class="mini-label">02 · Computational Artifacts</div>
+            <h3>What Counts as a Computational Artifact?</h3>
+            <div class="body-copy">
+              <p>A <strong class="ap-term">computational artifact</strong> is anything created by a human using a computer. These are the outputs of computing work and can take many forms.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Programs / Code</strong><div class="body-copy">The most obvious type. Any working software or script counts.</div></div>
+              <div class="mini-note"><strong>Images</strong><div class="body-copy">Graphics, digital art, or photos edited on a computer.</div></div>
+              <div class="mini-note"><strong>Audio</strong><div class="body-copy">Music, podcasts, or sound effects produced digitally.</div></div>
+              <div class="mini-note"><strong>Video</strong><div class="body-copy">Recordings, animations, or video edits created with software.</div></div>
+              <div class="mini-note"><strong>Presentations</strong><div class="body-copy">Slide decks, infographics, interactive visualizations.</div></div>
+              <div class="mini-note"><strong>Written Documents</strong><div class="body-copy">Word-processed text, PDFs, web pages, or digital reports.</div></div>
+            </div>
+            <h4>AP Move</h4>
+            <div class="body-copy">When asked to identify or create a computational artifact on the exam, remember the broad definition. A video about an algorithm is still a valid computational artifact.</div>
+          </article>
+
+          <article class="note-section accent-purple" id="n-purpose">
+            <div class="mini-label">03 · Purpose vs. Function</div>
+            <h3>Purpose, Function, and the Gap Between Them</h3>
+            <div class="body-copy">
+              <p>This is one of the most tested distinctions in Big Idea 1. <strong class="ap-term">Purpose</strong> is the problem the innovation is intended to solve — the human motivation behind it. <strong class="ap-term">Function</strong> is what the innovation actually does — the observable behavior.</p>
+              <p>These are not always identical. A social media platform's purpose might be to connect people; its function includes recommending content, storing data, and serving ads. The gap between purpose and function is where unintended consequences arise.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Purpose</strong><div class="body-copy">The intended goal or problem to solve. "Why was this made?" Answer in human terms: to help users, to save time, to reduce errors.</div></div>
+              <div class="mini-note"><strong>Function</strong><div class="body-copy">The specific operations the program performs. "What does it actually do?" Answer in computational terms: accepts input, stores data, outputs results.</div></div>
+              <div class="mini-note"><strong>Unintended Effects</strong><div class="body-copy">When the function produces outcomes beyond the purpose. These can be beneficial (unexpected positive uses) or harmful (privacy leaks, bias).</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-teal" id="n-collab">
+            <div class="mini-label">04 · Collaboration</div>
+            <h3>Why Collaboration Makes Better Programs</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Collaboration</strong> in computing means more than splitting up tasks. It involves diverse perspectives, shared problem-solving, and mutual error-catching. The AP exam treats collaboration as a core computing practice, not a soft skill add-on.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Diverse Perspectives</strong><div class="body-copy">Teams with different backgrounds notice different issues, especially around accessibility, bias, and usability.</div></div>
+              <div class="mini-note"><strong>Error Catching</strong><div class="body-copy">Multiple reviewers find bugs and logic errors that solo developers miss.</div></div>
+              <div class="mini-note"><strong>Pair Programming</strong><div class="body-copy">One person writes code while another reviews in real time. Produces cleaner, more reliable output.</div></div>
+              <div class="mini-note"><strong>Online Tools</strong><div class="body-copy">Version control (like Git), shared editors, and project management platforms enable asynchronous collaboration.</div></div>
+            </div>
+            <h4>AP Move</h4>
+            <div class="body-copy">On a question about collaboration, always explain the mechanism: it's not just "two heads are better than one" — it's that diversity catches biases, and peer review reduces errors.</div>
+          </article>
+
+          <article class="note-section accent-orange" id="n-development">
+            <div class="mini-label">05 · Program Development</div>
+            <h3>How Programs Are Actually Built</h3>
+            <div class="body-copy">
+              <p>The program development process is <strong class="ap-term">iterative and incremental</strong>, not a single-pass pipeline. Programs start from requirements, move through design, get coded and tested, and are revised based on results.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Investigating</strong><div class="body-copy">Identify the problem, survey existing solutions, define requirements. Involves users, surveys, testing.</div></div>
+              <div class="mini-note"><strong>Designing</strong><div class="body-copy">Plan the solution using diagrams, pseudocode, storyboards, or mockups before writing final code.</div></div>
+              <div class="mini-note"><strong>Prototyping</strong><div class="body-copy">Build a working but incomplete version to test core ideas early and cheaply.</div></div>
+              <div class="mini-note"><strong>Testing</strong><div class="body-copy">Use a variety of inputs to verify the program behaves correctly. Includes edge cases and error handling.</div></div>
+              <div class="mini-note"><strong>Iteration</strong><div class="body-copy">Revise based on test results and user feedback. Each cycle improves the program.</div></div>
+              <div class="mini-note"><strong>Documentation</strong><div class="body-copy">Comments in code, naming conventions, and written descriptions help others (and your future self) understand the program.</div></div>
+            </div>
+          </article>
+
+          <article class="note-section accent-green" id="n-create">
+            <div class="mini-label">06 · Create Performance Task</div>
+            <h3>The Create PT and Big Idea 1</h3>
+            <div class="body-copy">
+              <p>The <strong class="ap-term">Create Performance Task</strong> is a major AP CSP assessment where you design and build a program. It directly tests Big Idea 1 concepts: your program must serve a purpose, demonstrate an algorithm, use abstraction, and reflect your personal design choices.</p>
+              <p>You must write a <strong class="ap-term">written response</strong> explaining the program's purpose, function, how a list and a procedure work, and how your algorithm reflects complexity beyond simple sequencing.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- INNOVATION -->
+    <section class="tab-content" id="innovation">
+      <header class="page-header">
+        <span class="unit-tag">Core Concept</span>
+        <h2>Computing Innovation</h2>
+        <p>Physical · software · conceptual · program as integral part</p>
+      </header>
+      <div class="principle-grid">
+        <article class="principle-card accent-cyan">
+          <div class="mini-label">Definition</div>
+          <h3>Program as an Integral Part</h3>
+          <div class="body-copy">
+            <p>What makes something a <strong class="ap-term">computing innovation</strong> is that a program is not just added on — it is integral to what the thing does. Without the program, the innovation doesn't function as intended.</p>
+            <p>This is the line between a digital clock (just displays time) and a smartwatch (runs programs, syncs data, sends alerts).</p>
+          </div>
+        </article>
+        <article class="principle-card accent-blue">
+          <div class="mini-label">Three Types</div>
+          <h3>Physical, Software, Conceptual</h3>
+          <ul class="bullet-list">
+            <li><strong class="ap-term">Physical</strong>: smart cars, medical devices, robotics.</li>
+            <li><strong class="ap-term">Software</strong>: apps, games, operating systems, browsers.</li>
+            <li><strong class="ap-term">Conceptual</strong>: streaming services, social networks, e-commerce ecosystems.</li>
+          </ul>
+        </article>
+        <article class="principle-card accent-teal">
+          <div class="mini-label">Exam Application</div>
+          <h3>Identifying Innovations on the Exam</h3>
+          <div class="body-copy">
+            <p>AP questions often ask you to identify whether something is a computing innovation or explain how a given innovation reflects human creativity. The key move is always to point to the embedded program and explain what role it plays in the core function.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ARTIFACTS -->
+    <section class="tab-content" id="artifacts">
+      <header class="page-header">
+        <span class="unit-tag">Outputs of Computing</span>
+        <h2>Computational Artifacts</h2>
+        <p>Created by humans using computers · broad definition · multiple types</p>
+      </header>
+      <div class="democracy-grid">
+        <article class="feature-card accent-cyan">
+          <div class="card-sub">Type 1</div>
+          <div class="card-title">Programs and Code</div>
+          <div class="feature-copy"><p>Any working software: scripts, apps, games, or tools. The most directly testable type on the AP exam.</p></div>
+        </article>
+        <article class="feature-card accent-blue">
+          <div class="card-sub">Type 2</div>
+          <div class="card-title">Images and Graphics</div>
+          <div class="feature-copy"><p>Digital art, edited photos, infographics, icons, or any visual made on a computer.</p></div>
+        </article>
+        <article class="feature-card accent-teal">
+          <div class="card-sub">Type 3</div>
+          <div class="card-title">Audio</div>
+          <div class="feature-copy"><p>Recorded or synthesized sound, music production, podcast episodes, or audio effects created digitally.</p></div>
+        </article>
+        <article class="feature-card accent-orange">
+          <div class="card-sub">Type 4</div>
+          <div class="card-title">Video</div>
+          <div class="feature-copy"><p>Recorded, edited, or animated video. A video explaining an algorithm is itself a computational artifact.</p></div>
+        </article>
+        <article class="feature-card accent-purple">
+          <div class="card-sub">Type 5</div>
+          <div class="card-title">Written Docs and Presentations</div>
+          <div class="feature-copy"><p>Word processed text, web pages, slide decks, and interactive visualizations created with software tools.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PURPOSE vs FUNCTION -->
+    <section class="tab-content" id="purpose">
+      <header class="page-header">
+        <span class="unit-tag">Critical Distinction</span>
+        <h2>Purpose vs. Function</h2>
+        <p>Why it was made vs. what it actually does</p>
+      </header>
+      <div class="exam-grid">
+        <article class="exam-card accent-cyan">
+          <div class="mini-label">Purpose</div>
+          <h3>The Intended Goal</h3>
+          <div class="exam-copy">
+            <p><strong class="ap-term">Purpose</strong> is the human motivation behind the innovation. It answers: "Why was this made? What problem does it solve?"</p>
+            <p>Purpose is stated in terms of user benefit: to help people communicate, to automate a repetitive task, to visualize complex data.</p>
+          </div>
+        </article>
+        <article class="exam-card accent-purple">
+          <div class="mini-label">Function</div>
+          <h3>What It Actually Does</h3>
+          <div class="exam-copy">
+            <p><strong class="ap-term">Function</strong> is the actual behavior of the program. It answers: "What operations does it perform? What are its inputs and outputs?"</p>
+            <p>Function is stated computationally: accepts text input, stores user data, returns a sorted list, displays results on screen.</p>
+          </div>
+        </article>
+        <article class="exam-card accent-red">
+          <div class="mini-label">The Gap</div>
+          <h3>Unintended Consequences</h3>
+          <div class="exam-copy">
+            <p>When function diverges from purpose, <strong class="ap-term">unintended consequences</strong> emerge. A location app intended for navigation also creates a detailed movement log. A recommendation algorithm intended to show relevant content can reinforce bias.</p>
+            <p>These can be beneficial (unexpected use cases) or harmful (privacy, bias, misinformation).</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- COLLABORATION -->
+    <section class="tab-content" id="collaboration">
+      <header class="page-header">
+        <span class="unit-tag">Working Together</span>
+        <h2>Collaboration in Computing</h2>
+        <p>Pair programming · diverse perspectives · shared tools</p>
+      </header>
+      <div class="structure-grid">
+        <article class="feature-card accent-teal">
+          <div class="card-sub">Why It Matters</div>
+          <div class="card-title">Better Programs Through People</div>
+          <div class="feature-copy">
+            <p>The AP exam treats <strong class="ap-term">collaboration</strong> as a core computing practice. Programs developed collaboratively tend to have fewer errors, reach more users appropriately, and reflect a wider range of needs and perspectives.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-blue">
+          <div class="card-sub">Method</div>
+          <div class="card-title">Pair Programming</div>
+          <div class="feature-copy">
+            <p>In <strong class="ap-term">pair programming</strong>, one developer writes while the other reviews in real time. Roles switch regularly. This method produces cleaner code and catches errors earlier than solo coding.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-orange">
+          <div class="card-sub">Tools</div>
+          <div class="card-title">Online Collaboration</div>
+          <div class="feature-copy">
+            <p>Modern computing relies on <strong class="ap-term">version control systems</strong> (like Git), shared code editors, issue trackers, and communication platforms. These tools allow distributed teams to collaborate asynchronously across time zones.</p>
+          </div>
+        </article>
+        <article class="feature-card accent-cyan">
+          <div class="card-sub">Diversity Impact</div>
+          <div class="card-title">Perspectives and Bias Reduction</div>
+          <div class="feature-copy">
+            <p>Diverse teams are more likely to notice when a program fails for certain groups, contains implicit bias in its logic, or doesn't meet accessibility needs. This is why computing benefits from broad participation.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DEVELOPMENT -->
+    <section class="tab-content" id="development">
+      <header class="page-header">
+        <span class="unit-tag">Building Programs</span>
+        <h2>The Program Development Process</h2>
+        <p>Iterative · incremental · testing · documentation</p>
+      </header>
+      <div class="principle-grid">
+        <article class="principle-card accent-orange">
+          <div class="mini-label">Core Principle</div>
+          <h3>Iterative and Incremental</h3>
+          <div class="body-copy">
+            <p>Programs are not built start-to-finish in one pass. Development is <strong class="ap-term">iterative</strong>: each cycle of design-build-test improves the program. It is also <strong class="ap-term">incremental</strong>: new features are added bit by bit rather than all at once.</p>
+          </div>
+        </article>
+        <article class="principle-card accent-blue">
+          <div class="mini-label">Investigating</div>
+          <h3>Defining the Problem</h3>
+          <div class="body-copy">
+            <p>Before writing code, developers investigate: What is the problem? Who are the users? What solutions already exist? What are the requirements? This phase can involve surveys, interviews, and exploring existing programs.</p>
+          </div>
+        </article>
+        <article class="principle-card accent-purple">
+          <div class="mini-label">Design Phase</div>
+          <h3>Planning Before Coding</h3>
+          <div class="body-copy">
+            <p>Designers use <strong class="ap-term">storyboards</strong>, <strong class="ap-term">pseudocode</strong>, flowcharts, and mockups to plan programs before writing final code. This reduces costly mistakes and ensures requirements are clearly understood.</p>
+          </div>
+        </article>
+        <article class="principle-card accent-teal">
+          <div class="mini-label">Testing</div>
+          <h3>Verifying Behavior</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Testing</strong> uses a variety of inputs to check that a program does what it should. Good testing includes normal cases, boundary conditions, and invalid input to make sure the program handles errors gracefully.</p>
+          </div>
+        </article>
+      </div>
+      <div class="two-col-list">
+        <div class="list-panel">
+          <h4>Documentation Practices</h4>
+          <ul>
+            <li>Inline comments explain what code sections do.</li>
+            <li>Descriptive variable and function names improve readability.</li>
+            <li>External documentation helps new team members onboard.</li>
+          </ul>
+        </div>
+        <div class="list-panel">
+          <h4>Common Development Steps</h4>
+          <ul>
+            <li>Investigate the problem and define requirements.</li>
+            <li>Design using pseudocode, storyboards, or diagrams.</li>
+            <li>Build a prototype and test with real inputs.</li>
+            <li>Iterate: revise based on test results and feedback.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="tab-content" id="timeline">
+      <header class="page-header">
+        <span class="unit-tag">Concept Map</span>
+        <h2>Big Idea 1 Concept Timeline</h2>
+        <p>Scroll through the key ideas in order of complexity</p>
+      </header>
+      <div class="timeline-intro">Conceptual rail: scroll from foundational ideas to applied skills tested on the AP exam.</div>
+      <div class="timeline">
+        <article class="timeline-item">
+          <div class="timeline-year">Step 1</div>
+          <div class="timeline-copy"><strong class="ap-term">Define Computing Innovation</strong>
+            <ul class="bullet-list"><li>Program must be integral to the innovation.</li><li>Three types: physical, software, conceptual.</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 2</div>
+          <div class="timeline-copy"><strong class="ap-term">Identify Computational Artifacts</strong>
+            <ul class="bullet-list"><li>Created by humans using computers.</li><li>Code, images, audio, video, documents.</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 3</div>
+          <div class="timeline-copy"><strong class="ap-term">Understand Purpose</strong>
+            <ul class="bullet-list"><li>The intended human goal of the innovation.</li><li>Why was it built?</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 4</div>
+          <div class="timeline-copy"><strong class="ap-term">Describe Function</strong>
+            <ul class="bullet-list"><li>What the program actually does operationally.</li><li>Inputs, processes, outputs.</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 5</div>
+          <div class="timeline-copy"><strong class="ap-term">Spot Unintended Consequences</strong>
+            <ul class="bullet-list"><li>Where function diverges from purpose.</li><li>Can be beneficial or harmful.</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 6</div>
+          <div class="timeline-copy"><strong class="ap-term">Apply Collaboration</strong>
+            <ul class="bullet-list"><li>Pair programming, diverse perspectives.</li><li>Reduces errors, increases equity.</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 7</div>
+          <div class="timeline-copy"><strong class="ap-term">Iterative Development</strong>
+            <ul class="bullet-list"><li>Investigate, design, prototype, test, revise.</li><li>Repeat until requirements are met.</li></ul>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div class="timeline-year">Step 8</div>
+          <div class="timeline-copy"><strong class="ap-term">Create Performance Task</strong>
+            <ul class="bullet-list"><li>Apply all Big Idea 1 skills in a real program.</li><li>Explain purpose, function, abstraction, algorithm.</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Term Bank</span>
+        <h2>Glossary and Flashcards</h2>
+        <p>Filter terms, then flip cards for active recall</p>
+      </header>
+      <div class="glossary-toolbar">
+        <input id="glossaryFilter" type="text" placeholder="Filter glossary terms" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+      <div style="height: 26px;"></div>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- WRITING -->
+    <section class="tab-content" id="writing">
+      <header class="page-header">
+        <span class="unit-tag">AP Writing</span>
+        <h2>How Big Idea 1 Appears on the Exam</h2>
+        <p>Use evidence to support reasoning, not to decorate an answer</p>
+      </header>
+      <div class="writing-grid">
+        <article class="writing-card accent-cyan">
+          <div class="mini-label">Use This Pattern</div>
+          <h3>Claim + Evidence + Reasoning</h3>
+          <div class="writing-copy">
+            <p>Claim: Collaboration improves program quality.</p>
+            <p>Evidence: Pair programming allows one developer to write while another reviews, catching bugs in real time.</p>
+            <p>Reasoning: Because errors are caught earlier, the final program contains fewer defects than one developed solo.</p>
+          </div>
+        </article>
+        <article class="writing-card accent-blue">
+          <div class="mini-label">Common Prompt Move</div>
+          <h3>Explain the Tradeoff</h3>
+          <div class="writing-copy">
+            <p>Many prompts ask you to explain both benefits and drawbacks. Collaboration speeds error detection but requires coordination overhead. Iteration improves quality but takes more time.</p>
+          </div>
+        </article>
+        <article class="writing-card accent-red">
+          <div class="mini-label">What To Avoid</div>
+          <h3>Vague Claims Without Mechanism</h3>
+          <div class="writing-copy">
+            <p>Saying "collaboration is good" scores nothing. Explain HOW: diverse perspectives catch bias, peer review finds logic errors, version control enables parallel work.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button" data-close="quizModal">Close</button>
+      <div class="modal-title">Big Idea 1 Quiz</div>
+      <div class="modal-sub">8 AP-style review questions</div>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <button class="modal-close" type="button" data-close="essayModal">Close</button>
+      <div class="modal-title">Prompt Bank</div>
+      <div class="modal-sub">Short outlines for common Big Idea 1 argument patterns</div>
+      <div class="essay-list" id="essayTopics"></div>
+      <div class="essay-outline" id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", label: "Dashboard", icon: "◈", ambient: "radial-gradient(ellipse at 60% 10%, rgba(62,184,212,.12), transparent 65%)" },
+      { id: "notes", label: "Notes", icon: "☰", ambient: "radial-gradient(ellipse at 35% 18%, rgba(62,184,212,.14), transparent 65%)" },
+      { id: "innovation", label: "Innovation", icon: "✦", ambient: "radial-gradient(ellipse at 20% 20%, rgba(91,143,212,.12), transparent 65%)" },
+      { id: "artifacts", label: "Artifacts", icon: "◇", ambient: "radial-gradient(ellipse at 80% 20%, rgba(62,184,154,.12), transparent 65%)" },
+      { id: "purpose", label: "Purpose / Function", icon: "▣", ambient: "radial-gradient(ellipse at 25% 70%, rgba(155,134,244,.12), transparent 65%)" },
+      { id: "collaboration", label: "Collaboration", icon: "◎", ambient: "radial-gradient(ellipse at 75% 35%, rgba(62,184,154,.12), transparent 65%)" },
+      { id: "development", label: "Development", icon: "◆", ambient: "radial-gradient(ellipse at 40% 25%, rgba(242,135,73,.12), transparent 65%)" },
+      { id: "timeline", label: "Timeline", icon: "↗", ambient: "radial-gradient(ellipse at 55% 60%, rgba(62,184,212,.12), transparent 65%)" },
+      { id: "glossary", label: "Glossary", icon: "⌘", ambient: "radial-gradient(ellipse at 30% 30%, rgba(62,184,212,.12), transparent 65%)" },
+      { id: "writing", label: "Writing", icon: "✎", ambient: "radial-gradient(ellipse at 65% 28%, rgba(217,95,95,.12), transparent 65%)" }
+    ];
+
+    const glossaryTerms = [
+      { term: "Computing Innovation", def: "A product, system, or process that includes a program as an integral part of its function.", tab: "innovation" },
+      { term: "Computational Artifact", def: "Anything created by a human using a computer, including programs, images, audio, video, and documents.", tab: "artifacts" },
+      { term: "Purpose", def: "The intended goal of a computing innovation — the human problem it was meant to solve.", tab: "purpose" },
+      { term: "Function", def: "What a computing innovation actually does — its observable computational behavior.", tab: "purpose" },
+      { term: "Unintended Consequence", def: "An effect of a computing innovation that was not part of the original intended purpose, which can be beneficial or harmful.", tab: "purpose" },
+      { term: "Collaboration", def: "Working with others in computing to produce better programs through shared effort, diverse perspectives, and peer review.", tab: "collaboration" },
+      { term: "Pair Programming", def: "A collaboration technique where one developer writes code while another reviews it in real time.", tab: "collaboration" },
+      { term: "Iterative Development", def: "A development process where programs are improved through repeated cycles of designing, building, testing, and revising.", tab: "development" },
+      { term: "Incremental Development", def: "Building a program by adding one small feature at a time rather than trying to build everything at once.", tab: "development" },
+      { term: "Prototype", def: "An early, incomplete version of a program used to test core ideas and gather feedback.", tab: "development" },
+      { term: "Pseudocode", def: "A human-readable description of a program's logic that is not formal code but conveys the algorithm's structure.", tab: "development" },
+      { term: "Documentation", def: "Comments, naming conventions, and written descriptions that explain what a program does and how it works.", tab: "development" },
+      { term: "Version Control", def: "A system that tracks changes to code over time, allowing developers to collaborate and revert to earlier versions.", tab: "collaboration" },
+      { term: "Testing", def: "The process of running a program with varied inputs to verify that it behaves correctly and handles errors.", tab: "development" },
+      { term: "Create Performance Task", def: "The AP CSP portfolio task requiring students to design and build a program demonstrating algorithm, abstraction, and purpose.", tab: "notes" },
+      { term: "Program Purpose", def: "In the Create PT context, the specific problem the program is meant to solve or the goal it is meant to achieve.", tab: "purpose" },
+      { term: "Program Function", def: "In the Create PT context, the observable behavior of the program — what it does when run.", tab: "purpose" },
+      { term: "Bias in Computing", def: "When a program's design or data produces systematically unfair results for certain groups of users.", tab: "collaboration" }
+    ];
+
+    const flashcards = [
+      { front: "What is the difference between purpose and function?", back: "Purpose is why the innovation was created (intended human goal). Function is what it actually does computationally. These can diverge, producing unintended consequences." },
+      { front: "Why does collaboration improve program quality?", back: "Diverse perspectives catch bias and accessibility issues. Pair programming reduces bugs through real-time review. Shared tools enable parallel, coordinated work." },
+      { front: "What makes something a computing innovation vs. just a computer?", back: "A computing innovation has a program that is integral to its function. A digital clock just shows time; a fitness tracker that syncs, analyzes, and alerts is a computing innovation." },
+      { front: "What does iterative development mean?", back: "Programs improve through repeated cycles: investigate → design → prototype → test → revise. Each loop makes the program closer to requirements." }
+    ];
+
+    const quizQuestions = [
+      { question: "Which of the following best describes the purpose of a computing innovation?", options: ["The specific inputs the program accepts", "The intended goal or problem the innovation was designed to solve", "The list of functions and procedures in the code", "The hardware the program runs on"], correct: 1, explanation: "Purpose is the human motivation — why the innovation was created. Function is what it actually does." },
+      { question: "A navigation app collects real-time location data and discovers users' daily routines. This is an example of", options: ["The intended function of the app", "A deliberate design feature", "An unintended consequence of the app's purpose", "A hardware limitation"], correct: 2, explanation: "The app's purpose was navigation. Logging daily routines is a side effect — an unintended consequence of the function." },
+      { question: "Which of the following is NOT a computational artifact?", options: ["A program written in Python", "A video explaining a sorting algorithm", "A physical textbook with no digital version", "A digital image created in a paint application"], correct: 2, explanation: "A physical textbook with no digital component was not created by a human using a computer, so it is not a computational artifact." },
+      { question: "In pair programming, what is the primary role of the reviewer?", options: ["To run the program and check outputs", "To observe and critique the code as it is written in real time", "To write the test cases after coding is done", "To deploy the program to users"], correct: 1, explanation: "The reviewer in pair programming watches the code as it is written, catching errors and logic issues immediately." },
+      { question: "Iterative development is best described as", options: ["Writing all features before any testing begins", "A single-pass process where design comes before coding", "A repeated cycle of designing, building, testing, and revising", "Distributing development work among a large team"], correct: 2, explanation: "Iterative development involves repeated design-build-test-revise cycles, each improving the program based on results." },
+      { question: "Which type of computing innovation would a fitness tracking app best be classified as?", options: ["Physical computing innovation", "Nonphysical computing software", "Nonphysical computing concept", "Hardware innovation"], correct: 1, explanation: "A fitness tracking app is software running on a general-purpose device — a nonphysical computing software innovation." },
+      { question: "What is the main benefit of having a diverse team develop a program?", options: ["Diverse teams write code faster", "Different perspectives help identify potential issues like bias and accessibility gaps", "Larger teams always produce more features", "Diversity reduces the need for testing"], correct: 1, explanation: "Diverse perspectives mean more likely detection of bias, accessibility issues, and use cases the developers might otherwise overlook." },
+      { question: "What is pseudocode used for during program development?", options: ["Executing a program without a compiler", "Planning the logic of a program in human-readable terms before writing formal code", "Testing the program with random inputs", "Documenting the final version of a program for users"], correct: 1, explanation: "Pseudocode describes algorithm logic in plain language, helping developers plan before committing to a specific language's syntax." }
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Explain how collaboration improves program development",
+        blocks: [
+          ["Claim", "Collaboration produces better programs by combining diverse perspectives and building in real-time error detection."],
+          ["Evidence", "Pair programming allows one developer to code while another reviews continuously. Diverse teams catch bias and accessibility issues that homogeneous teams miss."],
+          ["Reasoning", "Because errors are caught early and a wider range of user needs are considered, the final program is more reliable and equitable than one developed in isolation."],
+          ["Counterpoint", "Collaboration requires coordination overhead. Team disagreements can slow decisions, and asynchronous work across tools can introduce version conflicts."]
+        ]
+      },
+      {
+        label: "Describe the difference between purpose and function",
+        blocks: [
+          ["Claim", "Purpose and function describe different aspects of a computing innovation: purpose is the intended human goal, function is the actual computational behavior."],
+          ["Evidence", "A social media platform's purpose is to connect people; its function includes storing profiles, serving content, collecting behavioral data, and targeting ads."],
+          ["Reasoning", "Because function can exceed or diverge from purpose, unintended consequences arise — some beneficial (unexpected uses), some harmful (privacy erosion, bias amplification)."],
+          ["Application", "On the Create PT, clearly distinguish the purpose your program serves from the specific operations it performs to serve that purpose."]
+        ]
+      },
+      {
+        label: "Explain iterative development and why it produces better programs",
+        blocks: [
+          ["Claim", "Iterative development produces better programs by allowing developers to discover and fix problems through repeated cycles rather than one-time design."],
+          ["Evidence", "Each cycle of investigate → design → prototype → test reveals new issues. Testing with edge cases exposes bugs that weren't visible in planning."],
+          ["Reasoning", "Because each iteration improves the program based on real test results and user feedback, the final product is more aligned with actual user needs than a one-pass design."],
+          ["Link", "This process is directly reflected in the Create Performance Task, where students are expected to show evidence of revision and testing."]
+        ]
+      }
+    ];
+
+    const nav = document.getElementById("sidebarNav");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const main = document.getElementById("main");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map(tab => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>`).join("");
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === tabId));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+      const tab = tabs.find(t => t.id === tabId);
+      if (tab) ambientOverlay.style.background = tab.ambient;
+      main.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderGlossary(filter = "") {
+      const val = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(val) || t.def.toLowerCase().includes(val));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map(card => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${card.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${card.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    function renderEssayTopics() {
+      document.getElementById("essayTopics").innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+      document.getElementById("essayOutline").classList.remove("show");
+      document.getElementById("essayOutline").innerHTML = "";
+    }
+
+    function selectEssay(index) {
+      document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === index));
+      const outline = essayOutlines[index];
+      document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) => `
+        <div class="essay-block"><div class="essay-block-label">${label}</div><div class="essay-block-body">${body}</div></div>`).join("");
+      document.getElementById("essayOutline").classList.add("show");
+    }
+
+    function renderQuizQuestion() {
+      const quizMount = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prevBest = Number(localStorage.getItem("apcsp_bi1_best") || 0);
+        const best = Math.max(prevBest, pct);
+        localStorage.setItem("apcsp_bi1_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review purpose vs. function, collaboration benefits, and iteration if you missed any questions.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+        return;
+      }
+      quizLocked = false;
+      quizMount.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function initBestScore() { const best = localStorage.getItem("apcsp_bi1_best"); bestScoreEl.textContent = best ? best + "%" : "--"; }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+    });
+    document.addEventListener("mouseover", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      const interactive = e.target.closest("button, a, .flash-card, .glossary-card");
+      cursor.style.width = interactive ? "20px" : "12px";
+      cursor.style.height = interactive ? "20px" : "12px";
+    });
+
+    pinBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned");
+      pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+    });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => {
+      const t = document.getElementById(b.dataset.noteTarget); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+
+    document.getElementById("openSearch").addEventListener("click", () => {
+      const panel = document.getElementById("sbSearchPanel");
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+    });
+    document.getElementById("sbInput").addEventListener("input", e => {
+      const query = e.target.value.toLowerCase().trim();
+      const matches = glossaryTerms.filter(t => t.term.toLowerCase().includes(query) || t.def.toLowerCase().includes(query)).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = matches.length ? matches.map(item => `<div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}"><div class="sb-result-tab">${item.tab}</div><div class="sb-result-term">${item.term}</div><div class="sb-result-snip">${item.def}</div></div>`).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+    document.getElementById("sbResults").addEventListener("click", e => {
+      const result = e.target.closest(".sb-result"); if (!result || !result.dataset.targetTab) return;
+      switchTab(result.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+      if (result.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = result.dataset.targetTerm; renderGlossary(result.dataset.targetTerm); }
+    });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
+    document.getElementById("quizMount").addEventListener("click", e => {
+      const option = e.target.closest(".quiz-option");
+      if (option && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex]; const selected = Number(option.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((btn, i) => { if (i === q.correct) btn.classList.add("correct"); if (i === selected && selected !== q.correct) btn.classList.add("wrong"); });
+        if (selected === q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+      if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+    });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+    main.addEventListener("scroll", () => {
+      const max = main.scrollHeight - main.clientHeight;
+      const pct = max > 0 ? (main.scrollTop / max) * 100 : 0;
+      document.getElementById("readingProgressFill").style.width = pct + "%";
+    });
+  </script>
+</body>
+</html>
