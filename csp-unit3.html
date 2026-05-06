@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AP Computer Science Principles — Big Idea 3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #07080a;
+            --card: #0d0f12;
+            --card2: #12161c;
+            --border: rgba(255, 255, 255, .07);
+            --text: #dde3ec;
+            --muted: #7a8699;
+            --cyan: #3eb8d4;
+            --teal: #3eb89a;
+            --blue: #5b8fd4;
+            --red: #d95f5f;
+            --orange: #f28749;
+            --purple: #9b86f4;
+            --green: #4caf7d;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Mono", monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: .35;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--purple);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width .2s ease, height .2s ease;
+        }
+
+        #readingProgress {
+            position: fixed;
+            top: 0;
+            left: 72px;
+            right: 0;
+            height: 2px;
+            z-index: 100;
+        }
+
+        #readingProgressFill {
+            width: 0%;
+            height: 100%;
+            background: var(--purple);
+        }
+
+        #ambientOverlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 10%, rgba(155, 134, 244, .12), transparent 65%);
+            opacity: .1;
+            pointer-events: none;
+            transition: background 1s ease, opacity .25s ease;
+            z-index: 0;
+        }
+
+        #sidebar {
+            width: 72px;
+            height: 100vh;
+            flex-shrink: 0;
+            background: rgba(5, 6, 8, .84);
+            border-right: 1px solid var(--border);
+            backdrop-filter: blur(24px);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            transition: width .4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #sidebar:hover,
+        #sidebar.pinned {
+            width: 264px;
+        }
+
+        #pinBtn {
+            position: absolute;
+            top: 12px;
+            right: 10px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 8px;
+            letter-spacing: .08em;
+            opacity: 0;
+            cursor: none;
+            transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+        }
+
+        #sidebar:hover #pinBtn,
+        #sidebar.pinned #pinBtn {
+            opacity: 1;
+        }
+
+        #pinBtn.pinned {
+            color: var(--purple);
+            border-color: rgba(155, 134, 244, .24);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            border: 1px solid rgba(155, 134, 244, .2);
+            background: rgba(155, 134, 244, .07);
+            color: var(--purple);
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .logo-copy {
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        #sidebar:hover .logo-copy,
+        #sidebar.pinned .logo-copy {
+            opacity: 1;
+        }
+
+        .logo-copy h1 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 13px;
+            letter-spacing: .25em;
+            color: var(--purple);
+        }
+
+        .logo-copy p {
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .search-wrap {
+            position: relative;
+            padding: 10px;
+        }
+
+        .sb-search-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .03);
+            color: var(--muted);
+            cursor: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, border-color .2s ease;
+        }
+
+        #sidebar:hover .sb-search-trigger,
+        #sidebar.pinned .sb-search-trigger {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sb-search-trigger:hover {
+            border-color: rgba(155, 134, 244, .2);
+        }
+
+        #sbSearchPanel {
+            position: absolute;
+            top: calc(100% - 4px);
+            left: 10px;
+            right: 10px;
+            border: 1px solid rgba(155, 134, 244, .18);
+            background: rgba(8, 10, 13, .98);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+            z-index: 80;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
+        }
+
+        #sbSearchPanel.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #sbSearchInner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        #sbInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .1em;
+            outline: none;
+            cursor: none;
+        }
+
+        #sbResults {
+            max-height: 280px;
+            overflow: auto;
+        }
+
+        .sb-result {
+            padding: 11px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            cursor: none;
+            transition: background .15s ease;
+        }
+
+        .sb-result:hover {
+            background: rgba(155, 134, 244, .06);
+        }
+
+        .sb-result:last-child {
+            border-bottom: none;
+        }
+
+        .sb-result-tab {
+            font-size: 8px;
+            color: var(--purple);
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .sb-result-term {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 14px;
+            color: white;
+            letter-spacing: .04em;
+        }
+
+        .sb-result-snip {
+            font-family: "Crimson Pro", serif;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+            margin-top: 2px;
+        }
+
+        nav {
+            height: calc(100vh - 176px);
+            padding: 0 10px 14px;
+            overflow: auto;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--muted);
+            cursor: none;
+            white-space: nowrap;
+            transition: background .2s ease, color .2s ease;
+            position: relative;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, .03);
+            color: #aeb7c6;
+        }
+
+        .nav-btn.active {
+            background: rgba(155, 134, 244, .07);
+            color: var(--purple);
+        }
+
+        .nav-btn.active .nav-indicator {
+            opacity: 1;
+        }
+
+        .nav-indicator {
+            position: absolute;
+            left: 0;
+            width: 2px;
+            height: 24px;
+            background: var(--purple);
+            border-radius: 5px;
+            opacity: 0;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        #sidebar:hover .nav-label,
+        #sidebar.pinned .nav-label {
+            opacity: 1;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .1em;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .sidebar-footer span:last-child {
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        #sidebar:hover .sidebar-footer span:last-child,
+        #sidebar.pinned .sidebar-footer span:last-child {
+            opacity: 1;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--teal);
+            animation: blink 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        #main {
+            flex: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 36px 54px 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding: 8px 0 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .glass-btn,
+        #scoreTracker {
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .05);
+            color: var(--muted);
+            padding: 9px 14px;
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            cursor: none;
+            backdrop-filter: blur(12px);
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .glass-btn:hover,
+        #scoreTracker:hover {
+            color: var(--purple);
+            border-color: rgba(155, 134, 244, .26);
+        }
+
+        .glass-btn.active {
+            color: var(--purple);
+            border-color: rgba(155, 134, 244, .32);
+            background: rgba(155, 134, 244, .08);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp .45s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 34px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .unit-tag {
+            display: block;
+            color: var(--purple);
+            font-size: 10px;
+            letter-spacing: .35em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .page-header h2 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(38px, 5vw, 62px);
+            letter-spacing: .08em;
+            line-height: .96;
+            color: white;
+        }
+
+        .page-header p {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 22px;
+            margin-bottom: 26px;
+        }
+
+        .principle-grid,
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        .case-grid,
+        .flash-grid,
+        .structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 22px;
+        }
+
+        .card,
+        .feature-card,
+        .principle-card,
+        .case-card,
+        .exam-card,
+        .flash-card,
+        .writing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+        }
+
+        .card:hover,
+        .feature-card:hover,
+        .principle-card:hover,
+        .case-card:hover,
+        .exam-card:hover,
+        .flash-card:hover,
+        .writing-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, .14);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, .35);
+        }
+
+        .hero-card::before,
+        .feature-card::before,
+        .principle-card::before,
+        .case-card::before,
+        .exam-card::before,
+        .writing-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 2px;
+            background: var(--accent, var(--purple));
+            opacity: .6;
+        }
+
+        .hero-card {
+            --accent: var(--purple);
+        }
+
+        .accent-cyan {
+            --accent: var(--cyan);
+        }
+
+        .accent-blue {
+            --accent: var(--blue);
+        }
+
+        .accent-teal {
+            --accent: var(--teal);
+        }
+
+        .accent-red {
+            --accent: var(--red);
+        }
+
+        .accent-orange {
+            --accent: var(--orange);
+        }
+
+        .accent-purple {
+            --accent: var(--purple);
+        }
+
+        .accent-green {
+            --accent: var(--green);
+        }
+
+        .card-sub {
+            color: var(--accent, var(--purple));
+            font-size: 9px;
+            letter-spacing: .35em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 28px;
+            letter-spacing: .05em;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .body-copy,
+        .bullet-list,
+        .exam-copy,
+        .feature-copy {
+            font-family: "Crimson Pro", serif;
+            color: var(--muted);
+            line-height: 1.82;
+            font-size: 15px;
+        }
+
+        .body-copy p+p,
+        .feature-copy p+p,
+        .exam-copy p+p {
+            margin-top: 12px;
+        }
+
+        .bullet-list {
+            padding-left: 18px;
+        }
+
+        .bullet-list li+li {
+            margin-top: 10px;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 18px;
+        }
+
+        .tag {
+            padding: 4px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .07);
+            background: rgba(255, 255, 255, .03);
+            color: var(--muted);
+            font-size: 7px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 22px;
+        }
+
+        .stat-box {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .02);
+            padding: 16px;
+        }
+
+        .stat-box span {
+            display: block;
+            color: var(--muted);
+            font-size: 8px;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-box strong {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: .06em;
+            color: white;
+        }
+
+        .focus-callout {
+            margin-top: 22px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(155, 134, 244, .14);
+            background: rgba(155, 134, 244, .04);
+        }
+
+        .focus-callout .label {
+            color: var(--purple);
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .mini-label {
+            color: var(--muted);
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        /* Notes */
+        .notes-shell {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .notes-index {
+            position: sticky;
+            top: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .notes-index-title {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+
+        .note-jump {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .08em;
+            cursor: none;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .note-jump:hover {
+            background: rgba(255, 255, 255, .04);
+            color: var(--text);
+        }
+
+        .note-jump span:last-child {
+            color: var(--purple);
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 14px;
+        }
+
+        .notes-stack {
+            display: grid;
+            gap: 22px;
+        }
+
+        .note-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent, var(--purple));
+            border-radius: 16px;
+            padding: 26px;
+        }
+
+        .note-section h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 22px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        .note-section h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 16px;
+            letter-spacing: .06em;
+            color: var(--purple);
+            margin: 18px 0 8px;
+        }
+
+        .note-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .mini-note {
+            background: rgba(255, 255, 255, .025);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .mini-note strong {
+            display: block;
+            color: var(--text);
+            font-size: 11px;
+            letter-spacing: .06em;
+            margin-bottom: 6px;
+        }
+
+        .code-block {
+            font-family: "DM Mono", monospace;
+            font-size: 11px;
+            background: rgba(0, 0, 0, .35);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            color: #c3aff4;
+            line-height: 1.7;
+            margin-top: 14px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* Glossary */
+        .glossary-toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .glossary-toolbar input {
+            flex: 1;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .08em;
+            padding: 10px 14px;
+            outline: none;
+            cursor: none;
+            min-width: 220px;
+            transition: border-color .2s ease;
+        }
+
+        .glossary-toolbar input:focus {
+            border-color: rgba(155, 134, 244, .24);
+        }
+
+        .glossary-card {
+            background: var(--card2);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .glossary-card h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 18px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flashcards */
+        .flash-card {
+            perspective: 900px;
+            min-height: 180px;
+            cursor: none;
+        }
+
+        .flash-inner {
+            width: 100%;
+            height: 100%;
+            min-height: 180px;
+            transition: transform .55s ease;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .flash-card.flipped .flash-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flash-front,
+        .flash-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--card2);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .flash-back {
+            transform: rotateY(180deg);
+            border-color: rgba(155, 134, 244, .18);
+            background: rgba(155, 134, 244, .05);
+        }
+
+        .flash-front h3,
+        .flash-back h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 18px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .flash-hint {
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .exam-card {
+            background: var(--card2);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, .72);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 660px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: .08em;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .1em;
+            padding: 6px 10px;
+            cursor: none;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+            border-color: rgba(255, 255, 255, .18);
+        }
+
+        .quiz-status {
+            font-size: 9px;
+            letter-spacing: .3em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .quiz-question {
+            font-family: "Crimson Pro", serif;
+            font-size: 18px;
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .03);
+            color: var(--text);
+            font: inherit;
+            font-size: 11px;
+            letter-spacing: .04em;
+            cursor: none;
+            transition: border-color .2s ease, background .2s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: rgba(155, 134, 244, .2);
+        }
+
+        .quiz-option.correct {
+            border-color: rgba(62, 184, 154, .35);
+            background: rgba(62, 184, 154, .08);
+        }
+
+        .quiz-option.wrong {
+            border-color: rgba(217, 95, 95, .35);
+            background: rgba(217, 95, 95, .08);
+        }
+
+        .quiz-feedback {
+            margin-top: 18px;
+            font-family: "Crimson Pro", serif;
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .quiz-next {
+            margin-top: 18px;
+        }
+
+        .essay-list {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .essay-topic-btn {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .03);
+            color: var(--text);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .08em;
+            cursor: none;
+            transition: border-color .2s ease, background .2s ease;
+        }
+
+        .essay-topic-btn:hover,
+        .essay-topic-btn.active {
+            border-color: rgba(155, 134, 244, .24);
+            background: rgba(155, 134, 244, .07);
+        }
+
+        .essay-outline {
+            display: none;
+            gap: 14px;
+        }
+
+        .essay-outline.show {
+            display: grid;
+        }
+
+        .essay-block {
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .025);
+            padding: 18px;
+        }
+
+        .essay-block-label {
+            color: var(--purple);
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .essay-block-body {
+            font-family: "Crimson Pro", serif;
+            color: var(--muted);
+            line-height: 1.78;
+            font-size: 15px;
+        }
+
+        strong.ap-term {
+            color: #c3aff4;
+            font-weight: 600;
+        }
+
+        body.ap-highlight strong.ap-term {
+            background: rgba(155, 134, 244, .12);
+            padding: 0 3px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(155, 134, 244, .15);
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .2
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @media(max-width:1020px) {
+            .hero-grid {
+                grid-template-columns: 1fr
+            }
+
+            .dash-stats {
+                grid-template-columns: 1fr
+            }
+
+            #main {
+                padding-left: 26px;
+                padding-right: 26px
+            }
+
+            .notes-shell {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:760px) {
+            body {
+                cursor: auto;
+                overflow: auto;
+                display: block
+            }
+
+            #cursor,
+            #readingProgress {
+                display: none
+            }
+
+            #sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border)
+            }
+
+            #sidebar:hover,
+            #sidebar.pinned {
+                width: 100%
+            }
+
+            .logo-copy,
+            .nav-label,
+            .sidebar-footer span:last-child,
+            .sb-search-trigger {
+                opacity: 1 !important;
+                pointer-events: auto !important
+            }
+
+            #pinBtn {
+                display: none
+            }
+
+            nav {
+                height: auto;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px
+            }
+
+            #main {
+                height: auto;
+                overflow: visible
+            }
+
+            .topbar {
+                position: static
+            }
+
+            .glossary-toolbar input {
+                min-width: 100%;
+                width: 100%
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div id="ambientOverlay"></div>
+    <div id="readingProgress">
+        <div id="readingProgressFill"></div>
+    </div>
+
+    <aside id="sidebar">
+        <button id="pinBtn" type="button">Pin</button>
+        <div class="sidebar-logo">
+            <div class="logo-icon">CSP</div>
+            <div class="logo-copy">
+                <h1>CSP BIG IDEA 3</h1>
+                <p>Algorithms & Programming</p>
+            </div>
+        </div>
+        <div class="search-wrap">
+            <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Big Idea 3</span></button>
+            <div id="sbSearchPanel">
+                <div id="sbSearchInner">
+                    <span style="color:var(--purple);font-size:12px;">⌕</span>
+                    <input id="sbInput" type="text" placeholder="Find concepts, terms, or topics" />
+                </div>
+                <div id="sbResults"></div>
+            </div>
+        </div>
+        <nav id="sidebarNav"></nav>
+        <div class="sidebar-footer"><span class="dot"></span><span>Study Mode Active</span></div>
+    </aside>
+
+    <main id="main">
+        <div class="topbar">
+            <div class="top-actions">
+                <a class="glass-btn" href="apcsp-unit1.html">Big Idea 1</a>
+                <a class="glass-btn" href="apcsp-unit2.html">Big Idea 2</a>
+                <a class="glass-btn" href="apcsp-unit3.html"
+                    style="color:var(--purple);border-color:rgba(155,134,244,.32);">Big Idea 3</a>
+                <a class="glass-btn" href="apcsp-unit4.html">Big Idea 4</a>
+                <a class="glass-btn" href="apcsp-unit5.html">Big Idea 5</a>
+                <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+                <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+                <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+            </div>
+            <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <section class="tab-content active" id="dashboard">
+            <header class="page-header">
+                <span class="unit-tag">Big Idea 3 · Algorithms & Programming</span>
+                <h2>The Logic of Programs</h2>
+                <p>Variables · Control Structures · Lists · Procedures · Algorithms · Efficiency</p>
+            </header>
+            <div class="hero-grid">
+                <article class="card hero-card">
+                    <div class="card-sub">Core Frame</div>
+                    <div class="card-title">What Big Idea 3 Is Really About</div>
+                    <div class="body-copy">
+                        <p>Big Idea 3 is the programming heart of AP CSP. It covers how programs are built: storing data
+                            in <strong class="ap-term">variables</strong>, controlling flow with <strong
+                                class="ap-term">conditionals</strong> and <strong class="ap-term">loops</strong>,
+                            grouping data in <strong class="ap-term">lists</strong>, and packaging logic into reusable
+                            <strong class="ap-term">procedures</strong>.
+                        </p>
+                        <p>Beyond syntax, it also asks deeper questions: what makes an <strong
+                                class="ap-term">algorithm</strong> correct? How do we measure <strong
+                                class="ap-term">efficiency</strong>? And are some problems simply <strong
+                                class="ap-term">unsolvable</strong>?</p>
+                    </div>
+                    <div class="dash-stats">
+                        <div class="stat-box"><span>Study Sections</span><strong>10</strong></div>
+                        <div class="stat-box"><span>Key Concepts</span><strong>9</strong></div>
+                        <div class="stat-box"><span>Quiz Items</span><strong>10</strong></div>
+                    </div>
+                    <div class="focus-callout">
+                        <div class="label">Exam Focus</div>
+                        <div class="body-copy">Be ready to trace pseudocode by hand — follow a loop or conditional step
+                            by step, track variable values, and predict output. The exam tests understanding, not
+                            memorization.</div>
+                    </div>
+                </article>
+                <article class="card feature-card accent-blue">
+                    <div class="card-sub">Fast Review</div>
+                    <div class="card-title">What You Must Be Able To Explain</div>
+                    <ul class="bullet-list">
+                        <li>How <strong class="ap-term">variables</strong> store and update values, including the
+                            assignment statement.</li>
+                        <li>The three building blocks of algorithms: <strong class="ap-term">sequencing</strong>,
+                            <strong class="ap-term">selection</strong>, and <strong class="ap-term">iteration</strong>.
+                        </li>
+                        <li>How <strong class="ap-term">Boolean expressions</strong> (AND, OR, NOT) control conditional
+                            flow.</li>
+                        <li>How <strong class="ap-term">lists</strong> (arrays) store multiple values, accessed by index
+                            (starting at 1 in AP pseudocode).</li>
+                        <li>What <strong class="ap-term">procedural abstraction</strong> is and why parameters make
+                            procedures flexible.</li>
+                        <li>The difference between <strong class="ap-term">linear search</strong> and <strong
+                                class="ap-term">binary search</strong> in efficiency.</li>
+                        <li>Why some problems are <strong class="ap-term">undecidable</strong> — no algorithm can solve
+                            them for all inputs.</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">Variables</span><span class="tag">Conditionals</span><span
+                            class="tag">Loops</span><span class="tag">Lists</span><span
+                            class="tag">Procedures</span><span class="tag">Algorithms</span>
+                    </div>
+                </article>
+            </div>
+            <div class="exam-grid">
+                <article class="exam-card accent-red">
+                    <div class="mini-label">Common Mistakes</div>
+                    <h3>Avoid These</h3>
+                    <ul class="bullet-list">
+                        <li>Confusing <code>x ← x + 1</code> (update x) with <code>x = x + 1</code> math — in code,
+                            assignment replaces the old value.</li>
+                        <li>Thinking lists start at index 0 — AP CSP pseudocode lists start at index <strong
+                                class="ap-term">1</strong>.</li>
+                        <li>Using a binary search on an <em>unsorted</em> list — it only works when data is sorted.</li>
+                        <li>Confusing <strong class="ap-term">REPEAT n TIMES</strong> (fixed count) with <strong
+                                class="ap-term">REPEAT UNTIL</strong> (condition-based) — a REPEAT UNTIL loop with a
+                            never-true condition runs forever.</li>
+                        <li>Assuming more efficient always means faster — efficiency depends on input size and the rate
+                            of growth.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-teal">
+                    <div class="mini-label">Study Strategy</div>
+                    <h3>Best Order To Review</h3>
+                    <ul class="bullet-list">
+                        <li>Start with variables, assignment, and expressions — foundation for everything else.</li>
+                        <li>Master sequencing → selection (IF/ELSE) → iteration (REPEAT loops, FOR EACH).</li>
+                        <li>Practice tracing pseudocode by hand on paper before looking at the answer.</li>
+                        <li>Study lists: indexing, INSERT, APPEND, REMOVE, LENGTH, and traversal patterns.</li>
+                        <li>Nail procedures and parameters — abstraction is the most conceptual part of BI 3.</li>
+                        <li>Finish with algorithm efficiency, linear vs. binary search, and decidability.</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- NOTES -->
+        <section class="tab-content" id="notes">
+            <header class="page-header">
+                <span class="unit-tag">Study Notes</span>
+                <h2>Big Idea 3 Notes Index</h2>
+                <p>Variables · Expressions · Conditionals · Loops · Lists · Procedures · Algorithms · Searching ·
+                    Efficiency · Undecidability</p>
+            </header>
+            <div class="notes-shell">
+                <aside class="notes-index" aria-label="Big Idea 3 notes index">
+                    <div class="notes-index-title">Major Buckets</div>
+                    <button class="note-jump" type="button" data-note-target="n-vars"><span>Variables &
+                            Data</span><span>01</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-expressions"><span>Expressions</span><span>02</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-selection"><span>Selection</span><span>03</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-iteration"><span>Iteration</span><span>04</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-lists"><span>Lists</span><span>05</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-procedures"><span>Procedures</span><span>06</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-algorithms"><span>Algorithms</span><span>07</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-searching"><span>Searching</span><span>08</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-efficiency"><span>Efficiency</span><span>09</span></button>
+                    <button class="note-jump" type="button"
+                        data-note-target="n-undecidable"><span>Undecidability</span><span>10</span></button>
+                </aside>
+                <div class="notes-stack">
+
+                    <article class="note-section accent-purple" id="n-vars">
+                        <div class="mini-label">01 · Variables & Data</div>
+                        <h3>Storing and Updating Values</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">variable</strong> is a named storage location whose value can
+                                change as a program runs. In AP CSP pseudocode, the <strong class="ap-term">assignment
+                                    operator</strong> is ←. The right side is evaluated first, then stored into the
+                                variable on the left.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Assignment</strong>
+                                <div class="body-copy"><code>x ← 5</code> stores 5 in x. <code>x ← x + 1</code> reads
+                                    the current value of x, adds 1, and stores the result back. The old value is
+                                    replaced.</div>
+                            </div>
+                            <div class="mini-note"><strong>Data Types</strong>
+                                <div class="body-copy">Variables can hold numbers (integers and decimals), strings (text
+                                    in quotes), and Booleans (true/false). The type determines what operations are
+                                    valid.</div>
+                            </div>
+                            <div class="mini-note"><strong>String Concatenation</strong>
+                                <div class="body-copy">Joining strings together. Example: "Hello" + " " + "World" →
+                                    "Hello World". Strings and numbers are different — "5" is not the same as 5.</div>
+                            </div>
+                            <div class="mini-note"><strong>Common Error</strong>
+                                <div class="body-copy">Reading <code>x ← x + 1</code> as an equation — it isn't. It's an
+                                    instruction: "calculate x + 1, then store it in x." The old x is gone.</div>
+                            </div>
+                        </div>
+                        <h4>Tracing Variable Changes</h4>
+                        <div class="code-block">x ← 3
+                            y ← x + 2 // y = 5
+                            x ← x * y // x = 3 * 5 = 15
+                            DISPLAY(x) // outputs 15</div>
+                    </article>
+
+                    <article class="note-section accent-blue" id="n-expressions">
+                        <div class="mini-label">02 · Arithmetic & Boolean Expressions</div>
+                        <h3>Evaluating Expressions</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Arithmetic expressions</strong> combine variables, values, and
+                                operators (+, −, *, /) into a number. The <strong class="ap-term">MOD</strong> operator
+                                returns the remainder of division (e.g., 17 MOD 5 = 2). <strong class="ap-term">Boolean
+                                    expressions</strong> evaluate to true or false and are the foundation of all
+                                decision-making in programs.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>MOD Operator</strong>
+                                <div class="body-copy"><code>n MOD 2 = 0</code> means n is even.
+                                    <code>n MOD 2 = 1</code> means n is odd. MOD is used constantly to detect
+                                    divisibility and wrap around values.
+                                </div>
+                            </div>
+                            <div class="mini-note"><strong>Comparison Operators</strong>
+                                <div class="body-copy">= (equal), ≠ (not equal), &lt; (less than), &gt; (greater than),
+                                    ≤, ≥. These return true or false and are used inside IF conditions and REPEAT UNTIL
+                                    loops.</div>
+                            </div>
+                            <div class="mini-note"><strong>AND</strong>
+                                <div class="body-copy">Both conditions must be true for the whole expression to be true.
+                                    If either is false, the result is false.</div>
+                            </div>
+                            <div class="mini-note"><strong>OR</strong>
+                                <div class="body-copy">At least one condition must be true. Only false when both are
+                                    false.</div>
+                            </div>
+                            <div class="mini-note"><strong>NOT</strong>
+                                <div class="body-copy">Flips the Boolean value. NOT true = false; NOT false = true.
+                                </div>
+                            </div>
+                            <div class="mini-note"><strong>Tip</strong>
+                                <div class="body-copy">On the exam, mentally substitute true/false for conditions and
+                                    trace AND/OR/NOT outcomes step by step. Don't guess from intuition.</div>
+                            </div>
+                        </div>
+                        <h4>Truth Table Quick Reference</h4>
+                        <div class="code-block">A=true, B=true → A AND B = true, A OR B = true
+                            A=true, B=false → A AND B = false, A OR B = true
+                            A=false, B=true → A AND B = false, A OR B = true
+                            A=false, B=false → A AND B = false, A OR B = false
+                            NOT true = false, NOT false = true</div>
+                    </article>
+
+                    <article class="note-section accent-orange" id="n-selection">
+                        <div class="mini-label">03 · Selection (Conditionals)</div>
+                        <h3>Making Decisions in Code</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Selection</strong> lets a program choose which block of code to
+                                run based on a Boolean condition. Without selection, programs can only run in a straight
+                                line — no choices. The fundamental structure is IF / ELSE IF / ELSE.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>IF Statement</strong>
+                                <div class="body-copy">Runs its block only when the condition is true. If false, the
+                                    block is skipped entirely.</div>
+                            </div>
+                            <div class="mini-note"><strong>IF / ELSE</strong>
+                                <div class="body-copy">Runs the IF block if true, the ELSE block if false. Exactly one
+                                    of the two blocks executes.</div>
+                            </div>
+                            <div class="mini-note"><strong>Nested Conditionals</strong>
+                                <div class="body-copy">An IF inside another IF. Allows more complex decision trees. Pay
+                                    attention to which ELSE belongs to which IF when tracing nested code.</div>
+                            </div>
+                            <div class="mini-note"><strong>AP Move</strong>
+                                <div class="body-copy">When tracing conditionals, evaluate the condition first — don't
+                                    assume which branch runs. Substitute actual variable values into the Boolean
+                                    expression before deciding.</div>
+                            </div>
+                        </div>
+                        <h4>AP CSP Pseudocode: IF / ELSE</h4>
+                        <div class="code-block">score ← 85
+
+                            IF score >= 90
+                            {
+                            DISPLAY("A")
+                            }
+                            ELSE IF score >= 80
+                            {
+                            DISPLAY("B") // This branch runs: 85 >= 80 is true
+                            }
+                            ELSE
+                            {
+                            DISPLAY("C or below")
+                            }</div>
+                    </article>
+
+                    <article class="note-section accent-teal" id="n-iteration">
+                        <div class="mini-label">04 · Iteration (Loops)</div>
+                        <h3>Repeating Instructions</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Iteration</strong> allows a program to execute the same block of
+                                code multiple times without rewriting it. There are three main loop types in AP CSP
+                                pseudocode: REPEAT n TIMES, REPEAT UNTIL, and FOR EACH.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>REPEAT n TIMES</strong>
+                                <div class="body-copy">Runs the block exactly n times. Use when you know the count in
+                                    advance.</div>
+                            </div>
+                            <div class="mini-note"><strong>REPEAT UNTIL (condition)</strong>
+                                <div class="body-copy">Runs until the condition becomes true. The body runs at least
+                                    once, then checks. Warning: if the condition can never be true, this creates an
+                                    infinite loop.</div>
+                            </div>
+                            <div class="mini-note"><strong>FOR EACH item IN list</strong>
+                                <div class="body-copy">Assigns each element to a temporary variable one at a time and
+                                    runs the block. Ideal for processing every element in a list.</div>
+                            </div>
+                            <div class="mini-note"><strong>Infinite Loop</strong>
+                                <div class="body-copy">When the exit condition is never met, the loop runs forever.
+                                    Common cause: the variable controlling the condition is never updated inside the
+                                    loop.</div>
+                            </div>
+                        </div>
+                        <h4>REPEAT UNTIL: Find Sum</h4>
+                        <div class="code-block">sum ← 0
+                            i ← 1
+
+                            REPEAT UNTIL i > 5
+                            {
+                            sum ← sum + i
+                            i ← i + 1
+                            }
+                            DISPLAY(sum) // outputs 15 (1+2+3+4+5)</div>
+                        <h4>FOR EACH: Find Max in List</h4>
+                        <div class="code-block">nums ← [3, 7, 2, 9, 4]
+                            maxVal ← nums[1]
+
+                            FOR EACH n IN nums
+                            {
+                            IF n > maxVal
+                            {
+                            maxVal ← n
+                            }
+                            }
+                            DISPLAY(maxVal) // outputs 9</div>
+                    </article>
+
+                    <article class="note-section accent-cyan" id="n-lists">
+                        <div class="mini-label">05 · Lists (Arrays)</div>
+                        <h3>Storing Multiple Values</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">list</strong> stores an ordered collection of values in a
+                                single variable. Each value is called an <strong class="ap-term">element</strong>,
+                                accessed by its <strong class="ap-term">index</strong> (position). In AP CSP pseudocode,
+                                <strong class="ap-term">indices start at 1</strong>, not 0.
+                            </p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Index Access</strong>
+                                <div class="body-copy"><code>myList[1]</code> is the first element.
+                                    <code>myList[LENGTH(myList)]</code> is the last. Accessing an index that doesn't
+                                    exist causes an error.
+                                </div>
+                            </div>
+                            <div class="mini-note"><strong>APPEND</strong>
+                                <div class="body-copy"><code>APPEND(myList, value)</code> adds value to the end of the
+                                    list. List length increases by 1.</div>
+                            </div>
+                            <div class="mini-note"><strong>INSERT</strong>
+                                <div class="body-copy"><code>INSERT(myList, i, value)</code> inserts value at index i,
+                                    shifting all elements at and after i one position to the right.</div>
+                            </div>
+                            <div class="mini-note"><strong>REMOVE</strong>
+                                <div class="body-copy"><code>REMOVE(myList, i)</code> deletes the element at index i,
+                                    shifting remaining elements left. List length decreases by 1.</div>
+                            </div>
+                            <div class="mini-note"><strong>LENGTH</strong>
+                                <div class="body-copy"><code>LENGTH(myList)</code> returns the number of elements in the
+                                    list. Use this in loops to avoid hard-coding the count.</div>
+                            </div>
+                            <div class="mini-note"><strong>Traversal</strong>
+                                <div class="body-copy">Iterating over every element in a list. A full traversal visits
+                                    all elements; a partial traversal visits a subset. FOR EACH is the cleanest way to
+                                    traverse.</div>
+                            </div>
+                        </div>
+                        <h4>Computing Average of a List</h4>
+                        <div class="code-block">grades ← [88, 92, 76, 95, 84]
+                            total ← 0
+
+                            FOR EACH g IN grades
+                            {
+                            total ← total + g
+                            }
+
+                            avg ← total / LENGTH(grades)
+                            DISPLAY(avg) // outputs 87</div>
+                    </article>
+
+                    <article class="note-section accent-green" id="n-procedures">
+                        <div class="mini-label">06 · Procedures & Abstraction</div>
+                        <h3>Packaging and Reusing Logic</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">procedure</strong> (also called a function) is a named block of
+                                code that runs only when called. Procedures allow programmers to package logic once and
+                                reuse it throughout a program without rewriting it.</p>
+                            <p><strong class="ap-term">Procedural abstraction</strong> means a caller only needs to
+                                know: the procedure's name, what parameters it takes, and what it returns — not how it
+                                works internally. This hides complexity and reduces errors.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Parameters</strong>
+                                <div class="body-copy">Variables that receive values when a procedure is called (the
+                                    arguments). They allow the same procedure to work with different inputs each time
+                                    it's called.</div>
+                            </div>
+                            <div class="mini-note"><strong>Return Statement</strong>
+                                <div class="body-copy">Sends a value back to the calling code and immediately ends the
+                                    procedure. Not all procedures return a value — some just perform an action.</div>
+                            </div>
+                            <div class="mini-note"><strong>Calling a Procedure</strong>
+                                <div class="body-copy">When called, the program pauses, executes the procedure, then
+                                    continues from where it left off. Arguments are passed to parameters in order.</div>
+                            </div>
+                            <div class="mini-note"><strong>Built-in Procedures</strong>
+                                <div class="body-copy">Pre-written, tested procedures included with the language.
+                                    Examples: DISPLAY, LENGTH, APPEND, RANDOM. You call them without writing the code
+                                    yourself.</div>
+                            </div>
+                            <div class="mini-note"><strong>Libraries & APIs</strong>
+                                <div class="body-copy">A <strong class="ap-term">library</strong> is a collection of
+                                    procedures. An <strong class="ap-term">API</strong> (Application Programming
+                                    Interface) describes what procedures are available and how to call them.</div>
+                            </div>
+                            <div class="mini-note"><strong>Modularity</strong>
+                                <div class="body-copy">Splitting a program into separate, independent procedures — each
+                                    responsible for one thing. Makes programs easier to test, debug, and modify.</div>
+                            </div>
+                        </div>
+                        <h4>Procedure with Parameter and Return</h4>
+                        <div class="code-block">PROCEDURE square(n)
+                            {
+                            RETURN n * n
+                            }
+
+                            result ← square(7)
+                            DISPLAY(result) // outputs 49</div>
+                        <h4>Procedure that Acts (no return)</h4>
+                        <div class="code-block">PROCEDURE greet(name)
+                            {
+                            DISPLAY("Hello, " + name + "!")
+                            }
+
+                            greet("Alex") // outputs: Hello, Alex!</div>
+                    </article>
+
+                    <article class="note-section accent-purple" id="n-algorithms">
+                        <div class="mini-label">07 · Algorithms</div>
+                        <h3>Step-by-Step Problem Solving</h3>
+                        <div class="body-copy">
+                            <p>An <strong class="ap-term">algorithm</strong> is a finite, precise sequence of
+                                instructions that solves a problem or computes a result. Every program implements one or
+                                more algorithms. A correct algorithm must: terminate (not run forever), produce the
+                                correct output for all valid inputs, and handle edge cases.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Sequencing</strong>
+                                <div class="body-copy">Instructions run in order, one after another. The sequence
+                                    matters — swapping steps can change or break the result.</div>
+                            </div>
+                            <div class="mini-note"><strong>Selection</strong>
+                                <div class="body-copy">A decision point (IF/ELSE) that takes one of two or more paths
+                                    based on a condition.</div>
+                            </div>
+                            <div class="mini-note"><strong>Iteration</strong>
+                                <div class="body-copy">A loop that repeats steps. Combined with sequencing and
+                                    selection, these three building blocks can express any computable algorithm.</div>
+                            </div>
+                            <div class="mini-note"><strong>Multiple Correct Algorithms</strong>
+                                <div class="body-copy">Many different algorithms can solve the same problem correctly.
+                                    They may differ in speed, clarity, or resource usage. Correctness and efficiency are
+                                    separate concerns.</div>
+                            </div>
+                            <div class="mini-note"><strong>Logic Error</strong>
+                                <div class="body-copy">The algorithm runs without crashing but produces the wrong
+                                    result. Hard to detect because the program doesn't signal a problem.</div>
+                            </div>
+                            <div class="mini-note"><strong>Debugging</strong>
+                                <div class="body-copy">Techniques: hand tracing (simulating the algorithm manually),
+                                    adding DISPLAY statements, using test cases, and visualizing data flow.</div>
+                            </div>
+                        </div>
+                        <h4>Common Algorithm Patterns</h4>
+                        <div class="code-block">// Find minimum value in a list
+                            list ← [8, 3, 6, 1, 9]
+                            minVal ← list[1]
+
+                            FOR EACH n IN list
+                            {
+                            IF n < minVal { minVal ← n } } DISPLAY(minVal) // outputs 1</div>
+                    </article>
+
+                    <article class="note-section accent-orange" id="n-searching">
+                        <div class="mini-label">08 · Searching Algorithms</div>
+                        <h3>Linear Search vs. Binary Search</h3>
+                        <div class="body-copy">
+                            <p>Searching means finding a specific value (the <strong class="ap-term">target</strong>) in
+                                a dataset, or confirming it isn't there. The two key algorithms are linear search and
+                                binary search — they differ enormously in efficiency.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Linear Search</strong>
+                                <div class="body-copy">Checks each element one by one from the start. Works on any list
+                                    (sorted or not). Worst case: must check every element. Good when: list is small or
+                                    unsorted.</div>
+                            </div>
+                            <div class="mini-note"><strong>Binary Search</strong>
+                                <div class="body-copy">Repeatedly splits a sorted list in half. Compare target to the
+                                    middle element — if target is smaller, search the left half; if larger, search the
+                                    right half. Requires: list must be SORTED first.</div>
+                            </div>
+                            <div class="mini-note"><strong>Efficiency Gap</strong>
+                                <div class="body-copy">Linear search: up to n comparisons for a list of n items. Binary
+                                    search: at most log₂(n) comparisons. For 1,000,000 items — linear needs up to
+                                    1,000,000 checks; binary needs at most 20.</div>
+                            </div>
+                            <div class="mini-note"><strong>Critical Rule</strong>
+                                <div class="body-copy">Binary search ONLY works on a sorted list. Using it on an
+                                    unsorted list produces incorrect results — it will "find" nothing even if the item
+                                    exists.</div>
+                            </div>
+                        </div>
+                        <h4>Binary Search Trace: Find 7 in [1, 3, 5, 7, 9, 11, 13]</h4>
+                        <div class="code-block">List: [1, 3, 5, 7, 9, 11, 13] (7 elements)
+                            Step 1: middle = index 4 → value 7
+                            target (7) = middle (7) → FOUND at index 4</div>
+                        <h4>Binary Search Trace: Find 10 in [2, 5, 8, 12, 16, 23]</h4>
+                        <div class="code-block">Step 1: middle = index 3 → value 8 | 10 > 8 → search right half
+                            Step 2: right half: [12, 16, 23] | middle = 16 | 10 < 16 → search left Step 3: left: [12] |
+                                12 ≠ 10 → NOT FOUND</div>
+                    </article>
+
+                    <article class="note-section accent-red" id="n-efficiency">
+                        <div class="mini-label">09 · Algorithm Efficiency</div>
+                        <h3>Reasonable vs. Unreasonable Time</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Efficiency</strong> is about how an algorithm's runtime grows as
+                                the input size grows. AP CSP distinguishes between <strong class="ap-term">reasonable
+                                    time</strong> (polynomial growth — n, n², n³) and <strong
+                                    class="ap-term">unreasonable time</strong> (exponential growth — 2ⁿ). For large
+                                inputs, unreasonable algorithms become practically unusable.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Reasonable Time</strong>
+                                <div class="body-copy">Runtime grows as a polynomial of input size (n, n², n³). Even n²
+                                    can be acceptable for moderate n. As input grows, time grows at a manageable rate.
+                                </div>
+                            </div>
+                            <div class="mini-note"><strong>Unreasonable Time</strong>
+                                <div class="body-copy">Runtime grows exponentially (2ⁿ, n!). Even for n = 50, 2⁵⁰ is
+                                    over a quadrillion operations — impossible with any computer. These algorithms don't
+                                    scale.</div>
+                            </div>
+                            <div class="mini-note"><strong>Heuristics</strong>
+                                <div class="body-copy">When an exact solution is unreasonably slow, a heuristic finds a
+                                    "good enough" answer quickly. Not guaranteed optimal, but practical. Used for
+                                    problems like the traveling salesman.</div>
+                            </div>
+                            <div class="mini-note"><strong>Parallel Computing</strong>
+                                <div class="body-copy">Running tasks simultaneously on multiple processors. Can speed up
+                                    solutions when tasks are independent. Does NOT make exponential problems polynomial
+                                    — it just reduces the constant.</div>
+                            </div>
+                        </div>
+                        <h4>Growth Rate Comparison</h4>
+                        <div class="code-block">Input n = 10:
+                            n = 10 operations
+                            n² = 100 operations
+                            2ⁿ = 1,024 operations
+
+                            Input n = 50:
+                            n = 50 operations
+                            n² = 2,500 operations
+                            2ⁿ = 1,125,899,906,842,624 operations (impossible!)</div>
+                    </article>
+
+                    <article class="note-section accent-teal" id="n-undecidable">
+                        <div class="mini-label">10 · Undecidability & Limits</div>
+                        <h3>Problems Algorithms Cannot Solve</h3>
+                        <div class="body-copy">
+                            <p>Not every problem has an algorithmic solution. A problem is <strong
+                                    class="ap-term">decidable</strong> if an algorithm can always answer yes or no for
+                                every possible input. A problem is <strong class="ap-term">undecidable</strong> if no
+                                algorithm can correctly answer yes or no for all inputs — proven by logic, not just a
+                                matter of not yet finding the right algorithm.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>The Halting Problem</strong>
+                                <div class="body-copy">Given a program and its input, will it halt (finish), or run
+                                    forever? Proven to be undecidable — no algorithm can correctly answer this for every
+                                    program/input combination. This is the canonical undecidable problem on the AP exam.
+                                </div>
+                            </div>
+                            <div class="mini-note"><strong>Undecidable ≠ Unsolvable for All Cases</strong>
+                                <div class="body-copy">An undecidable problem may be solvable for specific inputs — it
+                                    just can't be solved for ALL inputs by any single algorithm.</div>
+                            </div>
+                            <div class="mini-note"><strong>Implications</strong>
+                                <div class="body-copy">These limits exist for all computers — no increase in computing
+                                    power changes them. They're mathematical limits, not engineering limits. Even a
+                                    theoretically perfect computer cannot solve undecidable problems.</div>
+                            </div>
+                            <div class="mini-note"><strong>AP Move</strong>
+                                <div class="body-copy">When asked about undecidability: state that no algorithm exists
+                                    that always gives the correct answer for all inputs, and cite the halting problem as
+                                    the key example. Never say "we just haven't found it yet."</div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div><!-- /notes-stack -->
+            </div><!-- /notes-shell -->
+        </section>
+
+        <!-- GLOSSARY -->
+        <section class="tab-content" id="glossary">
+            <header class="page-header">
+                <span class="unit-tag">Glossary</span>
+                <h2>Big Idea 3 Key Terms</h2>
+                <p>Search and filter all vocabulary for this unit</p>
+            </header>
+            <div class="glossary-toolbar">
+                <input id="glossaryFilter" type="text" placeholder="Filter terms…" />
+            </div>
+            <div class="glossary-grid" id="glossaryGrid"></div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="tab-content" id="flashcards">
+            <header class="page-header">
+                <span class="unit-tag">Flashcards</span>
+                <h2>Big Idea 3 Flashcards</h2>
+                <p>Click any card to reveal the answer</p>
+            </header>
+            <div class="flash-grid" id="flashGrid"></div>
+        </section>
+
+        <!-- EXAM PREP -->
+        <section class="tab-content" id="examprep">
+            <header class="page-header">
+                <span class="unit-tag">Exam Prep</span>
+                <h2>AP Exam Strategies</h2>
+                <p>High-yield patterns and common traps for Big Idea 3</p>
+            </header>
+            <div class="exam-grid">
+                <article class="exam-card accent-purple">
+                    <div class="mini-label">Variables & Expressions</div>
+                    <h3>Tracing Variable State</h3>
+                    <ul class="bullet-list">
+                        <li>Always evaluate the right side of ← before storing into the variable.</li>
+                        <li><code>x ← x + 1</code> adds 1 to x and saves it; x's old value is gone.</li>
+                        <li>MOD returns the remainder: 17 MOD 5 = 2; use to test even/odd (n MOD 2).</li>
+                        <li>Trace code in a table: one column per variable, one row per step.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-orange">
+                    <div class="mini-label">Boolean Logic</div>
+                    <h3>AND / OR / NOT Rules</h3>
+                    <ul class="bullet-list">
+                        <li>AND: both must be true. Any false → result is false.</li>
+                        <li>OR: at least one must be true. Both false → result is false.</li>
+                        <li>NOT: flips the Boolean. NOT (x > 5) is the same as x ≤ 5.</li>
+                        <li>Substitute concrete values before evaluating compound expressions.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-blue">
+                    <div class="mini-label">Loops</div>
+                    <h3>REPEAT vs. FOR EACH</h3>
+                    <ul class="bullet-list">
+                        <li>REPEAT n TIMES → use when count is known ahead of time.</li>
+                        <li>REPEAT UNTIL (condition) → use when you stop on a condition; runs at least once.</li>
+                        <li>FOR EACH item IN list → cleanest way to process every element.</li>
+                        <li>Infinite loop = condition never becomes true → update variables inside the loop!</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-cyan">
+                    <div class="mini-label">Lists</div>
+                    <h3>Index Rules & Operations</h3>
+                    <ul class="bullet-list">
+                        <li>AP CSP lists are 1-indexed: first element is at index 1, not 0.</li>
+                        <li>APPEND adds to the end; INSERT shifts elements right from the target index.</li>
+                        <li>REMOVE shifts elements left; list shrinks by 1.</li>
+                        <li>LENGTH(list) is the safest way to reference the last element: list[LENGTH(list)].</li>
+                        <li>Accessing an out-of-range index causes a run-time error.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-green">
+                    <div class="mini-label">Procedures</div>
+                    <h3>Abstraction & Parameters</h3>
+                    <ul class="bullet-list">
+                        <li>To use a procedure, you only need name + parameters + return type — not the internal code.
+                        </li>
+                        <li>Arguments (at the call) map to parameters (in the definition) in order.</li>
+                        <li>RETURN sends a value back and immediately ends the procedure.</li>
+                        <li>Modularity: one procedure, one job. Easier to test and debug independently.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-red">
+                    <div class="mini-label">Search & Efficiency</div>
+                    <h3>Linear vs. Binary</h3>
+                    <ul class="bullet-list">
+                        <li>Linear search: O(n) worst case — works on any list.</li>
+                        <li>Binary search: O(log n) — only works on a sorted list.</li>
+                        <li>Undecidable problems (like the Halting Problem) cannot be solved by any algorithm for all
+                            inputs — this is a mathematical limit, not a hardware limit.</li>
+                        <li>Reasonable time = polynomial (n, n²). Unreasonable = exponential (2ⁿ).</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- QUIZ MODAL -->
+        <div class="modal" id="quizModal">
+            <div class="modal-box">
+                <div class="modal-title">Big Idea 3 Quiz</div>
+                <button class="modal-close" data-close="quizModal" type="button">✕ Close</button>
+                <div id="quizMount"></div>
+            </div>
+        </div>
+
+        <!-- ESSAY MODAL -->
+        <div class="modal" id="essayModal">
+            <div class="modal-box">
+                <div class="modal-title">Prompt Bank</div>
+                <button class="modal-close" data-close="essayModal" type="button">✕ Close</button>
+                <div class="essay-list" id="essayTopics"></div>
+                <div class="essay-outline" id="essayOutline"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const tabs = [
+            { id: "dashboard", icon: "◈", label: "Dashboard", ambient: "radial-gradient(ellipse at 60% 10%, rgba(155,134,244,.14), transparent 65%)" },
+            { id: "notes", icon: "≡", label: "Notes", ambient: "radial-gradient(ellipse at 30% 20%, rgba(91,143,212,.12), transparent 65%)" },
+            { id: "glossary", icon: "⊞", label: "Glossary", ambient: "radial-gradient(ellipse at 70% 30%, rgba(242,135,73,.10), transparent 65%)" },
+            { id: "flashcards", icon: "⧉", label: "Flashcards", ambient: "radial-gradient(ellipse at 50% 50%, rgba(62,184,154,.10), transparent 65%)" },
+            { id: "examprep", icon: "◎", label: "Exam Prep", ambient: "radial-gradient(ellipse at 40% 10%, rgba(217,95,95,.10), transparent 65%)" },
+        ];
+
+        const glossaryTerms = [
+            { tab: "notes", term: "Variable", def: "A named storage location in a program whose value can change as the program runs. Stores numbers, strings, Booleans, or lists." },
+            { tab: "notes", term: "Assignment (←)", def: "The AP CSP pseudocode operator that stores a value into a variable. The right side is evaluated first, then stored into the variable on the left." },
+            { tab: "notes", term: "Data Type", def: "The kind of value a variable can hold: integer, floating-point number, string (text), or Boolean (true/false). The type determines valid operations." },
+            { tab: "notes", term: "MOD Operator", def: "Returns the remainder after integer division. Example: 17 MOD 5 = 2. Commonly used to test even/odd (n MOD 2 = 0 means even)." },
+            { tab: "notes", term: "String Concatenation", def: "Joining two or more strings into one. Example: 'Hello' + ' ' + 'World' = 'Hello World'." },
+            { tab: "notes", term: "Boolean Expression", def: "An expression that evaluates to either true or false. Used in IF conditions and REPEAT UNTIL loops. Formed with comparison operators and AND, OR, NOT." },
+            { tab: "notes", term: "AND", def: "A Boolean operator that returns true only when both operands are true. If either operand is false, the result is false." },
+            { tab: "notes", term: "OR", def: "A Boolean operator that returns true when at least one operand is true. Returns false only when both operands are false." },
+            { tab: "notes", term: "NOT", def: "A Boolean operator that reverses the truth value of its operand. NOT true = false; NOT false = true." },
+            { tab: "notes", term: "Sequencing", def: "One of the three building blocks of algorithms. Instructions execute in order, one after another. The sequence matters — changing the order can change the result." },
+            { tab: "notes", term: "Selection", def: "One of the three building blocks of algorithms. A conditional (IF/ELSE) that chooses which block of code to run based on a Boolean condition." },
+            { tab: "notes", term: "Iteration", def: "One of the three building blocks of algorithms. A loop that repeats a block of instructions a set number of times or until a condition is met." },
+            { tab: "notes", term: "REPEAT n TIMES", def: "A loop that executes its block exactly n times. Use when the iteration count is known in advance." },
+            { tab: "notes", term: "REPEAT UNTIL (condition)", def: "A loop that continues until its condition becomes true. The body executes at least once. If the condition never becomes true, the loop runs forever (infinite loop)." },
+            { tab: "notes", term: "FOR EACH item IN list", def: "A loop that iterates over every element in a list, assigning each element to the variable 'item' in turn. The cleanest way to process all elements." },
+            { tab: "notes", term: "Infinite Loop", def: "A loop whose exit condition never becomes true, so it runs forever. Common cause: failing to update the variable that controls the condition inside the loop." },
+            { tab: "notes", term: "List (Array)", def: "A data structure that stores an ordered collection of values in a single variable. Each value (element) is accessed by its index position." },
+            { tab: "notes", term: "Index", def: "A position in a list. In AP CSP pseudocode, lists are 1-indexed: the first element is at index 1. Accessing an out-of-range index causes a run-time error." },
+            { tab: "notes", term: "APPEND", def: "Adds a value to the end of a list. The list's length increases by 1. Syntax: APPEND(list, value)." },
+            { tab: "notes", term: "INSERT", def: "Inserts a value at a specific index in a list, shifting elements at that index and beyond one position to the right. Syntax: INSERT(list, index, value)." },
+            { tab: "notes", term: "REMOVE", def: "Deletes the element at a specific index from a list, shifting remaining elements left. The list's length decreases by 1. Syntax: REMOVE(list, index)." },
+            { tab: "notes", term: "LENGTH", def: "Returns the number of elements in a list. Syntax: LENGTH(list). Use LENGTH(list) to safely access the last element without hard-coding the count." },
+            { tab: "notes", term: "Traversal", def: "Iterating over elements in a list. A full traversal visits every element; a partial traversal visits a subset. FOR EACH performs a full traversal." },
+            { tab: "notes", term: "Procedure (Function)", def: "A named block of code that runs only when called. Allows logic to be written once and reused throughout a program." },
+            { tab: "notes", term: "Parameter", def: "A variable in a procedure definition that receives the argument value when the procedure is called. Makes procedures flexible — the same procedure can work with different inputs." },
+            { tab: "notes", term: "Argument", def: "The actual value passed to a procedure when it is called. Maps to the corresponding parameter in the procedure definition." },
+            { tab: "notes", term: "Return Statement", def: "Sends a value back to the calling code and immediately ends the procedure. Not all procedures have a return statement." },
+            { tab: "notes", term: "Procedural Abstraction", def: "Using a procedure by knowing only its name, parameters, and return value — without needing to know its internal implementation. Hides complexity." },
+            { tab: "notes", term: "Library", def: "A collection of pre-written, tested procedures that programmers can call in their own programs without implementing them from scratch." },
+            { tab: "notes", term: "API", def: "Application Programming Interface. A description of a library's available procedures, their parameters, and return values. Tells you how to use procedures without exposing their code." },
+            { tab: "notes", term: "Modularity", def: "Dividing a program into separate, independent procedures where each handles one specific task. Improves readability, testing, and maintenance." },
+            { tab: "notes", term: "Algorithm", def: "A finite, precise, step-by-step sequence of instructions that solves a problem or computes a result. Every program implements one or more algorithms." },
+            { tab: "notes", term: "Logic Error", def: "A mistake in an algorithm or program that causes it to produce incorrect results without crashing. Hard to detect because the program runs normally." },
+            { tab: "notes", term: "Syntax Error", def: "A mistake where the program violates the rules of the programming language. The program cannot run until the syntax error is fixed." },
+            { tab: "notes", term: "Run-time Error", def: "An error that occurs while the program is running, such as accessing an invalid list index or dividing by zero." },
+            { tab: "notes", term: "Linear Search", def: "A searching algorithm that checks each element one by one from the start until the target is found or all elements are checked. Works on any list (sorted or unsorted). Worst case: n comparisons." },
+            { tab: "notes", term: "Binary Search", def: "A searching algorithm that repeatedly splits a sorted list in half to find a target. Requires a sorted list. Much more efficient than linear search: at most log₂(n) comparisons." },
+            { tab: "notes", term: "Reasonable Time", def: "An algorithm whose runtime grows as a polynomial function of input size (n, n², n³). Considered practically usable for large inputs." },
+            { tab: "notes", term: "Unreasonable Time", def: "An algorithm whose runtime grows exponentially (2ⁿ, n!). Becomes practically unusable very quickly as input size grows." },
+            { tab: "notes", term: "Heuristic", def: "An approach to a problem that finds a 'good enough' solution quickly when an exact solution would take unreasonably long. Not guaranteed to be optimal." },
+            { tab: "notes", term: "Decidable Problem", def: "A problem for which an algorithm exists that always correctly answers yes or no for every possible input." },
+            { tab: "notes", term: "Undecidable Problem", def: "A problem for which no algorithm can correctly answer yes or no for all possible inputs. The Halting Problem is the canonical example. This is a mathematical limit, not a hardware limit." },
+            { tab: "notes", term: "Halting Problem", def: "The question of whether a given program with a given input will eventually halt or run forever. Proven to be undecidable — no algorithm can correctly answer this for all program/input pairs." },
+        ];
+
+        const flashcards = [
+            { front: "What does x ← x + 1 do?", back: "Reads the current value of x, adds 1 to it, and stores the result back into x. The old value of x is overwritten. It is not a mathematical equation — it is an assignment instruction." },
+            { front: "What is the MOD operator and what is it typically used for?", back: "MOD returns the remainder after integer division. Example: 17 MOD 5 = 2. Most commonly used to test if a number is even (n MOD 2 = 0) or odd (n MOD 2 = 1)." },
+            { front: "What are the three building blocks of algorithms?", back: "Sequencing (instructions in order), Selection (IF/ELSE decisions based on a Boolean), and Iteration (loops that repeat instructions). Every algorithm is built from combinations of these three." },
+            { front: "What is the difference between REPEAT n TIMES and REPEAT UNTIL?", back: "REPEAT n TIMES runs the block exactly n times (count is fixed). REPEAT UNTIL runs until a condition becomes true — the body runs at least once. If the condition never becomes true, the loop runs forever (infinite loop)." },
+            { front: "In AP CSP pseudocode, what index does a list start at?", back: "Index 1. The first element of myList is myList[1], not myList[0]. Accessing an index outside the list's range causes a run-time error." },
+            { front: "What is the difference between APPEND and INSERT for lists?", back: "APPEND(list, value) adds value to the end of the list. INSERT(list, i, value) inserts value at index i, shifting all elements at and after i one position to the right." },
+            { front: "What is procedural abstraction?", back: "Using a procedure by knowing only its name, parameters, and return value — without needing to understand how it works internally. Abstraction hides complexity so callers can use procedures as black boxes." },
+            { front: "What is the difference between a parameter and an argument?", back: "A parameter is the variable name in the procedure definition that receives a value. An argument is the actual value passed to the procedure when it is called. Arguments map to parameters in order." },
+            { front: "When can binary search NOT be used?", back: "Binary search requires the list to be sorted. Using it on an unsorted list produces incorrect results — it may report 'not found' even when the target exists." },
+            { front: "How many comparisons does binary search need for 1,000,000 elements?", back: "At most log₂(1,000,000) ≈ 20 comparisons. Compare this to linear search, which may need up to 1,000,000 comparisons. Binary search's efficiency comes from halving the search space each step." },
+            { front: "What is the difference between reasonable and unreasonable time complexity?", back: "Reasonable: runtime grows as a polynomial (n, n², n³) — practical for large inputs. Unreasonable: runtime grows exponentially (2ⁿ, n!) — becomes impossibly slow even for moderate n." },
+            { front: "What is the Halting Problem and why is it undecidable?", back: "The Halting Problem asks: given any program and input, will the program halt or run forever? It is undecidable because Alan Turing proved that no algorithm can correctly answer this for all possible program/input combinations. This is a mathematical limit — no computer, however powerful, can solve it." },
+        ];
+
+        const quizQuestions = [
+            {
+                question: "What is the value of x after this code runs?\n\nx ← 4\ny ← x + 3\nx ← y * 2",
+                options: ["4", "7", "14", "11"],
+                correct: 2,
+                explanation: "Step by step: x = 4, then y = 4 + 3 = 7, then x = 7 * 2 = 14. Always evaluate the right side before storing. x's old value of 4 is gone after the last assignment."
+            },
+            {
+                question: "Which of the following Boolean expressions is TRUE when x = 6?",
+                options: ["x > 10 AND x MOD 2 = 0", "x > 10 OR x MOD 2 = 0", "NOT (x > 5) AND x = 6", "x < 5 OR x MOD 3 = 0"],
+                correct: 1,
+                explanation: "x > 10 is false, but x MOD 2 = 0 is true (6 is even). With OR, only one needs to be true. So 'false OR true' = true. Option A fails because AND requires both to be true."
+            },
+            {
+                question: "A REPEAT UNTIL loop contains the condition (count > 10). Inside the loop, count is never changed. What happens?",
+                options: ["The loop runs exactly 10 times", "The loop never runs", "The loop runs infinitely", "The loop runs once and stops"],
+                correct: 2,
+                explanation: "If count never changes inside the loop, the condition (count > 10) can never become true. The loop runs forever — an infinite loop. This is a classic bug: the exit condition must eventually become true."
+            },
+            {
+                question: "A list is defined as nums ← [5, 3, 8, 1, 6]. What is nums[3]?",
+                options: ["3", "8", "1", "5"],
+                correct: 1,
+                explanation: "AP CSP lists are 1-indexed. Index 1 = 5, index 2 = 3, index 3 = 8. The answer is 8."
+            },
+            {
+                question: "After REMOVE(nums, 2) is called on nums ← [10, 20, 30, 40], what does nums look like?",
+                options: ["[10, 30, 40]", "[10, 20, 40]", "[20, 30, 40]", "[10, 20, 30]"],
+                correct: 0,
+                explanation: "REMOVE(nums, 2) deletes the element at index 2, which is 20. The remaining elements shift left: [10, 30, 40]. The list's length decreases from 4 to 3."
+            },
+            {
+                question: "A procedure is defined as PROCEDURE double(n) { RETURN n * 2 }. What does double(7) return?",
+                options: ["7", "2", "14", "49"],
+                correct: 2,
+                explanation: "The argument 7 is passed to parameter n. The procedure computes n * 2 = 7 * 2 = 14 and returns it."
+            },
+            {
+                question: "Which searching algorithm requires the data to be sorted before it can be used correctly?",
+                options: ["Linear search", "Sequential search", "Binary search", "Traversal search"],
+                correct: 2,
+                explanation: "Binary search divides the list in half repeatedly, which only works correctly when the list is sorted. Linear search checks elements one by one and works on any list regardless of order."
+            },
+            {
+                question: "A list has 64 elements. What is the maximum number of comparisons binary search would need in the worst case?",
+                options: ["6", "8", "32", "64"],
+                correct: 0,
+                explanation: "Binary search needs at most log₂(n) comparisons. log₂(64) = 6. Each step halves the search space: 64 → 32 → 16 → 8 → 4 → 2 → 1, requiring at most 6 comparisons."
+            },
+            {
+                question: "Which of the following represents an algorithm running in unreasonable time?",
+                options: ["Checking every pair in a list of n items: n² steps", "Adding up n numbers: n steps", "An algorithm that takes 2ⁿ steps for n items", "Splitting a list in half repeatedly: log₂(n) steps"],
+                correct: 2,
+                explanation: "2ⁿ is exponential growth — unreasonable time. For n = 50, that's over a quadrillion steps. The other options (n², n, log n) are all polynomial — considered reasonable time."
+            },
+            {
+                question: "What is the Halting Problem, and why is it significant?",
+                options: ["A loop that runs too long; solved by adding a timeout", "An algorithm that determines if any program will halt; proven to be decidable", "An algorithm that determines if any program will halt; proven to be undecidable", "A problem caused by infinite loops; fixed by better compilers"],
+                correct: 2,
+                explanation: "The Halting Problem asks whether any given program will halt or run forever for a given input. Alan Turing proved that no algorithm can correctly answer this for all inputs — it is undecidable. This is a fundamental mathematical limit that no amount of computing power can overcome."
+            },
+        ];
+
+        const essayOutlines = [
+            {
+                label: "Explain the difference between REPEAT n TIMES and REPEAT UNTIL, and when each should be used",
+                blocks: [
+                    ["Claim", "REPEAT n TIMES and REPEAT UNTIL serve different use cases: the first when the count is known, the second when termination depends on a condition being met."],
+                    ["Evidence", "REPEAT n TIMES executes its block a fixed number of times — the count cannot change during execution. REPEAT UNTIL checks a Boolean condition after each iteration and continues until it's true, making it suitable for variable-length tasks like reading input until the user is done."],
+                    ["Reasoning", "Using REPEAT UNTIL when you intended a fixed count can cause an infinite loop if the condition variable is never updated. Using REPEAT n TIMES when the count is data-dependent (like searching until something is found) requires calculating n in advance, which may be impossible."],
+                    ["Application", "On the Create PT, justify your loop choice in your written responses. If your loop count depends on a condition rather than a fixed number, REPEAT UNTIL is the appropriate structure."]
+                ]
+            },
+            {
+                label: "Explain why binary search is more efficient than linear search, including any requirements",
+                blocks: [
+                    ["Claim", "Binary search is dramatically more efficient than linear search for large datasets, but it requires data to be sorted."],
+                    ["Evidence", "Linear search checks each element one by one — up to n comparisons for a list of n elements. Binary search eliminates half the remaining elements with each comparison, requiring at most log₂(n) comparisons. For 1,000,000 items: linear = up to 1,000,000 checks; binary = at most 20."],
+                    ["Reasoning", "Because binary search exploits the sorted order to make a directional decision (search left or right half) at each step, the search space shrinks exponentially. Without sorting, this decision cannot be made correctly — binary search may miss elements that exist."],
+                    ["Tradeoff", "The cost of sorting must be included when comparing overall efficiency. For a one-time search on unsorted data, linear search may be the better choice. For repeated searches, sorting first and using binary search pays off quickly."]
+                ]
+            },
+            {
+                label: "Explain what procedural abstraction is and why it is useful in program design",
+                blocks: [
+                    ["Claim", "Procedural abstraction hides the implementation details of a procedure from its callers, allowing programs to be built from reusable, understandable components."],
+                    ["Evidence", "A caller only needs to know a procedure's name, parameters, and return value — not how it works internally. Built-in procedures like APPEND and LENGTH exemplify this: programmers use them without knowing their source code."],
+                    ["Reasoning", "By hiding complexity, abstraction reduces the mental load on programmers. It also enables division of labor — different team members can write and test separate procedures. If the implementation changes, callers don't need to change as long as the interface stays the same."],
+                    ["Link", "The Create Performance Task requires students to use procedural abstraction — define a procedure with a parameter and call it. The written response must explain how the abstraction manages complexity."]
+                ]
+            },
+            {
+                label: "Explain what it means for a problem to be undecidable, using the Halting Problem as an example",
+                blocks: [
+                    ["Claim", "An undecidable problem is one for which no algorithm can correctly determine yes or no for every possible input — a mathematical limit independent of computing power."],
+                    ["Evidence", "The Halting Problem asks: given any program and any input, will the program eventually halt or run forever? Alan Turing proved in 1936 that no algorithm can answer this correctly for all program/input combinations."],
+                    ["Reasoning", "The proof works by contradiction: assume a halting-detector exists, then construct a program that does the opposite of what the detector predicts — creating a logical impossibility. This shows that the assumption of a halting-detector must be false."],
+                    ["Significance", "Undecidability is not a hardware limitation. Even a hypothetically perfect computer cannot solve an undecidable problem. This matters for software development: tools that claim to detect all infinite loops are provably impossible to build perfectly."]
+                ]
+            }
+        ];
+
+        const nav = document.getElementById("sidebarNav");
+        const ambientOverlay = document.getElementById("ambientOverlay");
+        const mainEl = document.getElementById("main");
+        const cursor = document.getElementById("cursor");
+        const pinBtn = document.getElementById("pinBtn");
+        const sidebar = document.getElementById("sidebar");
+        const apToggleBtn = document.getElementById("apToggleBtn");
+        const bestScoreEl = document.getElementById("bestScore");
+        let currentTab = "dashboard";
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizLocked = false;
+
+        function renderNav() {
+            nav.innerHTML = tabs.map(tab => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>`).join("");
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === tabId));
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) ambientOverlay.style.background = tab.ambient;
+            mainEl.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function renderGlossary(filter = "") {
+            const val = filter.toLowerCase().trim();
+            const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(val) || t.def.toLowerCase().includes(val));
+            document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+        }
+
+        function renderFlashcards() {
+            document.getElementById("flashGrid").innerHTML = flashcards.map(card => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${card.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${card.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+        }
+
+        function renderEssayTopics() {
+            document.getElementById("essayTopics").innerHTML = essayOutlines.map((o, i) =>
+                `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+            document.getElementById("essayOutline").classList.remove("show");
+            document.getElementById("essayOutline").innerHTML = "";
+        }
+
+        function selectEssay(index) {
+            document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === index));
+            const outline = essayOutlines[index];
+            document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) =>
+                `<div class="essay-block"><div class="essay-block-label">${label}</div><div class="essay-block-body">${body}</div></div>`).join("");
+            document.getElementById("essayOutline").classList.add("show");
+        }
+
+        function renderQuizQuestion() {
+            const quizMount = document.getElementById("quizMount");
+            const q = quizQuestions[quizIndex];
+            if (!q) {
+                const pct = Math.round((quizScore / quizQuestions.length) * 100);
+                const prevBest = Number(localStorage.getItem("apcsp_bi3_best") || 0);
+                const best = Math.max(prevBest, pct);
+                localStorage.setItem("apcsp_bi3_best", String(best));
+                bestScoreEl.textContent = best + "%";
+                quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review variable tracing, list indexing, loop behavior, and binary search requirements if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+                return;
+            }
+            quizLocked = false;
+            quizMount.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question.replace(/\n/g, '<br>')}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add("open"); }
+        function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+        function initBestScore() { const best = localStorage.getItem("apcsp_bi3_best"); bestScoreEl.textContent = best ? best + "%" : "--"; }
+
+        renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+        document.addEventListener("mousemove", e => {
+            if (!window.matchMedia("(pointer:fine)").matches) return;
+            cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+        });
+        document.addEventListener("mouseover", e => {
+            if (!window.matchMedia("(pointer:fine)").matches) return;
+            const interactive = e.target.closest("button, a, .flash-card, .glossary-card");
+            cursor.style.width = interactive ? "20px" : "12px";
+            cursor.style.height = interactive ? "20px" : "12px";
+        });
+
+        pinBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned");
+            pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+        });
+        nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+        document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => {
+            const t = document.getElementById(b.dataset.noteTarget); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+        }));
+        document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+        document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+
+        document.getElementById("openSearch").addEventListener("click", () => {
+            const panel = document.getElementById("sbSearchPanel");
+            panel.classList.toggle("open");
+            if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+        });
+        document.getElementById("sbInput").addEventListener("input", e => {
+            const query = e.target.value.toLowerCase().trim();
+            const matches = glossaryTerms.filter(t => t.term.toLowerCase().includes(query) || t.def.toLowerCase().includes(query)).slice(0, 8);
+            document.getElementById("sbResults").innerHTML = matches.length
+                ? matches.map(item => `<div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}"><div class="sb-result-tab">${item.tab}</div><div class="sb-result-term">${item.term}</div><div class="sb-result-snip">${item.def}</div></div>`).join("")
+                : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+        });
+        document.getElementById("sbResults").addEventListener("click", e => {
+            const result = e.target.closest(".sb-result"); if (!result || !result.dataset.targetTab) return;
+            switchTab(result.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+            document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+            if (result.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = result.dataset.targetTerm; renderGlossary(result.dataset.targetTerm); }
+        });
+        document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+        apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+        document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+        document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+        document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
+        document.getElementById("quizMount").addEventListener("click", e => {
+            const option = e.target.closest(".quiz-option");
+            if (option && !quizLocked) {
+                quizLocked = true;
+                const q = quizQuestions[quizIndex]; const selected = Number(option.dataset.optionIndex);
+                document.querySelectorAll(".quiz-option").forEach((btn, i) => { if (i === q.correct) btn.classList.add("correct"); if (i === selected && selected !== q.correct) btn.classList.add("wrong"); });
+                if (selected === q.correct) quizScore++;
+                document.getElementById("quizFeedback").textContent = q.explanation;
+                document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+            }
+            if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+            if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+        });
+        document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+        document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+        mainEl.addEventListener("scroll", () => {
+            const max = mainEl.scrollHeight - mainEl.clientHeight;
+            const pct = max > 0 ? (mainEl.scrollTop / max) * 100 : 0;
+            document.getElementById("readingProgressFill").style.width = pct + "%";
+        });
+    </script>
+</body>
+
+</html>
