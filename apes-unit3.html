@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 3: Populations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0800;
+      --card: #180e02;
+      --card2: #1f1405;
+      --border: rgba(255,255,255,.055);
+      --text: #f0e2c8;
+      --muted: #7a5c38;
+      --g: #e8924a;
+      --g2: #d4a843;
+      --g3: #e86b3a;
+      --gold: #f0c060;
+      --blue: #6abed4;
+      --red: #d95f5f;
+      --teal: #4abca8;
+      --accent: #e8924a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(232,146,74,.010) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,146,74,.010) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+      pointer-events: none; z-index: 1;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .22; pointer-events: none; z-index: 1;
+    }
+
+    #cursor {
+      position: fixed; width: 12px; height: 12px;
+      border-radius: 50%; background: var(--g);
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      mix-blend-mode: difference;
+      transition: width .2s, height .2s;
+    }
+
+    #readingProgress { position: fixed; top: 0; left: 72px; right: 0; height: 2px; z-index: 100; }
+    #readingProgressFill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--g), var(--g2)); }
+
+    #ambientOverlay {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 55% 15%, rgba(232,146,74,.09), transparent 65%);
+      opacity: .14; pointer-events: none;
+      transition: background 1s ease, opacity .25s ease; z-index: 0;
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 72px; height: 100vh; flex-shrink: 0;
+      background: rgba(12,6,0,.90);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden; position: relative; z-index: 10;
+      transition: width .4s cubic-bezier(.23,1,.32,1);
+    }
+    #sidebar:hover, #sidebar.pinned { width: 264px; }
+
+    #pinBtn {
+      position: absolute; top: 12px; right: 10px;
+      padding: 4px 7px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent; color: var(--muted);
+      font: inherit; font-size: 8px; letter-spacing: .08em;
+      opacity: 0; cursor: none;
+      transition: opacity .25s, color .2s, border-color .2s;
+    }
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+    #pinBtn.pinned { color: var(--g); border-color: rgba(232,146,74,.24); }
+
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .logo-icon {
+      width: 36px; height: 36px; display: grid; place-items: center;
+      border-radius: 10px; border: 1px solid rgba(232,146,74,.22);
+      background: rgba(232,146,74,.07); color: var(--g); flex-shrink: 0;
+      font-family: 'Cinzel', serif; font-size: 9px; font-weight: 700;
+    }
+    .logo-copy { opacity: 0; transition: opacity .25s; }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+    .logo-copy h1 { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .22em; color: var(--g); }
+    .logo-copy p { color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; margin-top: 3px; }
+
+    .search-wrap { position: relative; padding: 10px; }
+    .sb-search-trigger {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(255,255,255,.02); color: var(--muted); cursor: none;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'DM Mono', monospace; font-size: 10px;
+    }
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger { opacity: 1; pointer-events: auto; }
+    .sb-search-trigger:hover { border-color: rgba(232,146,74,.2); }
+
+    #sbSearchPanel {
+      position: absolute; top: calc(100% - 4px); left: 10px; right: 10px;
+      border: 1px solid rgba(232,146,74,.18); background: rgba(12,6,0,.98);
+      border-radius: 12px; overflow: hidden;
+      opacity: 0; pointer-events: none; transform: translateY(-8px);
+      transition: opacity .22s, transform .22s; z-index: 80;
+      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+    }
+    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    #sbSearchInner { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.05); }
+    #sbInput { flex: 1; border: none; background: transparent; color: var(--text); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; outline: none; cursor: none; }
+    #sbResults { max-height: 280px; overflow: auto; }
+    .sb-result { padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,.04); cursor: none; transition: background .15s; }
+    .sb-result:hover { background: rgba(232,146,74,.06); }
+    .sb-result:last-child { border-bottom: none; }
+    .sb-result-tab { font-size: 8px; color: var(--g); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+    .sb-result-term { font-family: 'Cinzel', serif; font-size: 13px; color: white; letter-spacing: .04em; }
+    .sb-result-snip { font-family: 'Crimson Pro', serif; font-size: 12px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+
+    nav { height: calc(100vh - 176px); padding: 0 10px 14px; overflow: auto; }
+    .nav-btn {
+      width: 100%; display: flex; align-items: center; gap: 14px;
+      padding: 10px 14px; border: none; border-radius: 10px;
+      background: transparent; color: var(--muted);
+      cursor: none; white-space: nowrap;
+      transition: background .2s, color .2s; position: relative;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.025); color: #d4a878; }
+    .nav-btn.active { background: rgba(232,146,74,.07); color: var(--g); }
+    .nav-btn.active .nav-indicator { opacity: 1; }
+    .nav-indicator { position: absolute; left: 0; width: 2px; height: 24px; background: var(--g); border-radius: 5px; opacity: 0; }
+    .nav-icon { font-size: 14px; flex-shrink: 0; }
+    .nav-label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; opacity: 0; transition: opacity .25s; }
+    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+
+    .sidebar-footer {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+      border-top: 1px solid var(--border); color: var(--muted);
+      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .1em;
+      overflow: hidden; white-space: nowrap;
+    }
+    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s; }
+    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g); flex-shrink: 0; animation: blink 2.4s ease-in-out infinite; }
+
+    /* ── MAIN ── */
+    #main { flex: 1; height: 100vh; overflow-y: auto; padding: 36px 54px 80px; position: relative; z-index: 2; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      margin-bottom: 24px; padding: 8px 0 20px; backdrop-filter: blur(8px);
+    }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .glass-btn, #scoreTracker {
+      border-radius: 10px; border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      padding: 9px 14px; font-family: 'DM Mono', monospace;
+      font-size: 9px; letter-spacing: .16em; text-transform: uppercase; cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap; text-decoration: none; display: inline-block;
+    }
+    .glass-btn:hover, #scoreTracker:hover { color: var(--g); border-color: rgba(232,146,74,.26); }
+    .glass-btn.active { color: var(--g); border-color: rgba(232,146,74,.32); background: rgba(232,146,74,.07); }
+
+    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(.23,1,.32,1); }
+    .tab-content.active { display: block; }
+
+    .page-header { margin-bottom: 34px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .unit-tag { display: block; color: var(--g); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .35em; text-transform: uppercase; margin-bottom: 10px; }
+    .page-header h2 { font-family: 'Cinzel', serif; font-size: clamp(32px, 4.5vw, 56px); letter-spacing: .06em; line-height: .98; color: white; }
+    .page-header p { margin-top: 10px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+
+    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; margin-bottom: 26px; }
+    .principle-grid, .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+    .case-grid, .flash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 22px; }
+
+    .card, .feature-card, .principle-card, .case-card, .exam-card, .flash-card, .writing-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px;
+      position: relative; overflow: hidden;
+      transition: transform .24s, border-color .24s, box-shadow .24s;
+    }
+    .card:hover, .feature-card:hover, .principle-card:hover,
+    .case-card:hover, .exam-card:hover, .flash-card:hover, .writing-card:hover {
+      transform: translateY(-2px); border-color: rgba(255,255,255,.11);
+      box-shadow: 0 20px 48px rgba(0,0,0,.4);
+    }
+    .hero-card::before, .feature-card::before, .principle-card::before,
+    .case-card::before, .exam-card::before, .writing-card::before {
+      content: ''; position: absolute; left: 0; right: 0; top: 0;
+      height: 2px; background: var(--accent, var(--g)); opacity: .65;
+    }
+    .hero-card { --accent: var(--g); }
+    .accent-g   { --accent: var(--g); }
+    .accent-g2  { --accent: var(--g2); }
+    .accent-g3  { --accent: var(--g3); }
+    .accent-gold{ --accent: var(--gold); }
+    .accent-blue{ --accent: var(--blue); }
+    .accent-red { --accent: var(--red); }
+    .accent-teal{ --accent: var(--teal); }
+
+    .card-sub { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: var(--g); margin-bottom: 10px; }
+    .card-title { font-family: 'Cinzel', serif; font-size: 21px; letter-spacing: .04em; color: white; line-height: 1.18; margin-bottom: 14px; }
+    .body-copy { font-family: 'Crimson Pro', serif; font-size: 15px; line-height: 1.82; color: #c0946a; }
+    .body-copy p + p { margin-top: 10px; }
+
+    .dash-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 20px; }
+    .stat-box { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+    .stat-box span { display: block; font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .stat-box strong { font-family: 'Cinzel', serif; font-size: 26px; letter-spacing: .06em; color: var(--g); }
+
+    .focus-callout { margin-top: 20px; padding: 16px 18px; border-radius: 12px; background: rgba(232,146,74,.04); border: 1px solid rgba(232,146,74,.13); }
+    .focus-callout .label { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: var(--g); margin-bottom: 8px; }
+
+    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .bullet-list li { font-family: 'Crimson Pro', serif; font-size: 14px; line-height: 1.68; color: #c0946a; padding-left: 18px; position: relative; }
+    .bullet-list li::before { content: '›'; position: absolute; left: 0; color: var(--g); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .tag { padding: 4px 10px; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .16em; text-transform: uppercase; border: 1px solid rgba(232,146,74,.2); color: rgba(232,146,74,.6); background: rgba(232,146,74,.04); }
+
+    .mini-label { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: var(--g); margin-bottom: 10px; }
+
+    /* ── NOTES ── */
+    .notes-shell { display: grid; grid-template-columns: 200px 1fr; gap: 28px; align-items: start; }
+    .notes-index { position: sticky; top: 80px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .notes-index-title { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); padding: 0 6px; margin-bottom: 8px; }
+    .note-jump { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 10px; border: none; border-radius: 8px; background: transparent; color: var(--muted); font-family: 'Space Grotesk', sans-serif; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; cursor: none; transition: background .18s, color .18s; }
+    .note-jump:hover { background: rgba(232,146,74,.06); color: var(--g); }
+    .note-jump span:last-child { color: rgba(232,146,74,.35); font-family: 'DM Mono', monospace; }
+
+    .notes-stack { display: flex; flex-direction: column; gap: 22px; }
+    .note-section { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 30px; position: relative; overflow: hidden; }
+    .note-section::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent, var(--g)); opacity: .55; }
+    .note-section h3 { font-family: 'Cinzel', serif; font-size: 22px; letter-spacing: .05em; color: white; margin-bottom: 14px; }
+    .note-section h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .1em; color: var(--text); margin: 20px 0 10px; text-transform: uppercase; }
+    .note-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; margin: 18px 0; }
+    .mini-note { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 10px; letter-spacing: .08em; font-weight: 600; color: var(--text); }
+    .mini-note .body-copy { font-size: 13px; letter-spacing: 0; font-weight: 400; color: #8a6040; margin-top: 7px; }
+    .code-block { background: #0a0400; border: 1px solid rgba(232,146,74,.1); border-radius: 12px; padding: 18px 20px; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.7; color: #d4904a; letter-spacing: .04em; overflow-x: auto; white-space: pre; margin-top: 10px; }
+
+    .compare-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    .compare-table th { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--g); padding: 10px 14px; border-bottom: 1px solid rgba(232,146,74,.18); text-align: left; }
+    .compare-table td { font-family: 'Crimson Pro', serif; font-size: 13px; color: var(--muted); padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(232,146,74,.025); }
+
+    /* ── GLOSSARY ── */
+    .glossary-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+    .glossary-toolbar input { flex: 1; min-width: 200px; padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--card2); color: var(--text); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; outline: none; cursor: none; transition: border-color .2s; }
+    .glossary-toolbar input:focus { border-color: rgba(232,146,74,.3); }
+    .glossary-card h4 { font-family: 'Cinzel', serif; font-size: 15px; letter-spacing: .04em; color: white; margin-bottom: 10px; }
+    .glossary-card { cursor: none; }
+
+    /* ── FLASHCARDS ── */
+    .flash-card { perspective: 900px; height: 200px; background: transparent; border: none; padding: 0; }
+    .flash-card:hover { transform: none; box-shadow: none; border-color: transparent; }
+    .flash-inner { width: 100%; height: 100%; position: relative; transition: transform .55s cubic-bezier(.23,1,.32,1); transform-style: preserve-3d; }
+    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+    .flash-front, .flash-back { position: absolute; inset: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: border-color .2s; }
+    .flash-card:hover .flash-front, .flash-card:hover .flash-back { border-color: rgba(232,146,74,.2); }
+    .flash-back { transform: rotateY(180deg); background: var(--card2); }
+    .flash-front h3, .flash-back .body-copy { font-family: 'Cinzel', serif; font-size: 16px; letter-spacing: .04em; color: white; }
+    .flash-back .body-copy { font-family: 'Crimson Pro', serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: #c0946a; }
+    .flash-hint { font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+
+    /* ── MODALS ── */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.72); backdrop-filter: blur(8px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
+    .modal.open { display: flex; }
+    .modal-box { background: var(--card); border: 1px solid rgba(232,146,74,.14); border-radius: 24px; padding: 36px; max-width: 620px; width: 100%; max-height: 88vh; overflow-y: auto; position: relative; animation: fadeUp .4s cubic-bezier(.23,1,.32,1); }
+    .modal-title { font-family: 'Cinzel', serif; font-size: 20px; letter-spacing: .06em; color: white; margin-bottom: 22px; }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .14em; padding: 6px 10px; border-radius: 8px; cursor: none; transition: color .2s, border-color .2s; }
+    .modal-close:hover { color: var(--red); border-color: rgba(217,95,95,.3); }
+
+    /* ── QUIZ ── */
+    .quiz-status { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: var(--g); margin-bottom: 14px; }
+    .quiz-question { font-family: 'Crimson Pro', serif; font-size: 17px; line-height: 1.72; color: var(--text); margin-bottom: 20px; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .quiz-option { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 13px 16px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--muted); text-align: left; cursor: none; transition: border-color .2s, color .2s, background .2s; }
+    .quiz-option:hover { border-color: rgba(232,146,74,.28); color: var(--text); }
+    .quiz-option.correct { border-color: var(--teal); color: var(--teal); background: rgba(74,188,168,.08); }
+    .quiz-option.wrong { border-color: var(--red); color: var(--red); background: rgba(217,95,95,.08); }
+    .quiz-feedback { font-family: 'Crimson Pro', serif; font-size: 14px; line-height: 1.72; color: var(--muted); min-height: 20px; margin-bottom: 14px; }
+    .quiz-next { text-align: right; }
+
+    /* ── ESSAY ── */
+    .essay-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .essay-topic-btn { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--muted); text-align: left; cursor: none; transition: border-color .2s, color .2s; }
+    .essay-topic-btn:hover, .essay-topic-btn.active { border-color: rgba(232,146,74,.28); color: var(--g); }
+    .essay-outline { display: none; flex-direction: column; gap: 14px; }
+    .essay-outline.show { display: flex; }
+    .essay-block { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .essay-block-label { color: var(--g); font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: .28em; text-transform: uppercase; margin-bottom: 9px; }
+    .essay-block-body { font-family: 'Crimson Pro', serif; color: var(--muted); line-height: 1.82; font-size: 15px; }
+
+    strong.ap-term { color: #e8a870; font-weight: 600; }
+    body.ap-highlight strong.ap-term { background: rgba(232,146,74,.11); padding: 0 3px; border-radius: 3px; box-shadow: 0 0 10px rgba(232,146,74,.14); }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+    @media(max-width:1020px) { .hero-grid { grid-template-columns: 1fr } .dash-stats { grid-template-columns: 1fr } #main { padding-left: 26px; padding-right: 26px } .notes-shell { grid-template-columns: 1fr } }
+    @media(max-width:760px) { body { cursor: auto; overflow: auto; display: block } #cursor, #readingProgress { display: none } #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border) } #sidebar:hover, #sidebar.pinned { width: 100% } .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important } #pinBtn { display: none } nav { height: auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 8px } #main { height: auto; overflow: visible } .topbar { position: static } .glossary-toolbar input { min-width: 100%; width: 100% } }
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="ambientOverlay"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">👥</div>
+      <div class="logo-copy">
+        <h1>APES UNIT 3</h1>
+        <p>Populations</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Unit 3</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color:var(--g);font-size:12px;">⌕</span>
+          <input id="sbInput" type="text" placeholder="Find concepts, terms, or topics" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer"><span class="dot"></span><span>Study Mode Active</span></div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <a class="glass-btn" href="apes-unit2.html">← Unit 2</a>
+        <a class="glass-btn" href="apes-unit3.html" style="color:var(--g);border-color:rgba(232,146,74,.32);">Unit 3</a>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
+      </div>
+      <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+    </div>
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 3 · Populations</span>
+        <h2>How Populations Grow & Change</h2>
+        <p>Population Dynamics · Growth Models · Human Demographics · DTM · Age Structure · Policy</p>
+      </header>
+
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Core Frame</div>
+          <div class="card-title">What Unit 3 Is Really About</div>
+          <div class="body-copy">
+            <p>Unit 3 is where biology meets human society. You'll study <strong class="ap-term">how populations grow</strong>, what stops them, and how human population dynamics drive environmental change. The thread connecting every section: population size isn't the only driver — <strong class="ap-term">per-capita consumption</strong> and technology matter too.</p>
+            <p>The two big models to master: <strong class="ap-term">J-curve (exponential growth)</strong> — no limits, grows forever until it crashes — and <strong class="ap-term">S-curve (logistic growth)</strong> — growth slows as it approaches carrying capacity. Everything else (r/K strategies, survivorship curves, DTM) builds on these.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Study Sections</span><strong>8</strong></div>
+            <div class="stat-box"><span>Key Terms</span><strong>80+</strong></div>
+            <div class="stat-box"><span>Quiz Items</span><strong>14</strong></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Strategy</div>
+            <div class="body-copy">Expect calculation questions: growth rate from CBR/CDR, doubling time with Rule of 70, population density, and percent change. Always show your work. Then explain the implication — a 2% growth rate means doubling in 35 years, which has specific resource consequences.</div>
+          </div>
+        </article>
+
+        <article class="card feature-card accent-g2">
+          <div class="card-sub">Fast Review</div>
+          <div class="card-title">What You Must Be Able to Do</div>
+          <ul class="bullet-list">
+            <li>Compare <strong class="ap-term">r-selected vs. K-selected</strong> species using lifespan, offspring, parental care, and population curve shape.</li>
+            <li>Read all three <strong class="ap-term">survivorship curves</strong> (Type I, II, III) and link to r/K strategies.</li>
+            <li>Explain <strong class="ap-term">density-dependent vs. density-independent</strong> limiting factors with examples.</li>
+            <li>Calculate <strong class="ap-term">growth rate (%)</strong> from CBR and CDR (divide by 10!). Include migration for national rate.</li>
+            <li>Apply the <strong class="ap-term">Rule of 70</strong>: doubling time = 70 ÷ growth rate (%).</li>
+            <li>Interpret <strong class="ap-term">age-structure diagrams</strong> to predict population momentum.</li>
+            <li>Place a country in the correct <strong class="ap-term">Demographic Transition Model</strong> stage from a birth/death rate graph.</li>
+            <li>Explain why education and healthcare access reduce <strong class="ap-term">TFR</strong> over time.</li>
+            <li>Trace population growth impacts to specific <strong class="ap-term">environmental pressures</strong> (water, forests, food, coasts).</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">r/K Strategy</span><span class="tag">DTM</span><span class="tag">Rule of 70</span>
+            <span class="tag">Age Structure</span><span class="tag">CBR/CDR</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="exam-grid">
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Common Mistakes</div>
+          <h3>Avoid These</h3>
+          <ul class="bullet-list">
+            <li>Forgetting to <strong class="ap-term">divide by 10</strong> when converting CBR−CDR (per 1,000) to growth rate (%).</li>
+            <li>Confusing <strong class="ap-term">CBR</strong> (births per 1,000) with <strong class="ap-term">TFR</strong> (average children per woman). They measure different things.</li>
+            <li>Thinking <strong class="ap-term">K-selected</strong> species can't go extinct — they're MORE vulnerable because they recover slowly.</li>
+            <li>Calling weather events (drought, frost) <strong class="ap-term">density-dependent</strong> — they are density-independent.</li>
+            <li>Assuming a low TFR immediately stops growth — <strong class="ap-term">population momentum</strong> from a young age structure sustains growth for decades.</li>
+            <li>Thinking Stage 2 of the DTM has high death rates — Stage 2 is when <strong class="ap-term">death rates drop</strong> while birth rates stay high.</li>
+            <li>Treating carrying capacity as fixed — it can <strong class="ap-term">change with drought, habitat loss, invasives, or climate</strong>.</li>
+            <li>Saying lower population solves environmental problems — per-capita <strong class="ap-term">consumption</strong> matters just as much.</li>
+          </ul>
+        </article>
+        <article class="exam-card feature-card accent-gold">
+          <div class="mini-label">Calculation Cheatsheet</div>
+          <h3>Key Formulas</h3>
+          <ul class="bullet-list">
+            <li><strong>Growth Rate (%) =</strong> (CBR − CDR) ÷ 10 &nbsp;[global, no migration]</li>
+            <li><strong>National Growth Rate (%) =</strong> (CBR + immigration − CDR − emigration) ÷ 10</li>
+            <li><strong>Doubling Time =</strong> 70 ÷ growth rate (%)</li>
+            <li><strong>CBR =</strong> (births ÷ population) × 1,000</li>
+            <li><strong>CDR =</strong> (deaths ÷ population) × 1,000</li>
+            <li><strong>Population Density =</strong> total population ÷ total area</li>
+            <li><strong>% Rate of Change =</strong> (new − old) ÷ old × 100</li>
+            <li><strong>Pop. Growth Rate (raw counts) =</strong> (births + immigration − deaths − emigration) ÷ population × 100</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══ NOTES ═══ -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Unit 3 Deep Dive</h2>
+        <p>Population Basics · r/K Strategies · Survivorship · Carrying Capacity · Growth Models · Demographics · Age Structure · DTM · Policy</p>
+      </header>
+      <div class="notes-shell">
+        <aside class="notes-index">
+          <div class="notes-index-title">Sections</div>
+          <button class="note-jump" type="button" data-note-target="n-basics"><span>Population Basics</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-rk"><span>r/K Strategies</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-surv"><span>Survivorship Curves</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-cc"><span>Carrying Capacity</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-growth"><span>Growth Models</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-metrics"><span>Human Metrics</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-age"><span>Age Structure</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-dtm"><span>DTM & Policy</span><span>08</span></button>
+        </aside>
+
+        <div class="notes-stack">
+
+          <!-- 01 -->
+          <article class="note-section accent-g" id="n-basics">
+            <div class="mini-label">01 · Population Basics: Definitions, Niches & Dispersal</div>
+            <h3>What a Population Is & How It Spreads</h3>
+            <div class="body-copy">
+              <p>A <strong class="ap-term">population</strong> is a group of individuals of the same species living in the same area at the same time. Population size is always linked to resource availability, habitat conditions, predation, disease, and — for humans — economics and culture. Never treat population growth as happening in isolation.</p>
+            </div>
+            <h4>Generalists vs. Specialists</h4>
+            <table class="compare-table">
+              <tr><th>Trait</th><th>Generalist Species</th><th>Specialist Species</th></tr>
+              <tr><td>Resource use</td><td>Wide variety of resources</td><td>Specific, narrow resource set</td></tr>
+              <tr><td>Tolerance range</td><td>High (temperature, salinity, etc.)</td><td>Low — narrow environmental window</td></tr>
+              <tr><td>Adaptability</td><td>Handles change well; can switch foods/habitats</td><td>Vulnerable if specific resource/habitat disappears</td></tr>
+              <tr><td>Extinction risk</td><td>Less likely to become extinct</td><td>More likely to become extinct</td></tr>
+              <tr><td>Examples</td><td>Humans, raccoons, crows</td><td>Pandas, koalas, specialist birds</td></tr>
+            </table>
+            <h4>Dispersal Patterns</h4>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Clumped Dispersal</strong>
+                <div class="body-copy">Organisms cluster in patches. Common where resources are patchy or where grouping offers protection (prey herds, social families). Most common dispersal pattern in nature.</div>
+              </div>
+              <div class="mini-note"><strong>Random Dispersal</strong>
+                <div class="body-copy">Uniform conditions + little interaction among individuals → random placement. Wind-dispersed plants (dandelions) often show this. Relatively rare.</div>
+              </div>
+              <div class="mini-note"><strong>Uniform Dispersal</strong>
+                <div class="body-copy">Individuals evenly spaced, often to minimize competition. Shaped by territorial behavior or resource spacing. Example: nesting territories, some desert shrubs.</div>
+              </div>
+            </div>
+            <h4>Biotic Potential & Environmental Resistance</h4>
+            <div class="body-copy">
+              <p><strong class="ap-term">Biotic potential</strong> is the maximum reproductive capacity under ideal conditions. <strong class="ap-term">Environmental resistance</strong> is any factor inhibiting population increase (disease, predation, limited resources, harsh weather). The interplay of these two determines actual population size.</p>
+            </div>
+          </article>
+
+          <!-- 02 -->
+          <article class="note-section accent-g2" id="n-rk">
+            <div class="mini-label">02 · Life History Strategies: r-Selected vs. K-Selected</div>
+            <h3>How Species Allocate Energy to Survive & Reproduce</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">r</strong> = intrinsic rate of increase (max growth rate under ideal conditions). <strong class="ap-term">K</strong> = carrying capacity (long-term sustainable population size). These letters anchor the two life history extremes. In reality, it's a spectrum — species are not strictly "either/or."</p>
+            </div>
+            <table class="compare-table">
+              <tr><th>Trait</th><th>r-Strategists</th><th>K-Strategists</th></tr>
+              <tr><td>Offspring number</td><td>Many; tend to overproduce</td><td>Few</td></tr>
+              <tr><td>Parental care</td><td>Low to none</td><td>High — invest heavily per offspring</td></tr>
+              <tr><td>Maturation speed</td><td>Rapid</td><td>Slow</td></tr>
+              <tr><td>Lifespan</td><td>Short</td><td>Long</td></tr>
+              <tr><td>Body size</td><td>Small</td><td>Tend to be larger</td></tr>
+              <tr><td>Main limiting factor</td><td>Density-independent (weather, disasters)</td><td>Density-dependent (competition, predation, parasitism)</td></tr>
+              <tr><td>Population pattern</td><td>Wide fluctuations; can crash</td><td>Stabilizes near carrying capacity K</td></tr>
+              <tr><td>Survivorship type</td><td>Type III (high early mortality)</td><td>Type I or II (survival to near max lifespan)</td></tr>
+              <tr><td>Extinction risk</td><td>Less likely to be endangered</td><td>More likely to be endangered — slow recovery</td></tr>
+              <tr><td>Examples</td><td>Insects, bacteria, algae, rodents, annual plants</td><td>Humans, elephants, sharks, whales, cacti</td></tr>
+            </table>
+            <div class="focus-callout">
+              <div class="label">Exam Key</div>
+              <div class="body-copy">After a major disturbance (cleared field, fire), r-strategists colonize first and dominate early succession. K-strategists recover slowly after overharvesting — this is why overfishing large, slow-reproducing fish is so damaging.</div>
+            </div>
+          </article>
+
+          <!-- 03 -->
+          <article class="note-section accent-g3" id="n-surv">
+            <div class="mini-label">03 · Survivorship Curves</div>
+            <h3>When Do Individuals Die?</h3>
+            <div class="body-copy">
+              <p>A <strong class="ap-term">survivorship curve</strong> shows the proportion of a cohort (same age group) that survives over time. It reveals when mortality is concentrated — early in life, evenly, or late. The shape directly reflects life history strategy.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Type I — Late Loss</strong>
+                <div class="body-copy">High survival through early and middle life; steep drop in old age. Few offspring, high parental care, long-lived. Deaths concentrated near biological limit. Examples: <strong class="ap-term">humans, sheep, elephants</strong>. Associated with K-strategies.</div>
+              </div>
+              <div class="mini-note"><strong>Type II — Constant Loss</strong>
+                <div class="body-copy">Roughly constant mortality at every age → steady decline. Predation often drives death at all ages. Organisms reach adult stages quickly. Examples: <strong class="ap-term">rodents, many songbirds, some perennial plants</strong>.</div>
+              </div>
+              <div class="mini-note"><strong>Type III — Early Loss</strong>
+                <div class="body-copy">Very high mortality early in life; survivors live long. Many offspring, little parental care, early death from predation/environment. Examples: <strong class="ap-term">sea turtles, trees, fish, oysters, marine invertebrates</strong>. Associated with r-strategies.</div>
+              </div>
+            </div>
+            <div class="code-block">Reading a survivorship curve on the exam:
+  Steep early drop, then flattens = Type III
+    → many offspring, low parental care, r-strategist
+  Stays high, then drops steeply at old age = Type I
+    → few offspring, high care, K-strategist
+  Steady diagonal decline = Type II
+    → constant mortality; predation at all ages</div>
+          </article>
+
+          <!-- 04 -->
+          <article class="note-section accent-gold" id="n-cc">
+            <div class="mini-label">04 · Carrying Capacity, Limiting Factors & Feedback</div>
+            <h3>What Stops Populations from Growing Forever</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Carrying capacity (K)</strong> is the maximum population size an environment can sustain long-term given available resources. K is NOT fixed — it changes with rainfall, seasons, land use, nutrient inputs, invasive species, and climate. A useful guiding principle: <strong class="ap-term">Liebig's Law of the Minimum</strong> — even if most factors are favorable, the factor in shortest supply determines growth.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Density-Dependent Factors</strong>
+                <div class="body-copy">Effects intensify as population density increases. Competition for food/nesting sites, disease transmission, predation, parasitism, intraspecific competition. These create <strong class="ap-term">negative feedback</strong> that pushes population back toward K.</div>
+              </div>
+              <div class="mini-note"><strong>Density-Independent Factors</strong>
+                <div class="body-copy">Effects unrelated to population density. Drought, floods, hurricanes, temperature extremes, pollution, volcanic eruptions. Can cause large crashes regardless of population size. <strong>Never call these density-dependent</strong> on the exam.</div>
+              </div>
+              <div class="mini-note"><strong>Bottom-Up Control</strong>
+                <div class="body-copy">Population regulated by resource availability (food, nutrients, habitat). If resources increase → population can increase. Nutrient inputs to an ecosystem can raise carrying capacity.</div>
+              </div>
+              <div class="mini-note"><strong>Top-Down Control</strong>
+                <div class="body-copy">Population regulated by predators, parasites, or disease. Predation pressure keeps prey low even when resources are plentiful. Removing a predator can trigger prey population explosion.</div>
+              </div>
+              <div class="mini-note"><strong>Overshoot & Dieback</strong>
+                <div class="body-copy">Population temporarily exceeds K → overbrowse/deplete resources → habitat damage → K drops → <strong class="ap-term">dieback</strong> (crash). Example: deer after predator removal → overbrowse → starvation → crash.</div>
+              </div>
+              <div class="mini-note"><strong>Predator-Prey Cycles</strong>
+                <div class="body-copy">Prey increases → predators increase (more food) → prey decreases (more predation) → predators decrease. Predators <strong>lag behind</strong> prey in population peaks. Classic: Lynx-snowshoe hare cycle.</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 05 -->
+          <article class="note-section accent-teal" id="n-growth">
+            <div class="mini-label">05 · Population Growth Models</div>
+            <h3>J-Curves, S-Curves & the Rule of 70</h3>
+            <div class="body-copy">
+              <p>Two models describe how populations change over time. Knowing which curve a graph shows — and why — is a core exam skill.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Exponential Growth (J-Curve)</strong>
+                <div class="body-copy">Growth proportional to current size: dN/dt = rN. Occurs when resources are unlimited. Produces a J-shaped curve — rapid increase then abrupt stop or crash when a limiting factor hits. Examples: early invasive spread, post-disturbance colonization, early human history.</div>
+              </div>
+              <div class="mini-note"><strong>Logistic Growth (S-Curve)</strong>
+                <div class="body-copy">Growth slows as population approaches K: dN/dt = rN(1 − N/K). The S-curve shows fast early growth, inflection point, then leveling off at K. Most real populations follow something like this in stable environments.</div>
+              </div>
+            </div>
+            <h4>Rule of 70 — Doubling Time</h4>
+            <div class="code-block">Doubling Time = 70 ÷ growth rate (%)
+
+Examples:
+  Growth rate 1%  → doubles in 70 years
+  Growth rate 2%  → doubles in 35 years
+  Growth rate 3.5%→ doubles in 20 years
+  Growth rate 7%  → doubles in 10 years
+
+Remember: larger growth rate = FASTER doubling (smaller number)
+Populations cannot double forever — limiting factors always apply.</div>
+            <h4>J-Curve vs. S-Curve: Key Distinctions</h4>
+            <table class="compare-table">
+              <tr><th>Feature</th><th>J-Curve (Exponential)</th><th>S-Curve (Logistic)</th></tr>
+              <tr><td>Resource assumption</td><td>Unlimited resources</td><td>Finite resources; limiting factors apply</td></tr>
+              <tr><td>Growth rate</td><td>Constant; accelerates with size</td><td>Decreases as N approaches K</td></tr>
+              <tr><td>Endpoint</td><td>Crash or abrupt stop</td><td>Levels off at carrying capacity K</td></tr>
+              <tr><td>When it occurs</td><td>New habitat, early invasion, post-disturbance, r-strategists</td><td>Most natural populations in stable environments</td></tr>
+              <tr><td>Equation</td><td>dN/dt = rN</td><td>dN/dt = rN(1 − N/K)</td></tr>
+            </table>
+          </article>
+
+          <!-- 06 -->
+          <article class="note-section accent-g" id="n-metrics">
+            <div class="mini-label">06 · Human Population Metrics & Formulas</div>
+            <h3>Measuring How Human Populations Change</h3>
+            <div class="body-copy">
+              <p>Human demographic measures link population change to resource demands and environmental impacts. Exam questions frequently require <strong class="ap-term">calculations</strong> — show your work clearly and state the units.</p>
+            </div>
+            <h4>Core Definitions</h4>
+            <div class="note-grid">
+              <div class="mini-note"><strong>CBR — Crude Birth Rate</strong>
+                <div class="body-copy">Births per 1,000 people per year. "Crude" = not adjusted for age structure. A young population can have a high CBR even with moderate fertility.</div>
+              </div>
+              <div class="mini-note"><strong>CDR — Crude Death Rate</strong>
+                <div class="body-copy">Deaths per 1,000 people per year. An aging population may have a high CDR even with good healthcare. Not a direct measure of healthcare quality.</div>
+              </div>
+              <div class="mini-note"><strong>TFR — Total Fertility Rate</strong>
+                <div class="body-copy">Average number of children a woman is expected to have over her lifetime. A clearer family-size indicator than CBR because it's not distorted by age structure. <strong class="ap-term">Replacement level ≈ 2.1</strong> in developed countries.</div>
+              </div>
+              <div class="mini-note"><strong>IMR — Infant Mortality Rate</strong>
+                <div class="body-copy">Deaths of infants under age 1 per 1,000 live births per year. Strongly linked to clean water, sanitation, nutrition, vaccination, and maternal health. Key development indicator.</div>
+              </div>
+            </div>
+            <h4>Key Formulas</h4>
+            <div class="code-block">Global Growth Rate (%) = (CBR − CDR) ÷ 10
+
+National Growth Rate (%) = (CBR + immigration rate − CDR − emigration rate) ÷ 10
+
+Raw-count version:
+  Growth Rate (%) = (births + immigration − deaths − emigration) ÷ population × 100
+
+Doubling Time = 70 ÷ Growth Rate (%)
+CBR = (births ÷ population) × 1,000
+CDR = (deaths ÷ population) × 1,000
+Population Density = population ÷ area
+% Rate of Change = (new − old) ÷ old × 100</div>
+            <h4>Worked Example</h4>
+            <div class="code-block">Given: CBR = 30, CDR = 10 (per 1,000/year), no migration data
+
+Step 1 — Growth Rate:
+  (30 − 10) ÷ 10 = 2%/year
+
+Step 2 — Doubling Time:
+  70 ÷ 2 = 35 years
+
+Interpretation: At 2%/year, this population doubles in 35 years.
+If CBR = 28, CDR = 8: growth = (28−8)÷10 = 2% → same result.</div>
+            <h4>Factors That Reduce TFR Over Time</h4>
+            <div class="body-copy">
+              <p>Access to women's education, economic opportunities for women, affordable contraception and reproductive healthcare, declining child mortality (reduces pressure to have extra children for "insurance"), social safety nets reducing dependence on children in old age, and urbanization (higher costs, less need for farm labor). These are the mechanisms the exam expects you to explain — not just list.</p>
+            </div>
+          </article>
+
+          <!-- 07 -->
+          <article class="note-section accent-g2" id="n-age">
+            <div class="mini-label">07 · Age-Structure Diagrams & Population Momentum</div>
+            <h3>Who Is in the Population Matters as Much as How Many</h3>
+            <div class="body-copy">
+              <p>An <strong class="ap-term">age-structure diagram</strong> (population pyramid) shows the distribution of a population across age groups, often separated by sex. It reflects birth rate, death rate, generation time, migration, and past events (wars, pandemics, baby booms). A key concept: <strong class="ap-term">population momentum</strong> — growth continues after fertility drops if large cohorts are moving into reproductive years.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Pyramid Shape (Rapid Growth)</strong>
+                <div class="body-copy">Wide base: many individuals in younger age groups, high birth rates. Predicts continued growth. Puts strain on schools, childcare, and job creation. Common in developing nations early in the DTM.</div>
+              </div>
+              <div class="mini-note"><strong>Bell Shape (Stable/Slow Growth)</strong>
+                <div class="body-copy">Pre-reproductive and reproductive groups roughly equal; post-reproductive smaller due to mortality. Characteristic of stable populations, often DTM Stage 3–4.</div>
+              </div>
+              <div class="mini-note"><strong>Urn Shape (Declining)</strong>
+                <div class="body-copy">Narrow base: birth rates below death rates. Aging population; healthcare and retirement systems under strain. Common in parts of Europe and East Asia today.</div>
+              </div>
+              <div class="mini-note"><strong>Population Momentum</strong>
+                <div class="body-copy">Even if TFR drops to replacement level today, the population can keep growing for decades because a large young cohort is still entering their reproductive years. A wide-base pyramid = strong momentum.</div>
+              </div>
+            </div>
+            <div class="code-block">FRQ Example:
+  Country: CBR = 28, CDR = 8, wide-base pyramid, expanding girls' education
+
+  Step 1: Current growth = (28−8)÷10 = 2%/year
+  Step 2: Doubling time = 70÷2 = 35 years
+  Step 3: Wide base → strong population momentum even if TFR falls soon
+  Step 4: Education + contraception → TFR declines over time → CBR falls
+  Prediction: Growth rate declines long-term but positive for decades due to momentum</div>
+          </article>
+
+          <!-- 08 -->
+          <article class="note-section accent-orange" id="n-dtm">
+            <div class="mini-label">08 · Demographic Transition Model, Worldviews & Policy</div>
+            <h3>How Societies Move From High to Low Birth & Death Rates</h3>
+            <div class="body-copy">
+              <p>The <strong class="ap-term">Demographic Transition Model (DTM)</strong> describes the shift from high birth and death rates to low birth and death rates as a country industrializes. It is a model — not a law — and countries vary in timing and pathway. Death rates typically fall before birth rates because public health improvements (sanitation, vaccines) are faster than social/economic changes.</p>
+            </div>
+            <table class="compare-table">
+              <tr><th>Stage</th><th>Birth Rate</th><th>Death Rate</th><th>Growth</th><th>Context</th></tr>
+              <tr><td><strong>Stage 1</strong> Pre-Industrial</td><td>High</td><td>High</td><td>Low/stable</td><td>Food scarcity, poor sanitation, limited healthcare. High births replace high mortality.</td></tr>
+              <tr><td><strong>Stage 2</strong> Transitional</td><td>High</td><td>↓ Falling</td><td>Rapid increase</td><td>Industrialization begins. Hygiene, sanitation, vaccines → death rates drop. Birth rates stay high. Population surges.</td></tr>
+              <tr><td><strong>Stage 3</strong> Industrial</td><td>↓ Falling</td><td>Low</td><td>Slowing</td><td>Urbanization, female education, contraception, economic incentives for smaller families → birth rates decline. Growth slows.</td></tr>
+              <tr><td><strong>Stage 4</strong> Post-Industrial</td><td>Low</td><td>Low</td><td>Near zero</td><td>Both rates low. Population stabilizes. Higher standard of living.</td></tr>
+              <tr><td><strong>Stage 5</strong> (optional)</td><td>Below replacement</td><td>Low-rising</td><td>Declining</td><td>Birth rates fall below death rates. Aging population; immigration may sustain size. Parts of Europe/East Asia.</td></tr>
+            </table>
+            <h4>Historical Population Surges</h4>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Tool Use (~3.5 Ma)</strong><div class="body-copy">First major expansion of human range and resource access. Estimated 1–3 million humans as hunter-gatherers.</div></div>
+              <div class="mini-note"><strong>Agricultural Revolution (~10,000 BCE)</strong><div class="body-copy">Shift from hunting/gathering to crop-growing and animal domestication → sustained food surpluses → ~50 million humans by 8000 BCE.</div></div>
+              <div class="mini-note"><strong>Industrial & Medical Revolutions (~1650–present)</strong><div class="body-copy">Vaccines, antibiotics, sanitation, improved nutrition, mechanized agriculture → death rates plummeted. Growth rate 0.1% in 1650 → ~1.2% today. Population: ~600 million → 8+ billion.</div></div>
+              <div class="mini-note"><strong>Environmental Worldviews</strong><div class="body-copy"><strong class="ap-term">Frontier</strong>: exploit resources as quickly as possible. <strong class="ap-term">Planetary Management</strong>: humans manage Earth; technology will solve resource limits. <strong class="ap-term">Earth Wisdom</strong>: resources are limited; sustain natural cycles for all species, not just humans.</div></div>
+            </div>
+            <h4>Environmental Impacts of Population Growth</h4>
+            <div class="body-copy">
+              <p>Growing populations strain <strong class="ap-term">freshwater</strong> (finite supply, rising demand), <strong class="ap-term">forests</strong> (≈16 million hectares lost annually), <strong class="ap-term">food supply</strong> (25% of world malnourished; 2 billion hectares of arable land degraded), <strong class="ap-term">fisheries and coasts</strong> (estuaries drained, fish stocks declining), and <strong class="ap-term">public health</strong> (12+ million die/year from dirty water and poor sanitation). Remember: population size alone doesn't determine impact — per-capita consumption multiplies the effect.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ GLOSSARY ═══ -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Glossary</span>
+        <h2>Key Terms</h2>
+        <p>Search, filter, and click to jump to the relevant section</p>
+      </header>
+      <div class="glossary-toolbar">
+        <input type="text" id="glossaryFilter" placeholder="Filter terms…" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- ═══ FLASHCARDS ═══ -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Flashcards</span>
+        <h2>Active Recall</h2>
+        <p>Click any card to reveal — click again to flip back</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- ═══ FRQ PREP ═══ -->
+    <section class="tab-content" id="frq">
+      <header class="page-header">
+        <span class="unit-tag">FRQ Preparation</span>
+        <h2>Essay Frameworks</h2>
+        <p>Select a prompt to see a structured outline</p>
+      </header>
+      <div class="writing-card">
+        <div class="essay-list" id="essayTopics"></div>
+        <div class="essay-outline" id="essayOutline"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Quiz Modal -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Unit 3 Quiz</div>
+      <button class="modal-close" data-close="quizModal" type="button">Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- Essay Modal -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Bank</div>
+      <button class="modal-close" data-close="essayModal" type="button">Close</button>
+      <div class="essay-list" id="essayTopics2"></div>
+      <div class="essay-outline" id="essayOutline2"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id:"dashboard",  icon:"◈", label:"Dashboard",  ambient:"radial-gradient(ellipse at 55% 15%, rgba(232,146,74,.09), transparent 65%)" },
+      { id:"notes",      icon:"≡", label:"Notes",      ambient:"radial-gradient(ellipse at 20% 50%, rgba(232,146,74,.07), transparent 60%)" },
+      { id:"glossary",   icon:"⊞", label:"Glossary",   ambient:"radial-gradient(ellipse at 80% 30%, rgba(212,168,67,.07), transparent 55%)" },
+      { id:"flashcards", icon:"⟁", label:"Flashcards", ambient:"radial-gradient(ellipse at 40% 70%, rgba(74,188,168,.07), transparent 60%)" },
+      { id:"frq",        icon:"✎", label:"FRQ Prep",   ambient:"radial-gradient(ellipse at 60% 20%, rgba(232,107,58,.07), transparent 55%)" },
+    ];
+
+    const glossaryTerms = [
+      { term:"Population",                  tab:"notes", def:"A group of individuals of the same species living in the same area at the same time." },
+      { term:"Generalist Species",          tab:"notes", def:"Uses wide variety of resources; broad tolerance range; handles environmental change well; less likely to become extinct." },
+      { term:"Specialist Species",          tab:"notes", def:"Requires specific resources or narrow environmental conditions; highly efficient in stable environments but vulnerable to change." },
+      { term:"Clumped Dispersal",           tab:"notes", def:"Individuals cluster in patches; most common pattern; driven by resource patchiness or group benefits (protection, cooperation)." },
+      { term:"Random Dispersal",            tab:"notes", def:"Uniform conditions and little interaction → random placement; wind-dispersed plants; relatively rare." },
+      { term:"Uniform Dispersal",           tab:"notes", def:"Individuals evenly spaced; driven by competition or territorial behavior to maximize distance between individuals." },
+      { term:"Biotic Potential",            tab:"notes", def:"The maximum reproductive capacity of an organism under ideal environmental conditions." },
+      { term:"Environmental Resistance",    tab:"notes", def:"Any factor that inhibits population increase: limited resources, disease, predation, unsuitable habitat, harsh weather." },
+      { term:"r-Selected Species",          tab:"notes", def:"Many offspring, rapid maturity, little parental care, short-lived, small, density-independent regulation, Type III survivorship. Examples: insects, bacteria, rodents." },
+      { term:"K-Selected Species",          tab:"notes", def:"Few offspring, slow maturity, high parental care, long-lived, larger, density-dependent regulation, Type I/II survivorship. Examples: humans, elephants, sharks." },
+      { term:"Intrinsic Rate of Increase (r)", tab:"notes", def:"Maximum potential growth rate under ideal conditions, used in exponential and logistic growth models." },
+      { term:"Carrying Capacity (K)",       tab:"notes", def:"Maximum population size an environment can sustain long-term given available resources. NOT fixed — changes with habitat quality, climate, and resource inputs." },
+      { term:"Survivorship Curve",          tab:"notes", def:"Graph showing proportion of a cohort surviving at each age. Type I = late loss (humans); Type II = constant loss (rodents); Type III = early loss (sea turtles, fish)." },
+      { term:"Type I Survivorship",         tab:"notes", def:"High survival through most of life, steep drop in old age. Few offspring, high parental care. Examples: humans, elephants, sheep." },
+      { term:"Type II Survivorship",        tab:"notes", def:"Constant mortality at all ages; steady decline. Predation often the main cause. Examples: rodents, songbirds." },
+      { term:"Type III Survivorship",       tab:"notes", def:"Very high early mortality; survivors live long. Many offspring, little parental care. Examples: sea turtles, fish, trees, oysters." },
+      { term:"Density-Dependent Factor",    tab:"notes", def:"Limiting factor whose effect intensifies as population density increases: disease, competition, predation, parasitism. Creates negative feedback toward K." },
+      { term:"Density-Independent Factor",  tab:"notes", def:"Limiting factor whose effect is unrelated to population density: drought, floods, hurricanes, temperature extremes, pollution. Never call natural disasters density-dependent." },
+      { term:"Liebig's Law of the Minimum", tab:"notes", def:"Even if many factors are favorable, the factor in shortest supply dictates growth, abundance, or distribution." },
+      { term:"Bottom-Up Control",           tab:"notes", def:"Population regulated mainly by resource availability (food, nutrients, habitat). If resources increase, populations can increase." },
+      { term:"Top-Down Control",            tab:"notes", def:"Population regulated mainly by predators, parasites, or disease — even when resources are plentiful." },
+      { term:"Overshoot",                   tab:"notes", def:"When a population temporarily exceeds carrying capacity, depleting or damaging the resources that sustain it." },
+      { term:"Dieback",                     tab:"notes", def:"Population crash following overshoot; occurs when resources are depleted or habitat is damaged below what is needed." },
+      { term:"Exponential Growth (J-Curve)",tab:"notes", def:"Growth proportional to current population size (dN/dt = rN); occurs under ideal, unlimited-resource conditions; produces J-shaped curve." },
+      { term:"Logistic Growth (S-Curve)",   tab:"notes", def:"Growth slows as population approaches K (dN/dt = rN(1−N/K)); produces S-shaped curve; more realistic for natural populations." },
+      { term:"Rule of 70",                  tab:"notes", def:"Doubling Time = 70 ÷ growth rate (%). Approximation for exponential growth at approximately constant rate. Larger rate = shorter doubling time." },
+      { term:"Doubling Time",               tab:"notes", def:"Time required for a population to double in size at a constant growth rate. Calculated as 70 ÷ growth rate (%)." },
+      { term:"Crude Birth Rate (CBR)",      tab:"notes", def:"Number of births per 1,000 people per year. 'Crude' = not adjusted for age structure. Formula: (births ÷ population) × 1,000." },
+      { term:"Crude Death Rate (CDR)",      tab:"notes", def:"Number of deaths per 1,000 people per year. An aging population may have high CDR even with good healthcare." },
+      { term:"Total Fertility Rate (TFR)",  tab:"notes", def:"Average number of children a woman is expected to have over her lifetime. Clearer family-size indicator than CBR; unaffected by age structure." },
+      { term:"Replacement-Level Fertility", tab:"notes", def:"TFR needed to keep a population stable long-term; approximately 2.1 in developed countries. Below 2.1 → population eventually declines." },
+      { term:"Infant Mortality Rate (IMR)", tab:"notes", def:"Deaths of infants under age 1 per 1,000 live births per year. Linked to clean water, sanitation, nutrition, vaccination, maternal health." },
+      { term:"Population Momentum",         tab:"notes", def:"Continued population growth after fertility drops to replacement level because large young cohorts are still entering reproductive years." },
+      { term:"Age-Structure Diagram",       tab:"notes", def:"Visual showing population distribution across age groups by sex. Pyramid = rapid growth; bell = stable; urn = declining." },
+      { term:"Demographic Transition Model",tab:"notes", def:"Model describing shift from high birth/death rates to low birth/death rates as a country industrializes. Four main stages; death rates fall before birth rates." },
+      { term:"DTM Stage 1",                 tab:"notes", def:"Pre-industrial: both birth and death rates high; population growth slow. Poor sanitation, food scarcity, limited healthcare." },
+      { term:"DTM Stage 2",                 tab:"notes", def:"Transitional: death rates fall (vaccines, sanitation, medicine) while birth rates remain high. Rapid population growth." },
+      { term:"DTM Stage 3",                 tab:"notes", def:"Industrial: birth rates decline (urbanization, female education, contraception, economic incentives); population growth slows." },
+      { term:"DTM Stage 4",                 tab:"notes", def:"Post-industrial: both rates low; population near zero growth; higher standard of living." },
+      { term:"Frontier Worldview",          tab:"notes", def:"Undeveloped land seen as wilderness to exploit rapidly; nature exists for human use." },
+      { term:"Planetary Management Worldview", tab:"notes", def:"Humans manage Earth; technology will solve resource limits; economic growth essentially unlimited." },
+      { term:"Earth Wisdom Worldview",      tab:"notes", def:"Resources are limited; nature sustains itself; humans are not in charge; promote Earth-sustaining economics." },
+    ];
+
+    const flashcards = [
+      { front:"What is carrying capacity (K) and what can cause it to change?", back:"K is the maximum sustainable population size given current environmental conditions. It can change with rainfall, seasons, land use, habitat degradation, nutrient inputs, invasive species, and climate change — it is NOT fixed." },
+      { front:"List four traits of r-strategists and four of K-strategists.", back:"r: many offspring, little parental care, rapid maturity, short lifespan. K: few offspring, high parental care, slow maturity, long lifespan. r = Type III survivorship; K = Type I or II." },
+      { front:"A country has CBR = 35 and CDR = 10. What is the growth rate and doubling time?", back:"Growth rate = (35−10)÷10 = 2.5%/year. Doubling time = 70÷2.5 = 28 years. At this rate the population doubles every 28 years if the rate holds." },
+      { front:"Distinguish density-dependent from density-independent limiting factors with examples.", back:"Density-dependent: effects intensify with density (disease, competition, predation, parasitism). Density-independent: unrelated to density (drought, floods, hurricanes, temperature extremes). Natural disasters are NEVER density-dependent." },
+      { front:"Describe each survivorship curve type and give one example of each.", back:"Type I: high survival until old age (humans, elephants). Type II: constant mortality at all ages (rodents, songbirds). Type III: massive early mortality, survivors live long (sea turtles, fish, trees)." },
+      { front:"What is population momentum and why does it matter for policy?", back:"Continued population growth after fertility drops because large young cohorts are still entering reproductive years. A country with a wide-base pyramid can keep growing for decades even if TFR reaches replacement level today — policy effects are slow." },
+      { front:"Explain the four stages of the Demographic Transition Model.", back:"Stage 1: both rates high, low growth. Stage 2: death rates fall, birth rates stay high, rapid growth. Stage 3: birth rates fall, growth slows. Stage 4: both low, near-zero growth. Death rates fall BEFORE birth rates in Stage 2." },
+      { front:"What is Liebig's Law of the Minimum?", back:"Even if most environmental factors are favorable, the single factor in shortest supply determines the growth, abundance, or distribution of a population. The most-limiting factor is the ceiling on growth." },
+      { front:"Compare exponential (J-curve) and logistic (S-curve) growth.", back:"J-curve: growth proportional to size (dN/dt = rN); assumes unlimited resources; ends in crash or abrupt stop. S-curve: growth slows near K (dN/dt = rN(1−N/K)); produces sigmoid curve; more realistic for natural populations." },
+      { front:"Why does a high CDR not always mean poor healthcare?", back:"CDR is 'crude' — not adjusted for age structure. An aging population has more elderly people who die naturally, raising the CDR even if healthcare is excellent. Always consider age structure when interpreting CDR." },
+      { front:"List four factors that tend to reduce TFR over time.", back:"Access to women's education, economic opportunities for women, affordable contraception, declining infant mortality (less need to 'replace' lost children), social safety nets reducing old-age dependence on children, and urbanization (higher costs, less farm labor need)." },
+      { front:"What does a pyramid-shaped vs. urn-shaped age-structure diagram predict?", back:"Pyramid (wide base): high birth rates, many young → rapid future growth, population momentum. Urn (narrow base): birth rates below death rates → population decline, aging challenges, strain on healthcare and pensions." },
+      { front:"What is the Rule of 70 and when can you apply it?", back:"Doubling Time = 70 ÷ growth rate (%). Applies when growth is approximately exponential at a roughly constant rate. Do NOT apply it when growth is clearly logistic (slowing near K) or when the rate is changing rapidly." },
+      { front:"How does removing a top predator affect a prey population using top-down control?", back:"Predators normally suppress prey through top-down control. Remove the predator → prey population expands (often exponentially) → may overshoot K → overbrowse/deplete resources → habitat damage → K drops → dieback. This is the overshoot-dieback cycle." },
+    ];
+
+    const essayOutlines = [
+      {
+        label: "A country is in DTM Stage 2. Explain why and predict future changes.",
+        blocks: [
+          ["Identify Stage 2", "Stage 2 = transitional: death rates have fallen due to improved sanitation, clean water, vaccines, and basic medical care, while birth rates remain high. Population is growing rapidly."],
+          ["Why Death Rates Fall First", "Public health improvements (sanitation, vaccines, antibiotics) are technology-driven and can be implemented quickly. Birth-rate declines require slower social and economic changes: urbanization, female education, and contraception access."],
+          ["Predicting Stage 3 Transition", "As urbanization increases and women gain education and economic opportunities, family-planning services expand, and retirement safety nets reduce reliance on children for old-age support → birth rates will decline → entry into Stage 3."],
+          ["Population Momentum", "Even as TFR drops toward replacement level, a large cohort of young people is already moving through reproductive years → growth rate declines but population size continues to rise for decades."],
+          ["Environmental Implication", "Rapid growth in Stage 2 stresses water supplies, forests, food systems, and urban infrastructure. Later stages may reduce population growth but increase per-capita consumption — total environmental impact depends on both."],
+        ]
+      },
+      {
+        label: "Explain J-curve vs. S-curve growth with limiting factors",
+        blocks: [
+          ["Exponential (J-Curve)", "Occurs when resources are essentially unlimited: dN/dt = rN. Growth accelerates as population grows. Examples: invasive species in a new habitat, bacteria in fresh media, post-disturbance r-strategist colonization."],
+          ["Why J-Curves End", "Limiting factors — density-dependent (disease, competition, predation) or density-independent (drought, cold snap) — eventually reduce growth or cause a crash. No environment supports unlimited growth."],
+          ["Logistic (S-Curve)", "More realistic: dN/dt = rN(1−N/K). As N approaches K, the (1−N/K) term approaches zero, slowing growth. Population levels off at carrying capacity."],
+          ["Carrying Capacity is Dynamic", "K can change with seasons, drought, habitat loss, nutrient inputs, or invasive species. Human technology can raise effective K (e.g., irrigation, fertilizers) but often at environmental cost."],
+          ["FRQ Application", "If asked 'what would change the shape of the S-curve?': reducing K (drought, habitat loss) lowers the leveling-off point; increasing r (removing predators) makes the early phase steeper but doesn't change K. Identify the mechanism."],
+        ]
+      },
+      {
+        label: "Predict how expanding girls' education affects population growth",
+        blocks: [
+          ["Mechanism 1: Delayed Marriage", "Education delays marriage and childbearing, reducing the reproductive window and number of children per woman → TFR declines."],
+          ["Mechanism 2: Contraception Awareness", "Educated women are more likely to access and use family planning services → fewer unintended pregnancies → lower CBR over time."],
+          ["Mechanism 3: Economic Opportunity", "Women with education can enter the workforce → higher cost-benefit calculation for each child → smaller desired family size → lower TFR."],
+          ["Mechanism 4: Reduced IMR Reliance", "As infant survival improves (often correlated with educated mothers' health practices), families no longer need extra children to ensure some survive → TFR declines further."],
+          ["Time Lag and Momentum", "Effects are not immediate. A current wide-base age structure means momentum sustains growth for decades even as TFR drops. Short-term prediction: growth rate declines gradually. Long-term: population stabilizes or declines depending on TFR relative to replacement level."],
+        ]
+      },
+      {
+        label: "Explain overshoot and dieback using a specific population example",
+        blocks: [
+          ["Define Overshoot", "Overshoot occurs when a population temporarily exceeds carrying capacity — usually because it grows rapidly before depleting or damaging the resources that sustain it."],
+          ["Example: Deer After Predator Removal", "Wolves removed from a region → deer population grows exponentially (no top-down control) → deer exceed K → overbrowse vegetation → plant biomass declines → K itself drops below current population size."],
+          ["Dieback Mechanism", "With resources depleted and K lowered, death rates exceed birth rates → starvation, disease, and increased competition cause a population crash (dieback). Population falls below the new, lower K."],
+          ["Positive Feedback in Habitat Damage", "Overgrazing damages soil structure and reduces plant diversity → recovery of vegetation is slow → K remains depressed → multiple oscillations before stabilization, or collapse if damage is severe enough."],
+          ["Human Parallel", "If human population growth exceeds the carrying capacity of agricultural and water systems, similar dynamics can occur. Overshoot in human systems is typically managed by technology increasing K (irrigation, fertilizers), but this has environmental costs."],
+        ]
+      },
+    ];
+
+    const quizQuestions = [
+      {
+        question: "A country has CBR = 40 and CDR = 15 per 1,000 people per year. What is the population growth rate and approximately how long to double?",
+        options: ["2.5% per year; doubles in about 28 years", "25% per year; doubles in about 2.8 years", "0.25% per year; doubles in about 280 years", "2.5% per year; doubles in about 35 years"],
+        correct: 0,
+        explanation: "Growth rate = (40−15)÷10 = 2.5%/year. Doubling time = 70÷2.5 = 28 years. Key: always divide by 10 to convert per-1,000 rates to a percent."
+      },
+      {
+        question: "An eagle population is primarily regulated by territorial competition for nesting cliffs, which limits how many pairs can breed. This is an example of what type of limiting factor?",
+        options: ["Density-independent, because it involves habitat structure", "Density-dependent, because competition intensifies as population density increases", "Bottom-up control, because the nesting cliffs are a physical resource", "Abiotic limiting factor, because cliffs are not living organisms"],
+        correct: 1,
+        explanation: "Competition for nesting sites becomes more intense as more eagles try to claim territories — the effect depends on density. This is density-dependent regulation. It's also an example of intraspecific competition."
+      },
+      {
+        question: "A severe drought kills 40% of a prairie dog colony regardless of its size. This is best described as:",
+        options: ["A density-dependent factor because it affects the whole population", "A negative feedback loop restoring carrying capacity", "A density-independent limiting factor", "An example of top-down control"],
+        correct: 2,
+        explanation: "Density-independent factors affect populations regardless of density. Drought kills a fixed percentage whether the colony is 100 or 10,000. Natural disasters, temperature extremes, and pollution are always density-independent."
+      },
+      {
+        question: "A graph shows a population that grows steeply at first, then levels off and stabilizes near 5,000 individuals. This is best described as:",
+        options: ["Exponential growth, because it starts with rapid increase", "Logistic (S-curve) growth approaching carrying capacity K ≈ 5,000", "A J-curve followed by population crash", "Density-independent regulation at 5,000"],
+        correct: 1,
+        explanation: "Leveling off at a stable size is the hallmark of logistic (S-curve) growth. The leveling-off point is carrying capacity K. Exponential (J-curve) growth doesn't level off — it either continues rising or crashes."
+      },
+      {
+        question: "An endangered sea turtle species produces thousands of eggs per year but has very high hatchling mortality. Most adult turtles survive for decades once they reach maturity. Which survivorship curve applies?",
+        options: ["Type I, because adults survive for decades", "Type II, because mortality is constant across all ages", "Type III, because mortality is extremely high early in life with better survival for older individuals", "None of these — sea turtles don't fit any curve"],
+        correct: 2,
+        explanation: "Type III: very high early mortality (hatchlings), but those that survive to adulthood live for a long time. This is classic for organisms that produce many offspring with little parental care — r-selected traits."
+      },
+      {
+        question: "Which combination of factors is MOST likely to reduce TFR in a developing country?",
+        options: ["Increasing CDR and reducing healthcare access", "Expanding girls' secondary education and improving access to family planning", "Increasing agricultural subsidies and rural land ownership", "Building more hospitals without changing educational access"],
+        correct: 1,
+        explanation: "Education delays marriage, increases economic opportunity, and improves family-planning awareness. Access to contraception directly reduces unintended pregnancies. Together these are the most evidence-supported drivers of TFR decline."
+      },
+      {
+        question: "A country has a very wide base in its age-structure pyramid. TFR just dropped to replacement level (2.1). What will happen to the population in the short term?",
+        options: ["Population immediately stabilizes because TFR is at replacement level", "Population begins to decline because TFR dropped", "Population continues to grow for decades due to population momentum", "Population will crash because replacement level is too low"],
+        correct: 2,
+        explanation: "Population momentum: a wide base means enormous cohorts are entering reproductive age. Even at replacement fertility, the large number of parents produces many births. Growth continues — sometimes for 50+ years — before stabilizing."
+      },
+      {
+        question: "In the Demographic Transition Model, why do death rates fall BEFORE birth rates?",
+        options: ["Governments prioritize healthcare funding over education", "Public health improvements (sanitation, vaccines) can be deployed quickly; birth-rate declines require slower social and economic changes", "Death rates are always higher than birth rates early in development", "Birth rates only decline when K is approached"],
+        correct: 1,
+        explanation: "Vaccines, clean water, and sanitation are technological interventions implemented relatively quickly (Stage 2). Birth-rate declines require social and economic changes: urbanization, female education, contraception access, and shifting family-size norms — these take much longer (Stage 3)."
+      },
+      {
+        question: "A small island is 500 km² and has a population of 12,500 people. What is the population density?",
+        options: ["6.25 people/km²", "25 people/km²", "62.5 people/km²", "125 people/km²"],
+        correct: 1,
+        explanation: "Population density = 12,500 ÷ 500 = 25 people/km². Simple division: total population by total area."
+      },
+      {
+        question: "Which species is MOST vulnerable to extinction after habitat fragmentation?",
+        options: ["A generalist omnivore that can eat many food types and nests in disturbed areas", "A specialist predator requiring large territories of intact old-growth forest", "A bacterial species capable of rapid reproduction in changing conditions", "A rodent species that breeds year-round with large litters"],
+        correct: 1,
+        explanation: "Specialist K-strategists with large territory requirements are the most vulnerable. They cannot adapt to new conditions, require rare and specific resources, reproduce slowly, and need large areas that fragmentation destroys."
+      },
+      {
+        question: "A wolf reintroduction reduces deer populations, allowing riverside vegetation to recover, which stabilizes stream banks and improves water quality. This chain of effects is best described as:",
+        options: ["Bottom-up control driven by nutrient inputs", "Top-down control via trophic cascade", "Density-independent regulation by abiotic factors", "Carrying capacity increase from improved habitat"],
+        correct: 1,
+        explanation: "Wolves (top predator) → suppress deer (prey) → plants recover (browsing pressure relieved) → stream banks stabilize → water quality improves. This is a trophic cascade driven by top-down control."
+      },
+      {
+        question: "What does an urn-shaped (narrow-base) age-structure diagram indicate about a country?",
+        options: ["Rapid growth with high birth rates among young people", "Stable population at carrying capacity", "Declining population with birth rates below death rates; aging demographics", "A country in DTM Stage 2 with falling death rates"],
+        correct: 2,
+        explanation: "An urn shape (narrow base, wider middle and top) indicates that birth rates have fallen below death rates — fewer young people are replacing the older generations. This is characteristic of DTM Stage 4–5, found in parts of Europe and East Asia."
+      },
+      {
+        question: "A country has CBR = 22, CDR = 14, immigration rate = 4, emigration rate = 3 per 1,000. What is the national growth rate?",
+        options: ["0.8%", "0.9%", "1.2%", "0.5%"],
+        correct: 1,
+        explanation: "National growth rate = (CBR + immigration − CDR − emigration) ÷ 10 = (22 + 4 − 14 − 3) ÷ 10 = 9 ÷ 10 = 0.9%/year. Don't forget to include migration for national (not global) calculations."
+      },
+      {
+        question: "A pond has a frog population that briefly exceeds its carrying capacity during a wet year, then crashes. This best illustrates:",
+        options: ["Logistic growth approaching a new, higher K", "Overshoot followed by dieback as resources are depleted", "Density-independent regulation by rainfall", "Population momentum from a large young cohort"],
+        correct: 1,
+        explanation: "The population exceeded K (overshoot) — probably because the wet year temporarily increased food and habitat — then resource depletion or drying reduced K, causing a crash (dieback). Classic overshoot-dieback cycle."
+      },
+    ];
+
+    // ── RUNTIME ──
+    const nav = document.getElementById("sidebarNav");
+    const mainEl = document.getElementById("main");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map(t => `
+        <button class="nav-btn ${t.id===currentTab?"active":""}" data-tab="${t.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${t.icon}</span>
+          <span class="nav-label">${t.label}</span>
+        </button>`).join("");
+    }
+
+    function switchTab(id) {
+      currentTab = id;
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id===id));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab===id));
+      const t = tabs.find(x=>x.id===id);
+      if (t) ambientOverlay.style.background = t.ambient;
+      mainEl.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function renderGlossary(filter="") {
+      const v = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v)||t.def.toLowerCase().includes(v));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item=>`
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map(c=>`
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    function renderEssayTopics() {
+      ["essayTopics","essayTopics2"].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.innerHTML = essayOutlines.map((o,i)=>
+          `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+      });
+      ["essayOutline","essayOutline2"].forEach(id=>{
+        const ol=document.getElementById(id);
+        if(ol){ ol.classList.remove("show"); ol.innerHTML=""; }
+      });
+    }
+
+    function selectEssay(i, outlineId) {
+      document.querySelectorAll(".essay-topic-btn").forEach(b=>b.classList.toggle("active", Number(b.dataset.essayIndex)===i));
+      const o = essayOutlines[i];
+      const ol = document.getElementById(outlineId);
+      if(ol){
+        ol.innerHTML = o.blocks.map(([l,b])=>
+          `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join("");
+        ol.classList.add("show");
+      }
+    }
+
+    function renderQuizQuestion() {
+      const qm = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore/quizQuestions.length)*100);
+        const prev = Number(localStorage.getItem("apes_u3_best")||0);
+        const best = Math.max(prev,pct);
+        localStorage.setItem("apes_u3_best", String(best));
+        bestScoreEl.textContent = best+"%";
+        qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review growth models, CBR/CDR calculations, and DTM stages if you missed any. Use the Notes tab to reinforce weak areas.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+        return;
+      }
+      quizLocked = false;
+      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex+1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+    }
+
+    function openModal(id){ document.getElementById(id).classList.add("open"); }
+    function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+    function initBestScore(){ const b=localStorage.getItem("apes_u3_best"); bestScoreEl.textContent = b?b+"%":"--"; }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = e.clientX+"px"; cursor.style.top = e.clientY+"px";
+    });
+    document.addEventListener("mouseover", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.width = e.target.closest("button,a,.flash-card,.glossary-card") ? "20px" : "12px";
+      cursor.style.height = cursor.style.width;
+    });
+
+    pinBtn.addEventListener("click", ()=>{ sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned")?"Pinned":"Pin"; });
+    nav.addEventListener("click", e=>{ const b=e.target.closest(".nav-btn"); if(b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b=>b.addEventListener("click",()=>{ const t=document.getElementById(b.dataset.noteTarget); if(t){ switchTab("notes"); setTimeout(()=>t.scrollIntoView({behavior:"smooth",block:"start"}),100); } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e=>renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e=>{ const c=e.target.closest(".flash-card"); if(c) c.classList.toggle("flipped"); });
+
+    document.getElementById("openSearch").addEventListener("click",()=>{ const p=document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if(p.classList.contains("open")) document.getElementById("sbInput").focus(); });
+    document.getElementById("sbInput").addEventListener("input", e=>{
+      const q=e.target.value.toLowerCase().trim();
+      const m=glossaryTerms.filter(t=>t.term.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)).slice(0,8);
+      document.getElementById("sbResults").innerHTML = m.length
+        ? m.map(i=>`<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
+        : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+    document.getElementById("sbResults").addEventListener("click", e=>{
+      const r=e.target.closest(".sb-result"); if(!r||!r.dataset.targetTab) return;
+      switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value=""; document.getElementById("sbResults").innerHTML="";
+      if(r.dataset.targetTab==="glossary"){ document.getElementById("glossaryFilter").value=r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
+    });
+    document.getElementById("glossaryGrid").addEventListener("click", e=>{ const c=e.target.closest(".glossary-card"); if(c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click",()=>{ document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("quizOpenBtn").addEventListener("click",()=>{ quizIndex=0; quizScore=0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click",()=>{ renderEssayTopics(); openModal("essayModal"); });
+
+    document.getElementById("essayTopics").addEventListener("click", e=>{ const b=e.target.closest(".essay-topic-btn"); if(b) selectEssay(Number(b.dataset.essayIndex),"essayOutline"); });
+    document.getElementById("essayTopics2").addEventListener("click", e=>{ const b=e.target.closest(".essay-topic-btn"); if(b) selectEssay(Number(b.dataset.essayIndex),"essayOutline2"); });
+
+    document.getElementById("quizMount").addEventListener("click", e=>{
+      const opt=e.target.closest(".quiz-option");
+      if(opt&&!quizLocked){
+        quizLocked=true;
+        const q=quizQuestions[quizIndex]; const sel=Number(opt.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((b,i)=>{ if(i===q.correct)b.classList.add("correct"); if(i===sel&&sel!==q.correct)b.classList.add("wrong"); });
+        if(sel===q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent=q.explanation;
+        document.getElementById("quizNext").innerHTML=`<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex===quizQuestions.length-1?"See Score":"Next Question"}</button>`;
+      }
+      if(e.target.id==="nextQuizBtn"){ quizIndex++; renderQuizQuestion(); }
+      if(e.target.id==="restartQuizBtn"){ quizIndex=0; quizScore=0; renderQuizQuestion(); }
+    });
+    document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{ if(e.target===m)m.classList.remove("open"); }));
+    mainEl.addEventListener("scroll",()=>{
+      const max=mainEl.scrollHeight-mainEl.clientHeight;
+      document.getElementById("readingProgressFill").style.width=(max>0?(mainEl.scrollTop/max)*100:0)+"%";
+    });
+  </script>
+</body>
+</html>
