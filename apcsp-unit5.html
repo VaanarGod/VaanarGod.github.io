@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AP Computer Science Principles — Big Idea 5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #07080a;
+            --card: #0d0f12;
+            --card2: #12161c;
+            --border: rgba(255, 255, 255, .07);
+            --text: #dde3ec;
+            --muted: #7a8699;
+            --cyan: #3eb8d4;
+            --teal: #3eb89a;
+            --blue: #5b8fd4;
+            --red: #d95f5f;
+            --orange: #f28749;
+            --purple: #9b86f4;
+            --green: #4caf7d;
+            --accent-main: #9b86f4;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Mono", monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: .35;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--purple);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width .2s ease, height .2s ease;
+        }
+
+        #readingProgress {
+            position: fixed;
+            top: 0;
+            left: 72px;
+            right: 0;
+            height: 2px;
+            z-index: 100;
+        }
+
+        #readingProgressFill {
+            width: 0%;
+            height: 100%;
+            background: var(--purple);
+        }
+
+        #ambientOverlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 10%, rgba(155, 134, 244, .12), transparent 65%);
+            opacity: .1;
+            pointer-events: none;
+            transition: background 1s ease, opacity .25s ease;
+            z-index: 0;
+        }
+
+        #sidebar {
+            width: 72px;
+            height: 100vh;
+            flex-shrink: 0;
+            background: rgba(5, 6, 8, .84);
+            border-right: 1px solid var(--border);
+            backdrop-filter: blur(24px);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            transition: width .4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #sidebar:hover, #sidebar.pinned { width: 264px; }
+
+        #pinBtn {
+            position: absolute;
+            top: 12px;
+            right: 10px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 8px;
+            letter-spacing: .08em;
+            opacity: 0;
+            cursor: none;
+            transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+        }
+
+        #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+
+        #pinBtn.pinned {
+            color: var(--purple);
+            border-color: rgba(155, 134, 244, .24);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            border: 1px solid rgba(155, 134, 244, .2);
+            background: rgba(155, 134, 244, .07);
+            color: var(--purple);
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .logo-copy { opacity: 0; transition: opacity .25s ease; }
+        #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+
+        .logo-copy h1 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 13px;
+            letter-spacing: .25em;
+            color: var(--purple);
+        }
+
+        .logo-copy p {
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .search-wrap { position: relative; padding: 10px; }
+
+        .sb-search-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .03);
+            color: var(--muted);
+            cursor: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, border-color .2s ease;
+        }
+
+        #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sb-search-trigger:hover { border-color: rgba(155, 134, 244, .2); }
+
+        #sbSearchPanel {
+            position: absolute;
+            top: calc(100% - 4px);
+            left: 10px;
+            right: 10px;
+            border: 1px solid rgba(155, 134, 244, .18);
+            background: rgba(8, 10, 13, .98);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+            z-index: 80;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
+        }
+
+        #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        #sbSearchInner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        #sbInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .1em;
+            outline: none;
+            cursor: none;
+        }
+
+        #sbResults { max-height: 280px; overflow: auto; }
+
+        .sb-result {
+            padding: 11px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            cursor: none;
+            transition: background .15s ease;
+        }
+
+        .sb-result:hover { background: rgba(155, 134, 244, .06); }
+        .sb-result:last-child { border-bottom: none; }
+
+        .sb-result-tab {
+            font-size: 8px;
+            color: var(--purple);
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .sb-result-term {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 14px;
+            color: white;
+            letter-spacing: .04em;
+        }
+
+        .sb-result-snip {
+            font-family: "Crimson Pro", serif;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+            margin-top: 2px;
+        }
+
+        nav {
+            height: calc(100vh - 176px);
+            padding: 0 10px 14px;
+            overflow: auto;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--muted);
+            cursor: none;
+            white-space: nowrap;
+            transition: background .2s ease, color .2s ease;
+            position: relative;
+        }
+
+        .nav-btn:hover { background: rgba(255, 255, 255, .03); color: #aeb7c6; }
+
+        .nav-btn.active {
+            background: rgba(155, 134, 244, .07);
+            color: var(--purple);
+        }
+
+        .nav-btn.active .nav-indicator { opacity: 1; }
+
+        .nav-indicator {
+            position: absolute;
+            left: 0;
+            width: 2px;
+            height: 24px;
+            background: var(--purple);
+            border-radius: 5px;
+            opacity: 0;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+
+        .sidebar-footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .1em;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s ease; }
+        #sidebar:hover .sidebar-footer span:last-child,
+        #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--purple);
+            animation: blink 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        #main {
+            flex: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 36px 54px 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding: 8px 0 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .glass-btn, #scoreTracker {
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .05);
+            color: var(--muted);
+            padding: 9px 14px;
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            cursor: none;
+            backdrop-filter: blur(12px);
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .glass-btn:hover, #scoreTracker:hover {
+            color: var(--purple);
+            border-color: rgba(155, 134, 244, .26);
+        }
+
+        .glass-btn.active {
+            color: var(--purple);
+            border-color: rgba(155, 134, 244, .32);
+            background: rgba(155, 134, 244, .08);
+        }
+
+        .tab-content { display: none; animation: fadeUp .45s cubic-bezier(0.23, 1, 0.32, 1); }
+        .tab-content.active { display: block; }
+
+        .page-header {
+            margin-bottom: 34px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .unit-tag {
+            display: block;
+            color: var(--purple);
+            font-size: 10px;
+            letter-spacing: .35em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .page-header h2 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(38px, 5vw, 62px);
+            letter-spacing: .08em;
+            line-height: .96;
+            color: white;
+        }
+
+        .page-header p {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 22px;
+            margin-bottom: 26px;
+        }
+
+        .principle-grid, .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        .case-grid, .flash-grid, .structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 22px;
+        }
+
+        .card, .feature-card, .principle-card, .case-card,
+        .exam-card, .flash-card, .writing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+        }
+
+        .card:hover, .feature-card:hover, .principle-card:hover,
+        .case-card:hover, .exam-card:hover, .flash-card:hover, .writing-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, .14);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, .35);
+        }
+
+        .hero-card::before, .feature-card::before, .principle-card::before,
+        .case-card::before, .exam-card::before, .writing-card::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 2px;
+            background: var(--accent, var(--purple));
+            opacity: .6;
+        }
+
+        .hero-card { --accent: var(--purple); }
+        .accent-cyan { --accent: var(--cyan); }
+        .accent-blue { --accent: var(--blue); }
+        .accent-teal { --accent: var(--teal); }
+        .accent-red { --accent: var(--red); }
+        .accent-orange { --accent: var(--orange); }
+        .accent-purple { --accent: var(--purple); }
+        .accent-green { --accent: var(--green); }
+
+        .card-sub {
+            font-size: 9px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 24px;
+            letter-spacing: .06em;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .body-copy {
+            font-family: "Crimson Pro", serif;
+            font-size: 15px;
+            line-height: 1.78;
+            color: #94a3b8;
+        }
+
+        .body-copy p + p { margin-top: 10px; }
+
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .stat-box span {
+            display: block;
+            font-size: 8px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-box strong {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 28px;
+            letter-spacing: .06em;
+            color: var(--purple);
+        }
+
+        .focus-callout {
+            margin-top: 20px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            background: rgba(155, 134, 244, .05);
+            border: 1px solid rgba(155, 134, 244, .14);
+        }
+
+        .focus-callout .label {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .bullet-list li {
+            font-family: "Crimson Pro", serif;
+            font-size: 14px;
+            line-height: 1.65;
+            color: #94a3b8;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 18px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 8px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            border: 1px solid rgba(155, 134, 244, .2);
+            color: rgba(155, 134, 244, .65);
+            background: rgba(155, 134, 244, .04);
+        }
+
+        .mini-label {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 10px;
+        }
+
+        /* NOTES */
+        .notes-shell {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .notes-index {
+            position: sticky;
+            top: 80px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .notes-index-title {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 0 6px;
+            margin-bottom: 8px;
+        }
+
+        .note-jump {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: background .18s ease, color .18s ease;
+        }
+
+        .note-jump:hover { background: rgba(155, 134, 244, .06); color: var(--purple); }
+        .note-jump span:last-child { color: rgba(155, 134, 244, .35); }
+
+        .notes-stack { display: flex; flex-direction: column; gap: 22px; }
+
+        .note-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .note-section::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--accent, var(--purple));
+            opacity: .55;
+        }
+
+        .note-section h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        .note-section h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 15px;
+            letter-spacing: .1em;
+            color: var(--text);
+            margin: 20px 0 10px;
+        }
+
+        .note-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 18px 0;
+        }
+
+        .mini-note {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 9px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .mini-note .body-copy {
+            font-size: 13px;
+            letter-spacing: 0;
+            text-transform: none;
+            color: #8896a8;
+            margin-top: 7px;
+        }
+
+        .code-block {
+            background: #070a0e;
+            border: 1px solid rgba(155, 134, 244, .1);
+            border-radius: 12px;
+            padding: 18px 20px;
+            font-size: 11px;
+            line-height: 1.7;
+            color: #c8b8f8;
+            letter-spacing: .04em;
+            overflow-x: auto;
+            white-space: pre;
+            margin-top: 10px;
+        }
+
+        /* GLOSSARY */
+        .glossary-toolbar { margin-bottom: 22px; }
+
+        .glossary-toolbar input {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .1em;
+            color: var(--text);
+            outline: none;
+            min-width: 300px;
+            transition: border-color .2s ease;
+        }
+
+        .glossary-toolbar input:focus { border-color: rgba(155, 134, 244, .3); }
+
+        .glossary-card h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 18px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* FLASHCARDS */
+        .flash-card {
+            perspective: 900px;
+            height: 200px;
+            cursor: none;
+        }
+
+        .flash-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform .55s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+
+        .flash-front, .flash-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .flash-back { transform: rotateY(180deg); }
+
+        .flash-card h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 18px;
+            letter-spacing: .06em;
+            color: white;
+            line-height: 1.15;
+        }
+
+        .flash-hint {
+            font-size: 8px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: rgba(155, 134, 244, .4);
+        }
+
+        /* EXAM PREP */
+        .exam-card h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 20px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        /* MODALS */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .72);
+            z-index: 9000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.open { display: flex; }
+
+        .modal-box {
+            background: #0c0e12;
+            border: 1px solid rgba(155, 134, 244, .18);
+            border-radius: 20px;
+            padding: 32px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 82vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: .1em;
+            color: white;
+            margin-bottom: 22px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .14em;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: none;
+            transition: color .2s ease, border-color .2s ease;
+        }
+
+        .modal-close:hover { color: var(--red); border-color: rgba(217, 95, 95, .3); }
+
+        /* QUIZ */
+        .quiz-status {
+            font-size: 9px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 14px;
+        }
+
+        .quiz-question {
+            font-family: "Crimson Pro", serif;
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+        .quiz-option {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 16px;
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .08em;
+            color: var(--muted);
+            text-align: left;
+            cursor: none;
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+        }
+
+        .quiz-option:hover { border-color: rgba(155, 134, 244, .28); color: var(--text); }
+        .quiz-option.correct { border-color: var(--teal); color: var(--teal); background: rgba(62, 184, 154, .08); }
+        .quiz-option.wrong { border-color: var(--red); color: var(--red); background: rgba(217, 95, 95, .08); }
+
+        .quiz-feedback {
+            font-family: "Crimson Pro", serif;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--muted);
+            min-height: 20px;
+            margin-bottom: 14px;
+        }
+
+        .quiz-next { text-align: right; }
+
+        /* ESSAY */
+        .essay-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+
+        .essay-topic-btn {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .06em;
+            color: var(--muted);
+            text-align: left;
+            cursor: none;
+            transition: border-color .2s ease, color .2s ease;
+        }
+
+        .essay-topic-btn:hover, .essay-topic-btn.active {
+            border-color: rgba(155, 134, 244, .28);
+            color: var(--purple);
+        }
+
+        .essay-outline { display: none; flex-direction: column; gap: 14px; }
+        .essay-outline.show { display: flex; }
+
+        .essay-block {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .essay-block-label {
+            color: var(--purple);
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .essay-block-body {
+            font-family: "Crimson Pro", serif;
+            color: var(--muted);
+            line-height: 1.78;
+            font-size: 15px;
+        }
+
+        strong.ap-term { color: #c8b0f8; font-weight: 600; }
+
+        body.ap-highlight strong.ap-term {
+            background: rgba(155, 134, 244, .12);
+            padding: 0 3px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(155, 134, 244, .15);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1 }
+            50% { opacity: .2 }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px) }
+            to { opacity: 1; transform: translateY(0) }
+        }
+
+        @media(max-width:1020px) {
+            .hero-grid { grid-template-columns: 1fr }
+            .dash-stats { grid-template-columns: 1fr }
+            #main { padding-left: 26px; padding-right: 26px }
+            .notes-shell { grid-template-columns: 1fr }
+        }
+
+        @media(max-width:760px) {
+            body { cursor: auto; overflow: auto; display: block }
+            #cursor, #readingProgress { display: none }
+            #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border) }
+            #sidebar:hover, #sidebar.pinned { width: 100% }
+            .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger {
+                opacity: 1 !important; pointer-events: auto !important
+            }
+            #pinBtn { display: none }
+            nav { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px }
+            #main { height: auto; overflow: visible }
+            .topbar { position: static }
+            .glossary-toolbar input { min-width: 100%; width: 100% }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div id="ambientOverlay"></div>
+    <div id="readingProgress">
+        <div id="readingProgressFill"></div>
+    </div>
+
+    <aside id="sidebar">
+        <button id="pinBtn" type="button">Pin</button>
+        <div class="sidebar-logo">
+            <div class="logo-icon">CSP</div>
+            <div class="logo-copy">
+                <h1>CSP BIG IDEA 5</h1>
+                <p>Impact of Computing</p>
+            </div>
+        </div>
+        <div class="search-wrap">
+            <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Big Idea 5</span></button>
+            <div id="sbSearchPanel">
+                <div id="sbSearchInner">
+                    <span style="color:var(--purple);font-size:12px;">⌕</span>
+                    <input id="sbInput" type="text" placeholder="Find concepts, terms, or topics" />
+                </div>
+                <div id="sbResults"></div>
+            </div>
+        </div>
+        <nav id="sidebarNav"></nav>
+        <div class="sidebar-footer"><span class="dot"></span><span>Study Mode Active</span></div>
+    </aside>
+
+    <main id="main">
+        <div class="topbar">
+            <div class="top-actions">
+                <a class="glass-btn" href="apcsp-unit1.html">Big Idea 1</a>
+                <a class="glass-btn" href="apcsp-unit2.html">Big Idea 2</a>
+                <a class="glass-btn" href="apcsp-unit3.html">Big Idea 3</a>
+                <a class="glass-btn" href="apcsp-unit4.html">Big Idea 4</a>
+                <a class="glass-btn" href="apcsp-unit5.html"
+                    style="color:var(--purple);border-color:rgba(155,134,244,.32);">Big Idea 5</a>
+                <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+                <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+                <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+            </div>
+            <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <section class="tab-content active" id="dashboard">
+            <header class="page-header">
+                <span class="unit-tag">Big Idea 5 · Impact of Computing</span>
+                <h2>Computing & Society</h2>
+                <p>Innovations · Privacy · Bias · Digital Divide · Crowdsourcing · Legal & Ethical Issues · Cybersecurity</p>
+            </header>
+            <div class="hero-grid">
+                <article class="card hero-card">
+                    <div class="card-sub">Core Frame</div>
+                    <div class="card-title">What Big Idea 5 Is Really About</div>
+                    <div class="body-copy">
+                        <p>Big Idea 5 is the human heart of AP CSP. While earlier units explain how computing works, this unit asks: <em>what does it mean for people?</em> Every topic — from <strong class="ap-term">privacy</strong> to <strong class="ap-term">bias</strong> to <strong class="ap-term">intellectual property</strong> — traces how technology reshapes power, opportunity, and daily life.</p>
+                        <p>The exam rewards nuanced thinking: showing that the same <strong class="ap-term">computing innovation</strong> can benefit one group and harm another, that <strong class="ap-term">digital divide</strong> is about more than having a device, and that <strong class="ap-term">algorithms</strong> reflect human choices — not neutral math.</p>
+                    </div>
+                    <div class="dash-stats">
+                        <div class="stat-box"><span>Study Sections</span><strong>9</strong></div>
+                        <div class="stat-box"><span>Key Terms</span><strong>50+</strong></div>
+                        <div class="stat-box"><span>Quiz Items</span><strong>12</strong></div>
+                    </div>
+                    <div class="focus-callout">
+                        <div class="label">Exam Focus</div>
+                        <div class="body-copy">Always explain <em>who</em> is affected, <em>how</em> the technology causes the effect, and what the <strong class="ap-term">trade-offs</strong> are. Vague answers ("it helps people") score zero. Name a stakeholder, trace a mechanism, acknowledge a downside.</div>
+                    </div>
+                </article>
+                <article class="card feature-card accent-blue">
+                    <div class="card-sub">Fast Review</div>
+                    <div class="card-title">What You Must Be Able To Explain</div>
+                    <ul class="bullet-list">
+                        <li>How a <strong class="ap-term">computing innovation</strong> can have both beneficial and harmful effects — often for different stakeholders.</li>
+                        <li>What <strong class="ap-term">personally identifiable information (PII)</strong> is and how data can be used to infer sensitive facts.</li>
+                        <li>Why "anonymous" data is not always truly private (<strong class="ap-term">re-identification</strong>).</li>
+                        <li>The three dimensions of the <strong class="ap-term">digital divide</strong>: access, use, and outcomes.</li>
+                        <li>How <strong class="ap-term">bias</strong> enters algorithms through data and design choices — not just "bad programmers."</li>
+                        <li>What <strong class="ap-term">crowdsourcing</strong> enables and what risks it introduces.</li>
+                        <li>The difference between <strong class="ap-term">copyright</strong>, <strong class="ap-term">open source</strong>, and <strong class="ap-term">Creative Commons</strong> licensing.</li>
+                        <li>Common <strong class="ap-term">cybersecurity</strong> threats: phishing, malware, social engineering, and how encryption addresses them.</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">Privacy</span><span class="tag">Bias</span><span class="tag">Equity</span>
+                        <span class="tag">Security</span><span class="tag">IP</span><span class="tag">Crowdsourcing</span>
+                    </div>
+                </article>
+            </div>
+            <div class="exam-grid">
+                <article class="exam-card accent-red">
+                    <div class="mini-label">Common Mistakes</div>
+                    <h3>Avoid These</h3>
+                    <ul class="bullet-list">
+                        <li>Giving only a benefit <em>or</em> only a harm when the question asks for both — always present both sides.</li>
+                        <li>Treating "anonymous" data as automatically safe — <strong class="ap-term">re-identification</strong> through linked datasets is a real risk.</li>
+                        <li>Claiming "algorithms are objective because computers don't have feelings" — algorithms reflect the data and goals humans choose.</li>
+                        <li>Confusing <strong class="ap-term">security</strong> (blocking unauthorized access) with <strong class="ap-term">privacy</strong> (controlling personal info) — they're related but distinct.</li>
+                        <li>Treating "open source" as "no rules" — open-source licenses still define what you can and cannot do.</li>
+                        <li>Reducing the digital divide to "having internet or not" — skills, quality, and outcomes matter too.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-teal">
+                    <div class="mini-label">Study Strategy</div>
+                    <h3>Best Order To Review</h3>
+                    <ul class="bullet-list">
+                        <li>Start with computing innovations and the beneficial/harmful effect framework — it underlies every topic.</li>
+                        <li>Study PII, digital footprints, and inference — data privacy questions are the most common on the exam.</li>
+                        <li>Learn the digital divide through its three layers: access, use, and outcomes.</li>
+                        <li>Cover bias: where it comes from, feedback loops, and real-world high-stakes examples.</li>
+                        <li>Understand crowdsourcing: its power, quality risks, and labor ethics.</li>
+                        <li>Finish with intellectual property (copyright vs. open source vs. Creative Commons) and cybersecurity threats and defenses.</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- NOTES -->
+        <section class="tab-content" id="notes">
+            <header class="page-header">
+                <span class="unit-tag">Study Notes</span>
+                <h2>Big Idea 5 Notes Index</h2>
+                <p>Innovations · Data & Privacy · Digital Divide · Bias · Crowdsourcing · Legal Issues · Cybersecurity · Economy & Environment</p>
+            </header>
+            <div class="notes-shell">
+                <aside class="notes-index" aria-label="Big Idea 5 notes index">
+                    <div class="notes-index-title">Major Buckets</div>
+                    <button class="note-jump" type="button" data-note-target="n-innovations"><span>Computing Innovations</span><span>01</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-access"><span>Access to Info</span><span>02</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-privacy"><span>Data & Privacy</span><span>03</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-divide"><span>Digital Divide</span><span>04</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-bias"><span>Bias in Algorithms</span><span>05</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-crowd"><span>Crowdsourcing</span><span>06</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-legal"><span>Legal & Ethical</span><span>07</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-cyber"><span>Cybersecurity</span><span>08</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-economy"><span>Economy & Environment</span><span>09</span></button>
+                </aside>
+                <div class="notes-stack">
+
+                    <article class="note-section accent-purple" id="n-innovations">
+                        <div class="mini-label">01 · Computing Innovations & Their Impacts</div>
+                        <h3>How Computing Changes the World</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">computing innovation</strong> is a new or improved computer-based product or system — combining hardware, software, and data — that changes how people live, work, or communicate. It doesn't have to be a brand-new invention; smartphones are a powerful recombination of GPS, cameras, mobile internet, and apps.</p>
+                            <p>When evaluating impact, always identify <em>who</em> is affected, explain <em>what</em> changes, and acknowledge <strong class="ap-term">trade-offs</strong>: most innovations produce benefits and harms simultaneously, often for different groups.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Beneficial Effect</strong>
+                                <div class="body-copy">An outcome that improves quality of life, access, safety, productivity, or knowledge for a stakeholder.</div>
+                            </div>
+                            <div class="mini-note"><strong>Harmful Effect</strong>
+                                <div class="body-copy">An outcome that creates risk, inequity, damage, exploitation, or loss — including privacy loss — for some group.</div>
+                            </div>
+                            <div class="mini-note"><strong>Direct Effects</strong>
+                                <div class="body-copy">Immediate, intended results — e.g., video conferencing enables remote meetings.</div>
+                            </div>
+                            <div class="mini-note"><strong>Indirect Effects</strong>
+                                <div class="body-copy">Secondary consequences that emerge later — e.g., remote work shifts housing demand and local business revenue. The exam rewards going beyond the obvious.</div>
+                            </div>
+                            <div class="mini-note"><strong>Unintended Consequences</strong>
+                                <div class="body-copy">Programmers try to foresee negative uses, but it is rarely possible to anticipate all ways others will use an innovation. Scale makes unintended effects larger.</div>
+                            </div>
+                            <div class="mini-note"><strong>Network Effects</strong>
+                                <div class="body-copy">An innovation becomes more valuable as more people use it (e.g., messaging platforms). This can accelerate adoption but also lead to market concentration.</div>
+                            </div>
+                        </div>
+                        <h4>Worked Example: Navigation App</h4>
+                        <div class="code-block">Innovation: Navigation app (maps + GPS + real-time traffic)
+
+Beneficial effects:
+  → Reduces travel time for users
+  → Improves emergency response routing
+  → Increases accessibility for new drivers
+
+Harmful effects:
+  → Encourages constant location tracking
+  → Reroutes traffic through residential neighborhoods
+  → Location data can be misused for stalking
+
+Key insight: Same tool, different stakeholders, opposite outcomes.</div>
+                    </article>
+
+                    <article class="note-section accent-blue" id="n-access">
+                        <div class="mini-label">02 · Access to Information</div>
+                        <h3>The Web, Cloud Computing & Open Data</h3>
+                        <div class="body-copy">
+                            <p>Modern computing dramatically increases access to information, reshaping learning, markets, and problem-solving. The common thread: data becomes easier to store, search, share, and remix — at global scale.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Cloud Computing</strong>
+                                <div class="body-copy">Documents and services stored on remote servers, not your local device. Enables collaboration from anywhere, but creates dependence on internet access and third-party providers.</div>
+                            </div>
+                            <div class="mini-note"><strong>Open Data</strong>
+                                <div class="body-copy">Public databases — from government, science, sports, business — allow anyone to search, analyze, and innovate. Democratizes access but may carry misuse or re-identification risks.</div>
+                            </div>
+                            <div class="mini-note"><strong>Search Trends & Analytics</strong>
+                                <div class="body-copy">Search engines and social platforms track what topics surge in popularity. Businesses use analytics to identify customer behavior, optimize products, and target marketing.</div>
+                            </div>
+                            <div class="mini-note"><strong>Targeted Advertising</strong>
+                                <div class="body-copy">Matching ads to users based on collected data. Helpful for specific searches; but depends on data collection that creates privacy risks and power imbalances.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-cyan" id="n-privacy">
+                        <div class="mini-label">03 · Data & Privacy</div>
+                        <h3>What Gets Collected, Inferred, and Why It Matters</h3>
+                        <div class="body-copy">
+                            <p>Data collection shifts power: whoever controls data can influence decisions, markets, and people. The key concern is not just that data exists, but how it's collected, combined, and used — often without meaningful consent.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>PII</strong>
+                                <div class="body-copy">Personally identifiable information — name, address, age, SSN, medical/financial data. Includes anything that identifies you directly or indirectly.</div>
+                            </div>
+                            <div class="mini-note"><strong>Inference</strong>
+                                <div class="body-copy">Even "anonymous" data can reveal identity or sensitive facts. Location points can reveal home/work. Purchase history can suggest health or beliefs.</div>
+                            </div>
+                            <div class="mini-note"><strong>Explicit vs. Implicit Collection</strong>
+                                <div class="body-copy">Explicit: you type it in (forms, sign-ups). Implicit: the system silently records clicks, watch time, location, and device IDs.</div>
+                            </div>
+                            <div class="mini-note"><strong>Digital Footprint</strong>
+                                <div class="body-copy">The trail of data you leave online — posts, logins, metadata. Digital info is easy to copy, hard to fully erase. "Incognito" mode only hides local history, not server-side records.</div>
+                            </div>
+                            <div class="mini-note"><strong>Anonymization</strong>
+                                <div class="body-copy">Removes personal identifiers, but is not a privacy guarantee. Datasets can be re-identified by linking with other sources. Reduces risk; does not eliminate it.</div>
+                            </div>
+                            <div class="mini-note"><strong>Data Breach</strong>
+                                <div class="body-copy">Unauthorized access or exposure of private data. Consequences: identity theft, financial fraud, phishing attacks, and lasting privacy loss because copied data persists.</div>
+                            </div>
+                            <div class="mini-note"><strong>Surveillance</strong>
+                                <div class="body-copy">Monitoring behavior at scale: cameras, face recognition, location tracking, cookies. Can support safety but also enables authoritarian abuse, discrimination, or stalking.</div>
+                            </div>
+                            <div class="mini-note"><strong>Privacy ≠ Security</strong>
+                                <div class="body-copy">Security = protection from unauthorized access. Privacy = control over personal information. A system can be secure yet privacy-invasive (storing detailed location logs securely).</div>
+                            </div>
+                        </div>
+                        <h4>Fitness Tracker Example</h4>
+                        <div class="code-block">Collects: heart rate · sleep · location · exercise
+
+Beneficial: supports healthy habits, medical monitoring
+Harmful:  location trails reveal daily routines
+          health inferences may affect insurance rates
+          employers may pressure employees to share data
+
+Key theme: data collected for one purpose is often
+           later used for another without meaningful consent.</div>
+                    </article>
+
+                    <article class="note-section accent-orange" id="n-divide">
+                        <div class="mini-label">04 · Digital Divide & Accessibility</div>
+                        <h3>Who Gets Included, Who Gets Left Out</h3>
+                        <div class="body-copy">
+                            <p>The <strong class="ap-term">digital divide</strong> is unequal access to computing devices, internet, and the knowledge to use them effectively. It operates in three layers — and the exam expects you to know all three.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Access Divide</strong>
+                                <div class="body-copy">Who has reliable devices and internet? Affected by income, geography (rural broadband gaps), and infrastructure investment.</div>
+                            </div>
+                            <div class="mini-note"><strong>Use Divide</strong>
+                                <div class="body-copy">Who has the skills, time, and support to use technology effectively? Language barriers, disability, and lack of training all contribute.</div>
+                            </div>
+                            <div class="mini-note"><strong>Outcome Divide</strong>
+                                <div class="body-copy">Who benefits — through jobs, education, health services? Unequal outcomes persist even when devices are available.</div>
+                            </div>
+                            <div class="mini-note"><strong>Accessibility</strong>
+                                <div class="body-copy">Designing so people with disabilities can perceive, navigate, and interact with technology. Includes screen readers, captions, keyboard navigation, high-contrast modes.</div>
+                            </div>
+                            <div class="mini-note"><strong>Assistive Technology</strong>
+                                <div class="body-copy">Hardware or software helping people accomplish tasks: Braille displays, voice typing, switch controls. Often benefits users beyond the originally targeted group.</div>
+                            </div>
+                            <div class="mini-note"><strong>Inclusive Design</strong>
+                                <div class="body-copy">Planning for diverse users from the start, not retrofitting accessibility later. Retrofitting is expensive and often incomplete — early planning matters for equity.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-red" id="n-bias">
+                        <div class="mini-label">05 · Bias in Computing</div>
+                        <h3>How Data & Algorithms Can Reinforce Inequality</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Bias</strong> is a systematic tendency toward certain outcomes. It can be intentional or unintentional — a system can produce unfair results even if no one "meant" to discriminate. Because <strong class="ap-term">humans write algorithms</strong>, our biases can make their way into the code and data without us realizing it.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Biased Data</strong>
+                                <div class="body-copy">Unrepresentative datasets — if a group appears less in the training data, the system learns patterns that work worse for them. Classic example: facial recognition trained mostly on lighter-skinned faces.</div>
+                            </div>
+                            <div class="mini-note"><strong>Biased Labels</strong>
+                                <div class="body-copy">Human judgments encoded into what's measured — if historical hiring reflected discrimination, a model trained on past hires will replicate that discrimination.</div>
+                            </div>
+                            <div class="mini-note"><strong>Feedback Loops</strong>
+                                <div class="body-copy">System outputs influence future inputs, reinforcing patterns over time. Predictive policing sends more patrols to neighborhoods → more incidents recorded → even more patrols "justified."</div>
+                            </div>
+                            <div class="mini-note"><strong>High-Stakes AI Uses</strong>
+                                <div class="body-copy">Screening job candidates, determining credit/loans, locating crime. Scaled algorithmic bias in these areas can cause serious harm to individuals and communities.</div>
+                            </div>
+                            <div class="mini-note"><strong>"The Computer Decided"</strong>
+                                <div class="body-copy">Not a valid excuse. Outputs reflect human choices about what to optimize, what data to use, and what constraints to apply. Appearing neutral is not the same as being fair.</div>
+                            </div>
+                            <div class="mini-note"><strong>Mitigations</strong>
+                                <div class="body-copy">Improve data representation; test outcomes across subgroups; provide explanations; add human oversight for high-stakes decisions. No single fix eliminates all bias.</div>
+                            </div>
+                        </div>
+                        <h4>Automated Resume Filtering Example</h4>
+                        <div class="code-block">System: ranks applicants based on past successful hires
+
+Problem: if past hires skewed toward certain schools
+         or demographics, the model encodes that history
+         → nontraditional backgrounds penalized
+         → qualified candidates filtered out before review
+
+Fix options:
+  → Audit outcomes by subgroup, not just overall accuracy
+  → Add human review for borderline cases
+  → Retrain on more representative data</div>
+                    </article>
+
+                    <article class="note-section accent-teal" id="n-crowd">
+                        <div class="mini-label">06 · Crowdsourcing & Collective Computing</div>
+                        <h3>Power, Quality, and Ethics of the Crowd</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Crowdsourcing</strong> gets contributions — data, ideas, labor, money, or computing power — from a large group via the internet. It changes how work is organized and how knowledge is created.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Crowdfunding</strong>
+                                <div class="body-copy">Raising money from many people. Enables projects that traditional investors might not fund; democratizes access to capital.</div>
+                            </div>
+                            <div class="mini-note"><strong>Citizen Science</strong>
+                                <div class="body-copy">Volunteers contribute observations or analysis to research projects. Scales data collection far beyond what a small team could achieve.</div>
+                            </div>
+                            <div class="mini-note"><strong>Human Computation</strong>
+                                <div class="body-copy">People do small tasks computers struggle with: labeling images, transcribing audio. Enables training AI systems at large scale.</div>
+                            </div>
+                            <div class="mini-note"><strong>Donated Computing Time</strong>
+                                <div class="body-copy">Users allow idle devices to contribute processing power to research projects (e.g., protein folding). Scales computation at near-zero cost to the organization.</div>
+                            </div>
+                            <div class="mini-note"><strong>Quality Risks</strong>
+                                <div class="body-copy">Unrepresentative contributors, low-quality work incentives, malicious manipulation. Safeguards: reputation systems, redundancy (multiple contributors per task), moderation.</div>
+                            </div>
+                            <div class="mini-note"><strong>Labor Ethics</strong>
+                                <div class="body-copy">Can involve low pay, lack of worker protections, unclear consent, and unequal benefit distribution between platforms and contributors. "Flexible" often hides exploitation.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-green" id="n-legal">
+                        <div class="mini-label">07 · Legal & Ethical Concerns</div>
+                        <h3>Intellectual Property, Licensing & Responsible Use</h3>
+                        <div class="body-copy">
+                            <p>Computing makes copying and distributing information frictionless, creating tension between openness and the rights of creators. Key distinction: <strong class="ap-term">legal</strong> questions ask what the law allows; <strong class="ap-term">ethical</strong> questions ask what is right and fair — and they don't always agree.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Intellectual Property</strong>
+                                <div class="body-copy">Creations of the mind — music, writing, software, images. Anything a person creates is their intellectual property. "It's online" doesn't mean "free to use."</div>
+                            </div>
+                            <div class="mini-note"><strong>Copyright</strong>
+                                <div class="body-copy">Legal protection giving creators rights over how their work is used and distributed. Digital duplication makes enforcement difficult but the rights still exist.</div>
+                            </div>
+                            <div class="mini-note"><strong>Creative Commons</strong>
+                                <div class="body-copy">A licensing system allowing creators to share work with stipulations (e.g., attribution required, non-commercial only). Provides clear rules for reuse without full copyright restriction.</div>
+                            </div>
+                            <div class="mini-note"><strong>Open Source</strong>
+                                <div class="body-copy">Source code available under a license allowing viewing, modification, and redistribution under specific conditions. Not "no rules" — the license still governs use.</div>
+                            </div>
+                            <div class="mini-note"><strong>Peer-to-Peer Sharing</strong>
+                                <div class="body-copy">P2P networks can be used for legitimate file sharing but are also used to share copyrighted material illegally. A classic example of how easy copying creates legal conflict.</div>
+                            </div>
+                            <div class="mini-note"><strong>Ethics Beyond Legality</strong>
+                                <div class="body-copy">Something can be legal but unethical — e.g., designing addictive engagement for children. Ethical reasoning considers harm, honesty, privacy, consent, and fairness even when no law is broken.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-cyan" id="n-cyber">
+                        <div class="mini-label">08 · Safety, Security & Cybersecurity</div>
+                        <h3>Protecting People in a Connected World</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Cybersecurity</strong> has a global impact because anyone from anywhere can attempt to gain unauthorized access to someone else's computer, data, or network. Strong security practices protect both individuals and institutions.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Phishing</strong>
+                                <div class="body-copy">Emails or websites posing as legitimate to trick users into clicking malicious links or entering credentials. The most common social-engineering attack vector.</div>
+                            </div>
+                            <div class="mini-note"><strong>Malware</strong>
+                                <div class="body-copy">Harmful software that steals data, damages files, or hijacks devices. Includes viruses (self-replicating attached to files) and keyloggers (capture every keystroke).</div>
+                            </div>
+                            <div class="mini-note"><strong>Social Engineering</strong>
+                                <div class="body-copy">Manipulating people rather than breaking code — e.g., impersonating IT support to get a password. Exploits trust rather than technical vulnerabilities.</div>
+                            </div>
+                            <div class="mini-note"><strong>Encryption & Decryption</strong>
+                                <div class="body-copy">Encryption converts a message to coded format; decryption reverses it. Protects data in transit even if intercepted. The algorithm is public; the key is secret.</div>
+                            </div>
+                            <div class="mini-note"><strong>Public Key Encryption</strong>
+                                <div class="body-copy">Uses two keys: a public key to encrypt, a private key to decrypt. Anyone can send an encrypted message; only the recipient can read it. Powers HTTPS and secure email.</div>
+                            </div>
+                            <div class="mini-note"><strong>Certificate Authorities</strong>
+                                <div class="body-copy">Trusted third parties that issue digital certificates verifying that a website's encryption key belongs to who it claims. Enables the "trust model" behind secure online purchases.</div>
+                            </div>
+                            <div class="mini-note"><strong>Strong Passwords & MFA</strong>
+                                <div class="body-copy">Strong passwords block brute-force access. Multifactor authentication (MFA) adds a second verification layer — something you know + something you have or are.</div>
+                            </div>
+                            <div class="mini-note"><strong>Security vs. Privacy</strong>
+                                <div class="body-copy">Security = keeping unauthorized users out. Privacy = controlling how your data is used. A system can be both secure and privacy-invasive (e.g., storing encrypted location logs indefinitely).</div>
+                            </div>
+                        </div>
+                        <h4>Phishing Scenario</h4>
+                        <div class="code-block">Email: "Your account will be deleted — confirm password now."
+
+Threat type:   Phishing (social engineering)
+Impact:        Attacker gains account access;
+               may access private messages, reset passwords elsewhere
+
+Correct response:
+  → Do NOT click the link
+  → Verify through official channels (type URL directly)
+  → Report to IT / school administration</div>
+                    </article>
+
+                    <article class="note-section accent-orange" id="n-economy">
+                        <div class="mini-label">09 · Economic, Social & Environmental Impacts</div>
+                        <h3>Jobs, Communities & the Planet</h3>
+                        <div class="body-copy">
+                            <p>Computing reshapes economies, social structures, and environmental systems — not just individual users. A nuanced exam response looks beyond the obvious individual benefit to systemic effects.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Automation</strong>
+                                <div class="body-copy">Technology performing tasks with reduced human involvement. Increases productivity and safety but can displace workers. New jobs appear (developers, technicians) but transitions are uneven.</div>
+                            </div>
+                            <div class="mini-note"><strong>Gig Economy</strong>
+                                <div class="body-copy">App-based platforms provide flexible income but concentrate power: platforms set rules, workers have limited transparency, and algorithms determine assignments and ratings.</div>
+                            </div>
+                            <div class="mini-note"><strong>Mental Health</strong>
+                                <div class="body-copy">Computing expands social connection but also enables harassment, social comparison, and overuse. Design choices (notifications, infinite scroll) shape behavior — not just individual self-control.</div>
+                            </div>
+                            <div class="mini-note"><strong>E-Waste</strong>
+                                <div class="body-copy">Discarded electronics containing hazardous materials. Manufacturing and disposal have real environmental costs often omitted from "computing is green" narratives.</div>
+                            </div>
+                            <div class="mini-note"><strong>Energy Use</strong>
+                                <div class="body-copy">Data centers and networks consume massive amounts of electricity. Streaming one hour of video has a measurable carbon footprint, though computing also enables remote work that reduces some travel.</div>
+                            </div>
+                            <div class="mini-note"><strong>Environmental Solutions</strong>
+                                <div class="body-copy">Computing also helps: smart grids optimize energy use, climate models improve forecasting, and remote collaboration reduces business travel. Trade-offs go both ways.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOSSARY -->
+        <section class="tab-content" id="glossary">
+            <header class="page-header">
+                <span class="unit-tag">Glossary</span>
+                <h2>Key Terms</h2>
+                <p>All Big Idea 5 vocabulary — searchable</p>
+            </header>
+            <div class="glossary-toolbar">
+                <input id="glossaryFilter" type="text" placeholder="Search terms…" />
+            </div>
+            <div class="glossary-grid" id="glossaryGrid"></div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="tab-content" id="flashcards">
+            <header class="page-header">
+                <span class="unit-tag">Flashcards</span>
+                <h2>Flip to Review</h2>
+                <p>Click any card to reveal the answer</p>
+            </header>
+            <div class="flash-grid" id="flashGrid"></div>
+        </section>
+
+        <!-- EXAM PREP -->
+        <section class="tab-content" id="examprep">
+            <header class="page-header">
+                <span class="unit-tag">Exam Prep</span>
+                <h2>AP Exam Strategies</h2>
+                <p>Patterns, traps, and the reasoning method that scores points</p>
+            </header>
+            <div class="exam-grid">
+                <article class="exam-card feature-card accent-purple">
+                    <div class="mini-label">Impact Framework</div>
+                    <h3>The 5-Step Response Method</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Describe</strong> what the innovation does in 1–2 precise sentences, including data collection if relevant.</li>
+                        <li><strong>Identify stakeholders</strong>: users, non-users nearby, companies, governments, workers, communities.</li>
+                        <li><strong>Give one beneficial effect</strong> and explain the <em>mechanism</em> — how the tech causes the benefit.</li>
+                        <li><strong>Give one harmful effect</strong> and explain the <em>mechanism</em> — how the tech causes harm.</li>
+                        <li><strong>If asked</strong>, propose mitigations and acknowledge their limitations.</li>
+                    </ul>
+                </article>
+                <article class="exam-card feature-card accent-blue">
+                    <div class="mini-label">Privacy Questions</div>
+                    <h3>Data & PII Question Patterns</h3>
+                    <ul class="bullet-list">
+                        <li>Always note whether collection is explicit (forms) or implicit (behavior tracking).</li>
+                        <li>Mention re-identification risk when "anonymous" data is discussed.</li>
+                        <li>Distinguish privacy (control over info) from security (unauthorized access).</li>
+                        <li>Name a specific inference risk — not just "they might misuse it."</li>
+                        <li>Remember: even "incognito" browsing leaves server-side traces.</li>
+                    </ul>
+                </article>
+                <article class="exam-card feature-card accent-red">
+                    <div class="mini-label">Bias Questions</div>
+                    <h3>Algorithm Bias Question Patterns</h3>
+                    <ul class="bullet-list">
+                        <li>Never say "computers are objective" — explain what human choices went into the system.</li>
+                        <li>Trace bias to its source: underrepresentation in data, biased labels, or feedback loops.</li>
+                        <li>Name a high-stakes domain: hiring, lending, policing, medical diagnosis.</li>
+                        <li>Suggest practical mitigations: better data, subgroup auditing, human oversight.</li>
+                        <li>Avoid unrealistic fixes like "remove all bias."</li>
+                    </ul>
+                </article>
+                <article class="exam-card feature-card accent-orange">
+                    <div class="mini-label">Digital Divide</div>
+                    <h3>Equity Question Patterns</h3>
+                    <ul class="bullet-list">
+                        <li>Use all three layers: access (device/internet), use (skills/support), outcomes (jobs/education).</li>
+                        <li>Don't assume technology automatically increases equity — cost, language, and disability matter.</li>
+                        <li>Distinguish accessibility (designing for disability) from general usability.</li>
+                        <li>Identify who is harmed in a scenario, not just who benefits.</li>
+                    </ul>
+                </article>
+                <article class="exam-card feature-card accent-teal">
+                    <div class="mini-label">Legal & IP</div>
+                    <h3>Intellectual Property Quick Rules</h3>
+                    <ul class="bullet-list">
+                        <li>"It's online" ≠ free to use. Always check for a license.</li>
+                        <li>Educational use does NOT automatically remove copyright concerns.</li>
+                        <li>Open source still has rules — what you can do depends on the specific license.</li>
+                        <li>Creative Commons licenses vary: some require attribution only; others restrict commercial use.</li>
+                        <li>Ethics extends beyond legality: legal + harmful = still problematic.</li>
+                    </ul>
+                </article>
+                <article class="exam-card feature-card accent-cyan">
+                    <div class="mini-label">Cybersecurity</div>
+                    <h3>Security Question Patterns</h3>
+                    <ul class="bullet-list">
+                        <li>Name the specific threat type: phishing, malware, keylogger, social engineering.</li>
+                        <li>Explain the human factor — many attacks exploit trust, not just technical flaws.</li>
+                        <li>Describe a specific preventive action, not just "be careful."</li>
+                        <li>Encryption hides content; authentication proves identity — don't conflate them.</li>
+                        <li>Public key encryption: algorithm is public; the key is the secret.</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- QUIZ MODAL -->
+    <div class="modal" id="quizModal">
+        <div class="modal-box">
+            <div class="modal-title">Big Idea 5 Quiz</div>
+            <button class="modal-close" data-close="quizModal" type="button">Close</button>
+            <div id="quizMount"></div>
+        </div>
+    </div>
+
+    <!-- ESSAY MODAL -->
+    <div class="modal" id="essayModal">
+        <div class="modal-box">
+            <div class="modal-title">AP Prompt Bank</div>
+            <button class="modal-close" data-close="essayModal" type="button">Close</button>
+            <div class="essay-list" id="essayTopics"></div>
+            <div class="essay-outline" id="essayOutline"></div>
+        </div>
+    </div>
+
+    <script>
+        const tabs = [
+            { id: "dashboard", icon: "◈", label: "Dashboard", ambient: "radial-gradient(ellipse at 60% 10%, rgba(155,134,244,.12), transparent 65%)" },
+            { id: "notes",     icon: "≡", label: "Notes",     ambient: "radial-gradient(ellipse at 20% 50%, rgba(91,143,212,.1), transparent 65%)" },
+            { id: "glossary",  icon: "⊞", label: "Glossary",  ambient: "radial-gradient(ellipse at 80% 30%, rgba(62,184,154,.1), transparent 65%)" },
+            { id: "flashcards",icon: "⟳", label: "Flashcards",ambient: "radial-gradient(ellipse at 40% 70%, rgba(242,135,73,.08), transparent 65%)" },
+            { id: "examprep",  icon: "✦", label: "Exam Prep", ambient: "radial-gradient(ellipse at 70% 20%, rgba(217,95,95,.08), transparent 65%)" },
+        ];
+
+        const glossaryTerms = [
+            { term: "Computing Innovation", tab: "notes", def: "A new or improved computer-based product or system that changes how people live, work, or communicate. Can be a recombination of existing technologies." },
+            { term: "Beneficial Effect", tab: "notes", def: "An outcome of a computing innovation that improves quality of life, access, safety, productivity, or knowledge for a stakeholder." },
+            { term: "Harmful Effect", tab: "notes", def: "An outcome that creates risk, inequity, damage, exploitation, or privacy loss for some group. The same innovation can be beneficial and harmful for different stakeholders." },
+            { term: "Unintended Consequence", tab: "notes", def: "A result of an innovation that was not foreseen by its creators. Scale makes unintended effects larger and harder to predict." },
+            { term: "Network Effects", tab: "notes", def: "When an innovation becomes more valuable as more people use it. Can accelerate adoption but also leads to market concentration." },
+            { term: "Direct Effect", tab: "notes", def: "Immediate, intended result of a computing innovation — e.g., video conferencing enables remote meetings." },
+            { term: "Indirect Effect", tab: "notes", def: "Secondary consequences that emerge later — e.g., remote work shifts housing demand. Exam rewards identifying these." },
+            { term: "Cloud Computing", tab: "notes", def: "Storing documents and services on remote servers rather than local devices. Enables collaboration from anywhere but creates dependence on internet access and third-party providers." },
+            { term: "Open Data", tab: "notes", def: "Public databases — from government, science, sports, business — allowing anyone to search, analyze, and innovate with them." },
+            { term: "Targeted Advertising", tab: "notes", def: "Matching ads to users based on collected behavioral data. Useful for specific searches but depends on data collection that creates privacy risks." },
+            { term: "PII", tab: "glossary", def: "Personally Identifiable Information — any data that identifies you directly or indirectly: name, address, age, SSN, medical/financial information." },
+            { term: "Inference", tab: "glossary", def: "Deriving sensitive information from data that doesn't directly identify someone. Location points can reveal home/work; purchase history can suggest health conditions." },
+            { term: "Digital Footprint", tab: "glossary", def: "The trail of data left online — posts, logins, metadata. Digital info is easy to copy and hard to fully erase." },
+            { term: "Anonymization", tab: "glossary", def: "Removing personal identifiers from data. Not a privacy guarantee — datasets can often be re-identified by linking with other sources." },
+            { term: "Re-identification", tab: "glossary", def: "The process of matching anonymous data to a specific individual using supplementary information. Reason why 'anonymous' data is not always truly private." },
+            { term: "Data Breach", tab: "glossary", def: "Unauthorized access or exposure of private data, enabling identity theft, financial fraud, phishing, and lasting privacy loss." },
+            { term: "Surveillance", tab: "glossary", def: "Monitoring behavior or activities at scale, using cameras, face recognition, location tracking, or cookies. Can support safety or enable abuse." },
+            { term: "Digital Divide", tab: "glossary", def: "Unequal access to computing devices, internet, and knowledge to use them. Has three layers: access, use, and outcomes." },
+            { term: "Accessibility", tab: "glossary", def: "Designing computing innovations so people with disabilities can perceive, understand, navigate, and interact with them." },
+            { term: "Assistive Technology", tab: "glossary", def: "Hardware or software that helps people with disabilities perform tasks: Braille displays, screen readers, voice typing, switch controls." },
+            { term: "Inclusive Design", tab: "glossary", def: "Planning for diverse users from the start rather than retrofitting accessibility later. Reduces cost and improves equity." },
+            { term: "Bias", tab: "glossary", def: "A systematic tendency toward certain outcomes in an algorithm. Can be unintentional; results from choices in data, labels, model goals, and deployment context." },
+            { term: "Feedback Loop", tab: "glossary", def: "When a system's outputs influence its future inputs, reinforcing patterns over time. Example: predictive policing sends more patrols → more incidents recorded → more patrols." },
+            { term: "Crowdsourcing", tab: "glossary", def: "Getting contributions — data, ideas, labor, money, or computing power — from a large group via the internet." },
+            { term: "Citizen Science", tab: "glossary", def: "Volunteers contributing observations or analysis to research projects, scaling data collection far beyond small teams." },
+            { term: "Intellectual Property", tab: "glossary", def: "Creations of the mind — music, writing, software, images. Anything a person creates is their intellectual property." },
+            { term: "Copyright", tab: "glossary", def: "Legal protection giving creators rights over how their work is used and distributed. 'It's online' doesn't mean 'free to use.'" },
+            { term: "Creative Commons", tab: "glossary", def: "A licensing system allowing creators to share work with clear stipulations such as attribution required or non-commercial use only." },
+            { term: "Open Source", tab: "glossary", def: "Software whose source code is available under a license allowing viewing, modification, and redistribution under specific conditions. Not 'no rules.'" },
+            { term: "Phishing", tab: "glossary", def: "Emails or websites posing as legitimate to trick users into clicking malicious links or entering credentials. Most common social-engineering attack." },
+            { term: "Malware", tab: "glossary", def: "Harmful software that steals data, damages files, or hijacks devices. Includes viruses and keyloggers." },
+            { term: "Social Engineering", tab: "glossary", def: "Manipulating people rather than breaking technical security — e.g., impersonating IT support to obtain passwords." },
+            { term: "Encryption", tab: "glossary", def: "Converting a message to coded format so it is unreadable without the decryption key. Protects data in transit even if intercepted." },
+            { term: "Public Key Encryption", tab: "glossary", def: "Uses a public key to encrypt and a private key to decrypt. Anyone can send an encrypted message; only the intended recipient can read it." },
+            { term: "Certificate Authority", tab: "glossary", def: "Trusted third party that issues digital certificates verifying a website's encryption key belongs to its claimed owner. Enables secure HTTPS connections." },
+            { term: "Multifactor Authentication", tab: "glossary", def: "Adding a second verification layer beyond a password — something you know plus something you have or are. Significantly reduces unauthorized access." },
+            { term: "Automation", tab: "glossary", def: "Technology performing tasks with reduced human involvement. Increases productivity but can displace workers and increase inequality if benefits concentrate among technology owners." },
+            { term: "E-Waste", tab: "glossary", def: "Discarded electronics containing hazardous materials. Manufacturing and disposal have real environmental costs often overlooked." },
+            { term: "Analytics", tab: "glossary", def: "Identifying trends in data for marketing purposes and business intelligence — what customers search for, how long items sit in carts, when people buy." },
+        ];
+
+        const flashcards = [
+            { front: "What is a computing innovation?", back: "A new or improved computer-based product or system (hardware + software + data) that changes how people live, work, or communicate. Can be a recombination of existing tech." },
+            { front: "What is PII and give two examples?", back: "Personally Identifiable Information — any data that identifies you directly or indirectly. Examples: name & address, SSN, medical records, location history." },
+            { front: "Why is 'anonymous' data not always private?", back: "Re-identification: combining an anonymous dataset with other datasets can expose individual identities. E.g., a few location/time points can be matched to a known person." },
+            { front: "Name the three layers of the digital divide.", back: "1) Access divide (devices & internet), 2) Use divide (skills, time, support), 3) Outcome divide (benefits in jobs, education, health)." },
+            { front: "Where does algorithmic bias come from?", back: "Biased data (unrepresentative sets), biased labels (human judgments encoded as ground truth), biased model goals (optimizing profit over fairness), and biased deployment context." },
+            { front: "What is a feedback loop in AI?", back: "When a system's outputs influence future inputs, reinforcing patterns over time. E.g., predictive policing sends more patrols → more incidents recorded → even more patrols." },
+            { front: "What is crowdsourcing and one risk?", back: "Getting contributions from many people via the internet. One risk: unrepresentative contributors or malicious manipulation can produce low-quality or biased results." },
+            { front: "Difference between copyright and Creative Commons?", back: "Copyright: default legal protection — all rights reserved, permission needed. Creative Commons: a licensing system where creators specify exactly what uses are allowed (e.g., attribution + non-commercial)." },
+            { front: "What is phishing?", back: "Emails or websites posing as legitimate to trick users into clicking malicious links or entering credentials. A form of social engineering that exploits trust." },
+            { front: "How does public key encryption work?", back: "Uses two keys: a public key (shared with anyone) to encrypt, and a private key (kept secret) to decrypt. The algorithm is public; the key is the secret." },
+            { front: "Security vs. privacy — what's the difference?", back: "Security = protecting systems from unauthorized access. Privacy = controlling how personal information is collected and used. A system can be secure yet still be privacy-invasive." },
+            { front: "Name one environmental cost and one benefit of computing.", back: "Cost: e-waste from discarded electronics; high data center energy consumption. Benefit: climate modeling, smart grids, and remote collaboration reducing some travel." },
+        ];
+
+        const quizQuestions = [
+            {
+                question: "A fitness tracker collects location and heart-rate data to help users monitor health. A researcher identifies that insurers are beginning to request access to this data to adjust premiums. This is an example of:",
+                options: ["A beneficial effect of computing on public health", "Data being used for a purpose other than originally intended", "A direct effect of the fitness tracker innovation", "Open-source data sharing"],
+                correct: 1,
+                explanation: "Data collected for one purpose (health monitoring) being later used for another (insurance pricing) is a classic example of unintended secondary data use — a key Big Idea 5 theme."
+            },
+            {
+                question: "A school switches to online-only testing. Students in rural areas with slow internet connections consistently score lower. This best illustrates:",
+                options: ["Algorithmic bias in grading software", "The use divide component of the digital divide", "A phishing risk to students", "Crowdsourced assessment"],
+                correct: 1,
+                explanation: "The issue is not access to a device per se, but to adequate internet quality — which is the 'use divide': having a device but lacking the conditions to use it effectively."
+            },
+            {
+                question: "An AI hiring tool trained on 10 years of resumes from a company where 90% of past hires were men now ranks male applicants significantly higher. This bias most likely results from:",
+                options: ["Malicious programming by the developers", "Underrepresentation of women in the training data", "A feedback loop in the resume database", "Poor encryption of candidate data"],
+                correct: 1,
+                explanation: "The training data encoded historical hiring patterns that skewed male. The algorithm learned those patterns — not from intent, but from data that reflected past discrimination."
+            },
+            {
+                question: "A student copies an image from a website with no visible license for use in a school app. Which statement is most accurate?",
+                options: ["Educational use automatically grants permission to use any online image", "Open-source images can be used freely with no restrictions", "The image is likely copyrighted and requires permission or a proper license", "Images on the internet are public domain by default"],
+                correct: 2,
+                explanation: "Copyright exists by default for creative works. 'Found online' does not mean 'free to use.' The student needs explicit permission or a license (such as Creative Commons) that grants the intended use."
+            },
+            {
+                question: "Which of the following BEST describes the difference between security and privacy in computing?",
+                options: ["Security prevents data collection; privacy prevents hacking", "Security controls who can access systems; privacy controls how personal data is used", "Security and privacy are the same concept applied to different devices", "Privacy is a legal concern only; security is a technical concern only"],
+                correct: 1,
+                explanation: "Security = blocking unauthorized access. Privacy = controlling collection and use of personal data. A system can be highly secure yet collect and share invasive amounts of personal data."
+            },
+            {
+                question: "A recommendation algorithm on a video platform ranks content based on views. Popular videos get recommended more → more views → ranked even higher. This pattern is called:",
+                options: ["Public key encryption", "A feedback loop", "Crowdsourcing", "Targeted advertising"],
+                correct: 1,
+                explanation: "A feedback loop occurs when a system's outputs feed back as inputs, reinforcing existing patterns. This can amplify certain content types (including misinformation) regardless of quality."
+            },
+            {
+                question: "A volunteer mapping project lets users report road closures after a hurricane. One risk of this approach is:",
+                options: ["Excessive encryption of map data", "Inaccurate reports that could mislead emergency responders", "Copyright violations on satellite imagery", "Certificate authority failure"],
+                correct: 1,
+                explanation: "Crowdsourced data quality is a major risk: inaccurate or malicious contributions can mislead responders — potentially endangering lives. Redundancy and verification help but don't eliminate the risk."
+            },
+            {
+                question: "A social media platform collects data on which posts users interact with, then uses that data to rank future posts. Which pair of effects BEST represents the trade-off?",
+                options: ["Benefit: faster internet speeds. Harm: more data center energy use.", "Benefit: personalized, relevant content for users. Harm: potential filter bubbles and addictive design patterns.", "Benefit: stronger encryption. Harm: increased phishing attacks.", "Benefit: open-source code. Harm: peer-to-peer file sharing."],
+                correct: 1,
+                explanation: "Algorithmic ranking can improve relevance (beneficial) but can also trap users in filter bubbles and exploit behavioral patterns to maximize engagement — at cost to mental health and exposure to diverse viewpoints."
+            },
+            {
+                question: "Which describes how public key encryption keeps messages confidential?",
+                options: ["The encryption algorithm is kept secret from all but the sender and receiver", "Data is encrypted with the recipient's public key and can only be decrypted with their private key", "A certificate authority encrypts and decrypts all messages on behalf of users", "Multifactor authentication replaces the need for encryption keys"],
+                correct: 1,
+                explanation: "In public key encryption, anyone can use the public key to encrypt. Only the holder of the private key can decrypt. The algorithm itself is published and public — the security comes from the key, not the algorithm."
+            },
+            {
+                question: "A navigation app reroutes traffic through a quiet residential neighborhood to save drivers time. This is best described as:",
+                options: ["An intended beneficial effect for the neighborhood residents", "An unintended harmful indirect effect of the innovation", "A cybersecurity vulnerability in the routing algorithm", "An example of the digital divide at work"],
+                correct: 1,
+                explanation: "The rerouting reduces driver travel time (intended direct benefit for users) but creates noise, congestion, and safety risks for residents who did not choose to participate — a classic unintended indirect harm."
+            },
+            {
+                question: "Which of the following is the MOST accurate description of the 'use divide' in the digital divide?",
+                options: ["People who cannot afford internet service", "People who have devices and connectivity but lack skills or support to use technology effectively", "People who disagree with how technology companies use their data", "Communities that rely on 4G instead of 5G networks"],
+                correct: 1,
+                explanation: "The use divide specifically refers to having access but lacking the skills, time, literacy, or support to use technology effectively — distinct from the access divide (no device/internet) and outcome divide (no real benefit)."
+            },
+            {
+                question: "A software company wants to reduce bias in its automated loan-approval system. Which action would MOST directly address the source of the bias?",
+                options: ["Encrypting all applicant data before processing", "Auditing approval rates by demographic group and retraining with more representative data", "Switching from open-source to proprietary software", "Adding multifactor authentication for loan officers"],
+                correct: 1,
+                explanation: "Bias in ML systems usually stems from unrepresentative training data or optimization goals. Auditing outcomes across demographic subgroups identifies disparate impact, and retraining with better data addresses the root cause."
+            },
+        ];
+
+        const essayOutlines = [
+            {
+                label: "Beneficial and Harmful Effects of a Computing Innovation",
+                blocks: [
+                    ["Restate the Innovation", "Briefly describe what the computing innovation is — include what data it collects or processes, and what it does. (1–2 sentences)"],
+                    ["Identify Stakeholders", "Name at least two groups affected: users, non-users nearby, companies, governments, workers, or communities."],
+                    ["Beneficial Effect + Mechanism", "Describe one clear benefit and explain HOW the technology causes it. E.g., 'The app reduces emergency response time because real-time traffic data reroutes ambulances around congestion.'"],
+                    ["Harmful Effect + Mechanism", "Describe one harm and explain HOW the technology causes it. E.g., 'Continuous location tracking creates privacy risks because stored data could be accessed in a breach or sold to third parties.'"],
+                    ["Trade-Off Acknowledgment", "Note that the benefit and harm often involve different stakeholders or timescales, and that most innovations require ongoing assessment as adoption grows."],
+                ]
+            },
+            {
+                label: "Privacy Risks from Data Collection",
+                blocks: [
+                    ["What Data Is Collected", "Specify the types of data (explicit and implicit) — clicks, location, biometrics, purchase history, browsing behavior."],
+                    ["How Inference Creates Risk", "Explain that even without direct identifiers, combining data points can reveal sensitive information (health conditions, beliefs, routines)."],
+                    ["Re-identification", "Note that 'anonymization' does not guarantee privacy: linking datasets can re-identify individuals."],
+                    ["Impact on Individuals", "Describe a concrete harm: targeted manipulation, insurance pricing, discriminatory hiring, stalking, or identity theft."],
+                    ["Possible Mitigation", "Suggest a specific action: data minimization (collect only what's needed), transparency about uses, or stronger consent requirements."],
+                ]
+            },
+            {
+                label: "Algorithmic Bias and Fairness",
+                blocks: [
+                    ["Define the Algorithm's Purpose", "State what the algorithm does (screening, ranking, predicting) and in what domain (hiring, credit, policing, medical diagnosis)."],
+                    ["Source of Bias", "Trace where the bias enters: underrepresentation in training data, biased labels, or optimization goals that ignore fairness."],
+                    ["Real-World Harm", "Describe a concrete consequence for an affected group — rejected qualified applicants, denied loans, over-policed communities."],
+                    ["Feedback Loop Risk", "Explain how biased outputs can become future inputs, compounding the problem over time."],
+                    ["Mitigation Steps", "Propose realistic fixes: subgroup outcome auditing, human review for high-stakes decisions, and more representative training data. Acknowledge limits."],
+                ]
+            },
+            {
+                label: "Digital Divide and Equitable Access",
+                blocks: [
+                    ["Name the Innovation", "Specify the technology and its intended users."],
+                    ["Access Layer", "Identify who lacks devices or reliable internet, and why (income, geography, infrastructure)."],
+                    ["Use Layer", "Explain who has a device but lacks skills, support, or language to use it effectively."],
+                    ["Outcome Layer", "Connect limited access/use to real consequences: worse educational outcomes, fewer job opportunities, reduced civic participation."],
+                    ["Design or Policy Recommendation", "Suggest an inclusive design choice, accessibility feature, or policy intervention that would reduce — not just acknowledge — the divide."],
+                ]
+            },
+            {
+                label: "Intellectual Property and Responsible Use",
+                blocks: [
+                    ["Identify the Artifact", "Describe the computational artifact (code, image, music, text) and how it was created or found."],
+                    ["Legal Analysis", "Does copyright apply? Is there a Creative Commons or open-source license? What does the license actually permit?"],
+                    ["Ethical Analysis", "Even if use is legal, is it fair to the creator? Does attribution give credit? Are profits being earned from someone else's work without compensation?"],
+                    ["Responsible Action", "Describe the correct behavior: seek permission, use a properly licensed alternative, or attribute the source as required."],
+                    ["Broader Principle", "State that legality and ethics are not the same: ethical computing requires going beyond what the law requires."],
+                ]
+            },
+        ];
+
+        const nav = document.getElementById("sidebarNav");
+        const mainEl = document.getElementById("main");
+        const ambientOverlay = document.getElementById("ambientOverlay");
+        const cursor = document.getElementById("cursor");
+        const pinBtn = document.getElementById("pinBtn");
+        const sidebar = document.getElementById("sidebar");
+        const apToggleBtn = document.getElementById("apToggleBtn");
+        const bestScoreEl = document.getElementById("bestScore");
+        let currentTab = "dashboard";
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizLocked = false;
+
+        function renderNav() {
+            nav.innerHTML = tabs.map(tab => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>`).join("");
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === tabId));
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) ambientOverlay.style.background = tab.ambient;
+            mainEl.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function renderGlossary(filter = "") {
+            const val = filter.toLowerCase().trim();
+            const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(val) || t.def.toLowerCase().includes(val));
+            document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+        }
+
+        function renderFlashcards() {
+            document.getElementById("flashGrid").innerHTML = flashcards.map(card => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${card.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${card.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+        }
+
+        function renderEssayTopics() {
+            document.getElementById("essayTopics").innerHTML = essayOutlines.map((o, i) =>
+                `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+            document.getElementById("essayOutline").classList.remove("show");
+            document.getElementById("essayOutline").innerHTML = "";
+        }
+
+        function selectEssay(index) {
+            document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === index));
+            const outline = essayOutlines[index];
+            document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) =>
+                `<div class="essay-block"><div class="essay-block-label">${label}</div><div class="essay-block-body">${body}</div></div>`).join("");
+            document.getElementById("essayOutline").classList.add("show");
+        }
+
+        function renderQuizQuestion() {
+            const quizMount = document.getElementById("quizMount");
+            const q = quizQuestions[quizIndex];
+            if (!q) {
+                const pct = Math.round((quizScore / quizQuestions.length) * 100);
+                const prevBest = Number(localStorage.getItem("apcsp_bi5_best") || 0);
+                const best = Math.max(prevBest, pct);
+                localStorage.setItem("apcsp_bi5_best", String(best));
+                bestScoreEl.textContent = best + "%";
+                quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review privacy, bias, digital divide, and cybersecurity sections if you missed any questions.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+                return;
+            }
+            quizLocked = false;
+            quizMount.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question.replace(/\n/g, '<br>')}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add("open"); }
+        function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+        function initBestScore() { const best = localStorage.getItem("apcsp_bi5_best"); bestScoreEl.textContent = best ? best + "%" : "--"; }
+
+        renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+        document.addEventListener("mousemove", e => {
+            if (!window.matchMedia("(pointer:fine)").matches) return;
+            cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+        });
+        document.addEventListener("mouseover", e => {
+            if (!window.matchMedia("(pointer:fine)").matches) return;
+            const interactive = e.target.closest("button, a, .flash-card, .glossary-card");
+            cursor.style.width = interactive ? "20px" : "12px";
+            cursor.style.height = interactive ? "20px" : "12px";
+        });
+
+        pinBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned");
+            pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+        });
+        nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+        document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => {
+            const t = document.getElementById(b.dataset.noteTarget); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+        }));
+        document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+        document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+
+        document.getElementById("openSearch").addEventListener("click", () => {
+            const panel = document.getElementById("sbSearchPanel");
+            panel.classList.toggle("open");
+            if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+        });
+        document.getElementById("sbInput").addEventListener("input", e => {
+            const query = e.target.value.toLowerCase().trim();
+            const matches = glossaryTerms.filter(t => t.term.toLowerCase().includes(query) || t.def.toLowerCase().includes(query)).slice(0, 8);
+            document.getElementById("sbResults").innerHTML = matches.length
+                ? matches.map(item => `<div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}"><div class="sb-result-tab">${item.tab}</div><div class="sb-result-term">${item.term}</div><div class="sb-result-snip">${item.def}</div></div>`).join("")
+                : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+        });
+        document.getElementById("sbResults").addEventListener("click", e => {
+            const result = e.target.closest(".sb-result"); if (!result || !result.dataset.targetTab) return;
+            switchTab(result.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+            document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+            if (result.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = result.dataset.targetTerm; renderGlossary(result.dataset.targetTerm); }
+        });
+        document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+        apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+        document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+        document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+        document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
+        document.getElementById("quizMount").addEventListener("click", e => {
+            const option = e.target.closest(".quiz-option");
+            if (option && !quizLocked) {
+                quizLocked = true;
+                const q = quizQuestions[quizIndex]; const selected = Number(option.dataset.optionIndex);
+                document.querySelectorAll(".quiz-option").forEach((btn, i) => { if (i === q.correct) btn.classList.add("correct"); if (i === selected && selected !== q.correct) btn.classList.add("wrong"); });
+                if (selected === q.correct) quizScore++;
+                document.getElementById("quizFeedback").textContent = q.explanation;
+                document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+            }
+            if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+            if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+        });
+        document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+        document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+        mainEl.addEventListener("scroll", () => {
+            const max = mainEl.scrollHeight - mainEl.clientHeight;
+            const pct = max > 0 ? (mainEl.scrollTop / max) * 100 : 0;
+            document.getElementById("readingProgressFill").style.width = pct + "%";
+        });
+    </script>
+</body>
+
+</html>
