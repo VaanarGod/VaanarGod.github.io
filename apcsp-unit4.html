@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AP Computer Science Principles — Big Idea 4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #07080a;
+            --card: #0d0f12;
+            --card2: #12161c;
+            --border: rgba(255, 255, 255, .07);
+            --text: #dde3ec;
+            --muted: #7a8699;
+            --cyan: #3eb8d4;
+            --teal: #3eb89a;
+            --blue: #5b8fd4;
+            --red: #d95f5f;
+            --orange: #f28749;
+            --purple: #9b86f4;
+            --green: #4caf7d;
+            --accent-main: #3eb8d4;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Mono", monospace;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: .35;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--cyan);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width .2s ease, height .2s ease;
+        }
+
+        #readingProgress {
+            position: fixed;
+            top: 0;
+            left: 72px;
+            right: 0;
+            height: 2px;
+            z-index: 100;
+        }
+
+        #readingProgressFill {
+            width: 0%;
+            height: 100%;
+            background: var(--cyan);
+        }
+
+        #ambientOverlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 10%, rgba(62, 184, 212, .12), transparent 65%);
+            opacity: .1;
+            pointer-events: none;
+            transition: background 1s ease, opacity .25s ease;
+            z-index: 0;
+        }
+
+        #sidebar {
+            width: 72px;
+            height: 100vh;
+            flex-shrink: 0;
+            background: rgba(5, 6, 8, .84);
+            border-right: 1px solid var(--border);
+            backdrop-filter: blur(24px);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            transition: width .4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #sidebar:hover, #sidebar.pinned { width: 264px; }
+
+        #pinBtn {
+            position: absolute;
+            top: 12px;
+            right: 10px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 8px;
+            letter-spacing: .08em;
+            opacity: 0;
+            cursor: none;
+            transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+        }
+
+        #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
+
+        #pinBtn.pinned {
+            color: var(--cyan);
+            border-color: rgba(62, 184, 212, .24);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            border: 1px solid rgba(62, 184, 212, .2);
+            background: rgba(62, 184, 212, .07);
+            color: var(--cyan);
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .logo-copy { opacity: 0; transition: opacity .25s ease; }
+        #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+
+        .logo-copy h1 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 13px;
+            letter-spacing: .25em;
+            color: var(--cyan);
+        }
+
+        .logo-copy p {
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .search-wrap { position: relative; padding: 10px; }
+
+        .sb-search-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .03);
+            color: var(--muted);
+            cursor: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, border-color .2s ease;
+        }
+
+        #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sb-search-trigger:hover { border-color: rgba(62, 184, 212, .2); }
+
+        #sbSearchPanel {
+            position: absolute;
+            top: calc(100% - 4px);
+            left: 10px;
+            right: 10px;
+            border: 1px solid rgba(62, 184, 212, .18);
+            background: rgba(8, 10, 13, .98);
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity .22s ease, transform .22s ease;
+            z-index: 80;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
+        }
+
+        #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        #sbSearchInner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+        }
+
+        #sbInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .1em;
+            outline: none;
+            cursor: none;
+        }
+
+        #sbResults { max-height: 280px; overflow: auto; }
+
+        .sb-result {
+            padding: 11px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            cursor: none;
+            transition: background .15s ease;
+        }
+
+        .sb-result:hover { background: rgba(62, 184, 212, .06); }
+        .sb-result:last-child { border-bottom: none; }
+
+        .sb-result-tab {
+            font-size: 8px;
+            color: var(--cyan);
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .sb-result-term {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 14px;
+            color: white;
+            letter-spacing: .04em;
+        }
+
+        .sb-result-snip {
+            font-family: "Crimson Pro", serif;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+            margin-top: 2px;
+        }
+
+        nav {
+            height: calc(100vh - 176px);
+            padding: 0 10px 14px;
+            overflow: auto;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--muted);
+            cursor: none;
+            white-space: nowrap;
+            transition: background .2s ease, color .2s ease;
+            position: relative;
+        }
+
+        .nav-btn:hover { background: rgba(255, 255, 255, .03); color: #aeb7c6; }
+
+        .nav-btn.active {
+            background: rgba(62, 184, 212, .07);
+            color: var(--cyan);
+        }
+
+        .nav-btn.active .nav-indicator { opacity: 1; }
+
+        .nav-indicator {
+            position: absolute;
+            left: 0;
+            width: 2px;
+            height: 24px;
+            background: var(--cyan);
+            border-radius: 5px;
+            opacity: 0;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+
+        .sidebar-footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .1em;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s ease; }
+        #sidebar:hover .sidebar-footer span:last-child,
+        #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--teal);
+            animation: blink 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        #main {
+            flex: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 36px 54px 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding: 8px 0 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .glass-btn, #scoreTracker {
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .05);
+            color: var(--muted);
+            padding: 9px 14px;
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            cursor: none;
+            backdrop-filter: blur(12px);
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .glass-btn:hover, #scoreTracker:hover {
+            color: var(--cyan);
+            border-color: rgba(62, 184, 212, .26);
+        }
+
+        .glass-btn.active {
+            color: var(--cyan);
+            border-color: rgba(62, 184, 212, .32);
+            background: rgba(62, 184, 212, .08);
+        }
+
+        .tab-content { display: none; animation: fadeUp .45s cubic-bezier(0.23, 1, 0.32, 1); }
+        .tab-content.active { display: block; }
+
+        .page-header {
+            margin-bottom: 34px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .unit-tag {
+            display: block;
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: .35em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .page-header h2 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(38px, 5vw, 62px);
+            letter-spacing: .08em;
+            line-height: .96;
+            color: white;
+        }
+
+        .page-header p {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 22px;
+            margin-bottom: 26px;
+        }
+
+        .principle-grid, .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        .case-grid, .flash-grid, .structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 22px;
+        }
+
+        .card, .feature-card, .principle-card, .case-card,
+        .exam-card, .flash-card, .writing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+        }
+
+        .card:hover, .feature-card:hover, .principle-card:hover,
+        .case-card:hover, .exam-card:hover, .flash-card:hover, .writing-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, .14);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, .35);
+        }
+
+        .hero-card::before, .feature-card::before, .principle-card::before,
+        .case-card::before, .exam-card::before, .writing-card::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 2px;
+            background: var(--accent, var(--cyan));
+            opacity: .6;
+        }
+
+        .hero-card { --accent: var(--cyan); }
+        .accent-cyan { --accent: var(--cyan); }
+        .accent-blue { --accent: var(--blue); }
+        .accent-teal { --accent: var(--teal); }
+        .accent-red { --accent: var(--red); }
+        .accent-orange { --accent: var(--orange); }
+        .accent-purple { --accent: var(--purple); }
+        .accent-green { --accent: var(--green); }
+
+        .card-sub {
+            font-size: 9px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 24px;
+            letter-spacing: .06em;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .body-copy {
+            font-family: "Crimson Pro", serif;
+            font-size: 15px;
+            line-height: 1.78;
+            color: #94a3b8;
+        }
+
+        .body-copy p + p { margin-top: 10px; }
+
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .stat-box span {
+            display: block;
+            font-size: 8px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .stat-box strong {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 28px;
+            letter-spacing: .06em;
+            color: var(--cyan);
+        }
+
+        .focus-callout {
+            margin-top: 20px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            background: rgba(62, 184, 212, .05);
+            border: 1px solid rgba(62, 184, 212, .14);
+        }
+
+        .focus-callout .label {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 8px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .bullet-list li {
+            font-family: "Crimson Pro", serif;
+            font-size: 14px;
+            line-height: 1.65;
+            color: #94a3b8;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 18px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 8px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            border: 1px solid rgba(62, 184, 212, .2);
+            color: rgba(62, 184, 212, .65);
+            background: rgba(62, 184, 212, .04);
+        }
+
+        .mini-label {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+
+        /* NOTES */
+        .notes-shell {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .notes-index {
+            position: sticky;
+            top: 80px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .notes-index-title {
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 0 6px;
+            margin-bottom: 8px;
+        }
+
+        .note-jump {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            cursor: none;
+            transition: background .18s ease, color .18s ease;
+        }
+
+        .note-jump:hover { background: rgba(62, 184, 212, .06); color: var(--cyan); }
+        .note-jump span:last-child { color: rgba(62, 184, 212, .35); }
+
+        .notes-stack { display: flex; flex-direction: column; gap: 22px; }
+
+        .note-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .note-section::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--accent, var(--cyan));
+            opacity: .55;
+        }
+
+        .note-section h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        .note-section h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 15px;
+            letter-spacing: .1em;
+            color: var(--text);
+            margin: 20px 0 10px;
+        }
+
+        .note-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 18px 0;
+        }
+
+        .mini-note {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 9px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .mini-note .body-copy {
+            font-size: 13px;
+            letter-spacing: 0;
+            text-transform: none;
+            color: #8896a8;
+            margin-top: 7px;
+        }
+
+        .code-block {
+            background: #070a0e;
+            border: 1px solid rgba(62, 184, 212, .1);
+            border-radius: 12px;
+            padding: 18px 20px;
+            font-size: 11px;
+            line-height: 1.7;
+            color: #a8c8d8;
+            letter-spacing: .04em;
+            overflow-x: auto;
+            white-space: pre;
+            margin-top: 10px;
+        }
+
+        /* GLOSSARY */
+        .glossary-toolbar { margin-bottom: 22px; }
+
+        .glossary-toolbar input {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .1em;
+            color: var(--text);
+            outline: none;
+            min-width: 300px;
+            transition: border-color .2s ease;
+        }
+
+        .glossary-toolbar input:focus { border-color: rgba(62, 184, 212, .3); }
+
+        .glossary-card h4 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 18px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* FLASHCARDS */
+        .flash-card {
+            perspective: 900px;
+            height: 200px;
+            cursor: none;
+        }
+
+        .flash-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform .55s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
+
+        .flash-front, .flash-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .flash-back { transform: rotateY(180deg); }
+
+        .flash-card h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 18px;
+            letter-spacing: .06em;
+            color: white;
+            line-height: 1.15;
+        }
+
+        .flash-hint {
+            font-size: 8px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: rgba(62, 184, 212, .4);
+        }
+
+        /* EXAM PREP */
+        .exam-card h3 {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 20px;
+            letter-spacing: .06em;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        /* MODALS */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .72);
+            z-index: 9000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.open { display: flex; }
+
+        .modal-box {
+            background: #0c0e12;
+            border: 1px solid rgba(62, 184, 212, .18);
+            border-radius: 20px;
+            padding: 32px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 82vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: 26px;
+            letter-spacing: .1em;
+            color: white;
+            margin-bottom: 22px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font: inherit;
+            font-size: 9px;
+            letter-spacing: .14em;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: none;
+            transition: color .2s ease, border-color .2s ease;
+        }
+
+        .modal-close:hover { color: var(--red); border-color: rgba(217, 95, 95, .3); }
+
+        /* QUIZ */
+        .quiz-status {
+            font-size: 9px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 14px;
+        }
+
+        .quiz-question {
+            font-family: "Crimson Pro", serif;
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+        .quiz-option {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 16px;
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .08em;
+            color: var(--muted);
+            text-align: left;
+            cursor: none;
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+        }
+
+        .quiz-option:hover { border-color: rgba(62, 184, 212, .28); color: var(--text); }
+        .quiz-option.correct { border-color: var(--teal); color: var(--teal); background: rgba(62, 184, 154, .08); }
+        .quiz-option.wrong { border-color: var(--red); color: var(--red); background: rgba(217, 95, 95, .08); }
+
+        .quiz-feedback {
+            font-family: "Crimson Pro", serif;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--muted);
+            min-height: 20px;
+            margin-bottom: 14px;
+        }
+
+        .quiz-next { text-align: right; }
+
+        /* ESSAY */
+        .essay-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+
+        .essay-topic-btn {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: .06em;
+            color: var(--muted);
+            text-align: left;
+            cursor: none;
+            transition: border-color .2s ease, color .2s ease;
+        }
+
+        .essay-topic-btn:hover, .essay-topic-btn.active {
+            border-color: rgba(62, 184, 212, .28);
+            color: var(--cyan);
+        }
+
+        .essay-outline { display: none; flex-direction: column; gap: 14px; }
+        .essay-outline.show { display: flex; }
+
+        .essay-block {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .essay-block-label {
+            color: var(--cyan);
+            font-size: 8px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .essay-block-body {
+            font-family: "Crimson Pro", serif;
+            color: var(--muted);
+            line-height: 1.78;
+            font-size: 15px;
+        }
+
+        strong.ap-term { color: #7fd4e8; font-weight: 600; }
+
+        body.ap-highlight strong.ap-term {
+            background: rgba(62, 184, 212, .12);
+            padding: 0 3px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(62, 184, 212, .15);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1 }
+            50% { opacity: .2 }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px) }
+            to { opacity: 1; transform: translateY(0) }
+        }
+
+        @media(max-width:1020px) {
+            .hero-grid { grid-template-columns: 1fr }
+            .dash-stats { grid-template-columns: 1fr }
+            #main { padding-left: 26px; padding-right: 26px }
+            .notes-shell { grid-template-columns: 1fr }
+        }
+
+        @media(max-width:760px) {
+            body { cursor: auto; overflow: auto; display: block }
+            #cursor, #readingProgress { display: none }
+            #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border) }
+            #sidebar:hover, #sidebar.pinned { width: 100% }
+            .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger {
+                opacity: 1 !important; pointer-events: auto !important
+            }
+            #pinBtn { display: none }
+            nav { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px }
+            #main { height: auto; overflow: visible }
+            .topbar { position: static }
+            .glossary-toolbar input { min-width: 100%; width: 100% }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div id="ambientOverlay"></div>
+    <div id="readingProgress">
+        <div id="readingProgressFill"></div>
+    </div>
+
+    <aside id="sidebar">
+        <button id="pinBtn" type="button">Pin</button>
+        <div class="sidebar-logo">
+            <div class="logo-icon">CSP</div>
+            <div class="logo-copy">
+                <h1>CSP BIG IDEA 4</h1>
+                <p>Computer Systems & Networks</p>
+            </div>
+        </div>
+        <div class="search-wrap">
+            <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Big Idea 4</span></button>
+            <div id="sbSearchPanel">
+                <div id="sbSearchInner">
+                    <span style="color:var(--cyan);font-size:12px;">⌕</span>
+                    <input id="sbInput" type="text" placeholder="Find concepts, terms, or topics" />
+                </div>
+                <div id="sbResults"></div>
+            </div>
+        </div>
+        <nav id="sidebarNav"></nav>
+        <div class="sidebar-footer"><span class="dot"></span><span>Study Mode Active</span></div>
+    </aside>
+
+    <main id="main">
+        <div class="topbar">
+            <div class="top-actions">
+                <a class="glass-btn" href="apcsp-unit1.html">Big Idea 1</a>
+                <a class="glass-btn" href="apcsp-unit2.html">Big Idea 2</a>
+                <a class="glass-btn" href="apcsp-unit3.html">Big Idea 3</a>
+                <a class="glass-btn" href="apcsp-unit4.html"
+                    style="color:var(--cyan);border-color:rgba(62,184,212,.32);">Big Idea 4</a>
+                <a class="glass-btn" href="apcsp-unit5.html">Big Idea 5</a>
+                <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+                <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+                <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
+            </div>
+            <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <section class="tab-content active" id="dashboard">
+            <header class="page-header">
+                <span class="unit-tag">Big Idea 4 · Computer Systems & Networks</span>
+                <h2>How Computers Connect</h2>
+                <p>Hardware · Networks · Packets · DNS · Protocols · Security · Distributed Computing</p>
+            </header>
+            <div class="hero-grid">
+                <article class="card hero-card">
+                    <div class="card-sub">Core Frame</div>
+                    <div class="card-title">What Big Idea 4 Is Really About</div>
+                    <div class="body-copy">
+                        <p>Big Idea 4 is the infrastructure heart of AP CSP. It explains how individual computers are organized (<strong class="ap-term">hardware</strong> and <strong class="ap-term">software</strong>), how they connect into <strong class="ap-term">networks</strong>, and how data actually travels across the Internet through <strong class="ap-term">packet switching</strong> and <strong class="ap-term">protocols</strong>.</p>
+                        <p>It also tackles what makes the Internet resilient (<strong class="ap-term">fault tolerance</strong>), how it scales to billions of users (<strong class="ap-term">distributed computing</strong>), and how <strong class="ap-term">encryption</strong> and <strong class="ap-term">authentication</strong> protect data in transit.</p>
+                    </div>
+                    <div class="dash-stats">
+                        <div class="stat-box"><span>Study Sections</span><strong>10</strong></div>
+                        <div class="stat-box"><span>Key Terms</span><strong>40+</strong></div>
+                        <div class="stat-box"><span>Quiz Items</span><strong>12</strong></div>
+                    </div>
+                    <div class="focus-callout">
+                        <div class="label">Exam Focus</div>
+                        <div class="body-copy">Be ready to reason through scenarios — trace a web request from browser to server, explain what happens when a router fails, and distinguish bandwidth from latency. The exam tests conceptual understanding, not memorization of port numbers.</div>
+                    </div>
+                </article>
+                <article class="card feature-card accent-blue">
+                    <div class="card-sub">Fast Review</div>
+                    <div class="card-title">What You Must Be Able To Explain</div>
+                    <ul class="bullet-list">
+                        <li>The difference between <strong class="ap-term">hardware</strong> and <strong class="ap-term">software</strong> and why <strong class="ap-term">abstraction</strong> keeps systems manageable.</li>
+                        <li>Why the Internet uses <strong class="ap-term">packet switching</strong> instead of circuit switching.</li>
+                        <li>How <strong class="ap-term">routers</strong> use IP addresses to forward packets along a path.</li>
+                        <li>What <strong class="ap-term">DNS</strong> does and why it's distributed.</li>
+                        <li>The trade-off between <strong class="ap-term">TCP</strong> (reliable) and <strong class="ap-term">UDP</strong> (fast).</li>
+                        <li>How <strong class="ap-term">redundancy</strong> creates fault tolerance in networks.</li>
+                        <li>Why <strong class="ap-term">encryption</strong> protects confidentiality and why authentication is a separate concern.</li>
+                        <li>The difference between <strong class="ap-term">parallel</strong> and <strong class="ap-term">distributed</strong> computing.</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">Networks</span><span class="tag">Packets</span><span class="tag">DNS</span>
+                        <span class="tag">TCP/IP</span><span class="tag">Security</span><span class="tag">Distributed</span>
+                    </div>
+                </article>
+            </div>
+            <div class="exam-grid">
+                <article class="exam-card accent-red">
+                    <div class="mini-label">Common Mistakes</div>
+                    <h3>Avoid These</h3>
+                    <ul class="bullet-list">
+                        <li>Calling the Internet "hardware" — it's a <strong class="ap-term">network of networks</strong> that depends on both hardware and software protocols.</li>
+                        <li>Confusing <strong class="ap-term">bandwidth</strong> (max capacity) with <strong class="ap-term">latency</strong> (delay) — they are independent dimensions of performance.</li>
+                        <li>Thinking <strong class="ap-term">packet switching</strong> guarantees delivery or ordering — it doesn't; TCP adds those guarantees above IP.</li>
+                        <li>Saying DNS is "the Internet" — DNS is a lookup service the Internet uses, not the Internet itself.</li>
+                        <li>Confusing <strong class="ap-term">encryption</strong> with identity verification — encryption hides data; authentication proves who you're talking to.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-teal">
+                    <div class="mini-label">Study Strategy</div>
+                    <h3>Best Order To Review</h3>
+                    <ul class="bullet-list">
+                        <li>Start with hardware vs. software and layers — the mental model for everything else.</li>
+                        <li>Master packet switching and why it beats circuit switching for scale and resilience.</li>
+                        <li>Learn routing: IP addresses, routers, and how packets find their way.</li>
+                        <li>Study DNS as the "phonebook" that maps names to IPs.</li>
+                        <li>Contrast TCP (reliable, ordered) vs. UDP (fast, lossy) with real use-case examples.</li>
+                        <li>Cover bandwidth vs. latency vs. throughput with the data/rate formula.</li>
+                        <li>Finish with redundancy/fault tolerance, parallel/distributed computing, and security.</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- NOTES -->
+        <section class="tab-content" id="notes">
+            <header class="page-header">
+                <span class="unit-tag">Study Notes</span>
+                <h2>Big Idea 4 Notes Index</h2>
+                <p>Hardware · Networks · Packets · Routing · DNS · Protocols · Performance · Fault Tolerance · Distributed Computing · Security</p>
+            </header>
+            <div class="notes-shell">
+                <aside class="notes-index" aria-label="Big Idea 4 notes index">
+                    <div class="notes-index-title">Major Buckets</div>
+                    <button class="note-jump" type="button" data-note-target="n-hardware"><span>Hardware & Abstraction</span><span>01</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-networks"><span>Networks</span><span>02</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-packets"><span>Packets & Routing</span><span>03</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-dns"><span>DNS</span><span>04</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-protocols"><span>Protocols</span><span>05</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-performance"><span>Performance</span><span>06</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-scalability"><span>Scalability</span><span>07</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-fault"><span>Fault Tolerance</span><span>08</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-distributed"><span>Distributed Computing</span><span>09</span></button>
+                    <button class="note-jump" type="button" data-note-target="n-security"><span>Security</span><span>10</span></button>
+                </aside>
+                <div class="notes-stack">
+
+                    <article class="note-section accent-cyan" id="n-hardware">
+                        <div class="mini-label">01 · Hardware, Software & Abstraction</div>
+                        <h3>Inside a Computer System</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">computer system</strong> is the combination of physical components (<strong class="ap-term">hardware</strong>) and programs (<strong class="ap-term">software</strong>) that together input, process, store, and output data. The AP CSP goal is to understand organization and why abstraction makes systems manageable — not to memorize every chip.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Hardware</strong>
+                                <div class="body-copy">Physical machinery: CPU, RAM, storage, network cards, cables. Hardware constraints are physical — changing them may require new devices.</div>
+                            </div>
+                            <div class="mini-note"><strong>Software</strong>
+                                <div class="body-copy">Instructions that tell hardware what to do: operating systems, apps, protocols. Software capabilities can usually be updated without touching hardware.</div>
+                            </div>
+                            <div class="mini-note"><strong>CPU</strong>
+                                <div class="body-copy">Central Processing Unit — where computations happen. Executes instructions fetched from memory. Faster CPU means faster computation, not necessarily faster networking.</div>
+                            </div>
+                            <div class="mini-note"><strong>RAM (Memory)</strong>
+                                <div class="body-copy">Short-term working space. Fast but <strong class="ap-term">volatile</strong> — contents are lost when power is off. Programs and active data live here while running.</div>
+                            </div>
+                            <div class="mini-note"><strong>Storage</strong>
+                                <div class="body-copy">Long-term data persistence (SSD, HDD). Slower than RAM but <strong class="ap-term">non-volatile</strong> — data survives power loss. Files, apps, and the OS are stored here.</div>
+                            </div>
+                            <div class="mini-note"><strong>Abstraction Layers</strong>
+                                <div class="body-copy">Applications → OS → Drivers → Hardware. Each layer hides details from the one above. You write code without toggling transistors because lower layers handle it.</div>
+                            </div>
+                        </div>
+                        <h4>Exam Focus: Hardware vs. Software vs. Protocol</h4>
+                        <div class="code-block">Improving Wi-Fi range   → hardware (antenna, access point placement)
+Adding browser feature   → software update
+Handling more users      → both: more servers (hardware) + load balancing (software)
+Internet "the Internet"  → network of networks; relies on both hardware (cables, routers)
+                           AND software (protocols like TCP/IP)</div>
+                    </article>
+
+                    <article class="note-section accent-blue" id="n-networks">
+                        <div class="mini-label">02 · Networks & the Internet</div>
+                        <h3>Connecting Computers</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">network</strong> is a set of computing devices (<strong class="ap-term">nodes</strong>) connected by communication links so they can exchange data. The <strong class="ap-term">Internet</strong> is a worldwide <em>network of networks</em> — thousands of independently-owned networks interconnected by standardized protocols.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Node</strong>
+                                <div class="body-copy">Any device on a network: laptop, phone, router, server, printer. Each node can send, receive, or forward data.</div>
+                            </div>
+                            <div class="mini-note"><strong>Link</strong>
+                                <div class="body-copy">The connection between nodes. Can be wired (Ethernet, fiber optic) or wireless (Wi-Fi, cellular, Bluetooth).</div>
+                            </div>
+                            <div class="mini-note"><strong>Circuit Switching</strong>
+                                <div class="body-copy">A dedicated path is reserved for the entire session (like old phone calls). Predictable but wasteful — the path is locked even during silence.</div>
+                            </div>
+                            <div class="mini-note"><strong>Packet Switching</strong>
+                                <div class="body-copy">Messages are broken into packets that travel independently through the network. Efficient: many users share the same links. Resilient: packets can reroute around failures.</div>
+                            </div>
+                            <div class="mini-note"><strong>Protocol</strong>
+                                <div class="body-copy">An agreed-upon set of rules for formatting, sending, and interpreting data. Without protocols, devices made by different companies couldn't communicate.</div>
+                            </div>
+                            <div class="mini-note"><strong>Open Standards</strong>
+                                <div class="body-copy">The Internet works because it uses publicly available, standardized protocols. Any device that follows the standards can join. This is why interoperability is possible.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-teal" id="n-packets">
+                        <div class="mini-label">03 · Packets, Addresses & Routing</div>
+                        <h3>How Data Actually Gets Delivered</h3>
+                        <div class="body-copy">
+                            <p>A <strong class="ap-term">packet</strong> is a small unit of data sent over a network. Large messages are split into packets so links can be shared efficiently. Each packet carries a <strong class="ap-term">payload</strong> (actual data) and a <strong class="ap-term">header</strong> (metadata: addresses, ordering info, error-checking).</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>IP Address</strong>
+                                <div class="body-copy">A numerical label identifying a device on a network. Routers use IP addresses to decide where to forward packets next — like a postal address for data.</div>
+                            </div>
+                            <div class="mini-note"><strong>Router</strong>
+                                <div class="body-copy">A computing device that forwards packets between networks, choosing the best next hop. Routing is dynamic — routes change when links fail or congestion increases.</div>
+                            </div>
+                            <div class="mini-note"><strong>Why Packetize?</strong>
+                                <div class="body-copy">Sharing links (users interleave packets), reliability (only resend lost packets, not the whole file), routing flexibility (each packet can take the best current path).</div>
+                            </div>
+                            <div class="mini-note"><strong>Packet Loss</strong>
+                                <div class="body-copy">A packet never arrives. Higher-level protocols (TCP) detect this and retransmit. Loss does not mean the entire message fails.</div>
+                            </div>
+                            <div class="mini-note"><strong>Out-of-Order Arrival</strong>
+                                <div class="body-copy">Packets in the same message can take different routes and arrive in a different order than sent. TCP reorders them before delivering to the application.</div>
+                            </div>
+                            <div class="mini-note"><strong>Routers Don't Know the Whole Path</strong>
+                                <div class="body-copy">Each router only decides the <em>next hop</em> based on its routing table. No single device knows the full end-to-end route in advance.</div>
+                            </div>
+                        </div>
+                        <h4>Web Request Packet Flow (Conceptual)</h4>
+                        <div class="code-block">Browser prepares HTTP request
+  → DNS lookup resolves domain to IP address
+  → Request split into packets with destination IP in header
+  → Packets sent to home router → ISP → multiple Internet routers
+  → Each router forwards to next hop based on routing table
+  → Server receives all packets, reassembles, processes request
+  → Response packets travel back (possibly different path)
+  → Browser reassembles response and renders page</div>
+                    </article>
+
+                    <article class="note-section accent-green" id="n-dns">
+                        <div class="mini-label">04 · DNS & Domain Names</div>
+                        <h3>From Names to Addresses</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">DNS (Domain Name System)</strong> is a distributed system that maps human-readable <strong class="ap-term">domain names</strong> (like <code>collegeboard.org</code>) to numerical <strong class="ap-term">IP addresses</strong>. Routers forward packets using IP addresses, so DNS is the translator between human-friendly labels and machine-usable locations.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>How DNS Works</strong>
+                                <div class="body-copy">Your device asks a DNS resolver for the IP. If the resolver has it cached, it responds immediately. Otherwise, it queries other DNS servers until the answer is found, then returns it to you.</div>
+                            </div>
+                            <div class="mini-note"><strong>Caching</strong>
+                                <div class="body-copy">DNS answers are stored temporarily. Speeds up repeated lookups and reduces global load. Because of caching, different users may see a domain change at different times.</div>
+                            </div>
+                            <div class="mini-note"><strong>Distributed Design</strong>
+                                <div class="body-copy">DNS is spread across many servers worldwide. No single server handles all lookups. This provides scalability, fault tolerance, and efficiency (closer servers respond faster).</div>
+                            </div>
+                            <div class="mini-note"><strong>DNS Failure Effects</strong>
+                                <div class="body-copy">If DNS is unreachable, you may not reach a site even though the site's server is up — your device can't find the IP to send packets to.</div>
+                            </div>
+                            <div class="mini-note"><strong>DNS vs. Routing</strong>
+                                <div class="body-copy">DNS maps names → IPs (happens before the connection). Routing determines the packet path based on IP addresses (happens during the connection). These are distinct jobs.</div>
+                            </div>
+                            <div class="mini-note"><strong>Security Concern</strong>
+                                <div class="body-copy">If DNS is manipulated, users can be redirected to malicious servers. This is one basis for phishing and spoofing attacks — the name looks right but the IP is wrong.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-purple" id="n-protocols">
+                        <div class="mini-label">05 · Internet Protocols & Layering</div>
+                        <h3>TCP, UDP, HTTP, and Protocol Stacks</h3>
+                        <div class="body-copy">
+                            <p>The Internet works through <strong class="ap-term">layered protocols</strong> — each layer solves one piece of the communication puzzle. Data is wrapped with headers going down the stack (<strong class="ap-term">encapsulation</strong>) and unwrapped going up. This separation means layers can evolve independently.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>IP (Internet Protocol)</strong>
+                                <div class="body-copy"><strong class="ap-term">Best-effort delivery</strong>: IP routes and addresses packets but does NOT guarantee delivery, ordering, or error-free transmission. Keeps the core network simple and scalable.</div>
+                            </div>
+                            <div class="mini-note"><strong>TCP</strong>
+                                <div class="body-copy">Transmission Control Protocol. Adds reliable, ordered delivery above IP: detects lost packets and retransmits, reorders packets, manages congestion. Use when correctness matters more than speed (file downloads, web pages).</div>
+                            </div>
+                            <div class="mini-note"><strong>UDP</strong>
+                                <div class="body-copy">User Datagram Protocol. Minimal overhead, no built-in retransmission. Fast but lossy. Best when timeliness beats correctness: live video/audio calls, online gaming. UDP is a deliberate choice, not a broken TCP.</div>
+                            </div>
+                            <div class="mini-note"><strong>HTTP / HTTPS</strong>
+                                <div class="body-copy">Application-layer protocol defining web requests and responses. HTTPS adds encryption (TLS) so content is unreadable to eavesdroppers and certificates help verify the server's identity.</div>
+                            </div>
+                            <div class="mini-note"><strong>Layered Stack Summary</strong>
+                                <div class="body-copy">Application (HTTP) → Transport (TCP/UDP) → Network (IP) → Link (Wi-Fi/Ethernet). Each layer relies on the one below; changes in one don't require rewriting the others.</div>
+                            </div>
+                            <div class="mini-note"><strong>Video Call vs. File Download</strong>
+                                <div class="body-copy">A download uses TCP — it slows down but eventually finishes correctly. A live call uses UDP-like behavior — a late packet is useless, so it's skipped rather than retransmitted.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-orange" id="n-performance">
+                        <div class="mini-label">06 · Bandwidth, Latency & Throughput</div>
+                        <h3>Measuring Network Performance</h3>
+                        <div class="body-copy">
+                            <p>When people say a network is "fast," they may mean different things. AP CSP distinguishes <strong class="ap-term">bandwidth</strong>, <strong class="ap-term">latency</strong>, and <strong class="ap-term">throughput</strong> — three independent dimensions. A connection can have high bandwidth but still feel slow due to latency or congestion.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Bandwidth</strong>
+                                <div class="body-copy">Maximum data per second a link can carry (measured in bits/sec). Analogy: number of lanes on a highway. High bandwidth = more capacity, not less delay.</div>
+                            </div>
+                            <div class="mini-note"><strong>Latency</strong>
+                                <div class="body-copy">Time for data to travel from source to destination. Includes propagation delay, router processing, and queuing. Analogy: driving time between two cities — independent of highway width.</div>
+                            </div>
+                            <div class="mini-note"><strong>Throughput</strong>
+                                <div class="body-copy">Actual rate of successful data delivery. Always ≤ bandwidth. Reduced by congestion, packet loss, retransmissions, protocol overhead, and bottlenecks along the route.</div>
+                            </div>
+                            <div class="mini-note"><strong>Transfer Time Formula</strong>
+                                <div class="body-copy"><code>time = data ÷ rate</code>. Convert to same units first (bytes × 8 = bits). This is a rough estimate — latency and retransmissions add real-world overhead.</div>
+                            </div>
+                            <div class="mini-note"><strong>Bits vs. Bytes Trap</strong>
+                                <div class="body-copy">ISPs advertise speeds in bits/sec. File sizes are in bytes. 1 byte = 8 bits. Divide advertised speed by 8 to get MB/s download speed.</div>
+                            </div>
+                            <div class="mini-note"><strong>Use-Case Sensitivity</strong>
+                                <div class="body-copy">Games → sensitive to latency. Downloads → need high throughput. Video streaming → needs throughput ≥ video bitrate. Latency doesn't matter much for a file download that's already in progress.</div>
+                            </div>
+                        </div>
+                        <h4>Worked Example: 500 MB File at 50 Mbps Throughput</h4>
+                        <div class="code-block">File size:    500 MB × 8 = 4,000 megabits
+Throughput:   50 megabits/sec
+Transfer time = 4,000 ÷ 50 = 80 seconds
+
+Note: Advertised "gigabit" (1,000 Mbps) ≠ actual throughput.
+Real-world throughput is limited by congestion, packet loss, and bottlenecks.</div>
+                    </article>
+
+                    <article class="note-section accent-blue" id="n-scalability">
+                        <div class="mini-label">07 · Scalability</div>
+                        <h3>Growing Systems That Keep Working</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Scalability</strong> is the ability of a system, network, or process to handle a growing amount of work efficiently. A scalable design can serve more users or process more data without a complete redesign.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Why Scalability Matters</strong>
+                                <div class="body-copy">The Internet must support billions of devices. A web service must handle traffic spikes. Non-scalable designs become bottlenecks — one server can't handle the whole world.</div>
+                            </div>
+                            <div class="mini-note"><strong>Distributed DNS</strong>
+                                <div class="body-copy">A single central DNS server would be a catastrophic bottleneck. Distributing DNS across thousands of servers worldwide is a key scalability design choice.</div>
+                            </div>
+                            <div class="mini-note"><strong>Packet Switching Scales</strong>
+                                <div class="body-copy">Because many users share the same links by interleaving packets, the network doesn't need a dedicated circuit per user — it scales naturally with load.</div>
+                            </div>
+                            <div class="mini-note"><strong>Load Balancing</strong>
+                                <div class="body-copy">Directing incoming requests across multiple servers so no single server is overwhelmed. A software technique that enables horizontal scaling — add more servers rather than one bigger one.</div>
+                            </div>
+                            <div class="mini-note"><strong>Caching</strong>
+                                <div class="body-copy">Storing frequently-needed data (DNS answers, web content) closer to the user. Reduces load on origin servers and speeds up responses for repeat requests.</div>
+                            </div>
+                            <div class="mini-note"><strong>Scalability Trade-offs</strong>
+                                <div class="body-copy">Scaling adds cost, complexity, and coordination overhead. More servers require more management. Distributed systems need synchronization and consistency strategies.</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="note-section accent-red" id="n-fault">
+                        <div class="mini-label">08 · Fault Tolerance & Redundancy</div>
+                        <h3>Designing Networks That Survive Failures</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Fault tolerance</strong> is the ability of a system to continue operating even when some components fail. The Internet expects failures — cables get cut, routers crash, power goes out — so its design assumes they will happen.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Redundancy</strong>
+                                <div class="body-copy">Having more than one way to accomplish a task. In networks: multiple paths, multiple routers, replicated servers. If one path fails, traffic shifts to another.</div>
+                            </div>
+                            <div class="mini-note"><strong>Dynamic Routing</strong>
+                                <div class="body-copy">Routers detect unavailable paths, update their routing tables, and redirect packets automatically. Users may see a brief slowdown rather than a total outage.</div>
+                            </div>
+                            <div class="mini-note"><strong>Packet Switching Helps</strong>
+                                <div class="body-copy">Because messages are split into independent packets, there's no single fixed route that must stay alive. Each packet can be rerouted individually around failures.</div>
+                            </div>
+                            <div class="mini-note"><strong>Hardware Failure</strong>
+                                <div class="body-copy">Physical device stops working due to electrical problems, incorrect installation, or wear. Diagnosed with specialized tools; redundant devices take over in well-designed systems.</div>
+                            </div>
+                            <div class="mini-note"><strong>Operational Failures</strong>
+                                <div class="body-copy">Breakdowns in processes or software — unexpected downtime, incorrect outputs due to bugs. Can cause significant impact if redundancy or failover isn't designed in.</div>
+                            </div>
+                            <div class="mini-note"><strong>Fault Tolerance ≠ No Failures</strong>
+                                <div class="body-copy">Fault tolerance means failures don't cause catastrophic loss of service — not that nothing ever breaks. Overwhelming redundancy (e.g., DDoS) can still cause outages.</div>
+                            </div>
+                        </div>
+                        <h4>Example: Link Failure Rerouting</h4>
+                        <div class="code-block">Normal path:    A → B → C → D
+Link B→C fails:
+  Routers detect unavailable path
+  Routing tables update
+  New path: A → B → E → F → D
+  Some packets delayed or lost during transition
+  TCP retransmits lost packets
+  User sees a brief slowdown, not a complete failure</div>
+                    </article>
+
+                    <article class="note-section accent-teal" id="n-distributed">
+                        <div class="mini-label">09 · Parallel & Distributed Computing</div>
+                        <h3>Speed, Scale & Coordination</h3>
+                        <div class="body-copy">
+                            <p><strong class="ap-term">Parallel computing</strong> performs multiple computations simultaneously — within one device (multiple CPU cores) or across devices. <strong class="ap-term">Distributed computing</strong> spreads computation across multiple networked devices, enabling problems too large for any single machine.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Parallel Timing Rule</strong>
+                                <div class="body-copy">A parallel solution takes as long as the <em>longest</em> parallel task, plus any sequential portions. The sequential portion caps overall speedup — you can't parallelize everything.</div>
+                            </div>
+                            <div class="mini-note"><strong>Parallel vs. Distributed</strong>
+                                <div class="body-copy">Parallel: often one machine, multiple processors sharing memory. Distributed: multiple machines connected over a network. Distributed enables problems too large for one machine's storage or processing power.</div>
+                            </div>
+                            <div class="mini-note"><strong>When Parallelism Helps</strong>
+                                <div class="body-copy">Works when tasks are independent: rendering animation frames, training ML models on batches, large simulations. Doesn't help much when each step depends on the previous one.</div>
+                            </div>
+                            <div class="mini-note"><strong>Communication Overhead</strong>
+                                <div class="body-copy">Distributing work requires splitting tasks, sending pieces, collecting results, and handling failures. If inter-node communication dominates, distributed computing can be <em>slower</em> than sequential.</div>
+                            </div>
+                            <div class="mini-note"><strong>Cloud Computing</strong>
+                                <div class="body-copy">Computing resources (servers, storage, databases) provided over a network on demand. Enables rapid scaling and accessible powerful computation. Trade-offs: network dependence, data privacy on third-party servers, unexpected costs.</div>
+                            </div>
+                            <div class="mini-note"><strong>Replication</strong>
+                                <div class="body-copy">Multiple servers hold identical content. Combined with load balancing, replication provides both fault tolerance (if one server fails, others serve) and performance (requests spread across servers).</div>
+                            </div>
+                        </div>
+                        <h4>Parallel Timing Example</h4>
+                        <div class="code-block">Task breakdown:
+  Sequential setup:    2 seconds
+  Parallel task A:     5 seconds  ┐ run at the same time
+  Parallel task B:     3 seconds  ┘
+  Sequential cleanup:  1 second
+
+Total time = 2 + max(5, 3) + 1 = 2 + 5 + 1 = 8 seconds
+(NOT 2 + 5 + 3 + 1 = 11 seconds)
+
+Doubling parallel workers does NOT halve total time
+if sequential portions dominate.</div>
+                    </article>
+
+                    <article class="note-section accent-purple" id="n-security">
+                        <div class="mini-label">10 · Security & Trust in Network Communication</div>
+                        <h3>What Networks Do (and Don't) Guarantee</h3>
+                        <div class="body-copy">
+                            <p>Packet routing is designed for <em>delivery</em>, not inherently for <em>trust</em>. Data traveling across the Internet may pass through many devices you don't control. Security must be <strong class="ap-term">added</strong> on top of basic networking.</p>
+                        </div>
+                        <div class="note-grid">
+                            <div class="mini-note"><strong>Eavesdropping</strong>
+                                <div class="body-copy">Someone reads data in transit. Without encryption, anyone on the network path can potentially see the content of packets.</div>
+                            </div>
+                            <div class="mini-note"><strong>Encryption</strong>
+                                <div class="body-copy">Transforms plaintext into ciphertext unreadable without a key. Protects <strong class="ap-term">confidentiality</strong>. HTTPS uses encryption (TLS) to prevent eavesdropping on web traffic.</div>
+                            </div>
+                            <div class="mini-note"><strong>Authentication</strong>
+                                <div class="body-copy">Proves identity. Browsers use <strong class="ap-term">digital certificates</strong> from trusted organizations to verify a site is who it claims to be. Encryption ≠ authentication — they solve different problems.</div>
+                            </div>
+                            <div class="mini-note"><strong>Common Cyberattacks</strong>
+                                <div class="body-copy">Phishing, social engineering, DDoS (overwhelm a service), SQL injection, Man-in-the-Middle (MITM), malware (viruses, ransomware). Many combine technical and human-behavior exploits.</div>
+                            </div>
+                            <div class="mini-note"><strong>DDoS</strong>
+                                <div class="body-copy">Distributed Denial of Service — flooding a target with requests from many sources to make it unavailable. Targets redundancy by overwhelming resources that can't individually be blocked.</div>
+                            </div>
+                            <div class="mini-note"><strong>Security Trade-offs</strong>
+                                <div class="body-copy">Encryption adds computation overhead and latency (key exchange, encrypt/decrypt). Certificate validation adds steps. Security is essential for sensitive data but has real performance costs.</div>
+                            </div>
+                        </div>
+                        <h4>HTTP vs. HTTPS</h4>
+                        <div class="code-block">HTTP:   Content is plaintext → anyone on the network path can read or modify it
+HTTPS:  Content is encrypted (TLS) → eavesdroppers see ciphertext only
+        Certificates verify the server's identity → reduces impersonation risk
+
+HTTPS improves security significantly but is not perfect:
+  - Device-level malware can still capture data before encryption
+  - Phishing can trick users into visiting correctly-certified fake sites
+  - Correct implementation is required — misconfiguration creates vulnerabilities</div>
+                    </article>
+
+                </div><!-- /notes-stack -->
+            </div><!-- /notes-shell -->
+        </section>
+
+        <!-- GLOSSARY -->
+        <section class="tab-content" id="glossary">
+            <header class="page-header">
+                <span class="unit-tag">Glossary</span>
+                <h2>Big Idea 4 Key Terms</h2>
+                <p>Search and filter all vocabulary for this unit</p>
+            </header>
+            <div class="glossary-toolbar">
+                <input id="glossaryFilter" type="text" placeholder="Filter terms…" />
+            </div>
+            <div class="glossary-grid" id="glossaryGrid"></div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section class="tab-content" id="flashcards">
+            <header class="page-header">
+                <span class="unit-tag">Flashcards</span>
+                <h2>Big Idea 4 Flashcards</h2>
+                <p>Click any card to reveal the answer</p>
+            </header>
+            <div class="flash-grid" id="flashGrid"></div>
+        </section>
+
+        <!-- EXAM PREP -->
+        <section class="tab-content" id="examprep">
+            <header class="page-header">
+                <span class="unit-tag">Exam Prep</span>
+                <h2>AP Exam Strategies</h2>
+                <p>High-yield patterns and common traps for Big Idea 4</p>
+            </header>
+            <div class="exam-grid">
+                <article class="exam-card accent-cyan">
+                    <div class="mini-label">Hardware & Abstraction</div>
+                    <h3>Systems & Layers</h3>
+                    <ul class="bullet-list">
+                        <li>Identify whether a capability is hardware (physical) or software (instructions) or protocol (rules).</li>
+                        <li>CPU = computation; RAM = fast volatile working memory; Storage = slow non-volatile persistence.</li>
+                        <li>Abstraction layers let you build at a high level without manually managing lower-level details.</li>
+                        <li>"The Internet is hardware" — partially true; it also depends on software protocols for interoperability.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-blue">
+                    <div class="mini-label">Packet Switching</div>
+                    <h3>Packets & Routing</h3>
+                    <ul class="bullet-list">
+                        <li>Packets travel independently — they may arrive out of order, be duplicated, or be lost.</li>
+                        <li>Routers choose the next hop based on routing tables; they don't know the full end-to-end path.</li>
+                        <li>IP address = device/network location. Domain name = human-friendly label. These are different things.</li>
+                        <li>Packet loss ≠ whole message fails — TCP can retransmit only the missing packets.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-green">
+                    <div class="mini-label">DNS</div>
+                    <h3>Names to IPs</h3>
+                    <ul class="bullet-list">
+                        <li>DNS translates domain names to IP addresses — this happens <em>before</em> the connection to the server.</li>
+                        <li>DNS is distributed: no single server handles all lookups; distribution provides scalability and fault tolerance.</li>
+                        <li>DNS does not route packets — routing is a separate function handled by routers using IP addresses.</li>
+                        <li>DNS caching speeds up lookups but can delay propagation of updates (different users see changes at different times).</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-purple">
+                    <div class="mini-label">Protocols</div>
+                    <h3>TCP vs. UDP vs. IP</h3>
+                    <ul class="bullet-list">
+                        <li>IP = best-effort routing only. No delivery guarantee, no ordering guarantee.</li>
+                        <li>TCP = reliable, ordered delivery. Use for correctness: web pages, file downloads, email.</li>
+                        <li>UDP = fast, no retransmission. Use for timeliness: live video/audio, gaming.</li>
+                        <li>"UDP is bad" — FALSE. UDP is a deliberate design choice when low latency beats perfect delivery.</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-orange">
+                    <div class="mini-label">Performance</div>
+                    <h3>Bandwidth vs. Latency</h3>
+                    <ul class="bullet-list">
+                        <li>Bandwidth = capacity (lanes on a highway). Latency = delay (drive time). They are independent.</li>
+                        <li>Throughput ≤ bandwidth — real-world congestion, loss, and overhead reduce actual delivery rates.</li>
+                        <li>Transfer time = data (bits) ÷ throughput (bps). Always convert bytes → bits (×8) before dividing.</li>
+                        <li>High-bandwidth connection can still feel laggy if latency is high (e.g., satellite internet).</li>
+                    </ul>
+                </article>
+                <article class="exam-card accent-red">
+                    <div class="mini-label">Fault Tolerance & Security</div>
+                    <h3>Redundancy & Encryption</h3>
+                    <ul class="bullet-list">
+                        <li>Redundancy = multiple paths/servers. If one fails, traffic shifts to another — brief slowdown, not total failure.</li>
+                        <li>Fault tolerance ≠ packets never lost. Protocols handle loss; fault tolerance is about system-level resilience.</li>
+                        <li>Encryption protects confidentiality (content unreadable without key). Authentication proves identity. These are separate concerns.</li>
+                        <li>HTTPS improves security significantly but user behavior (phishing, weak passwords) still matters.</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- QUIZ MODAL -->
+        <div class="modal" id="quizModal">
+            <div class="modal-box">
+                <div class="modal-title">Big Idea 4 Quiz</div>
+                <button class="modal-close" data-close="quizModal" type="button">✕ Close</button>
+                <div id="quizMount"></div>
+            </div>
+        </div>
+
+        <!-- ESSAY MODAL -->
+        <div class="modal" id="essayModal">
+            <div class="modal-box">
+                <div class="modal-title">Prompt Bank</div>
+                <button class="modal-close" data-close="essayModal" type="button">✕ Close</button>
+                <div class="essay-list" id="essayTopics"></div>
+                <div class="essay-outline" id="essayOutline"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const tabs = [
+            { id: "dashboard", icon: "◈", label: "Dashboard", ambient: "radial-gradient(ellipse at 60% 10%, rgba(62,184,212,.14), transparent 65%)" },
+            { id: "notes", icon: "≡", label: "Notes", ambient: "radial-gradient(ellipse at 30% 20%, rgba(91,143,212,.12), transparent 65%)" },
+            { id: "glossary", icon: "⊞", label: "Glossary", ambient: "radial-gradient(ellipse at 70% 30%, rgba(242,135,73,.10), transparent 65%)" },
+            { id: "flashcards", icon: "⧉", label: "Flashcards", ambient: "radial-gradient(ellipse at 50% 50%, rgba(62,184,154,.10), transparent 65%)" },
+            { id: "examprep", icon: "◎", label: "Exam Prep", ambient: "radial-gradient(ellipse at 40% 10%, rgba(217,95,95,.10), transparent 65%)" },
+        ];
+
+        const glossaryTerms = [
+            { tab: "notes", term: "Computer System", def: "A combination of physical hardware components and software programs that work together to input, process, store, and output data." },
+            { tab: "notes", term: "Hardware", def: "The physical machinery of a computer system: CPU, RAM, storage devices, network interfaces, cables, and other tangible components." },
+            { tab: "notes", term: "Software", def: "The set of instructions (programs) that tell hardware what to do: operating systems, applications, drivers, and network protocols." },
+            { tab: "notes", term: "CPU (Central Processing Unit)", def: "The component where computations are executed. Faster CPU means faster instruction execution, but not necessarily faster networking or storage access." },
+            { tab: "notes", term: "RAM (Memory)", def: "Short-term, fast working storage used while programs are running. Volatile — data is lost when power is turned off." },
+            { tab: "notes", term: "Storage", def: "Long-term, non-volatile data persistence (SSD, HDD). Slower than RAM but retains data without power. Files, the OS, and applications are stored here." },
+            { tab: "notes", term: "Abstraction", def: "Hiding lower-level details so higher-level work can proceed without understanding every underlying component. Layered protocol stacks and operating systems are examples of abstraction." },
+            { tab: "notes", term: "Network", def: "A set of computing devices (nodes) connected by communication links so they can exchange data." },
+            { tab: "notes", term: "Internet", def: "A worldwide network of networks — thousands of independently-owned networks interconnected by standardized open protocols." },
+            { tab: "notes", term: "Node", def: "Any device connected to a network: laptop, phone, server, router, or printer. Each node can send, receive, or forward data." },
+            { tab: "notes", term: "Protocol", def: "An agreed-upon set of rules for how data is formatted, sent, received, and interpreted between devices. Protocols make interoperability possible." },
+            { tab: "notes", term: "Circuit Switching", def: "A communication method where a dedicated path is reserved for an entire session (like traditional phone calls). Predictable but wasteful when the sender is silent." },
+            { tab: "notes", term: "Packet Switching", def: "A communication method where messages are broken into packets that travel independently through the network, possibly taking different paths. Efficient and resilient — the basis of the Internet." },
+            { tab: "notes", term: "Packet", def: "A small unit of data sent over a network. Contains a payload (actual data) and a header (metadata: source/destination IP, ordering info, error-checking)." },
+            { tab: "notes", term: "Header", def: "Metadata attached to a packet by protocol layers. Contains the source and destination IP addresses, sequence numbers, and other routing/ordering information." },
+            { tab: "notes", term: "IP Address", def: "A numerical label assigned to a device on a network. Routers use IP addresses to forward packets toward their destination — like a postal address for data." },
+            { tab: "notes", term: "Router", def: "A networking device that forwards packets between networks by choosing the best next hop based on its routing table. Routing is dynamic — routes change as conditions change." },
+            { tab: "notes", term: "Routing", def: "The process of determining paths through a network for packets. Dynamic routing allows paths to change in response to congestion or failures." },
+            { tab: "notes", term: "Packet Loss", def: "When a packet never arrives at its destination. TCP detects missing packets and retransmits them. Loss does not mean the entire message fails." },
+            { tab: "notes", term: "DNS (Domain Name System)", def: "A distributed system that maps human-readable domain names (e.g., example.com) to numerical IP addresses. Operates like a distributed phonebook for the Internet." },
+            { tab: "notes", term: "DNS Resolver", def: "A server (often from your ISP) that handles DNS lookups on your behalf, querying other DNS servers if needed and caching results to speed future lookups." },
+            { tab: "notes", term: "DNS Caching", def: "Storing DNS lookup results temporarily. Speeds up repeated lookups and reduces load on DNS servers, but can delay propagation of address changes." },
+            { tab: "notes", term: "IP (Internet Protocol)", def: "The network-layer protocol responsible for addressing and routing packets. IP provides best-effort delivery — no guarantees of delivery, ordering, or error-free transmission." },
+            { tab: "notes", term: "TCP (Transmission Control Protocol)", def: "A transport-layer protocol that provides reliable, ordered delivery above IP. Detects lost packets and retransmits them, reorders packets, and manages congestion. Used when correctness matters more than speed." },
+            { tab: "notes", term: "UDP (User Datagram Protocol)", def: "A transport-layer protocol that sends messages with minimal overhead and no built-in retransmission. Fast but potentially lossy. Used when timeliness beats perfect delivery: live calls, gaming." },
+            { tab: "notes", term: "HTTP (Hypertext Transfer Protocol)", def: "An application-layer protocol that defines the rules for requesting and delivering web content. HTTPS adds encryption (TLS) to protect content in transit." },
+            { tab: "notes", term: "Encapsulation", def: "Wrapping data with headers as it moves down the protocol stack, and unwrapping headers as it moves up. Each layer adds its own header for the layer below." },
+            { tab: "notes", term: "Bandwidth", def: "The maximum amount of data a connection can transmit per unit of time (bits per second). Represents capacity, not speed of individual packet delivery." },
+            { tab: "notes", term: "Latency", def: "The time it takes for data to travel from source to destination. Includes transmission time, propagation delay, router processing, and queuing. Independent of bandwidth." },
+            { tab: "notes", term: "Throughput", def: "The actual rate of successful data delivery achieved. Always less than or equal to bandwidth, reduced by congestion, packet loss, and protocol overhead." },
+            { tab: "notes", term: "Scalability", def: "The ability of a system or network to handle growing amounts of work efficiently without requiring complete redesign. Achieved through distribution, caching, and load balancing." },
+            { tab: "notes", term: "Fault Tolerance", def: "The ability of a system to continue operating even when some components fail. The Internet is designed to be fault tolerant through redundancy and dynamic routing." },
+            { tab: "notes", term: "Redundancy", def: "Having more than one way to accomplish a task. In networks: multiple paths, routers, and servers. If one component fails, redundant ones continue service." },
+            { tab: "notes", term: "Load Balancing", def: "Distributing incoming requests across multiple servers to prevent overload. Enables horizontal scaling and improves both performance and fault tolerance." },
+            { tab: "notes", term: "Parallel Computing", def: "Performing multiple computations simultaneously — on multiple cores of one CPU or across multiple processors. Speed-up is limited by sequential portions of the task." },
+            { tab: "notes", term: "Distributed Computing", def: "Computation spread across multiple networked devices. Enables solving problems too large for one machine. Trade-off: communication overhead can reduce efficiency if tasks require frequent coordination." },
+            { tab: "notes", term: "Cloud Computing", def: "Computing resources (servers, storage, databases) provided over a network on demand. Enables rapid scaling and accessible computing without owning hardware, but introduces network dependence and data privacy concerns." },
+            { tab: "notes", term: "Encryption", def: "Transforming plaintext into ciphertext unreadable without a key. Protects data confidentiality in transit. HTTPS uses encryption to prevent eavesdropping on web traffic." },
+            { tab: "notes", term: "Authentication", def: "The process of verifying identity. Digital certificates issued by trusted organizations help confirm a site is who it claims to be. Separate from encryption — encryption hides content; authentication proves identity." },
+            { tab: "notes", term: "DDoS (Distributed Denial of Service)", def: "A cyberattack that floods a target with requests from many sources simultaneously, making it unavailable to legitimate users." },
+            { tab: "notes", term: "HTTPS", def: "HTTP with encryption (TLS). Content is encrypted in transit and certificates validate server identity. Prevents eavesdropping and reduces impersonation risk, but not a complete security guarantee." },
+        ];
+
+        const flashcards = [
+            { front: "What is the difference between hardware and software?", back: "Hardware is the physical machinery (CPU, RAM, storage, network cards). Software is the set of instructions that tells hardware what to do (OS, apps, protocols). Improving a software feature usually requires only an update; improving hardware range may require a new physical device." },
+            { front: "Why does the Internet use packet switching instead of circuit switching?", back: "Packet switching is efficient (many users share links by interleaving packets), resilient (packets can reroute around failures), and scalable (no dedicated circuit per user needed). Circuit switching wastes capacity when a sender is silent and creates a single point of failure per connection." },
+            { front: "What is an IP address and how is it different from a domain name?", back: "An IP address is a numerical label that identifies a device on a network — routers use it to forward packets. A domain name is a human-readable label (e.g., example.com). DNS translates domain names into IP addresses before communication begins. They are different identifiers serving different purposes." },
+            { front: "What does a router do, and does it know the full path in advance?", back: "A router forwards packets to the next hop toward their destination based on its routing table. Routers typically do NOT know the full end-to-end path — each router decides independently where to send a packet next. This is why two packets in the same message can travel different routes." },
+            { front: "What is DNS and why is it distributed?", back: "DNS (Domain Name System) maps domain names to IP addresses. It is distributed across thousands of servers worldwide so no single server is a bottleneck or single point of failure. Distribution provides scalability (shared workload), fault tolerance (if one fails, others answer), and efficiency (nearby servers respond faster)." },
+            { front: "What is the difference between TCP and UDP?", back: "TCP provides reliable, ordered delivery — it detects lost packets and retransmits them, reassembles packets in order, and manages congestion. Use for correctness (web pages, file downloads). UDP sends messages with minimal overhead and no retransmission — fast but potentially lossy. Use when timeliness beats correctness (live video/audio, gaming). UDP is a deliberate design choice, not a broken TCP." },
+            { front: "What does 'IP is best-effort' mean?", back: "IP tries to deliver packets but does not guarantee delivery, ordering, or error-free transmission. Packets can be lost, duplicated, or arrive out of order. This design keeps the core network simple and scalable. Higher-level protocols like TCP add guarantees on top of IP's best-effort service." },
+            { front: "What is the difference between bandwidth, latency, and throughput?", back: "Bandwidth: maximum data the link can carry per second (capacity). Latency: time for data to travel source → destination (delay). Throughput: actual delivery rate achieved, always ≤ bandwidth due to congestion, loss, and overhead. A high-bandwidth link can still feel slow if latency is high (e.g., satellite)." },
+            { front: "How does redundancy create fault tolerance?", back: "Redundancy means having multiple paths, servers, or routers. If one fails, routing tables update and traffic shifts to alternatives. Users may see a brief slowdown rather than a total outage. Because packets are independent, each one can be rerouted — no single fixed route must stay alive for the whole message." },
+            { front: "What is the difference between parallel and distributed computing?", back: "Parallel computing performs multiple tasks simultaneously — often one machine with multiple processors sharing memory. Distributed computing spreads computation across multiple networked machines. Distributed computing enables problems too large for one machine's storage or processing power. Both have the trade-off that communication overhead can reduce efficiency." },
+            { front: "What is encryption and does it prove who you're talking to?", back: "Encryption transforms plaintext into ciphertext — unreadable without the decryption key. It protects confidentiality (content hidden from eavesdroppers). It does NOT by itself prove identity. Authentication (e.g., digital certificates in HTTPS) is the separate mechanism that verifies you're communicating with the intended party, not an impersonator." },
+            { front: "Walk through the steps of loading a webpage.", back: "1) DNS lookup: resolve domain name to IP address. 2) Browser creates HTTP/HTTPS request. 3) TCP/IP handles reliable delivery and routing. 4) Request split into packets; routers forward each to destination. 5) Server receives, processes, sends response packets. 6) TCP reassembles packets in order. 7) Browser renders page. HTTPS adds encryption and certificate validation throughout." },
+        ];
+
+        const quizQuestions = [
+            {
+                question: "A student wants to improve the Wi-Fi range in a large school building. Which type of change is most likely needed?",
+                options: ["A software update to the school's router firmware", "Adding more access points (hardware) throughout the building", "Updating the operating system on student laptops", "Changing the network protocol from TCP to UDP"],
+                correct: 1,
+                explanation: "Wi-Fi range is a physical constraint determined by hardware — the number and placement of access points (radio transmitters/receivers). A firmware update might optimize performance but cannot physically extend wireless range without additional hardware access points."
+            },
+            {
+                question: "Which statement best explains why packet switching is more suitable than circuit switching for the Internet?",
+                options: ["Packet switching guarantees that all packets arrive in order", "Packet switching dedicates a fixed path to each connection, ensuring reliability", "Packet switching allows many users to share links and packets can reroute around failures", "Packet switching eliminates the need for routers"],
+                correct: 2,
+                explanation: "Packet switching is efficient (many users interleave packets on shared links), resilient (packets can dynamically reroute around failures), and scalable. Circuit switching wastes capacity and creates fixed points of failure. Packet switching does NOT guarantee order — that's TCP's job above IP."
+            },
+            {
+                question: "A user types 'example.com' into their browser. What must happen BEFORE packets are sent to example.com's server?",
+                options: ["The browser must determine the optimal routing path through the Internet", "A DNS lookup must resolve 'example.com' to an IP address", "TCP must establish a reliable connection before any name resolution", "The router must confirm that example.com is online"],
+                correct: 1,
+                explanation: "DNS lookup happens before the connection is established. Routers forward packets using IP addresses, not domain names — so the device must translate 'example.com' to an IP address first. TCP connection setup and routing come after the IP address is known."
+            },
+            {
+                question: "Two packets from the same message are sent across the Internet simultaneously. Which of the following is most accurate?",
+                options: ["Both packets will always follow the same path and arrive in order", "The packets may take different paths and arrive out of order", "The packets are guaranteed to arrive in order because of IP", "Only one packet can be in transit at a time per connection"],
+                correct: 1,
+                explanation: "In packet switching, each packet is routed independently based on current network conditions. Two packets from the same message can take entirely different routes through different routers and may arrive out of order. TCP reassembles packets into the original order — IP itself makes no ordering guarantee."
+            },
+            {
+                question: "Which application would most benefit from using a UDP-like protocol rather than TCP?",
+                options: ["Downloading a large software update file", "Sending an email with an important attachment", "A live video streaming call where brief audio gaps are acceptable", "Loading a web page with many images"],
+                correct: 2,
+                explanation: "Live video/audio calls prioritize timeliness — a late packet is useless, so it's skipped rather than retransmitted. UDP's low latency is worth the occasional dropped packet. File downloads, emails, and web pages require complete, correct data delivery, making TCP the appropriate choice."
+            },
+            {
+                question: "A website has an advertised download bandwidth of 100 Mbps but a user only achieves 40 Mbps throughput. Which of the following is a plausible explanation?",
+                options: ["The user's latency is very low", "Network congestion and packet loss are reducing actual delivery rate", "Bandwidth and throughput are the same metric by definition", "The website's DNS is cached on the user's device"],
+                correct: 1,
+                explanation: "Throughput is the actual rate achieved, which is always ≤ bandwidth. Congestion causes queuing delays, and packet loss causes retransmissions — both reduce effective throughput below the advertised bandwidth. Low latency would improve the situation. DNS caching affects lookup speed, not download throughput."
+            },
+            {
+                question: "A network is designed with multiple redundant paths between locations. A link between two routers suddenly fails. What most likely happens?",
+                options: ["All communication through those routers permanently stops", "Routing tables update and packets are forwarded along alternative paths", "Packets are buffered indefinitely until the link is repaired", "The entire Internet goes down until the link is fixed"],
+                correct: 1,
+                explanation: "Redundancy and dynamic routing are core Internet design features. When a link fails, routers detect the unavailable path, update their routing tables, and redirect packets through alternative routes. Users may see a brief slowdown during the transition. The Internet is designed so that local failures don't cause global outages."
+            },
+            {
+                question: "Why is DNS distributed across many servers rather than using a single central server?",
+                options: ["A single central DNS server would be more secure and reliable", "Distribution provides scalability, fault tolerance, and faster responses from nearby servers", "A single server is easier to maintain and faster for all users globally", "DNS distribution is required by the TCP protocol"],
+                correct: 1,
+                explanation: "A single central DNS server would be a catastrophic bottleneck and single point of failure — if it went down, the entire Internet's name resolution would fail. Distribution shares workload across thousands of servers, allows nearby servers to answer quickly, and ensures that failure of any one server doesn't prevent lookups."
+            },
+            {
+                question: "A parallel computing solution has a sequential setup phase of 3 seconds, two tasks that run in parallel (Task A: 8 seconds, Task B: 5 seconds), and a sequential cleanup of 2 seconds. What is the total runtime?",
+                options: ["18 seconds", "13 seconds", "10 seconds", "8 seconds"],
+                correct: 1,
+                explanation: "Total = sequential setup + longest parallel task + sequential cleanup = 3 + max(8, 5) + 2 = 3 + 8 + 2 = 13 seconds. The parallel portion takes as long as the longest task — Task B finishes while Task A is still running. The sequential portions cannot be parallelized and add directly to total time."
+            },
+            {
+                question: "Which of the following does encryption PRIMARILY protect against?",
+                options: ["An attacker impersonating a trusted website", "Unauthorized users reading data while it travels across the network", "Denial-of-service attacks that overwhelm a server", "Malware already installed on the user's device"],
+                correct: 1,
+                explanation: "Encryption protects confidentiality — it makes data unreadable to eavesdroppers who capture packets in transit. It does not by itself prove identity (that's authentication via certificates), prevent DDoS attacks (which overwhelm with volume), or protect against malware on the device (which intercepts data before it's encrypted)."
+            },
+            {
+                question: "A 200 MB file needs to be transferred over a connection with an actual throughput of 25 Mbps. How long will the transfer take?",
+                options: ["8 seconds", "64 seconds", "8 minutes", "0.8 seconds"],
+                correct: 1,
+                explanation: "Convert 200 MB to megabits: 200 × 8 = 1,600 megabits. Transfer time = 1,600 ÷ 25 = 64 seconds. Remember: 1 byte = 8 bits, and always use throughput (actual delivery rate) rather than advertised bandwidth for real-world estimates."
+            },
+            {
+                question: "What is the relationship between the Internet and the World Wide Web?",
+                options: ["They are the same thing — the Web is another name for the Internet", "The Internet is the physical and network infrastructure; the Web is an application (HTTP-based content) that runs on top of it", "The Web is the hardware layer and the Internet is the software layer", "The Internet only exists because of the Web's HTTP protocol"],
+                correct: 1,
+                explanation: "The Internet is the global network of networks — the physical cables, routers, protocols (TCP/IP), and infrastructure. The World Wide Web is one application that uses the Internet: web pages and resources accessed via HTTP/HTTPS. Email, video calls, and file transfers also use the Internet but are not part of the Web."
+            },
+        ];
+
+        const essayOutlines = [
+            {
+                label: "Explain why the Internet uses packet switching and how it supports scalability and fault tolerance",
+                blocks: [
+                    ["Claim", "Packet switching is the foundation of the Internet's scalability and fault tolerance — it allows many users to share infrastructure efficiently and enables automatic rerouting around failures."],
+                    ["Evidence", "In packet switching, messages are broken into packets that travel independently. Multiple users can interleave packets on the same link rather than requiring dedicated circuits. If a router or link fails, routing tables update and subsequent packets take alternative paths."],
+                    ["Reasoning", "Circuit switching would require a dedicated path per connection — the Internet could not scale to billions of simultaneous users without impossibly expensive infrastructure. Packet switching's shared-link model means capacity grows more efficiently with each new link added."],
+                    ["Trade-off", "Packet switching does not guarantee delivery, ordering, or timing. Protocols like TCP add these guarantees on top of IP's best-effort service, at the cost of additional overhead and latency."]
+                ]
+            },
+            {
+                label: "Explain what DNS is, why it is distributed, and what happens if DNS fails",
+                blocks: [
+                    ["Claim", "DNS is a critical lookup service that makes the Internet usable for humans, and its distributed design is essential for both scalability and reliability."],
+                    ["Evidence", "DNS translates domain names (e.g., example.com) to IP addresses that routers can use to forward packets. It is distributed across thousands of servers worldwide. Answers are cached to reduce load and improve speed."],
+                    ["Reasoning", "A single central DNS server would be a bottleneck handling billions of daily lookups and a single point of failure — one outage would cripple Internet usability globally. Distribution shares the workload, provides fault tolerance, and allows nearby servers to answer faster."],
+                    ["Failure Impact", "If DNS is unreachable, users cannot resolve domain names to IP addresses, so they cannot connect to sites even if the sites' servers are fully operational. DNS is a dependency that sits in front of every other Internet connection."]
+                ]
+            },
+            {
+                label: "Compare and contrast TCP and UDP, explaining when each is the better choice",
+                blocks: [
+                    ["Claim", "TCP and UDP make opposite trade-offs between reliability and speed — the right choice depends entirely on whether the application needs correct delivery or timely delivery."],
+                    ["Evidence", "TCP detects lost packets and retransmits them, reorders packets into the original sequence, and manages congestion. UDP sends messages with minimal overhead and no built-in retransmission, allowing faster but potentially incomplete delivery."],
+                    ["Reasoning", "Loading a web page or downloading a file requires every byte to arrive correctly — TCP's reliability is worth the latency overhead. A live voice call cannot wait for retransmitted packets (the moment has passed) — UDP's low-latency behavior is preferable, and a brief audio gap is acceptable."],
+                    ["Common Misconception", "UDP is not 'worse' than TCP — it is a deliberate design choice. Some applications even implement their own lightweight reliability on top of UDP to get the best of both."]
+                ]
+            },
+            {
+                label: "Explain the difference between encryption and authentication, and why both are needed for secure web communication",
+                blocks: [
+                    ["Claim", "Secure web communication requires both encryption (to protect confidentiality) and authentication (to verify identity) — they solve different problems and neither alone is sufficient."],
+                    ["Evidence", "Encryption transforms data into ciphertext unreadable without a key, preventing eavesdroppers from reading packets in transit. Authentication (via digital certificates in HTTPS) verifies that the server you're connected to is who it claims to be, preventing impersonation."],
+                    ["Reasoning", "Without encryption, anyone on the network path can read or modify content. Without authentication, an attacker could present a valid encryption channel but to a fake server — you'd securely send your password to the wrong party. HTTPS combines both through TLS encryption and certificate validation."],
+                    ["Limits", "HTTPS significantly improves security but is not complete protection. Malware on the device can intercept data before encryption. Phishing tricks users into connecting to correctly-certified fake sites. User behavior (weak passwords, ignoring warnings) also matters."]
+                ]
+            }
+        ];
+
+        const nav = document.getElementById("sidebarNav");
+        const ambientOverlay = document.getElementById("ambientOverlay");
+        const mainEl = document.getElementById("main");
+        const cursor = document.getElementById("cursor");
+        const pinBtn = document.getElementById("pinBtn");
+        const sidebar = document.getElementById("sidebar");
+        const apToggleBtn = document.getElementById("apToggleBtn");
+        const bestScoreEl = document.getElementById("bestScore");
+        let currentTab = "dashboard";
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizLocked = false;
+
+        function renderNav() {
+            nav.innerHTML = tabs.map(tab => `
+        <button class="nav-btn ${tab.id === currentTab ? "active" : ""}" data-tab="${tab.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${tab.icon}</span>
+          <span class="nav-label">${tab.label}</span>
+        </button>`).join("");
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === tabId));
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+            const tab = tabs.find(t => t.id === tabId);
+            if (tab) ambientOverlay.style.background = tab.ambient;
+            mainEl.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function renderGlossary(filter = "") {
+            const val = filter.toLowerCase().trim();
+            const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(val) || t.def.toLowerCase().includes(val));
+            document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+        }
+
+        function renderFlashcards() {
+            document.getElementById("flashGrid").innerHTML = flashcards.map(card => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${card.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${card.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+        }
+
+        function renderEssayTopics() {
+            document.getElementById("essayTopics").innerHTML = essayOutlines.map((o, i) =>
+                `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+            document.getElementById("essayOutline").classList.remove("show");
+            document.getElementById("essayOutline").innerHTML = "";
+        }
+
+        function selectEssay(index) {
+            document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === index));
+            const outline = essayOutlines[index];
+            document.getElementById("essayOutline").innerHTML = outline.blocks.map(([label, body]) =>
+                `<div class="essay-block"><div class="essay-block-label">${label}</div><div class="essay-block-body">${body}</div></div>`).join("");
+            document.getElementById("essayOutline").classList.add("show");
+        }
+
+        function renderQuizQuestion() {
+            const quizMount = document.getElementById("quizMount");
+            const q = quizQuestions[quizIndex];
+            if (!q) {
+                const pct = Math.round((quizScore / quizQuestions.length) * 100);
+                const prevBest = Number(localStorage.getItem("apcsp_bi4_best") || 0);
+                const best = Math.max(prevBest, pct);
+                localStorage.setItem("apcsp_bi4_best", String(best));
+                bestScoreEl.textContent = best + "%";
+                quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review packet switching, DNS, TCP vs UDP, bandwidth vs latency, and fault tolerance if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+                return;
+            }
+            quizLocked = false;
+            quizMount.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question.replace(/\n/g, '<br>')}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add("open"); }
+        function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+        function initBestScore() { const best = localStorage.getItem("apcsp_bi4_best"); bestScoreEl.textContent = best ? best + "%" : "--"; }
+
+        renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+        document.addEventListener("mousemove", e => {
+            if (!window.matchMedia("(pointer:fine)").matches) return;
+            cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+        });
+        document.addEventListener("mouseover", e => {
+            if (!window.matchMedia("(pointer:fine)").matches) return;
+            const interactive = e.target.closest("button, a, .flash-card, .glossary-card");
+            cursor.style.width = interactive ? "20px" : "12px";
+            cursor.style.height = interactive ? "20px" : "12px";
+        });
+
+        pinBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned");
+            pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin";
+        });
+        nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+        document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => {
+            const t = document.getElementById(b.dataset.noteTarget); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+        }));
+        document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+        document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+
+        document.getElementById("openSearch").addEventListener("click", () => {
+            const panel = document.getElementById("sbSearchPanel");
+            panel.classList.toggle("open");
+            if (panel.classList.contains("open")) document.getElementById("sbInput").focus();
+        });
+        document.getElementById("sbInput").addEventListener("input", e => {
+            const query = e.target.value.toLowerCase().trim();
+            const matches = glossaryTerms.filter(t => t.term.toLowerCase().includes(query) || t.def.toLowerCase().includes(query)).slice(0, 8);
+            document.getElementById("sbResults").innerHTML = matches.length
+                ? matches.map(item => `<div class="sb-result" data-target-tab="${item.tab}" data-target-term="${item.term}"><div class="sb-result-tab">${item.tab}</div><div class="sb-result-term">${item.term}</div><div class="sb-result-snip">${item.def}</div></div>`).join("")
+                : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+        });
+        document.getElementById("sbResults").addEventListener("click", e => {
+            const result = e.target.closest(".sb-result"); if (!result || !result.dataset.targetTab) return;
+            switchTab(result.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+            document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+            if (result.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = result.dataset.targetTerm; renderGlossary(result.dataset.targetTerm); }
+        });
+        document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+        apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+        document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+        document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+        document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
+        document.getElementById("quizMount").addEventListener("click", e => {
+            const option = e.target.closest(".quiz-option");
+            if (option && !quizLocked) {
+                quizLocked = true;
+                const q = quizQuestions[quizIndex]; const selected = Number(option.dataset.optionIndex);
+                document.querySelectorAll(".quiz-option").forEach((btn, i) => { if (i === q.correct) btn.classList.add("correct"); if (i === selected && selected !== q.correct) btn.classList.add("wrong"); });
+                if (selected === q.correct) quizScore++;
+                document.getElementById("quizFeedback").textContent = q.explanation;
+                document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+            }
+            if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+            if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+        });
+        document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+        document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+        mainEl.addEventListener("scroll", () => {
+            const max = mainEl.scrollHeight - mainEl.clientHeight;
+            const pct = max > 0 ? (mainEl.scrollTop / max) * 100 : 0;
+            document.getElementById("readingProgressFill").style.width = pct + "%";
+        });
+    </script>
+</body>
+
+</html>
