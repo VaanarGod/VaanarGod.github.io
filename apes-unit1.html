@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AP Environmental Science — Unit 1: The Living World: Ecosystems</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --bg: #060a06;
       --card: #0a0f0a;
       --card2: #0f150f;
-      --border: rgba(255,255,255,.055);
+      --border: rgba(255, 255, 255, .055);
       --text: #e2ead8;
       --muted: #5a6b52;
       --g: #5dbf6e;
@@ -27,7 +36,9 @@
       --accent: #5dbf6e;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       min-height: 100vh;
@@ -45,8 +56,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(93,191,110,.012) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(93,191,110,.012) 1px, transparent 1px);
+        linear-gradient(rgba(93, 191, 110, .012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(93, 191, 110, .012) 1px, transparent 1px);
       background-size: 72px 72px;
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
       pointer-events: none;
@@ -66,29 +77,36 @@
 
     #cursor {
       position: fixed;
-      width: 12px; height: 12px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: var(--g);
       pointer-events: none;
       z-index: 9999;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       mix-blend-mode: difference;
       transition: width .2s, height .2s;
     }
 
     #readingProgress {
       position: fixed;
-      top: 0; left: 72px; right: 0;
-      height: 2px; z-index: 100;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100;
     }
+
     #readingProgressFill {
-      width: 0%; height: 100%;
+      width: 0%;
+      height: 100%;
       background: linear-gradient(90deg, var(--g), var(--g2));
     }
 
     #ambientOverlay {
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse at 55% 15%, rgba(93,191,110,.10), transparent 65%);
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 55% 15%, rgba(93, 191, 110, .10), transparent 65%);
       opacity: .12;
       pointer-events: none;
       transition: background 1s ease, opacity .25s ease;
@@ -100,582 +118,1217 @@
       width: 72px;
       height: 100vh;
       flex-shrink: 0;
-      background: rgba(4,7,4,.88);
+      background: rgba(4, 7, 4, .88);
       border-right: 1px solid var(--border);
       backdrop-filter: blur(24px);
       overflow: hidden;
       position: relative;
       z-index: 10;
-      transition: width .4s cubic-bezier(.23,1,.32,1);
+      transition: width .4s cubic-bezier(.23, 1, .32, 1);
     }
-    #sidebar:hover, #sidebar.pinned { width: 264px; }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 264px;
+    }
 
     #pinBtn {
-      position: absolute; top: 12px; right: 10px;
-      padding: 4px 7px; border-radius: 6px;
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      background: transparent; color: var(--muted);
-      font: inherit; font-size: 8px; letter-spacing: .08em;
-      opacity: 0; cursor: none;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .08em;
+      opacity: 0;
+      cursor: none;
       transition: opacity .25s, color .2s, border-color .2s;
     }
-    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
-    #pinBtn.pinned { color: var(--g); border-color: rgba(93,191,110,.24); }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1;
+    }
+
+    #pinBtn.pinned {
+      color: var(--g);
+      border-color: rgba(93, 191, 110, .24);
+    }
 
     .sidebar-logo {
-      display: flex; align-items: center; gap: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
       padding: 18px;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
+
     .logo-icon {
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
       border-radius: 10px;
-      border: 1px solid rgba(93,191,110,.22);
-      background: rgba(93,191,110,.07);
+      border: 1px solid rgba(93, 191, 110, .22);
+      background: rgba(93, 191, 110, .07);
       color: var(--g);
       flex-shrink: 0;
       font-family: 'Cinzel', serif;
-      font-size: 9px; font-weight: 700;
+      font-size: 9px;
+      font-weight: 700;
     }
-    .logo-copy { opacity: 0; transition: opacity .25s; }
-    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1;
+    }
+
     .logo-copy h1 {
       font-family: 'Cinzel', serif;
-      font-size: 11px; letter-spacing: .22em; color: var(--g);
-    }
-    .logo-copy p {
-      color: var(--muted); font-size: 9px;
-      letter-spacing: .12em; text-transform: uppercase; margin-top: 3px;
+      font-size: 11px;
+      letter-spacing: .22em;
+      color: var(--g);
     }
 
-    .search-wrap { position: relative; padding: 10px; }
-    .sb-search-trigger {
-      width: 100%; display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      color: var(--muted); cursor: none;
-      opacity: 0; pointer-events: none;
-      transition: opacity .25s, border-color .2s;
-      font-family: 'DM Mono', monospace; font-size: 10px;
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-top: 3px;
     }
-    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger { opacity: 1; pointer-events: auto; }
-    .sb-search-trigger:hover { border-color: rgba(93,191,110,.2); }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px;
+    }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+    }
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(93, 191, 110, .2);
+    }
 
     #sbSearchPanel {
-      position: absolute; top: calc(100% - 4px); left: 10px; right: 10px;
-      border: 1px solid rgba(93,191,110,.18);
-      background: rgba(5,8,5,.98);
-      border-radius: 12px; overflow: hidden;
-      opacity: 0; pointer-events: none;
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(93, 191, 110, .18);
+      background: rgba(5, 8, 5, .98);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
       transform: translateY(-8px);
       transition: opacity .22s, transform .22s;
       z-index: 80;
-      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
     }
-    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
     #sbSearchInner {
-      display: flex; align-items: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       padding: 10px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
     }
+
     #sbInput {
-      flex: 1; border: none; background: transparent;
+      flex: 1;
+      border: none;
+      background: transparent;
       color: var(--text);
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em;
-      outline: none; cursor: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
     }
-    #sbResults { max-height: 280px; overflow: auto; }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto;
+    }
+
     .sb-result {
       padding: 11px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
-      cursor: none; transition: background .15s;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      cursor: none;
+      transition: background .15s;
     }
-    .sb-result:hover { background: rgba(93,191,110,.06); }
-    .sb-result:last-child { border-bottom: none; }
-    .sb-result-tab { font-size: 8px; color: var(--g); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
-    .sb-result-term { font-family: 'Cinzel', serif; font-size: 13px; color: white; letter-spacing: .04em; }
-    .sb-result-snip { font-family: 'Crimson Pro', serif; font-size: 12px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+
+    .sb-result:hover {
+      background: rgba(93, 191, 110, .06);
+    }
+
+    .sb-result:last-child {
+      border-bottom: none;
+    }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .sb-result-term {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: white;
+      letter-spacing: .04em;
+    }
+
+    .sb-result-snip {
+      font-family: 'Crimson Pro', serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
 
     nav {
       height: calc(100vh - 176px);
       padding: 0 10px 14px;
       overflow: auto;
     }
+
     .nav-btn {
-      width: 100%; display: flex; align-items: center; gap: 14px;
-      padding: 10px 14px; border: none; border-radius: 10px;
-      background: transparent; color: var(--muted);
-      cursor: none; white-space: nowrap;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
       transition: background .2s, color .2s;
       position: relative;
       font-family: 'Space Grotesk', sans-serif;
     }
-    .nav-btn:hover { background: rgba(255,255,255,.025); color: #a8c89a; }
-    .nav-btn.active { background: rgba(93,191,110,.07); color: var(--g); }
-    .nav-btn.active .nav-indicator { opacity: 1; }
-    .nav-indicator {
-      position: absolute; left: 0;
-      width: 2px; height: 24px;
-      background: var(--g); border-radius: 5px; opacity: 0;
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .025);
+      color: #a8c89a;
     }
-    .nav-icon { font-size: 14px; flex-shrink: 0; }
+
+    .nav-btn.active {
+      background: rgba(93, 191, 110, .07);
+      color: var(--g);
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1;
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 24px;
+      background: var(--g);
+      border-radius: 5px;
+      opacity: 0;
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
     .nav-label {
-      font-size: 10px; letter-spacing: .18em;
-      text-transform: uppercase; opacity: 0;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
       transition: opacity .25s;
     }
-    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1;
+    }
 
     .sidebar-footer {
-      position: absolute; left: 0; right: 0; bottom: 0;
-      display: flex; align-items: center; gap: 10px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       padding: 14px 18px;
       border-top: 1px solid var(--border);
       color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .1em;
-      overflow: hidden; white-space: nowrap;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap;
     }
-    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s; }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
     #sidebar:hover .sidebar-footer span:last-child,
-    #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1;
+    }
+
     .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--g); flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--g);
+      flex-shrink: 0;
       animation: blink 2.4s ease-in-out infinite;
     }
 
     /* ── MAIN ── */
     #main {
-      flex: 1; height: 100vh; overflow-y: auto;
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
       padding: 36px 54px 80px;
-      position: relative; z-index: 2;
+      position: relative;
+      z-index: 2;
     }
 
     .topbar {
-      position: sticky; top: 0; z-index: 20;
-      display: flex; align-items: center;
-      justify-content: space-between; gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
       margin-bottom: 24px;
       padding: 8px 0 20px;
       backdrop-filter: blur(8px);
     }
-    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    .glass-btn, #scoreTracker {
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .glass-btn,
+    #scoreTracker {
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .04);
       color: var(--muted);
       padding: 9px 14px;
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .16em;
-      text-transform: uppercase; cursor: none;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
       backdrop-filter: blur(12px);
       transition: border-color .2s, color .2s, background .2s;
       white-space: nowrap;
       text-decoration: none;
       display: inline-block;
     }
-    .glass-btn:hover, #scoreTracker:hover { color: var(--g); border-color: rgba(93,191,110,.26); }
-    .glass-btn.active { color: var(--g); border-color: rgba(93,191,110,.32); background: rgba(93,191,110,.07); }
 
-    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(.23,1,.32,1); }
-    .tab-content.active { display: block; }
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--g);
+      border-color: rgba(93, 191, 110, .26);
+    }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(93, 191, 110, .32);
+      background: rgba(93, 191, 110, .07);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeUp .45s cubic-bezier(.23, 1, .32, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
 
     /* ── PAGE HEADER ── */
     .page-header {
-      margin-bottom: 34px; padding-bottom: 24px;
+      margin-bottom: 34px;
+      padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
     }
+
     .unit-tag {
-      display: block; color: var(--g);
+      display: block;
+      color: var(--g);
       font-family: 'DM Mono', monospace;
-      font-size: 10px; letter-spacing: .35em;
-      text-transform: uppercase; margin-bottom: 10px;
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
+
     .page-header h2 {
       font-family: 'Cinzel', serif;
       font-size: clamp(32px, 4.5vw, 56px);
-      letter-spacing: .06em; line-height: .98; color: white;
+      letter-spacing: .06em;
+      line-height: .98;
+      color: white;
     }
+
     .page-header p {
-      margin-top: 10px; color: var(--muted);
+      margin-top: 10px;
+      color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
     }
 
     /* ── GRIDS ── */
-    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; margin-bottom: 26px; }
-    .principle-grid, .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
-    .case-grid, .flash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
-    .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 22px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      margin-bottom: 26px;
+    }
+
+    .principle-grid,
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 22px;
+    }
+
+    .case-grid,
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px;
+    }
 
     /* ── CARDS ── */
-    .card, .feature-card, .principle-card, .case-card, .exam-card, .flash-card, .writing-card {
+    .card,
+    .feature-card,
+    .principle-card,
+    .case-card,
+    .exam-card,
+    .flash-card,
+    .writing-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px; padding: 28px;
-      position: relative; overflow: hidden;
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
       transition: transform .24s, border-color .24s, box-shadow .24s;
     }
-    .card:hover, .feature-card:hover, .principle-card:hover,
-    .case-card:hover, .exam-card:hover, .flash-card:hover, .writing-card:hover {
+
+    .card:hover,
+    .feature-card:hover,
+    .principle-card:hover,
+    .case-card:hover,
+    .exam-card:hover,
+    .flash-card:hover,
+    .writing-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255,255,255,.11);
-      box-shadow: 0 20px 48px rgba(0,0,0,.4);
+      border-color: rgba(255, 255, 255, .11);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, .4);
     }
-    .hero-card::before, .feature-card::before, .principle-card::before,
-    .case-card::before, .exam-card::before, .writing-card::before {
+
+    .hero-card::before,
+    .feature-card::before,
+    .principle-card::before,
+    .case-card::before,
+    .exam-card::before,
+    .writing-card::before {
       content: '';
-      position: absolute; left: 0; right: 0; top: 0;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
       height: 2px;
       background: var(--accent, var(--g));
       opacity: .65;
     }
-    .hero-card { --accent: var(--g); }
-    .accent-g   { --accent: var(--g); }
-    .accent-g2  { --accent: var(--g2); }
-    .accent-g3  { --accent: var(--g3); }
-    .accent-gold{ --accent: var(--gold); }
-    .accent-blue{ --accent: var(--blue); }
-    .accent-red { --accent: var(--red); }
-    .accent-orange { --accent: var(--orange); }
+
+    .hero-card {
+      --accent: var(--g);
+    }
+
+    .accent-g {
+      --accent: var(--g);
+    }
+
+    .accent-g2 {
+      --accent: var(--g2);
+    }
+
+    .accent-g3 {
+      --accent: var(--g3);
+    }
+
+    .accent-gold {
+      --accent: var(--gold);
+    }
+
+    .accent-blue {
+      --accent: var(--blue);
+    }
+
+    .accent-red {
+      --accent: var(--red);
+    }
+
+    .accent-orange {
+      --accent: var(--orange);
+    }
 
     .card-sub {
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 10px;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px;
     }
+
     .card-title {
       font-family: 'Cinzel', serif;
-      font-size: 21px; letter-spacing: .04em;
-      color: white; line-height: 1.18; margin-bottom: 14px;
+      font-size: 21px;
+      letter-spacing: .04em;
+      color: white;
+      line-height: 1.18;
+      margin-bottom: 14px;
     }
+
     .body-copy {
       font-family: 'Crimson Pro', serif;
-      font-size: 15px; line-height: 1.82; color: #8aaa7a;
+      font-size: 15px;
+      line-height: 1.82;
+      color: #8aaa7a;
     }
-    .body-copy p + p { margin-top: 10px; }
+
+    .body-copy p+p {
+      margin-top: 10px;
+    }
 
     .dash-stats {
-      display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 12px; margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
     }
+
     .stat-box {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px; text-align: center;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
     }
+
     .stat-box span {
       display: block;
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 6px;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
+
     .stat-box strong {
       font-family: 'Cinzel', serif;
-      font-size: 26px; letter-spacing: .06em; color: var(--g);
+      font-size: 26px;
+      letter-spacing: .06em;
+      color: var(--g);
     }
 
     .focus-callout {
-      margin-top: 20px; padding: 16px 18px;
+      margin-top: 20px;
+      padding: 16px 18px;
       border-radius: 12px;
-      background: rgba(93,191,110,.04);
-      border: 1px solid rgba(93,191,110,.13);
+      background: rgba(93, 191, 110, .04);
+      border: 1px solid rgba(93, 191, 110, .13);
     }
+
     .focus-callout .label {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 8px;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px;
     }
 
-    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
     .bullet-list li {
       font-family: 'Crimson Pro', serif;
-      font-size: 14px; line-height: 1.68; color: #8aaa7a;
-      padding-left: 18px; position: relative;
+      font-size: 14px;
+      line-height: 1.68;
+      color: #8aaa7a;
+      padding-left: 18px;
+      position: relative;
     }
-    .bullet-list li::before { content: '›'; position: absolute; left: 0; color: var(--g); }
 
-    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .bullet-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--g);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
     .tag {
-      padding: 4px 10px; border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 20px;
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .16em; text-transform: uppercase;
-      border: 1px solid rgba(93,191,110,.2);
-      color: rgba(93,191,110,.6);
-      background: rgba(93,191,110,.04);
+      font-size: 8px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border: 1px solid rgba(93, 191, 110, .2);
+      color: rgba(93, 191, 110, .6);
+      background: rgba(93, 191, 110, .04);
     }
 
     .mini-label {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 10px;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px;
     }
 
     /* ── NOTES ── */
-    .notes-shell { display: grid; grid-template-columns: 200px 1fr; gap: 28px; align-items: start; }
-    .notes-index {
-      position: sticky; top: 80px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 18px 14px;
-      display: flex; flex-direction: column; gap: 4px;
+    .notes-shell {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 28px;
+      align-items: start;
     }
+
+    .notes-index {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
     .notes-index-title {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--muted);
-      padding: 0 6px; margin-bottom: 8px;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 6px;
+      margin-bottom: 8px;
     }
+
     .note-jump {
-      display: flex; justify-content: space-between; align-items: center;
-      width: 100%; padding: 8px 10px;
-      border: none; border-radius: 8px; background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
       color: var(--muted);
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
-      cursor: none; transition: background .18s, color .18s;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .18s, color .18s;
     }
-    .note-jump:hover { background: rgba(93,191,110,.06); color: var(--g); }
-    .note-jump span:last-child { color: rgba(93,191,110,.35); font-family: 'DM Mono', monospace; }
 
-    .notes-stack { display: flex; flex-direction: column; gap: 22px; }
-    .note-section {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 30px;
-      position: relative; overflow: hidden;
+    .note-jump:hover {
+      background: rgba(93, 191, 110, .06);
+      color: var(--g);
     }
+
+    .note-jump span:last-child {
+      color: rgba(93, 191, 110, .35);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .notes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
     .note-section::before {
-      content: ''; position: absolute;
-      left: 0; top: 0; bottom: 0;
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
       width: 3px;
       background: var(--accent, var(--g));
       opacity: .55;
     }
+
     .note-section h3 {
       font-family: 'Cinzel', serif;
-      font-size: 22px; letter-spacing: .05em;
-      color: white; margin-bottom: 14px;
+      font-size: 22px;
+      letter-spacing: .05em;
+      color: white;
+      margin-bottom: 14px;
     }
+
     .note-section h4 {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 600;
-      font-size: 13px; letter-spacing: .1em;
-      color: var(--text); margin: 20px 0 10px;
+      font-size: 13px;
+      letter-spacing: .1em;
+      color: var(--text);
+      margin: 20px 0 10px;
       text-transform: uppercase;
     }
+
     .note-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-      gap: 14px; margin: 18px 0;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
     }
+
     .mini-note {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px; letter-spacing: .08em;
-      font-weight: 600; color: var(--text);
+      font-size: 10px;
+      letter-spacing: .08em;
+      font-weight: 600;
+      color: var(--text);
     }
+
     .mini-note .body-copy {
-      font-size: 13px; letter-spacing: 0; font-weight: 400;
-      color: #6a8c5e; margin-top: 7px;
+      font-size: 13px;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: #6a8c5e;
+      margin-top: 7px;
     }
+
     .code-block {
       background: #040804;
-      border: 1px solid rgba(93,191,110,.1);
-      border-radius: 12px; padding: 18px 20px;
+      border: 1px solid rgba(93, 191, 110, .1);
+      border-radius: 12px;
+      padding: 18px 20px;
       font-family: 'DM Mono', monospace;
-      font-size: 11px; line-height: 1.7;
-      color: #7ab87a; letter-spacing: .04em;
-      overflow-x: auto; white-space: pre; margin-top: 10px;
+      font-size: 11px;
+      line-height: 1.7;
+      color: #7ab87a;
+      letter-spacing: .04em;
+      overflow-x: auto;
+      white-space: pre;
+      margin-top: 10px;
     }
 
     /* comparison table */
-    .compare-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+    }
+
     .compare-table th {
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--g); padding: 10px 14px; text-align: left;
-      border-bottom: 1px solid rgba(93,191,110,.15);
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--g);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(93, 191, 110, .15);
     }
+
     .compare-table td {
       font-family: 'Crimson Pro', serif;
-      font-size: 13px; line-height: 1.6; color: #8aaa7a;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #8aaa7a;
       padding: 9px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
       vertical-align: top;
     }
-    .compare-table tr:last-child td { border-bottom: none; }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
 
     /* ── GLOSSARY ── */
-    .glossary-toolbar { margin-bottom: 22px; }
+    .glossary-toolbar {
+      margin-bottom: 22px;
+    }
+
     .glossary-toolbar input {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 18px;
       font-family: 'DM Mono', monospace;
-      font-size: 10px; letter-spacing: .1em;
-      color: var(--text); outline: none; min-width: 300px;
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: var(--text);
+      outline: none;
+      min-width: 300px;
       transition: border-color .2s;
     }
-    .glossary-toolbar input:focus { border-color: rgba(93,191,110,.3); }
+
+    .glossary-toolbar input:focus {
+      border-color: rgba(93, 191, 110, .3);
+    }
+
     .glossary-card h4 {
       font-family: 'Cinzel', serif;
-      font-size: 16px; letter-spacing: .04em;
-      color: white; margin-bottom: 8px;
+      font-size: 16px;
+      letter-spacing: .04em;
+      color: white;
+      margin-bottom: 8px;
     }
 
     /* ── FLASHCARDS ── */
-    .flash-card { perspective: 900px; height: 210px; cursor: none; }
+    .flash-card {
+      perspective: 900px;
+      height: 210px;
+      cursor: none;
+    }
+
     .flash-inner {
-      width: 100%; height: 100%; position: relative;
+      width: 100%;
+      height: 100%;
+      position: relative;
       transform-style: preserve-3d;
-      transition: transform .55s cubic-bezier(.23,1,.32,1);
+      transition: transform .55s cubic-bezier(.23, 1, .32, 1);
     }
-    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
-    .flash-front, .flash-back {
-      position: absolute; inset: 0;
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      inset: 0;
       backface-visibility: hidden;
-      display: flex; flex-direction: column; justify-content: space-between;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .flash-back { transform: rotateY(180deg); }
+
+    .flash-back {
+      transform: rotateY(180deg);
+    }
+
     .flash-card h3 {
       font-family: 'Cinzel', serif;
-      font-size: 16px; letter-spacing: .04em;
-      color: white; line-height: 1.25;
+      font-size: 16px;
+      letter-spacing: .04em;
+      color: white;
+      line-height: 1.25;
     }
+
     .flash-hint {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
-      color: rgba(93,191,110,.4);
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(93, 191, 110, .4);
     }
 
     /* ── EXAM PREP ── */
     .exam-card h3 {
       font-family: 'Cinzel', serif;
-      font-size: 18px; letter-spacing: .04em;
-      color: white; margin-bottom: 14px;
+      font-size: 18px;
+      letter-spacing: .04em;
+      color: white;
+      margin-bottom: 14px;
     }
 
     /* ── MODALS ── */
     .modal {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.76); z-index: 9000;
-      display: none; align-items: center; justify-content: center;
-      padding: 24px; backdrop-filter: blur(8px);
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .76);
+      z-index: 9000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(8px);
     }
-    .modal.open { display: flex; }
+
+    .modal.open {
+      display: flex;
+    }
+
     .modal-box {
       background: #080d08;
-      border: 1px solid rgba(93,191,110,.16);
-      border-radius: 20px; padding: 32px;
-      width: 100%; max-width: 620px; max-height: 82vh;
-      overflow-y: auto; position: relative;
+      border: 1px solid rgba(93, 191, 110, .16);
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 82vh;
+      overflow-y: auto;
+      position: relative;
     }
+
     .modal-title {
       font-family: 'Cinzel', serif;
-      font-size: 22px; letter-spacing: .08em;
-      color: white; margin-bottom: 22px;
+      font-size: 22px;
+      letter-spacing: .08em;
+      color: white;
+      margin-bottom: 22px;
     }
+
     .modal-close {
-      position: absolute; top: 20px; right: 20px;
-      background: transparent; border: 1px solid var(--border);
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--border);
       color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .14em;
-      padding: 6px 10px; border-radius: 8px; cursor: none;
+      font-size: 9px;
+      letter-spacing: .14em;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: none;
       transition: color .2s, border-color .2s;
     }
-    .modal-close:hover { color: var(--red); border-color: rgba(217,95,95,.3); }
+
+    .modal-close:hover {
+      color: var(--red);
+      border-color: rgba(217, 95, 95, .3);
+    }
 
     /* ── QUIZ ── */
     .quiz-status {
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
-      color: var(--g); margin-bottom: 14px;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 14px;
     }
+
     .quiz-question {
       font-family: 'Crimson Pro', serif;
-      font-size: 17px; line-height: 1.72;
-      color: var(--text); margin-bottom: 20px;
+      font-size: 17px;
+      line-height: 1.72;
+      color: var(--text);
+      margin-bottom: 20px;
     }
-    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
     .quiz-option {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 13px 16px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px; color: var(--muted);
-      text-align: left; cursor: none;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      cursor: none;
       transition: border-color .2s, color .2s, background .2s;
     }
-    .quiz-option:hover { border-color: rgba(93,191,110,.28); color: var(--text); }
-    .quiz-option.correct { border-color: var(--g2); color: var(--g2); background: rgba(62,184,154,.08); }
-    .quiz-option.wrong { border-color: var(--red); color: var(--red); background: rgba(217,95,95,.08); }
+
+    .quiz-option:hover {
+      border-color: rgba(93, 191, 110, .28);
+      color: var(--text);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--g2);
+      color: var(--g2);
+      background: rgba(62, 184, 154, .08);
+    }
+
+    .quiz-option.wrong {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(217, 95, 95, .08);
+    }
+
     .quiz-feedback {
       font-family: 'Crimson Pro', serif;
-      font-size: 14px; line-height: 1.72;
-      color: var(--muted); min-height: 20px; margin-bottom: 14px;
+      font-size: 14px;
+      line-height: 1.72;
+      color: var(--muted);
+      min-height: 20px;
+      margin-bottom: 14px;
     }
-    .quiz-next { text-align: right; }
+
+    .quiz-next {
+      text-align: right;
+    }
 
     /* ── ESSAY ── */
-    .essay-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .essay-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
     .essay-topic-btn {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px 16px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px; color: var(--muted);
-      text-align: left; cursor: none;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      cursor: none;
       transition: border-color .2s, color .2s;
     }
-    .essay-topic-btn:hover, .essay-topic-btn.active {
-      border-color: rgba(93,191,110,.28); color: var(--g);
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      border-color: rgba(93, 191, 110, .28);
+      color: var(--g);
     }
-    .essay-outline { display: none; flex-direction: column; gap: 14px; }
-    .essay-outline.show { display: flex; }
+
+    .essay-outline {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .essay-outline.show {
+      display: flex;
+    }
+
     .essay-block {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 18px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
     }
+
     .essay-block-label {
-      color: var(--g); font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; margin-bottom: 9px;
+      color: var(--g);
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
     }
+
     .essay-block-body {
       font-family: 'Crimson Pro', serif;
-      color: var(--muted); line-height: 1.82; font-size: 15px;
+      color: var(--muted);
+      line-height: 1.82;
+      font-size: 15px;
     }
 
-    strong.ap-term { color: #8fd48f; font-weight: 600; }
+    strong.ap-term {
+      color: #8fd48f;
+      font-weight: 600;
+    }
+
     body.ap-highlight strong.ap-term {
-      background: rgba(93,191,110,.11);
-      padding: 0 3px; border-radius: 3px;
-      box-shadow: 0 0 10px rgba(93,191,110,.14);
+      background: rgba(93, 191, 110, .11);
+      padding: 0 3px;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(93, 191, 110, .14);
     }
 
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .15
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
     @media(max-width:1020px) {
-      .hero-grid { grid-template-columns: 1fr }
-      .dash-stats { grid-template-columns: 1fr }
-      #main { padding-left: 26px; padding-right: 26px }
-      .notes-shell { grid-template-columns: 1fr }
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .dash-stats {
+        grid-template-columns: 1fr
+      }
+
+      #main {
+        padding-left: 26px;
+        padding-right: 26px
+      }
+
+      .notes-shell {
+        grid-template-columns: 1fr
+      }
     }
+
     @media(max-width:760px) {
-      body { cursor: auto; overflow: auto; display: block }
-      #cursor, #readingProgress { display: none }
-      #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border) }
-      #sidebar:hover, #sidebar.pinned { width: 100% }
-      .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important }
-      #pinBtn { display: none }
-      nav { height: auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 8px }
-      #main { height: auto; overflow: visible }
-      .topbar { position: static }
-      .glossary-toolbar input { min-width: 100%; width: 100% }
+      body {
+        cursor: auto;
+        overflow: auto;
+        display: block
+      }
+
+      #cursor,
+      #readingProgress {
+        display: none
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border)
+      }
+
+      #sidebar:hover,
+      #sidebar.pinned {
+        width: 100%
+      }
+
+      .logo-copy,
+      .nav-label,
+      .sidebar-footer span:last-child,
+      .sb-search-trigger {
+        opacity: 1 !important;
+        pointer-events: auto !important
+      }
+
+      #pinBtn {
+        display: none
+      }
+
+      nav {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px
+      }
+
+      #main {
+        height: auto;
+        overflow: visible
+      }
+
+      .topbar {
+        position: static
+      }
+
+      .glossary-toolbar input {
+        min-width: 100%;
+        width: 100%
+      }
     }
   </style>
 </head>
@@ -683,7 +1336,9 @@
 <body>
   <div id="cursor"></div>
   <div id="ambientOverlay"></div>
-  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
 
   <aside id="sidebar">
     <button id="pinBtn" type="button">Pin</button>
@@ -714,7 +1369,8 @@
         <a class="glass-btn" href="apes-index.html">← All Units</a>
         <a class="glass-btn" href="apes-unit1.html" style="color:var(--g);border-color:rgba(93,191,110,.32);">Unit 1</a>
         <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
-         <a class="glass-btn" href="apes-unit3.html">← Unit 3</a>
+        <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
+        <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
@@ -735,8 +1391,14 @@
           <div class="card-sub">Core Frame</div>
           <div class="card-title">What Unit 1 Is Really About</div>
           <div class="body-copy">
-            <p>Unit 1 is the conceptual foundation of APES. Nearly every environmental problem you'll study — pollution, climate change, resource depletion — can only be analyzed after you understand how ecosystems <em>normally</em> work. That means mastering <strong class="ap-term">energy flow</strong>, <strong class="ap-term">nutrient cycling</strong>, <strong class="ap-term">limiting factors</strong>, and <strong class="ap-term">trophic dynamics</strong>.</p>
-            <p>The big organizing idea: <strong class="ap-term">energy flows one-way</strong> through ecosystems, while <strong class="ap-term">matter cycles</strong> repeatedly. Get this right and eutrophication, biomagnification, and productivity questions become predictable.</p>
+            <p>Unit 1 is the conceptual foundation of APES. Nearly every environmental problem you'll study — pollution,
+              climate change, resource depletion — can only be analyzed after you understand how ecosystems
+              <em>normally</em> work. That means mastering <strong class="ap-term">energy flow</strong>, <strong
+                class="ap-term">nutrient cycling</strong>, <strong class="ap-term">limiting factors</strong>, and
+              <strong class="ap-term">trophic dynamics</strong>.</p>
+            <p>The big organizing idea: <strong class="ap-term">energy flows one-way</strong> through ecosystems, while
+              <strong class="ap-term">matter cycles</strong> repeatedly. Get this right and eutrophication,
+              biomagnification, and productivity questions become predictable.</p>
           </div>
           <div class="dash-stats">
             <div class="stat-box"><span>Study Sections</span><strong>8</strong></div>
@@ -745,7 +1407,9 @@
           </div>
           <div class="focus-callout">
             <div class="label">Exam Strategy</div>
-            <div class="body-copy">FRQs almost always ask for a cause-and-effect chain. Practice the full chain: human action → cycle disruption → ecosystem change → ecological or human consequence. Never stop at step two.</div>
+            <div class="body-copy">FRQs almost always ask for a cause-and-effect chain. Practice the full chain: human
+              action → cycle disruption → ecosystem change → ecological or human consequence. Never stop at step two.
+            </div>
           </div>
         </article>
 
@@ -753,14 +1417,19 @@
           <div class="card-sub">Fast Review</div>
           <div class="card-title">What You Must Be Able to Explain</div>
           <ul class="bullet-list">
-            <li>Distinguish <strong class="ap-term">biotic</strong> vs. <strong class="ap-term">abiotic</strong> components — and why abiotic factors set limits.</li>
-            <li>Define <strong class="ap-term">habitat</strong> (where) vs. <strong class="ap-term">niche</strong> (role/job) — classic FRQ trap.</li>
+            <li>Distinguish <strong class="ap-term">biotic</strong> vs. <strong class="ap-term">abiotic</strong>
+              components — and why abiotic factors set limits.</li>
+            <li>Define <strong class="ap-term">habitat</strong> (where) vs. <strong class="ap-term">niche</strong>
+              (role/job) — classic FRQ trap.</li>
             <li>Name all six <strong class="ap-term">species interaction types</strong> and who benefits/is harmed.</li>
-            <li>Explain why <strong class="ap-term">energy</strong> flows one-way and <strong class="ap-term">matter</strong> cycles — not the reverse.</li>
-            <li>Trace all four <strong class="ap-term">biogeochemical cycles</strong> with key processes and human impacts.</li>
+            <li>Explain why <strong class="ap-term">energy</strong> flows one-way and <strong
+                class="ap-term">matter</strong> cycles — not the reverse.</li>
+            <li>Trace all four <strong class="ap-term">biogeochemical cycles</strong> with key processes and human
+              impacts.</li>
             <li>Apply the <strong class="ap-term">10% rule</strong> to calculate energy at any trophic level.</li>
             <li>Explain <strong class="ap-term">eutrophication</strong> as a complete cause-and-effect chain.</li>
-            <li>Identify a <strong class="ap-term">biome</strong> from a climate graph (temperature + precipitation).</li>
+            <li>Identify a <strong class="ap-term">biome</strong> from a climate graph (temperature + precipitation).
+            </li>
             <li>List and explain four <strong class="ap-term">wetland ecosystem services</strong>.</li>
           </ul>
           <div class="tag-row">
@@ -775,25 +1444,37 @@
           <div class="mini-label">Common Mistakes</div>
           <h3>Avoid These</h3>
           <ul class="bullet-list">
-            <li>Saying <strong class="ap-term">energy cycles</strong> like nutrients — energy flows one-way and is lost as heat at every transfer.</li>
-            <li>Saying <strong class="ap-term">phosphorus has an atmospheric phase</strong> — it doesn't; it cycles through rocks and sediments only.</li>
-            <li>Stopping eutrophication at "algae grow" — always continue: algae die → decomposers consume O₂ → hypoxia → fish kill.</li>
-            <li>Confusing <strong class="ap-term">habitat</strong> (address) with <strong class="ap-term">niche</strong> (role/occupation).</li>
-            <li>Calling all deserts "hot" — tundra and some high-altitude zones are cold deserts with very low precipitation.</li>
-            <li>Using <strong class="ap-term">GPP</strong> as energy available to consumers — it's <strong class="ap-term">NPP</strong> (GPP − respiration) that consumers can access.</li>
-            <li>Treating <strong class="ap-term">positive feedback</strong> as "good" — it means self-amplifying, not beneficial.</li>
+            <li>Saying <strong class="ap-term">energy cycles</strong> like nutrients — energy flows one-way and is lost
+              as heat at every transfer.</li>
+            <li>Saying <strong class="ap-term">phosphorus has an atmospheric phase</strong> — it doesn't; it cycles
+              through rocks and sediments only.</li>
+            <li>Stopping eutrophication at "algae grow" — always continue: algae die → decomposers consume O₂ → hypoxia
+              → fish kill.</li>
+            <li>Confusing <strong class="ap-term">habitat</strong> (address) with <strong class="ap-term">niche</strong>
+              (role/occupation).</li>
+            <li>Calling all deserts "hot" — tundra and some high-altitude zones are cold deserts with very low
+              precipitation.</li>
+            <li>Using <strong class="ap-term">GPP</strong> as energy available to consumers — it's <strong
+                class="ap-term">NPP</strong> (GPP − respiration) that consumers can access.</li>
+            <li>Treating <strong class="ap-term">positive feedback</strong> as "good" — it means self-amplifying, not
+              beneficial.</li>
           </ul>
         </article>
         <article class="exam-card feature-card accent-gold">
           <div class="mini-label">Study Order</div>
           <h3>Best Way to Review</h3>
           <ul class="bullet-list">
-            <li>Start with <strong>ecosystem structure</strong>: biotic/abiotic, levels of organization, habitat vs. niche.</li>
+            <li>Start with <strong>ecosystem structure</strong>: biotic/abiotic, levels of organization, habitat vs.
+              niche.</li>
             <li>Learn the <strong>energy rules</strong>: one-way flow, 10% rule, GPP vs. NPP, ecological pyramids.</li>
-            <li>Master all <strong>four biogeochemical cycles</strong> — water, carbon, nitrogen, phosphorus — with processes and human impacts.</li>
-            <li>Study <strong>species interactions and limiting factors</strong>: symbiosis, tolerance, carrying capacity.</li>
-            <li>Cover <strong>terrestrial biomes</strong> using climate graphs: temperature + precipitation → biome.</li>
-            <li>Finish with <strong>aquatic systems</strong>: zones, stratification, wetland services, coral reefs, eutrophication.</li>
+            <li>Master all <strong>four biogeochemical cycles</strong> — water, carbon, nitrogen, phosphorus — with
+              processes and human impacts.</li>
+            <li>Study <strong>species interactions and limiting factors</strong>: symbiosis, tolerance, carrying
+              capacity.</li>
+            <li>Cover <strong>terrestrial biomes</strong> using climate graphs: temperature + precipitation → biome.
+            </li>
+            <li>Finish with <strong>aquatic systems</strong>: zones, stratification, wetland services, coral reefs,
+              eutrophication.</li>
           </ul>
         </article>
       </div>
@@ -804,19 +1485,28 @@
       <header class="page-header">
         <span class="unit-tag">Study Notes</span>
         <h2>Unit 1 Deep Dive</h2>
-        <p>Ecosystems · Matter & Energy · Biogeochemical Cycles · Producers & Consumers · Biomes · Aquatic · Biodiversity</p>
+        <p>Ecosystems · Matter & Energy · Biogeochemical Cycles · Producers & Consumers · Biomes · Aquatic ·
+          Biodiversity</p>
       </header>
       <div class="notes-shell">
         <aside class="notes-index">
           <div class="notes-index-title">Sections</div>
-          <button class="note-jump" type="button" data-note-target="n-ecosystem"><span>Ecosystem Structure</span><span>01</span></button>
-          <button class="note-jump" type="button" data-note-target="n-matter"><span>Matter vs. Energy</span><span>02</span></button>
-          <button class="note-jump" type="button" data-note-target="n-cycles"><span>Biogeochem Cycles</span><span>03</span></button>
-          <button class="note-jump" type="button" data-note-target="n-energy"><span>Energy & Trophic</span><span>04</span></button>
-          <button class="note-jump" type="button" data-note-target="n-productivity"><span>Productivity</span><span>05</span></button>
-          <button class="note-jump" type="button" data-note-target="n-biomes"><span>Terrestrial Biomes</span><span>06</span></button>
-          <button class="note-jump" type="button" data-note-target="n-aquatic"><span>Aquatic Systems</span><span>07</span></button>
-          <button class="note-jump" type="button" data-note-target="n-biodiversity"><span>Biodiversity & Services</span><span>08</span></button>
+          <button class="note-jump" type="button" data-note-target="n-ecosystem"><span>Ecosystem
+              Structure</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-matter"><span>Matter vs.
+              Energy</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-cycles"><span>Biogeochem
+              Cycles</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-energy"><span>Energy &
+              Trophic</span><span>04</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="n-productivity"><span>Productivity</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-biomes"><span>Terrestrial
+              Biomes</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-aquatic"><span>Aquatic
+              Systems</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-biodiversity"><span>Biodiversity &
+              Services</span><span>08</span></button>
         </aside>
 
         <div class="notes-stack">
@@ -826,40 +1516,94 @@
             <div class="mini-label">01 · Ecosystem Structure & Species Interactions</div>
             <h3>How Ecosystems Are Organized</h3>
             <div class="body-copy">
-              <p>An <strong class="ap-term">ecosystem</strong> is a defined area where <strong class="ap-term">biotic</strong> components (living organisms) interact with <strong class="ap-term">abiotic</strong> components (sunlight, temperature, water, soil, pH, dissolved oxygen) through exchanges of energy and matter. Abiotic conditions set the rules — low dissolved oxygen can kill fish even when food is plentiful.</p>
+              <p>An <strong class="ap-term">ecosystem</strong> is a defined area where <strong
+                  class="ap-term">biotic</strong> components (living organisms) interact with <strong
+                  class="ap-term">abiotic</strong> components (sunlight, temperature, water, soil, pH, dissolved oxygen)
+                through exchanges of energy and matter. Abiotic conditions set the rules — low dissolved oxygen can kill
+                fish even when food is plentiful.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Organism → Ecosystem</strong>
-                <div class="body-copy">Organism → Species → Population (one species, one area) → Community (multiple species) → Ecosystem (community + abiotic). Adding abiotic factors is what makes a community an ecosystem.</div>
+                <div class="body-copy">Organism → Species → Population (one species, one area) → Community (multiple
+                  species) → Ecosystem (community + abiotic). Adding abiotic factors is what makes a community an
+                  ecosystem.</div>
               </div>
               <div class="mini-note"><strong>Habitat vs. Niche</strong>
-                <div class="body-copy"><strong class="ap-term">Habitat</strong> = where an organism lives (its "address"). <strong class="ap-term">Niche</strong> = its role: how it gets energy, what it eats, when it's active, and how it interacts with biotic/abiotic factors.</div>
+                <div class="body-copy"><strong class="ap-term">Habitat</strong> = where an organism lives (its
+                  "address"). <strong class="ap-term">Niche</strong> = its role: how it gets energy, what it eats, when
+                  it's active, and how it interacts with biotic/abiotic factors.</div>
               </div>
               <div class="mini-note"><strong>Generalists vs. Specialists</strong>
-                <div class="body-copy">Generalists (cockroaches, humans) tolerate wide conditions; resilient to disturbance. Specialists (giant pandas, koalas) thrive in stable, narrow niches but are vulnerable to any change.</div>
+                <div class="body-copy">Generalists (cockroaches, humans) tolerate wide conditions; resilient to
+                  disturbance. Specialists (giant pandas, koalas) thrive in stable, narrow niches but are vulnerable to
+                  any change.</div>
               </div>
               <div class="mini-note"><strong>Law of Tolerance</strong>
-                <div class="body-copy">Each species has a range of tolerance for each abiotic factor. Outside that range, survival and reproduction decline. <strong class="ap-term">Limiting factors</strong> restrict population growth — they can be density-dependent (predation, disease) or density-independent (drought, fire).</div>
+                <div class="body-copy">Each species has a range of tolerance for each abiotic factor. Outside that
+                  range, survival and reproduction decline. <strong class="ap-term">Limiting factors</strong> restrict
+                  population growth — they can be density-dependent (predation, disease) or density-independent
+                  (drought, fire).</div>
               </div>
               <div class="mini-note"><strong>Carrying Capacity (K)</strong>
-                <div class="body-copy">Maximum sustainable population size given available resources. When limiting factors tighten, K drops. When resources increase, K can rise.</div>
+                <div class="body-copy">Maximum sustainable population size given available resources. When limiting
+                  factors tighten, K drops. When resources increase, K can rise.</div>
               </div>
               <div class="mini-note"><strong>Feedback Loops</strong>
-                <div class="body-copy"><strong class="ap-term">Negative feedback</strong>: counteracts change → stabilizes systems. <strong class="ap-term">Positive feedback</strong>: amplifies change → self-reinforcing. "Positive" means amplifying, not beneficial.</div>
+                <div class="body-copy"><strong class="ap-term">Negative feedback</strong>: counteracts change →
+                  stabilizes systems. <strong class="ap-term">Positive feedback</strong>: amplifies change →
+                  self-reinforcing. "Positive" means amplifying, not beneficial.</div>
               </div>
             </div>
             <h4>Six Species Interaction Types</h4>
             <table class="compare-table">
-              <tr><th>Interaction</th><th>Species A</th><th>Species B</th><th>Example</th></tr>
-              <tr><td>Mutualism</td><td>+</td><td>+</td><td>Rhizobium bacteria in legume roots</td></tr>
-              <tr><td>Commensalism</td><td>+</td><td>0</td><td>Barnacles on whales</td></tr>
-              <tr><td>Parasitism</td><td>+</td><td>–</td><td>Tapeworm in host</td></tr>
-              <tr><td>Predation</td><td>+</td><td>–</td><td>Wolf eating deer</td></tr>
-              <tr><td>Competition</td><td>–</td><td>–</td><td>Two plants competing for light</td></tr>
-              <tr><td>Amensalism</td><td>0</td><td>–</td><td>Black walnut releasing juglone</td></tr>
+              <tr>
+                <th>Interaction</th>
+                <th>Species A</th>
+                <th>Species B</th>
+                <th>Example</th>
+              </tr>
+              <tr>
+                <td>Mutualism</td>
+                <td>+</td>
+                <td>+</td>
+                <td>Rhizobium bacteria in legume roots</td>
+              </tr>
+              <tr>
+                <td>Commensalism</td>
+                <td>+</td>
+                <td>0</td>
+                <td>Barnacles on whales</td>
+              </tr>
+              <tr>
+                <td>Parasitism</td>
+                <td>+</td>
+                <td>–</td>
+                <td>Tapeworm in host</td>
+              </tr>
+              <tr>
+                <td>Predation</td>
+                <td>+</td>
+                <td>–</td>
+                <td>Wolf eating deer</td>
+              </tr>
+              <tr>
+                <td>Competition</td>
+                <td>–</td>
+                <td>–</td>
+                <td>Two plants competing for light</td>
+              </tr>
+              <tr>
+                <td>Amensalism</td>
+                <td>0</td>
+                <td>–</td>
+                <td>Black walnut releasing juglone</td>
+              </tr>
             </table>
             <h4>Resource Partitioning</h4>
-            <div class="body-copy">When species overlap in resource use, competition is reduced through <strong class="ap-term">morphological partitioning</strong> (different structures), <strong class="ap-term">spatial partitioning</strong> (different areas), or <strong class="ap-term">temporal partitioning</strong> (different times). This allows similar species to coexist.</div>
+            <div class="body-copy">When species overlap in resource use, competition is reduced through <strong
+                class="ap-term">morphological partitioning</strong> (different structures), <strong
+                class="ap-term">spatial partitioning</strong> (different areas), or <strong class="ap-term">temporal
+                partitioning</strong> (different times). This allows similar species to coexist.</div>
           </article>
 
           <!-- 02 -->
@@ -867,17 +1611,23 @@
             <div class="mini-label">02 · Matter Cycling vs. Energy Flow</div>
             <h3>The Most Important Distinction in Ecosystem Science</h3>
             <div class="body-copy">
-              <p><strong class="ap-term">Energy flows</strong> through ecosystems — it enters as sunlight, moves through trophic levels, and exits as heat. It does <em>not</em> cycle back. <strong class="ap-term">Matter cycles</strong> within and among ecosystems; the same atoms are reused over and over.</p>
+              <p><strong class="ap-term">Energy flows</strong> through ecosystems — it enters as sunlight, moves through
+                trophic levels, and exits as heat. It does <em>not</em> cycle back. <strong class="ap-term">Matter
+                  cycles</strong> within and among ecosystems; the same atoms are reused over and over.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Why Energy Doesn't Cycle</strong>
-                <div class="body-copy">The Second Law of Thermodynamics: energy transfers increase entropy (disorder). Each metabolic step releases some energy as heat — permanently unavailable for biological work.</div>
+                <div class="body-copy">The Second Law of Thermodynamics: energy transfers increase entropy (disorder).
+                  Each metabolic step releases some energy as heat — permanently unavailable for biological work.</div>
               </div>
               <div class="mini-note"><strong>Why Matter Does Cycle</strong>
-                <div class="body-copy">Atoms (C, N, P, H₂O) are conserved — they're not destroyed. They move among living organisms and abiotic reservoirs (atmosphere, ocean, soil, rock) indefinitely.</div>
+                <div class="body-copy">Atoms (C, N, P, H₂O) are conserved — they're not destroyed. They move among
+                  living organisms and abiotic reservoirs (atmosphere, ocean, soil, rock) indefinitely.</div>
               </div>
               <div class="mini-note"><strong>Role of Decomposers</strong>
-                <div class="body-copy"><strong class="ap-term">Decomposers</strong> (bacteria, fungi) and <strong class="ap-term">detritivores</strong> (earthworms, pill bugs) break down dead organic matter. Without them, nutrients become locked in dead biomass and primary production collapses.</div>
+                <div class="body-copy"><strong class="ap-term">Decomposers</strong> (bacteria, fungi) and <strong
+                    class="ap-term">detritivores</strong> (earthworms, pill bugs) break down dead organic matter.
+                  Without them, nutrients become locked in dead biomass and primary production collapses.</div>
               </div>
             </div>
           </article>
@@ -887,82 +1637,105 @@
             <div class="mini-label">03 · Biogeochemical Cycles</div>
             <h3>Water · Carbon · Nitrogen · Phosphorus</h3>
             <div class="body-copy">
-              <p>A <strong class="ap-term">biogeochemical cycle</strong> tracks a chemical through living organisms (bio), Earth's rocks/soil (geo), and air/water (chemical). Know the major <strong class="ap-term">reservoirs</strong>, key <strong class="ap-term">processes</strong>, and <strong class="ap-term">human impacts</strong> for each.</p>
+              <p>A <strong class="ap-term">biogeochemical cycle</strong> tracks a chemical through living organisms
+                (bio), Earth's rocks/soil (geo), and air/water (chemical). Know the major <strong
+                  class="ap-term">reservoirs</strong>, key <strong class="ap-term">processes</strong>, and <strong
+                  class="ap-term">human impacts</strong> for each.</p>
             </div>
 
             <h4>💧 Water (Hydrologic) Cycle</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>Key Processes</strong>
-                <div class="body-copy">Evaporation · Transpiration · Evapotranspiration · Condensation · Precipitation · Infiltration · Percolation · Runoff</div>
+                <div class="body-copy">Evaporation · Transpiration · Evapotranspiration · Condensation · Precipitation ·
+                  Infiltration · Percolation · Runoff</div>
               </div>
               <div class="mini-note"><strong>Distribution</strong>
-                <div class="body-copy">Oceans hold ~97% of Earth's water. Only ~3% is freshwater — most locked in glaciers. Rivers renew in ~16 days; deep groundwater takes ~10,000 years.</div>
+                <div class="body-copy">Oceans hold ~97% of Earth's water. Only ~3% is freshwater — most locked in
+                  glaciers. Rivers renew in ~16 days; deep groundwater takes ~10,000 years.</div>
               </div>
               <div class="mini-note"><strong>Aquifers</strong>
-                <div class="body-copy">Geologic formations storing water. Overextraction causes depletion, land subsidence, and saltwater intrusion. Recharge zones must be protected.</div>
+                <div class="body-copy">Geologic formations storing water. Overextraction causes depletion, land
+                  subsidence, and saltwater intrusion. Recharge zones must be protected.</div>
               </div>
               <div class="mini-note"><strong>Human Impacts</strong>
-                <div class="body-copy">Urbanization → impervious surfaces → more runoff, less infiltration. Deforestation → less transpiration, more erosion. Agriculture → nitrate/phosphate runoff → eutrophication.</div>
+                <div class="body-copy">Urbanization → impervious surfaces → more runoff, less infiltration.
+                  Deforestation → less transpiration, more erosion. Agriculture → nitrate/phosphate runoff →
+                  eutrophication.</div>
               </div>
             </div>
 
             <h4>🌿 Carbon Cycle</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>Key Processes</strong>
-                <div class="body-copy">Photosynthesis (removes CO₂) · Respiration (releases CO₂) · Decomposition · Combustion · Ocean–atmosphere exchange · Sedimentation (long-term storage)</div>
+                <div class="body-copy">Photosynthesis (removes CO₂) · Respiration (releases CO₂) · Decomposition ·
+                  Combustion · Ocean–atmosphere exchange · Sedimentation (long-term storage)</div>
               </div>
               <div class="mini-note"><strong>Major Reservoirs</strong>
-                <div class="body-copy">Marine sediments/rocks (largest) → Oceans → Fossil fuels → Soil organic matter → Atmosphere → Terrestrial biomass</div>
+                <div class="body-copy">Marine sediments/rocks (largest) → Oceans → Fossil fuels → Soil organic matter →
+                  Atmosphere → Terrestrial biomass</div>
               </div>
               <div class="mini-note"><strong>Ocean Acidification</strong>
-                <div class="body-copy">CO₂ + H₂O → carbonic acid → lowers ocean pH. Disrupts coral reef formation and shell-building organisms. Already measurably acidifying oceans.</div>
+                <div class="body-copy">CO₂ + H₂O → carbonic acid → lowers ocean pH. Disrupts coral reef formation and
+                  shell-building organisms. Already measurably acidifying oceans.</div>
               </div>
               <div class="mini-note"><strong>Human Impacts</strong>
-                <div class="body-copy">Burning fossil fuels (geologic → atmospheric carbon). Deforestation (reduces uptake, releases stored carbon). Both increase atmospheric CO₂ driving climate change.</div>
+                <div class="body-copy">Burning fossil fuels (geologic → atmospheric carbon). Deforestation (reduces
+                  uptake, releases stored carbon). Both increase atmospheric CO₂ driving climate change.</div>
               </div>
             </div>
 
             <h4>🌱 Nitrogen Cycle</h4>
-            <div class="body-copy"><p>Nitrogen is ~78% of the atmosphere as N₂, but most organisms cannot use N₂ directly. Nitrogen is often a <strong class="ap-term">limiting nutrient</strong> for terrestrial plant growth.</p></div>
+            <div class="body-copy">
+              <p>Nitrogen is ~78% of the atmosphere as N₂, but most organisms cannot use N₂ directly. Nitrogen is often
+                a <strong class="ap-term">limiting nutrient</strong> for terrestrial plant growth.</p>
+            </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Nitrogen Fixation</strong>
-                <div class="body-copy">N₂ → NH₃/NH₄⁺. Done by nitrogen-fixing bacteria (e.g., <em>Rhizobium</em> in legume roots) and lightning. Industrial Haber-Bosch process also fixes N at massive scale.</div>
+                <div class="body-copy">N₂ → NH₃/NH₄⁺. Done by nitrogen-fixing bacteria (e.g., <em>Rhizobium</em> in
+                  legume roots) and lightning. Industrial Haber-Bosch process also fixes N at massive scale.</div>
               </div>
               <div class="mini-note"><strong>Nitrification</strong>
-                <div class="body-copy">NH₄⁺ → NO₂⁻ → NO₃⁻ by nitrifying bacteria. Makes nitrogen available for plant uptake as nitrate.</div>
+                <div class="body-copy">NH₄⁺ → NO₂⁻ → NO₃⁻ by nitrifying bacteria. Makes nitrogen available for plant
+                  uptake as nitrate.</div>
               </div>
               <div class="mini-note"><strong>Denitrification</strong>
-                <div class="body-copy">NO₃⁻ → N₂ (gas) by anaerobic bacteria. Returns nitrogen to atmosphere. Can also produce N₂O — a potent greenhouse gas.</div>
+                <div class="body-copy">NO₃⁻ → N₂ (gas) by anaerobic bacteria. Returns nitrogen to atmosphere. Can also
+                  produce N₂O — a potent greenhouse gas.</div>
               </div>
               <div class="mini-note"><strong>Human Impacts</strong>
-                <div class="body-copy">Synthetic fertilizers, livestock waste, fossil fuel combustion → excess reactive nitrogen → eutrophication, acid rain, NOx smog, N₂O emissions (GHG).</div>
+                <div class="body-copy">Synthetic fertilizers, livestock waste, fossil fuel combustion → excess reactive
+                  nitrogen → eutrophication, acid rain, NOx smog, N₂O emissions (GHG).</div>
               </div>
             </div>
 
             <h4>🪨 Phosphorus Cycle</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>No Atmosphere</strong>
-                <div class="body-copy">Unlike N and C, phosphorus has <em>no significant atmospheric phase</em>. It cycles only through rock weathering → soil/water → organisms → sedimentation. This makes it slow and often limiting.</div>
+                <div class="body-copy">Unlike N and C, phosphorus has <em>no significant atmospheric phase</em>. It
+                  cycles only through rock weathering → soil/water → organisms → sedimentation. This makes it slow and
+                  often limiting.</div>
               </div>
               <div class="mini-note"><strong>Key Processes</strong>
-                <div class="body-copy">Weathering releases phosphate from rocks. Plants absorb phosphate ions. Decomposition returns P to soil/water. Sedimentation locks P in sediments for long periods.</div>
+                <div class="body-copy">Weathering releases phosphate from rocks. Plants absorb phosphate ions.
+                  Decomposition returns P to soil/water. Sedimentation locks P in sediments for long periods.</div>
               </div>
               <div class="mini-note"><strong>Human Impacts</strong>
-                <div class="body-copy">Phosphate fertilizers and detergents → runoff → eutrophication in freshwater (P is often limiting in lakes). Slow recovery because sediments can continue releasing P.</div>
+                <div class="body-copy">Phosphate fertilizers and detergents → runoff → eutrophication in freshwater (P
+                  is often limiting in lakes). Slow recovery because sediments can continue releasing P.</div>
               </div>
             </div>
 
             <h4>Eutrophication: The Full Chain</h4>
             <div class="code-block">Human input: Nitrogen/phosphorus fertilizer runoff into a lake
 
-Step 1 → Nutrients increase → algae and cyanobacteria bloom rapidly
-Step 2 → Algae die in large quantities
-Step 3 → Decomposers (bacteria) break down dead algae
-Step 4 → Decomposition consumes dissolved oxygen (hypoxia)
-Step 5 → Fish and other aerobic organisms suffocate → die-off
-Step 6 → "Dead zone" — low-oxygen water with little aquatic life
+              Step 1 → Nutrients increase → algae and cyanobacteria bloom rapidly
+              Step 2 → Algae die in large quantities
+              Step 3 → Decomposers (bacteria) break down dead algae
+              Step 4 → Decomposition consumes dissolved oxygen (hypoxia)
+              Step 5 → Fish and other aerobic organisms suffocate → die-off
+              Step 6 → "Dead zone" — low-oxygen water with little aquatic life
 
-Key: ALWAYS include the oxygen-depletion step. Stopping at "algae grow" = incomplete.</div>
+              Key: ALWAYS include the oxygen-depletion step. Stopping at "algae grow" = incomplete.</div>
           </article>
 
           <!-- 04 -->
@@ -970,41 +1743,53 @@ Key: ALWAYS include the oxygen-depletion step. Stopping at "algae grow" = incomp
             <div class="mini-label">04 · Energy in Ecosystems & Trophic Dynamics</div>
             <h3>Producers, Consumers & the 10% Rule</h3>
             <div class="body-copy">
-              <p>Ecosystems run on energy captured by <strong class="ap-term">producers</strong> through <strong class="ap-term">photosynthesis</strong>. As energy moves up trophic levels, ~90% is lost as heat at each transfer. This inefficiency explains why top predators are rare and food chains are short.</p>
+              <p>Ecosystems run on energy captured by <strong class="ap-term">producers</strong> through <strong
+                  class="ap-term">photosynthesis</strong>. As energy moves up trophic levels, ~90% is lost as heat at
+                each transfer. This inefficiency explains why top predators are rare and food chains are short.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Photosynthesis</strong>
-                <div class="body-copy">CO₂ + H₂O + light → glucose + O₂. Producers (plants, algae, cyanobacteria) capture solar energy. Rate is limited by CO₂, light, water, and temperature.</div>
+                <div class="body-copy">CO₂ + H₂O + light → glucose + O₂. Producers (plants, algae, cyanobacteria)
+                  capture solar energy. Rate is limited by CO₂, light, water, and temperature.</div>
               </div>
               <div class="mini-note"><strong>Cellular Respiration</strong>
-                <div class="body-copy">Glucose + O₂ → CO₂ + H₂O + ATP. All organisms respire, releasing energy for metabolism. Often described as the reverse of photosynthesis.</div>
+                <div class="body-copy">Glucose + O₂ → CO₂ + H₂O + ATP. All organisms respire, releasing energy for
+                  metabolism. Often described as the reverse of photosynthesis.</div>
               </div>
               <div class="mini-note"><strong>Trophic Levels</strong>
-                <div class="body-copy">Producers (1st) → Primary consumers/herbivores → Secondary consumers → Tertiary consumers. Arrows in food webs show direction of energy transfer (prey → predator).</div>
+                <div class="body-copy">Producers (1st) → Primary consumers/herbivores → Secondary consumers → Tertiary
+                  consumers. Arrows in food webs show direction of energy transfer (prey → predator).</div>
               </div>
               <div class="mini-note"><strong>10% Rule</strong>
-                <div class="body-copy">Only ~10% of energy at one trophic level transfers to the next as new biomass. The other ~90% is lost as heat through metabolism, movement, incomplete digestion, and waste.</div>
+                <div class="body-copy">Only ~10% of energy at one trophic level transfers to the next as new biomass.
+                  The other ~90% is lost as heat through metabolism, movement, incomplete digestion, and waste.</div>
               </div>
               <div class="mini-note"><strong>Energy Pyramid</strong>
-                <div class="body-copy">Always upright — energy decreases at higher levels. Biomass pyramids can be inverted in aquatic systems (fast-reproducing phytoplankton support heavier zooplankton).</div>
+                <div class="body-copy">Always upright — energy decreases at higher levels. Biomass pyramids can be
+                  inverted in aquatic systems (fast-reproducing phytoplankton support heavier zooplankton).</div>
               </div>
               <div class="mini-note"><strong>Bioaccumulation vs. Biomagnification</strong>
-                <div class="body-copy"><strong class="ap-term">Bioaccumulation</strong>: toxin builds up in one organism over time. <strong class="ap-term">Biomagnification</strong>: toxin concentration increases at each higher trophic level because predators eat many contaminated prey.</div>
+                <div class="body-copy"><strong class="ap-term">Bioaccumulation</strong>: toxin builds up in one organism
+                  over time. <strong class="ap-term">Biomagnification</strong>: toxin concentration increases at each
+                  higher trophic level because predators eat many contaminated prey.</div>
               </div>
             </div>
             <h4>10% Rule — Worked Example</h4>
             <div class="code-block">Producers store: 20,000 kJ
 
-Primary consumers receive:   20,000 × 0.10 = 2,000 kJ
-Secondary consumers receive:  2,000 × 0.10 =   200 kJ
-Tertiary consumers receive:     200 × 0.10 =    20 kJ
+              Primary consumers receive: 20,000 × 0.10 = 2,000 kJ
+              Secondary consumers receive: 2,000 × 0.10 = 200 kJ
+              Tertiary consumers receive: 200 × 0.10 = 20 kJ
 
-→ Tertiary consumers receive only 0.1% of original producer energy
-→ This is why large predators need vast territories and are rare</div>
+              → Tertiary consumers receive only 0.1% of original producer energy
+              → This is why large predators need vast territories and are rare</div>
             <h4>Trophic Cascade & Keystone Species</h4>
             <div class="body-copy">
-              <p>A <strong class="ap-term">trophic cascade</strong> is a ripple effect across trophic levels from a change at one level. A <strong class="ap-term">keystone species</strong> has a disproportionately large impact relative to its abundance — losing one can restructure an entire ecosystem.</p>
-              <p>Classic example: Sea otters → sea urchins → kelp forests. Remove otters → urchin population explodes → kelp is overgrazed → kelp forest collapses → loss of habitat for hundreds of species.</p>
+              <p>A <strong class="ap-term">trophic cascade</strong> is a ripple effect across trophic levels from a
+                change at one level. A <strong class="ap-term">keystone species</strong> has a disproportionately large
+                impact relative to its abundance — losing one can restructure an entire ecosystem.</p>
+              <p>Classic example: Sea otters → sea urchins → kelp forests. Remove otters → urchin population explodes →
+                kelp is overgrazed → kelp forest collapses → loss of habitat for hundreds of species.</p>
             </div>
           </article>
 
@@ -1013,28 +1798,33 @@ Tertiary consumers receive:     200 × 0.10 =    20 kJ
             <div class="mini-label">05 · Primary Productivity</div>
             <h3>GPP, NPP & What Controls Them</h3>
             <div class="body-copy">
-              <p><strong class="ap-term">Primary productivity</strong> is the rate at which producers convert solar energy to chemical energy (biomass). It sets the entire energy budget for food webs above it.</p>
+              <p><strong class="ap-term">Primary productivity</strong> is the rate at which producers convert solar
+                energy to chemical energy (biomass). It sets the entire energy budget for food webs above it.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>GPP</strong>
-                <div class="body-copy">Gross Primary Productivity — total energy captured by producers through photosynthesis before any is used for respiration.</div>
+                <div class="body-copy">Gross Primary Productivity — total energy captured by producers through
+                  photosynthesis before any is used for respiration.</div>
               </div>
               <div class="mini-note"><strong>NPP</strong>
-                <div class="body-copy">Net Primary Productivity = GPP − Respiration. Energy actually available to consumers and decomposers. Always use NPP, not GPP, for available-energy questions.</div>
+                <div class="body-copy">Net Primary Productivity = GPP − Respiration. Energy actually available to
+                  consumers and decomposers. Always use NPP, not GPP, for available-energy questions.</div>
               </div>
               <div class="mini-note"><strong>Terrestrial Controls</strong>
-                <div class="body-copy">Temperature and water availability dominate. Tropical rainforests (warm + wet) = highest NPP. Tundra and deserts (cold or dry) = lowest NPP.</div>
+                <div class="body-copy">Temperature and water availability dominate. Tropical rainforests (warm + wet) =
+                  highest NPP. Tundra and deserts (cold or dry) = lowest NPP.</div>
               </div>
               <div class="mini-note"><strong>Aquatic Controls</strong>
-                <div class="body-copy">Nutrients (N, P), light depth, temperature, and upwelling. Open ocean is nutrient-poor at surface → low NPP per area despite covering ~70% of Earth.</div>
+                <div class="body-copy">Nutrients (N, P), light depth, temperature, and upwelling. Open ocean is
+                  nutrient-poor at surface → low NPP per area despite covering ~70% of Earth.</div>
               </div>
             </div>
             <div class="code-block">NPP Calculation:
-  GPP = 2,500 units · area⁻¹ · time⁻¹
-  Respiration (R) = 1,100 units · area⁻¹ · time⁻¹
-  NPP = GPP − R = 2,500 − 1,100 = 1,400 units
+              GPP = 2,500 units · area⁻¹ · time⁻¹
+              Respiration (R) = 1,100 units · area⁻¹ · time⁻¹
+              NPP = GPP − R = 2,500 − 1,100 = 1,400 units
 
-→ 1,400 units available to herbivores, decomposers, and higher trophic levels</div>
+              → 1,400 units available to herbivores, decomposers, and higher trophic levels</div>
           </article>
 
           <!-- 06 -->
@@ -1042,32 +1832,42 @@ Tertiary consumers receive:     200 × 0.10 =    20 kJ
             <div class="mini-label">06 · Terrestrial Biomes</div>
             <h3>Temperature + Precipitation → Biome</h3>
             <div class="body-copy">
-              <p>Biomes are large ecological regions defined by climate and characteristic plant communities. The two key variables are <strong class="ap-term">temperature</strong> and <strong class="ap-term">precipitation</strong>. Identify biomes from climate graphs on the exam.</p>
+              <p>Biomes are large ecological regions defined by climate and characteristic plant communities. The two
+                key variables are <strong class="ap-term">temperature</strong> and <strong
+                  class="ap-term">precipitation</strong>. Identify biomes from climate graphs on the exam.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Tropical Rainforest</strong>
-                <div class="body-copy">Near equator. High, year-round rainfall (>200 cm). Highest biodiversity and NPP. Soils nutrient-poor (nutrients in biomass). Rapid decomposition.</div>
+                <div class="body-copy">Near equator. High, year-round rainfall (>200 cm). Highest biodiversity and NPP.
+                  Soils nutrient-poor (nutrients in biomass). Rapid decomposition.</div>
               </div>
               <div class="mini-note"><strong>Temperate Deciduous Forest</strong>
-                <div class="body-copy">Four seasons, moderate precip (75–150 cm). Fertile soils (leaf litter). E. North America, Europe, NE Asia. Trees shed leaves in winter.</div>
+                <div class="body-copy">Four seasons, moderate precip (75–150 cm). Fertile soils (leaf litter). E. North
+                  America, Europe, NE Asia. Trees shed leaves in winter.</div>
               </div>
               <div class="mini-note"><strong>Temperate Grassland</strong>
-                <div class="body-copy">Moderate precip, insufficient for trees. Deep fertile soils. Maintained by fire and grazing. Great Plains, steppes, pampas, veldts.</div>
+                <div class="body-copy">Moderate precip, insufficient for trees. Deep fertile soils. Maintained by fire
+                  and grazing. Great Plains, steppes, pampas, veldts.</div>
               </div>
               <div class="mini-note"><strong>Desert</strong>
-                <div class="body-copy">&lt;50 cm precip/year. Can be hot or cold (tundra is a cold desert). Plants: succulents, deep or shallow roots, CAM photosynthesis, waxy coatings.</div>
+                <div class="body-copy">&lt;50 cm precip/year. Can be hot or cold (tundra is a cold desert). Plants:
+                  succulents, deep or shallow roots, CAM photosynthesis, waxy coatings.</div>
               </div>
               <div class="mini-note"><strong>Boreal Forest (Taiga)</strong>
-                <div class="body-copy">Largest terrestrial biome. Cold, short summers. Evergreen conifers. Thin, acidic soils. Slow decomposition. Permafrost possible at northern edge.</div>
+                <div class="body-copy">Largest terrestrial biome. Cold, short summers. Evergreen conifers. Thin, acidic
+                  soils. Slow decomposition. Permafrost possible at northern edge.</div>
               </div>
               <div class="mini-note"><strong>Tundra</strong>
-                <div class="body-copy">Arctic or alpine. Permafrost limits roots and drainage. Very low NPP. Short growing season (~50 days). Simple food webs. Cold desert precipitation levels.</div>
+                <div class="body-copy">Arctic or alpine. Permafrost limits roots and drainage. Very low NPP. Short
+                  growing season (~50 days). Simple food webs. Cold desert precipitation levels.</div>
               </div>
               <div class="mini-note"><strong>Savanna</strong>
-                <div class="body-copy">Tropical grassland with scattered trees. Pronounced wet/dry seasons (~50–130 cm precip). Seasonal fires maintain structure. Africa, Australia, S. America.</div>
+                <div class="body-copy">Tropical grassland with scattered trees. Pronounced wet/dry seasons (~50–130 cm
+                  precip). Seasonal fires maintain structure. Africa, Australia, S. America.</div>
               </div>
               <div class="mini-note"><strong>Chaparral (Shrubland)</strong>
-                <div class="body-copy">Hot dry summers, mild wet winters. Fire-adapted plants. Mediterranean climates. Periodic fire is part of natural disturbance regime.</div>
+                <div class="body-copy">Hot dry summers, mild wet winters. Fire-adapted plants. Mediterranean climates.
+                  Periodic fire is part of natural disturbance regime.</div>
               </div>
             </div>
           </article>
@@ -1077,32 +1877,47 @@ Tertiary consumers receive:     200 × 0.10 =    20 kJ
             <div class="mini-label">07 · Aquatic Systems</div>
             <h3>Freshwater · Wetlands · Marine · Estuaries</h3>
             <div class="body-copy">
-              <p>Aquatic biomes are shaped by <strong class="ap-term">salinity</strong>, <strong class="ap-term">depth/light</strong>, <strong class="ap-term">nutrients</strong>, <strong class="ap-term">temperature</strong>, <strong class="ap-term">turbidity</strong>, and <strong class="ap-term">dissolved oxygen</strong>. Cold water holds more DO than warm water — critical for eutrophication questions.</p>
+              <p>Aquatic biomes are shaped by <strong class="ap-term">salinity</strong>, <strong
+                  class="ap-term">depth/light</strong>, <strong class="ap-term">nutrients</strong>, <strong
+                  class="ap-term">temperature</strong>, <strong class="ap-term">turbidity</strong>, and <strong
+                  class="ap-term">dissolved oxygen</strong>. Cold water holds more DO than warm water — critical for
+                eutrophication questions.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Lake Zones</strong>
-                <div class="body-copy">Littoral (shallow, rooted plants) → Limnetic (open, phytoplankton) → Profundal (deep, dark, low O₂) → Benthic (bottom, decomposers).</div>
+                <div class="body-copy">Littoral (shallow, rooted plants) → Limnetic (open, phytoplankton) → Profundal
+                  (deep, dark, low O₂) → Benthic (bottom, decomposers).</div>
               </div>
               <div class="mini-note"><strong>Lake Stratification</strong>
-                <div class="body-copy">Summer: warm epilimnion over cold hypolimnion, separated by thermocline. Fall/spring turnover mixes layers, redistributing O₂ and nutrients.</div>
+                <div class="body-copy">Summer: warm epilimnion over cold hypolimnion, separated by thermocline.
+                  Fall/spring turnover mixes layers, redistributing O₂ and nutrients.</div>
               </div>
               <div class="mini-note"><strong>Lake Trophic State</strong>
-                <div class="body-copy">Oligotrophic (young, clear, low nutrients) → Mesotrophic → Eutrophic (old, murky, nutrient-rich, low O₂). Fertilizer pollution accelerates this transition.</div>
+                <div class="body-copy">Oligotrophic (young, clear, low nutrients) → Mesotrophic → Eutrophic (old, murky,
+                  nutrient-rich, low O₂). Fertilizer pollution accelerates this transition.</div>
               </div>
               <div class="mini-note"><strong>Wetlands</strong>
-                <div class="body-copy">Flood control, carbon sinks, water filtration, groundwater recharge, nursery habitat. Degraded by agriculture, drainage, development, logging, invasive species, and overgrazing.</div>
+                <div class="body-copy">Flood control, carbon sinks, water filtration, groundwater recharge, nursery
+                  habitat. Degraded by agriculture, drainage, development, logging, invasive species, and overgrazing.
+                </div>
               </div>
               <div class="mini-note"><strong>Estuaries</strong>
-                <div class="body-copy">Where freshwater meets saltwater. Highly productive. Critical nursery for fish/shellfish. Vulnerable to nutrient runoff and pollution.</div>
+                <div class="body-copy">Where freshwater meets saltwater. Highly productive. Critical nursery for
+                  fish/shellfish. Vulnerable to nutrient runoff and pollution.</div>
               </div>
               <div class="mini-note"><strong>Coral Reefs</strong>
-                <div class="body-copy">Warm, shallow, clear water. Highest marine biodiversity. Corals + zooxanthellae (photosynthetic algae). Sensitive to temperature (bleaching), acidification, and physical damage.</div>
+                <div class="body-copy">Warm, shallow, clear water. Highest marine biodiversity. Corals + zooxanthellae
+                  (photosynthetic algae). Sensitive to temperature (bleaching), acidification, and physical damage.
+                </div>
               </div>
               <div class="mini-note"><strong>Thermohaline Circulation</strong>
-                <div class="body-copy">Global ocean "conveyor belt" driven by temperature and salinity differences. Distributes heat globally (e.g., Gulf Stream warms N. Europe). Climate change could disrupt it.</div>
+                <div class="body-copy">Global ocean "conveyor belt" driven by temperature and salinity differences.
+                  Distributes heat globally (e.g., Gulf Stream warms N. Europe). Climate change could disrupt it.</div>
               </div>
               <div class="mini-note"><strong>Dissolved Oxygen</strong>
-                <div class="body-copy">Essential for aerobic aquatic life. Increases with cold temperature, turbulence, photosynthesis. Decreases with warm temperature and decomposition. Eutrophication creates hypoxic dead zones.</div>
+                <div class="body-copy">Essential for aerobic aquatic life. Increases with cold temperature, turbulence,
+                  photosynthesis. Decreases with warm temperature and decomposition. Eutrophication creates hypoxic dead
+                  zones.</div>
               </div>
             </div>
           </article>
@@ -1112,41 +1927,53 @@ Tertiary consumers receive:     200 × 0.10 =    20 kJ
             <div class="mini-label">08 · Biodiversity & Ecosystem Services</div>
             <h3>Why Life's Variety Matters</h3>
             <div class="body-copy">
-              <p><strong class="ap-term">Biodiversity</strong> — the variety of life — exists at three levels: <strong class="ap-term">genetic</strong>, <strong class="ap-term">species</strong>, and <strong class="ap-term">ecosystem</strong>. Higher biodiversity generally increases <strong class="ap-term">resilience</strong> (the ability to recover after disturbance) through functional redundancy and genetic variation.</p>
+              <p><strong class="ap-term">Biodiversity</strong> — the variety of life — exists at three levels: <strong
+                  class="ap-term">genetic</strong>, <strong class="ap-term">species</strong>, and <strong
+                  class="ap-term">ecosystem</strong>. Higher biodiversity generally increases <strong
+                  class="ap-term">resilience</strong> (the ability to recover after disturbance) through functional
+                redundancy and genetic variation.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Species Richness vs. Evenness</strong>
-                <div class="body-copy">Richness = number of species. Evenness = how equally individuals are distributed. A community can have high richness but low evenness (one species dominates) — both matter for diversity assessment.</div>
+                <div class="body-copy">Richness = number of species. Evenness = how equally individuals are distributed.
+                  A community can have high richness but low evenness (one species dominates) — both matter for
+                  diversity assessment.</div>
               </div>
               <div class="mini-note"><strong>Habitat Fragmentation</strong>
-                <div class="body-copy">Breaking large habitats into smaller patches reduces population size, gene flow, and interior habitat. <strong class="ap-term">Edge effects</strong> (changed temperature, humidity, predators) make fragment edges ecologically different from interiors.</div>
+                <div class="body-copy">Breaking large habitats into smaller patches reduces population size, gene flow,
+                  and interior habitat. <strong class="ap-term">Edge effects</strong> (changed temperature, humidity,
+                  predators) make fragment edges ecologically different from interiors.</div>
               </div>
               <div class="mini-note"><strong>Provisioning Services</strong>
-                <div class="body-copy">Tangible products: food, fresh water, timber, fiber. These are what people most easily recognize as nature's "goods."</div>
+                <div class="body-copy">Tangible products: food, fresh water, timber, fiber. These are what people most
+                  easily recognize as nature's "goods."</div>
               </div>
               <div class="mini-note"><strong>Regulating Services</strong>
-                <div class="body-copy">Climate regulation (carbon storage), flood control, water purification, disease regulation. Often invisible until lost.</div>
+                <div class="body-copy">Climate regulation (carbon storage), flood control, water purification, disease
+                  regulation. Often invisible until lost.</div>
               </div>
               <div class="mini-note"><strong>Supporting Services</strong>
-                <div class="body-copy">Nutrient cycling, soil formation, primary productivity — underlying functions that enable all other services.</div>
+                <div class="body-copy">Nutrient cycling, soil formation, primary productivity — underlying functions
+                  that enable all other services.</div>
               </div>
               <div class="mini-note"><strong>Cultural Services</strong>
-                <div class="body-copy">Recreation, tourism, spiritual and educational value. Often undervalued in economic analyses but important for human well-being.</div>
+                <div class="body-copy">Recreation, tourism, spiritual and educational value. Often undervalued in
+                  economic analyses but important for human well-being.</div>
               </div>
             </div>
             <h4>FRQ Example: Wetland Conversion</h4>
             <div class="code-block">Scenario: City replaces a wetland with a shopping center.
 
-Chain of consequences:
-  Impervious surface replaces permeable wetland
-  → More stormwater runoff (less infiltration)
-  → Higher flood risk downstream
-  → Loss of water filtration capacity
-  → More pollutants entering waterways
-  → Loss of nursery habitat → decline in local fish populations
-  → Loss of carbon sink → increased atmospheric CO₂
+              Chain of consequences:
+              Impervious surface replaces permeable wetland
+              → More stormwater runoff (less infiltration)
+              → Higher flood risk downstream
+              → Loss of water filtration capacity
+              → More pollutants entering waterways
+              → Loss of nursery habitat → decline in local fish populations
+              → Loss of carbon sink → increased atmospheric CO₂
 
-For full credit: identify the service lost AND explain the ecological mechanism.</div>
+              For full credit: identify the service lost AND explain the ecological mechanism.</div>
           </article>
 
         </div><!-- end notes-stack -->
@@ -1189,10 +2016,12 @@ For full credit: identify the service lost AND explain the ecological mechanism.
           <h3>How to Structure Any Ecosystem Answer</h3>
           <ul class="bullet-list">
             <li><strong>Identify the human action</strong> and which cycle/process it disrupts.</li>
-            <li><strong>Trace the disruption</strong> through the cycle (which reservoir changes, what process is altered).</li>
+            <li><strong>Trace the disruption</strong> through the cycle (which reservoir changes, what process is
+              altered).</li>
             <li><strong>Predict the ecological consequence</strong> — population, community, or ecosystem level.</li>
             <li><strong>Extend to a human consequence</strong> if asked (water quality, fisheries, health).</li>
-            <li><strong>Propose a mitigation</strong> — connect it back to the disrupted process (not just "use less fertilizer").</li>
+            <li><strong>Propose a mitigation</strong> — connect it back to the disrupted process (not just "use less
+              fertilizer").</li>
           </ul>
         </article>
         <article class="exam-card feature-card accent-gold">
@@ -1212,7 +2041,8 @@ For full credit: identify the service lost AND explain the ecological mechanism.
           <ul class="bullet-list">
             <li>Always use NPP (not GPP) as the energy available to consumers.</li>
             <li>Arrows in food web diagrams point from prey to predator (direction of energy flow).</li>
-            <li>Biomass pyramids can be inverted in aquatic systems — fast phytoplankton turnover means low standing biomass despite high production rate.</li>
+            <li>Biomass pyramids can be inverted in aquatic systems — fast phytoplankton turnover means low standing
+              biomass despite high production rate.</li>
             <li>Bioaccumulation = one organism over time. Biomagnification = across trophic levels.</li>
             <li>Endotherms lose more energy as heat than ectotherms → lower transfer efficiency.</li>
           </ul>
@@ -1246,8 +2076,10 @@ For full credit: identify the service lost AND explain the ecological mechanism.
           <ul class="bullet-list">
             <li>Always name the <em>category</em> of service (provisioning, regulating, supporting, cultural).</li>
             <li>Connect the service loss to a specific ecological mechanism — not just "it's important."</li>
-            <li>Wetland conversion → impervious surface → less infiltration → more flooding + less groundwater recharge.</li>
-            <li>Distinguish provisioning (water supply) from regulating (flood control) — both come from wetlands but through different mechanisms.</li>
+            <li>Wetland conversion → impervious surface → less infiltration → more flooding + less groundwater recharge.
+            </li>
+            <li>Distinguish provisioning (water supply) from regulating (flood control) — both come from wetlands but
+              through different mechanisms.</li>
           </ul>
         </article>
       </div>
@@ -1275,11 +2107,11 @@ For full credit: identify the service lost AND explain the ecological mechanism.
 
   <script>
     const tabs = [
-      { id: "dashboard",  icon: "◈", label: "Dashboard",  ambient: "radial-gradient(ellipse at 55% 15%, rgba(93,191,110,.10), transparent 65%)" },
-      { id: "notes",      icon: "≡", label: "Notes",      ambient: "radial-gradient(ellipse at 20% 50%, rgba(62,184,154,.09), transparent 65%)" },
-      { id: "glossary",   icon: "⊞", label: "Glossary",   ambient: "radial-gradient(ellipse at 80% 30%, rgba(126,200,126,.08), transparent 65%)" },
+      { id: "dashboard", icon: "◈", label: "Dashboard", ambient: "radial-gradient(ellipse at 55% 15%, rgba(93,191,110,.10), transparent 65%)" },
+      { id: "notes", icon: "≡", label: "Notes", ambient: "radial-gradient(ellipse at 20% 50%, rgba(62,184,154,.09), transparent 65%)" },
+      { id: "glossary", icon: "⊞", label: "Glossary", ambient: "radial-gradient(ellipse at 80% 30%, rgba(126,200,126,.08), transparent 65%)" },
       { id: "flashcards", icon: "⟳", label: "Flashcards", ambient: "radial-gradient(ellipse at 40% 70%, rgba(212,168,67,.07), transparent 65%)" },
-      { id: "examprep",   icon: "✦", label: "Exam Prep",  ambient: "radial-gradient(ellipse at 70% 20%, rgba(91,143,212,.07), transparent 65%)" },
+      { id: "examprep", icon: "✦", label: "Exam Prep", ambient: "radial-gradient(ellipse at 70% 20%, rgba(91,143,212,.07), transparent 65%)" },
     ];
 
     const glossaryTerms = [
@@ -1484,7 +2316,7 @@ For full credit: identify the service lost AND explain the ecological mechanism.
 
     function renderNav() {
       nav.innerHTML = tabs.map(t => `
-        <button class="nav-btn ${t.id===currentTab?"active":""}" data-tab="${t.id}" type="button">
+        <button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button">
           <span class="nav-indicator"></span>
           <span class="nav-icon">${t.icon}</span>
           <span class="nav-label">${t.label}</span>
@@ -1493,17 +2325,17 @@ For full credit: identify the service lost AND explain the ecological mechanism.
 
     function switchTab(id) {
       currentTab = id;
-      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id===id));
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab===id));
-      const t = tabs.find(x=>x.id===id);
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id));
+      const t = tabs.find(x => x.id === id);
       if (t) ambientOverlay.style.background = t.ambient;
-      mainEl.scrollTo({top:0, behavior:"smooth"});
+      mainEl.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function renderGlossary(filter="") {
+    function renderGlossary(filter = "") {
       const v = filter.toLowerCase().trim();
-      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v)||t.def.toLowerCase().includes(v));
-      document.getElementById("glossaryGrid").innerHTML = items.map(item=>`
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item => `
         <article class="feature-card glossary-card" data-target-tab="${item.tab}">
           <div class="mini-label">${item.tab}</div>
           <h4>${item.term}</h4>
@@ -1512,7 +2344,7 @@ For full credit: identify the service lost AND explain the ecological mechanism.
     }
 
     function renderFlashcards() {
-      document.getElementById("flashGrid").innerHTML = flashcards.map(c=>`
+      document.getElementById("flashGrid").innerHTML = flashcards.map(c => `
         <article class="flash-card" tabindex="0">
           <div class="flash-inner">
             <div class="flash-front">
@@ -1528,16 +2360,16 @@ For full credit: identify the service lost AND explain the ecological mechanism.
     }
 
     function renderEssayTopics() {
-      document.getElementById("essayTopics").innerHTML = essayOutlines.map((o,i)=>
+      document.getElementById("essayTopics").innerHTML = essayOutlines.map((o, i) =>
         `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
       const ol = document.getElementById("essayOutline");
-      ol.classList.remove("show"); ol.innerHTML="";
+      ol.classList.remove("show"); ol.innerHTML = "";
     }
 
     function selectEssay(i) {
-      document.querySelectorAll(".essay-topic-btn").forEach(b=>b.classList.toggle("active", Number(b.dataset.essayIndex)===i));
+      document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i));
       const o = essayOutlines[i];
-      document.getElementById("essayOutline").innerHTML = o.blocks.map(([l,b])=>
+      document.getElementById("essayOutline").innerHTML = o.blocks.map(([l, b]) =>
         `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join("");
       document.getElementById("essayOutline").classList.add("show");
     }
@@ -1546,27 +2378,27 @@ For full credit: identify the service lost AND explain the ecological mechanism.
       const qm = document.getElementById("quizMount");
       const q = quizQuestions[quizIndex];
       if (!q) {
-        const pct = Math.round((quizScore/quizQuestions.length)*100);
-        const prev = Number(localStorage.getItem("apes_u1_best")||0);
-        const best = Math.max(prev,pct);
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prev = Number(localStorage.getItem("apes_u1_best") || 0);
+        const best = Math.max(prev, pct);
         localStorage.setItem("apes_u1_best", String(best));
-        bestScoreEl.textContent = best+"%";
+        bestScoreEl.textContent = best + "%";
         qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review cycles, energy transfer, and eutrophication if you missed any. Use the Notes tab to reinforce weak areas.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
         return;
       }
       quizLocked = false;
-      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex+1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
     }
 
-    function openModal(id){ document.getElementById(id).classList.add("open"); }
-    function closeModal(id){ document.getElementById(id).classList.remove("open"); }
-    function initBestScore(){ const b=localStorage.getItem("apes_u1_best"); bestScoreEl.textContent = b?b+"%":"--"; }
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function initBestScore() { const b = localStorage.getItem("apes_u1_best"); bestScoreEl.textContent = b ? b + "%" : "--"; }
 
     renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
 
     document.addEventListener("mousemove", e => {
       if (!window.matchMedia("(pointer:fine)").matches) return;
-      cursor.style.left = e.clientX+"px"; cursor.style.top = e.clientY+"px";
+      cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
     });
     document.addEventListener("mouseover", e => {
       if (!window.matchMedia("(pointer:fine)").matches) return;
@@ -1574,50 +2406,51 @@ For full credit: identify the service lost AND explain the ecological mechanism.
       cursor.style.height = cursor.style.width;
     });
 
-    pinBtn.addEventListener("click", ()=>{ sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned")?"Pinned":"Pin"; });
-    nav.addEventListener("click", e=>{ const b=e.target.closest(".nav-btn"); if(b) switchTab(b.dataset.tab); });
-    document.querySelectorAll(".note-jump").forEach(b=>b.addEventListener("click",()=>{ const t=document.getElementById(b.dataset.noteTarget); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }));
-    document.getElementById("glossaryFilter").addEventListener("input", e=>renderGlossary(e.target.value));
-    document.getElementById("flashGrid").addEventListener("click", e=>{ const c=e.target.closest(".flash-card"); if(c) c.classList.toggle("flipped"); });
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin"; });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
 
-    document.getElementById("openSearch").addEventListener("click",()=>{ const p=document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if(p.classList.contains("open")) document.getElementById("sbInput").focus(); });
-    document.getElementById("sbInput").addEventListener("input", e=>{
-      const q=e.target.value.toLowerCase().trim();
-      const m=glossaryTerms.filter(t=>t.term.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)).slice(0,8);
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus(); });
+    document.getElementById("sbInput").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase().trim();
+      const m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8);
       document.getElementById("sbResults").innerHTML = m.length
-        ? m.map(i=>`<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
+        ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
         : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
     });
-    document.getElementById("sbResults").addEventListener("click", e=>{
-      const r=e.target.closest(".sb-result"); if(!r||!r.dataset.targetTab) return;
+    document.getElementById("sbResults").addEventListener("click", e => {
+      const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return;
       switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
-      document.getElementById("sbInput").value=""; document.getElementById("sbResults").innerHTML="";
-      if(r.dataset.targetTab==="glossary"){ document.getElementById("glossaryFilter").value=r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
+      document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+      if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
     });
-    document.getElementById("glossaryGrid").addEventListener("click", e=>{ const c=e.target.closest(".glossary-card"); if(c) switchTab(c.dataset.targetTab); });
-    apToggleBtn.addEventListener("click",()=>{ document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
-    document.getElementById("quizOpenBtn").addEventListener("click",()=>{ quizIndex=0; quizScore=0; renderQuizQuestion(); openModal("quizModal"); });
-    document.getElementById("essayOpenBtn").addEventListener("click",()=>{ renderEssayTopics(); openModal("essayModal"); });
-    document.getElementById("essayTopics").addEventListener("click", e=>{ const b=e.target.closest(".essay-topic-btn"); if(b) selectEssay(Number(b.dataset.essayIndex)); });
-    document.getElementById("quizMount").addEventListener("click", e=>{
-      const opt=e.target.closest(".quiz-option");
-      if(opt&&!quizLocked){
-        quizLocked=true;
-        const q=quizQuestions[quizIndex]; const sel=Number(opt.dataset.optionIndex);
-        document.querySelectorAll(".quiz-option").forEach((b,i)=>{ if(i===q.correct)b.classList.add("correct"); if(i===sel&&sel!==q.correct)b.classList.add("wrong"); });
-        if(sel===q.correct) quizScore++;
-        document.getElementById("quizFeedback").textContent=q.explanation;
-        document.getElementById("quizNext").innerHTML=`<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex===quizQuestions.length-1?"See Score":"Next Question"}</button>`;
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
+    document.getElementById("quizMount").addEventListener("click", e => {
+      const opt = e.target.closest(".quiz-option");
+      if (opt && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex]; const sel = Number(opt.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong"); });
+        if (sel === q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
       }
-      if(e.target.id==="nextQuizBtn"){ quizIndex++; renderQuizQuestion(); }
-      if(e.target.id==="restartQuizBtn"){ quizIndex=0; quizScore=0; renderQuizQuestion(); }
+      if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+      if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
     });
-    document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
-    document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{ if(e.target===m)m.classList.remove("open"); }));
-    mainEl.addEventListener("scroll",()=>{
-      const max=mainEl.scrollHeight-mainEl.clientHeight;
-      document.getElementById("readingProgressFill").style.width=(max>0?(mainEl.scrollTop/max)*100:0)+"%";
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+    mainEl.addEventListener("scroll", () => {
+      const max = mainEl.scrollHeight - mainEl.clientHeight;
+      document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%";
     });
   </script>
 </body>
+
 </html>

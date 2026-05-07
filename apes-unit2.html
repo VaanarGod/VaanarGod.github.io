@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AP Environmental Science — Unit 2: The Living World: Biodiversity</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --bg: #04080f;
       --card: #070e18;
       --card2: #0b1522;
-      --border: rgba(255,255,255,.055);
+      --border: rgba(255, 255, 255, .055);
       --text: #d4e8f0;
       --muted: #4a6b80;
       --g: #38bcd4;
@@ -27,7 +36,9 @@
       --accent: #38bcd4;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       min-height: 100vh;
@@ -44,8 +55,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(56,188,212,.010) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,188,212,.010) 1px, transparent 1px);
+        linear-gradient(rgba(56, 188, 212, .010) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 188, 212, .010) 1px, transparent 1px);
       background-size: 72px 72px;
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
       pointer-events: none;
@@ -64,29 +75,36 @@
 
     #cursor {
       position: fixed;
-      width: 12px; height: 12px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: var(--g);
       pointer-events: none;
       z-index: 9999;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       mix-blend-mode: difference;
       transition: width .2s, height .2s;
     }
 
     #readingProgress {
       position: fixed;
-      top: 0; left: 72px; right: 0;
-      height: 2px; z-index: 100;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100;
     }
+
     #readingProgressFill {
-      width: 0%; height: 100%;
+      width: 0%;
+      height: 100%;
       background: linear-gradient(90deg, var(--g), var(--g2));
     }
 
     #ambientOverlay {
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse at 55% 15%, rgba(56,188,212,.09), transparent 65%);
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 55% 15%, rgba(56, 188, 212, .09), transparent 65%);
       opacity: .14;
       pointer-events: none;
       transition: background 1s ease, opacity .25s ease;
@@ -98,596 +116,1244 @@
       width: 72px;
       height: 100vh;
       flex-shrink: 0;
-      background: rgba(3,6,14,.90);
+      background: rgba(3, 6, 14, .90);
       border-right: 1px solid var(--border);
       backdrop-filter: blur(24px);
       overflow: hidden;
       position: relative;
       z-index: 10;
-      transition: width .4s cubic-bezier(.23,1,.32,1);
+      transition: width .4s cubic-bezier(.23, 1, .32, 1);
     }
-    #sidebar:hover, #sidebar.pinned { width: 264px; }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 264px;
+    }
 
     #pinBtn {
-      position: absolute; top: 12px; right: 10px;
-      padding: 4px 7px; border-radius: 6px;
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      background: transparent; color: var(--muted);
-      font: inherit; font-size: 8px; letter-spacing: .08em;
-      opacity: 0; cursor: none;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .08em;
+      opacity: 0;
+      cursor: none;
       transition: opacity .25s, color .2s, border-color .2s;
     }
-    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1; }
-    #pinBtn.pinned { color: var(--g); border-color: rgba(56,188,212,.24); }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1;
+    }
+
+    #pinBtn.pinned {
+      color: var(--g);
+      border-color: rgba(56, 188, 212, .24);
+    }
 
     .sidebar-logo {
-      display: flex; align-items: center; gap: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
       padding: 18px;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
+
     .logo-icon {
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
       border-radius: 10px;
-      border: 1px solid rgba(56,188,212,.22);
-      background: rgba(56,188,212,.07);
+      border: 1px solid rgba(56, 188, 212, .22);
+      background: rgba(56, 188, 212, .07);
       color: var(--g);
       flex-shrink: 0;
       font-family: 'Cinzel', serif;
-      font-size: 9px; font-weight: 700;
+      font-size: 9px;
+      font-weight: 700;
     }
-    .logo-copy { opacity: 0; transition: opacity .25s; }
-    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1; }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1;
+    }
+
     .logo-copy h1 {
       font-family: 'Cinzel', serif;
-      font-size: 11px; letter-spacing: .22em; color: var(--g);
-    }
-    .logo-copy p {
-      color: var(--muted); font-size: 9px;
-      letter-spacing: .12em; text-transform: uppercase; margin-top: 3px;
+      font-size: 11px;
+      letter-spacing: .22em;
+      color: var(--g);
     }
 
-    .search-wrap { position: relative; padding: 10px; }
-    .sb-search-trigger {
-      width: 100%; display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.02);
-      color: var(--muted); cursor: none;
-      opacity: 0; pointer-events: none;
-      transition: opacity .25s, border-color .2s;
-      font-family: 'DM Mono', monospace; font-size: 10px;
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-top: 3px;
     }
-    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger { opacity: 1; pointer-events: auto; }
-    .sb-search-trigger:hover { border-color: rgba(56,188,212,.2); }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px;
+    }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+    }
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(56, 188, 212, .2);
+    }
 
     #sbSearchPanel {
-      position: absolute; top: calc(100% - 4px); left: 10px; right: 10px;
-      border: 1px solid rgba(56,188,212,.18);
-      background: rgba(4,8,16,.98);
-      border-radius: 12px; overflow: hidden;
-      opacity: 0; pointer-events: none;
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(56, 188, 212, .18);
+      background: rgba(4, 8, 16, .98);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
       transform: translateY(-8px);
       transition: opacity .22s, transform .22s;
       z-index: 80;
-      box-shadow: 0 18px 60px rgba(0,0,0,.65);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
     }
-    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
     #sbSearchInner {
-      display: flex; align-items: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       padding: 10px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
     }
+
     #sbInput {
-      flex: 1; border: none; background: transparent;
+      flex: 1;
+      border: none;
+      background: transparent;
       color: var(--text);
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em;
-      outline: none; cursor: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
     }
-    #sbResults { max-height: 280px; overflow: auto; }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto;
+    }
+
     .sb-result {
       padding: 11px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
-      cursor: none; transition: background .15s;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      cursor: none;
+      transition: background .15s;
     }
-    .sb-result:hover { background: rgba(56,188,212,.06); }
-    .sb-result:last-child { border-bottom: none; }
-    .sb-result-tab { font-size: 8px; color: var(--g); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
-    .sb-result-term { font-family: 'Cinzel', serif; font-size: 13px; color: white; letter-spacing: .04em; }
-    .sb-result-snip { font-family: 'Crimson Pro', serif; font-size: 12px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+
+    .sb-result:hover {
+      background: rgba(56, 188, 212, .06);
+    }
+
+    .sb-result:last-child {
+      border-bottom: none;
+    }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .sb-result-term {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: white;
+      letter-spacing: .04em;
+    }
+
+    .sb-result-snip {
+      font-family: 'Crimson Pro', serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
 
     nav {
       height: calc(100vh - 176px);
       padding: 0 10px 14px;
       overflow: auto;
     }
+
     .nav-btn {
-      width: 100%; display: flex; align-items: center; gap: 14px;
-      padding: 10px 14px; border: none; border-radius: 10px;
-      background: transparent; color: var(--muted);
-      cursor: none; white-space: nowrap;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
       transition: background .2s, color .2s;
       position: relative;
       font-family: 'Space Grotesk', sans-serif;
     }
-    .nav-btn:hover { background: rgba(255,255,255,.025); color: #8acfdc; }
-    .nav-btn.active { background: rgba(56,188,212,.07); color: var(--g); }
-    .nav-btn.active .nav-indicator { opacity: 1; }
-    .nav-indicator {
-      position: absolute; left: 0;
-      width: 2px; height: 24px;
-      background: var(--g); border-radius: 5px; opacity: 0;
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .025);
+      color: #8acfdc;
     }
-    .nav-icon { font-size: 14px; flex-shrink: 0; }
+
+    .nav-btn.active {
+      background: rgba(56, 188, 212, .07);
+      color: var(--g);
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1;
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 24px;
+      background: var(--g);
+      border-radius: 5px;
+      opacity: 0;
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
     .nav-label {
-      font-size: 10px; letter-spacing: .18em;
-      text-transform: uppercase; opacity: 0;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
       transition: opacity .25s;
     }
-    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1; }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1;
+    }
 
     .sidebar-footer {
-      position: absolute; left: 0; right: 0; bottom: 0;
-      display: flex; align-items: center; gap: 10px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       padding: 14px 18px;
       border-top: 1px solid var(--border);
       color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .1em;
-      overflow: hidden; white-space: nowrap;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap;
     }
-    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s; }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
     #sidebar:hover .sidebar-footer span:last-child,
-    #sidebar.pinned .sidebar-footer span:last-child { opacity: 1; }
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1;
+    }
+
     .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--g); flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--g);
+      flex-shrink: 0;
       animation: blink 2.4s ease-in-out infinite;
     }
 
     /* ── MAIN ── */
     #main {
-      flex: 1; height: 100vh; overflow-y: auto;
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
       padding: 36px 54px 80px;
-      position: relative; z-index: 2;
+      position: relative;
+      z-index: 2;
     }
 
     .topbar {
-      position: sticky; top: 0; z-index: 20;
-      display: flex; align-items: center;
-      justify-content: space-between; gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
       margin-bottom: 24px;
       padding: 8px 0 20px;
       backdrop-filter: blur(8px);
     }
-    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    .glass-btn, #scoreTracker {
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .glass-btn,
+    #scoreTracker {
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .04);
       color: var(--muted);
       padding: 9px 14px;
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .16em;
-      text-transform: uppercase; cursor: none;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
       backdrop-filter: blur(12px);
       transition: border-color .2s, color .2s, background .2s;
       white-space: nowrap;
       text-decoration: none;
       display: inline-block;
     }
-    .glass-btn:hover, #scoreTracker:hover { color: var(--g); border-color: rgba(56,188,212,.26); }
-    .glass-btn.active { color: var(--g); border-color: rgba(56,188,212,.32); background: rgba(56,188,212,.07); }
 
-    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(.23,1,.32,1); }
-    .tab-content.active { display: block; }
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--g);
+      border-color: rgba(56, 188, 212, .26);
+    }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(56, 188, 212, .32);
+      background: rgba(56, 188, 212, .07);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeUp .45s cubic-bezier(.23, 1, .32, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
 
     .page-header {
-      margin-bottom: 34px; padding-bottom: 24px;
+      margin-bottom: 34px;
+      padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
     }
+
     .unit-tag {
-      display: block; color: var(--g);
+      display: block;
+      color: var(--g);
       font-family: 'DM Mono', monospace;
-      font-size: 10px; letter-spacing: .35em;
-      text-transform: uppercase; margin-bottom: 10px;
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
+
     .page-header h2 {
       font-family: 'Cinzel', serif;
       font-size: clamp(32px, 4.5vw, 56px);
-      letter-spacing: .06em; line-height: .98; color: white;
+      letter-spacing: .06em;
+      line-height: .98;
+      color: white;
     }
+
     .page-header p {
-      margin-top: 10px; color: var(--muted);
+      margin-top: 10px;
+      color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
     }
 
-    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; margin-bottom: 26px; }
-    .principle-grid, .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
-    .case-grid, .flash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
-    .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 22px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      margin-bottom: 26px;
+    }
 
-    .card, .feature-card, .principle-card, .case-card, .exam-card, .flash-card, .writing-card {
+    .principle-grid,
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 22px;
+    }
+
+    .case-grid,
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px;
+    }
+
+    .card,
+    .feature-card,
+    .principle-card,
+    .case-card,
+    .exam-card,
+    .flash-card,
+    .writing-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px; padding: 28px;
-      position: relative; overflow: hidden;
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
       transition: transform .24s, border-color .24s, box-shadow .24s;
     }
-    .card:hover, .feature-card:hover, .principle-card:hover,
-    .case-card:hover, .exam-card:hover, .flash-card:hover, .writing-card:hover {
+
+    .card:hover,
+    .feature-card:hover,
+    .principle-card:hover,
+    .case-card:hover,
+    .exam-card:hover,
+    .flash-card:hover,
+    .writing-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255,255,255,.11);
-      box-shadow: 0 20px 48px rgba(0,0,0,.4);
+      border-color: rgba(255, 255, 255, .11);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, .4);
     }
-    .hero-card::before, .feature-card::before, .principle-card::before,
-    .case-card::before, .exam-card::before, .writing-card::before {
+
+    .hero-card::before,
+    .feature-card::before,
+    .principle-card::before,
+    .case-card::before,
+    .exam-card::before,
+    .writing-card::before {
       content: '';
-      position: absolute; left: 0; right: 0; top: 0;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
       height: 2px;
       background: var(--accent, var(--g));
       opacity: .65;
     }
-    .hero-card { --accent: var(--g); }
-    .accent-g   { --accent: var(--g); }
-    .accent-g2  { --accent: var(--g2); }
-    .accent-g3  { --accent: var(--g3); }
-    .accent-gold{ --accent: var(--gold); }
-    .accent-blue{ --accent: var(--blue); }
-    .accent-red { --accent: var(--red); }
-    .accent-orange { --accent: var(--orange); }
+
+    .hero-card {
+      --accent: var(--g);
+    }
+
+    .accent-g {
+      --accent: var(--g);
+    }
+
+    .accent-g2 {
+      --accent: var(--g2);
+    }
+
+    .accent-g3 {
+      --accent: var(--g3);
+    }
+
+    .accent-gold {
+      --accent: var(--gold);
+    }
+
+    .accent-blue {
+      --accent: var(--blue);
+    }
+
+    .accent-red {
+      --accent: var(--red);
+    }
+
+    .accent-orange {
+      --accent: var(--orange);
+    }
 
     .card-sub {
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 10px;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px;
     }
+
     .card-title {
       font-family: 'Cinzel', serif;
-      font-size: 21px; letter-spacing: .04em;
-      color: white; line-height: 1.18; margin-bottom: 14px;
+      font-size: 21px;
+      letter-spacing: .04em;
+      color: white;
+      line-height: 1.18;
+      margin-bottom: 14px;
     }
+
     .body-copy {
       font-family: 'Crimson Pro', serif;
-      font-size: 15px; line-height: 1.82; color: #7aaac0;
+      font-size: 15px;
+      line-height: 1.82;
+      color: #7aaac0;
     }
-    .body-copy p + p { margin-top: 10px; }
+
+    .body-copy p+p {
+      margin-top: 10px;
+    }
 
     .dash-stats {
-      display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 12px; margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
     }
+
     .stat-box {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px; text-align: center;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
     }
+
     .stat-box span {
       display: block;
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 6px;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
+
     .stat-box strong {
       font-family: 'Cinzel', serif;
-      font-size: 26px; letter-spacing: .06em; color: var(--g);
+      font-size: 26px;
+      letter-spacing: .06em;
+      color: var(--g);
     }
 
     .focus-callout {
-      margin-top: 20px; padding: 16px 18px;
+      margin-top: 20px;
+      padding: 16px 18px;
       border-radius: 12px;
-      background: rgba(56,188,212,.04);
-      border: 1px solid rgba(56,188,212,.13);
+      background: rgba(56, 188, 212, .04);
+      border: 1px solid rgba(56, 188, 212, .13);
     }
+
     .focus-callout .label {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 8px;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px;
     }
 
-    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
     .bullet-list li {
       font-family: 'Crimson Pro', serif;
-      font-size: 14px; line-height: 1.68; color: #7aaac0;
-      padding-left: 18px; position: relative;
+      font-size: 14px;
+      line-height: 1.68;
+      color: #7aaac0;
+      padding-left: 18px;
+      position: relative;
     }
-    .bullet-list li::before { content: '›'; position: absolute; left: 0; color: var(--g); }
 
-    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .bullet-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--g);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
     .tag {
-      padding: 4px 10px; border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 20px;
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .16em; text-transform: uppercase;
-      border: 1px solid rgba(56,188,212,.2);
-      color: rgba(56,188,212,.6);
-      background: rgba(56,188,212,.04);
+      font-size: 8px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border: 1px solid rgba(56, 188, 212, .2);
+      color: rgba(56, 188, 212, .6);
+      background: rgba(56, 188, 212, .04);
     }
 
     .mini-label {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 10px;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px;
     }
 
     /* ── NOTES ── */
-    .notes-shell { display: grid; grid-template-columns: 200px 1fr; gap: 28px; align-items: start; }
-    .notes-index {
-      position: sticky; top: 80px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 18px 14px;
-      display: flex; flex-direction: column; gap: 4px;
+    .notes-shell {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 28px;
+      align-items: start;
     }
+
+    .notes-index {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
     .notes-index-title {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; color: var(--muted);
-      padding: 0 6px; margin-bottom: 8px;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 6px;
+      margin-bottom: 8px;
     }
+
     .note-jump {
-      display: flex; justify-content: space-between; align-items: center;
-      width: 100%; padding: 8px 10px;
-      border: none; border-radius: 8px; background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
       color: var(--muted);
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
-      cursor: none; transition: background .18s, color .18s;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .18s, color .18s;
     }
-    .note-jump:hover { background: rgba(56,188,212,.06); color: var(--g); }
-    .note-jump span:last-child { color: rgba(56,188,212,.35); font-family: 'DM Mono', monospace; }
 
-    .notes-stack { display: flex; flex-direction: column; gap: 22px; }
-    .note-section {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 30px;
-      position: relative; overflow: hidden;
+    .note-jump:hover {
+      background: rgba(56, 188, 212, .06);
+      color: var(--g);
     }
+
+    .note-jump span:last-child {
+      color: rgba(56, 188, 212, .35);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .notes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
     .note-section::before {
-      content: ''; position: absolute;
-      left: 0; top: 0; bottom: 0;
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
       width: 3px;
       background: var(--accent, var(--g));
       opacity: .55;
     }
+
     .note-section h3 {
       font-family: 'Cinzel', serif;
-      font-size: 22px; letter-spacing: .05em;
-      color: white; margin-bottom: 14px;
+      font-size: 22px;
+      letter-spacing: .05em;
+      color: white;
+      margin-bottom: 14px;
     }
+
     .note-section h4 {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 600;
-      font-size: 13px; letter-spacing: .1em;
-      color: var(--text); margin: 20px 0 10px;
+      font-size: 13px;
+      letter-spacing: .1em;
+      color: var(--text);
+      margin: 20px 0 10px;
       text-transform: uppercase;
     }
+
     .note-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-      gap: 14px; margin: 18px 0;
-    }
-    .mini-note {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px; letter-spacing: .08em;
-      font-weight: 600; color: var(--text);
-    }
-    .mini-note .body-copy {
-      font-size: 13px; letter-spacing: 0; font-weight: 400;
-      color: #527b92; margin-top: 7px;
-    }
-    .code-block {
-      background: #030810;
-      border: 1px solid rgba(56,188,212,.1);
-      border-radius: 12px; padding: 18px 20px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px; line-height: 1.7;
-      color: #5ab8d4; letter-spacing: .04em;
-      overflow-x: auto; white-space: pre; margin-top: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
     }
 
-    .compare-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    .mini-note {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      letter-spacing: .08em;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .mini-note .body-copy {
+      font-size: 13px;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: #527b92;
+      margin-top: 7px;
+    }
+
+    .code-block {
+      background: #030810;
+      border: 1px solid rgba(56, 188, 212, .1);
+      border-radius: 12px;
+      padding: 18px 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      line-height: 1.7;
+      color: #5ab8d4;
+      letter-spacing: .04em;
+      overflow-x: auto;
+      white-space: pre;
+      margin-top: 10px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+    }
+
     .compare-table th {
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--g); padding: 10px 14px;
-      border-bottom: 1px solid rgba(56,188,212,.18);
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--g);
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(56, 188, 212, .18);
       text-align: left;
     }
+
     .compare-table td {
       font-family: 'Crimson Pro', serif;
-      font-size: 13px; color: var(--muted);
+      font-size: 13px;
+      color: var(--muted);
       padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       vertical-align: top;
     }
-    .compare-table tr:last-child td { border-bottom: none; }
-    .compare-table tr:hover td { background: rgba(56,188,212,.025); }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tr:hover td {
+      background: rgba(56, 188, 212, .025);
+    }
 
     /* ── GLOSSARY ── */
     .glossary-toolbar {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
     }
+
     .glossary-toolbar input {
-      flex: 1; min-width: 200px;
-      padding: 10px 16px; border-radius: 12px;
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 16px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      background: var(--card2); color: var(--text);
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em;
-      outline: none; cursor: none;
+      background: var(--card2);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
       transition: border-color .2s;
     }
-    .glossary-toolbar input:focus { border-color: rgba(56,188,212,.3); }
+
+    .glossary-toolbar input:focus {
+      border-color: rgba(56, 188, 212, .3);
+    }
+
     .glossary-card h4 {
       font-family: 'Cinzel', serif;
-      font-size: 15px; letter-spacing: .04em;
-      color: white; margin-bottom: 10px;
+      font-size: 15px;
+      letter-spacing: .04em;
+      color: white;
+      margin-bottom: 10px;
     }
-    .glossary-card { cursor: none; }
+
+    .glossary-card {
+      cursor: none;
+    }
 
     /* ── FLASHCARDS ── */
     .flash-card {
-      perspective: 900px; height: 200px;
-      background: transparent; border: none; padding: 0;
+      perspective: 900px;
+      height: 200px;
+      background: transparent;
+      border: none;
+      padding: 0;
     }
-    .flash-card:hover { transform: none; box-shadow: none; border-color: transparent; }
+
+    .flash-card:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: transparent;
+    }
+
     .flash-inner {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       position: relative;
-      transition: transform .55s cubic-bezier(.23,1,.32,1);
+      transition: transform .55s cubic-bezier(.23, 1, .32, 1);
       transform-style: preserve-3d;
     }
-    .flash-card.flipped .flash-inner { transform: rotateY(180deg); }
-    .flash-front, .flash-back {
-      position: absolute; inset: 0;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px;
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
       backface-visibility: hidden;
-      display: flex; flex-direction: column;
+      display: flex;
+      flex-direction: column;
       justify-content: space-between;
       transition: border-color .2s;
     }
+
     .flash-card:hover .flash-front,
-    .flash-card:hover .flash-back { border-color: rgba(56,188,212,.2); }
-    .flash-back { transform: rotateY(180deg); background: var(--card2); }
-    .flash-front h3, .flash-back .body-copy {
-      font-family: 'Cinzel', serif;
-      font-size: 16px; letter-spacing: .04em; color: white;
+    .flash-card:hover .flash-back {
+      border-color: rgba(56, 188, 212, .2);
     }
+
+    .flash-back {
+      transform: rotateY(180deg);
+      background: var(--card2);
+    }
+
+    .flash-front h3,
+    .flash-back .body-copy {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      letter-spacing: .04em;
+      color: white;
+    }
+
     .flash-back .body-copy {
       font-family: 'Crimson Pro', serif;
-      font-size: 14px; font-weight: 400;
-      letter-spacing: 0; color: #7aaac0;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: #7aaac0;
     }
+
     .flash-hint {
       font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .22em;
-      text-transform: uppercase; color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     /* ── MODALS ── */
     .modal {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.72);
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .72);
       backdrop-filter: blur(8px);
       z-index: 200;
-      display: none; align-items: center; justify-content: center;
+      display: none;
+      align-items: center;
+      justify-content: center;
       padding: 24px;
     }
-    .modal.open { display: flex; }
+
+    .modal.open {
+      display: flex;
+    }
+
     .modal-box {
       background: var(--card);
-      border: 1px solid rgba(56,188,212,.14);
-      border-radius: 24px; padding: 36px;
-      max-width: 620px; width: 100%;
-      max-height: 88vh; overflow-y: auto;
+      border: 1px solid rgba(56, 188, 212, .14);
+      border-radius: 24px;
+      padding: 36px;
+      max-width: 620px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
       position: relative;
-      animation: fadeUp .4s cubic-bezier(.23,1,.32,1);
+      animation: fadeUp .4s cubic-bezier(.23, 1, .32, 1);
     }
+
     .modal-title {
       font-family: 'Cinzel', serif;
-      font-size: 20px; letter-spacing: .06em;
-      color: white; margin-bottom: 22px;
+      font-size: 20px;
+      letter-spacing: .06em;
+      color: white;
+      margin-bottom: 22px;
     }
+
     .modal-close {
-      position: absolute; top: 20px; right: 20px;
-      background: transparent; border: 1px solid var(--border);
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--border);
       color: var(--muted);
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .14em;
-      padding: 6px 10px; border-radius: 8px; cursor: none;
+      font-size: 9px;
+      letter-spacing: .14em;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: none;
       transition: color .2s, border-color .2s;
     }
-    .modal-close:hover { color: var(--red); border-color: rgba(217,95,95,.3); }
+
+    .modal-close:hover {
+      color: var(--red);
+      border-color: rgba(217, 95, 95, .3);
+    }
 
     /* ── QUIZ ── */
     .quiz-status {
       font-family: 'DM Mono', monospace;
-      font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
-      color: var(--g); margin-bottom: 14px;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 14px;
     }
+
     .quiz-question {
       font-family: 'Crimson Pro', serif;
-      font-size: 17px; line-height: 1.72;
-      color: var(--text); margin-bottom: 20px;
+      font-size: 17px;
+      line-height: 1.72;
+      color: var(--text);
+      margin-bottom: 20px;
     }
-    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
     .quiz-option {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 13px 16px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px; color: var(--muted);
-      text-align: left; cursor: none;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      cursor: none;
       transition: border-color .2s, color .2s, background .2s;
     }
-    .quiz-option:hover { border-color: rgba(56,188,212,.28); color: var(--text); }
-    .quiz-option.correct { border-color: var(--g3); color: var(--g3); background: rgba(109,212,200,.08); }
-    .quiz-option.wrong { border-color: var(--red); color: var(--red); background: rgba(217,95,95,.08); }
+
+    .quiz-option:hover {
+      border-color: rgba(56, 188, 212, .28);
+      color: var(--text);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--g3);
+      color: var(--g3);
+      background: rgba(109, 212, 200, .08);
+    }
+
+    .quiz-option.wrong {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(217, 95, 95, .08);
+    }
+
     .quiz-feedback {
       font-family: 'Crimson Pro', serif;
-      font-size: 14px; line-height: 1.72;
-      color: var(--muted); min-height: 20px; margin-bottom: 14px;
+      font-size: 14px;
+      line-height: 1.72;
+      color: var(--muted);
+      min-height: 20px;
+      margin-bottom: 14px;
     }
-    .quiz-next { text-align: right; }
+
+    .quiz-next {
+      text-align: right;
+    }
 
     /* ── ESSAY ── */
-    .essay-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .essay-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
     .essay-topic-btn {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px 16px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px; color: var(--muted);
-      text-align: left; cursor: none;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      cursor: none;
       transition: border-color .2s, color .2s;
     }
-    .essay-topic-btn:hover, .essay-topic-btn.active {
-      border-color: rgba(56,188,212,.28); color: var(--g);
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      border-color: rgba(56, 188, 212, .28);
+      color: var(--g);
     }
-    .essay-outline { display: none; flex-direction: column; gap: 14px; }
-    .essay-outline.show { display: flex; }
+
+    .essay-outline {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .essay-outline.show {
+      display: flex;
+    }
+
     .essay-block {
-      background: var(--card2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 18px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
     }
+
     .essay-block-label {
-      color: var(--g); font-family: 'DM Mono', monospace;
-      font-size: 8px; letter-spacing: .28em;
-      text-transform: uppercase; margin-bottom: 9px;
+      color: var(--g);
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
     }
+
     .essay-block-body {
       font-family: 'Crimson Pro', serif;
-      color: var(--muted); line-height: 1.82; font-size: 15px;
+      color: var(--muted);
+      line-height: 1.82;
+      font-size: 15px;
     }
 
-    strong.ap-term { color: #6dd4c8; font-weight: 600; }
+    strong.ap-term {
+      color: #6dd4c8;
+      font-weight: 600;
+    }
+
     body.ap-highlight strong.ap-term {
-      background: rgba(56,188,212,.11);
-      padding: 0 3px; border-radius: 3px;
-      box-shadow: 0 0 10px rgba(56,188,212,.14);
+      background: rgba(56, 188, 212, .11);
+      padding: 0 3px;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(56, 188, 212, .14);
     }
 
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .15
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
     @media(max-width:1020px) {
-      .hero-grid { grid-template-columns: 1fr }
-      .dash-stats { grid-template-columns: 1fr }
-      #main { padding-left: 26px; padding-right: 26px }
-      .notes-shell { grid-template-columns: 1fr }
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .dash-stats {
+        grid-template-columns: 1fr
+      }
+
+      #main {
+        padding-left: 26px;
+        padding-right: 26px
+      }
+
+      .notes-shell {
+        grid-template-columns: 1fr
+      }
     }
+
     @media(max-width:760px) {
-      body { cursor: auto; overflow: auto; display: block }
-      #cursor, #readingProgress { display: none }
-      #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border) }
-      #sidebar:hover, #sidebar.pinned { width: 100% }
-      .logo-copy, .nav-label, .sidebar-footer span:last-child, .sb-search-trigger { opacity: 1 !important; pointer-events: auto !important }
-      #pinBtn { display: none }
-      nav { height: auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 8px }
-      #main { height: auto; overflow: visible }
-      .topbar { position: static }
-      .glossary-toolbar input { min-width: 100%; width: 100% }
+      body {
+        cursor: auto;
+        overflow: auto;
+        display: block
+      }
+
+      #cursor,
+      #readingProgress {
+        display: none
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border)
+      }
+
+      #sidebar:hover,
+      #sidebar.pinned {
+        width: 100%
+      }
+
+      .logo-copy,
+      .nav-label,
+      .sidebar-footer span:last-child,
+      .sb-search-trigger {
+        opacity: 1 !important;
+        pointer-events: auto !important
+      }
+
+      #pinBtn {
+        display: none
+      }
+
+      nav {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px
+      }
+
+      #main {
+        height: auto;
+        overflow: visible
+      }
+
+      .topbar {
+        position: static
+      }
+
+      .glossary-toolbar input {
+        min-width: 100%;
+        width: 100%
+      }
     }
   </style>
 </head>
@@ -695,7 +1361,9 @@
 <body>
   <div id="cursor"></div>
   <div id="ambientOverlay"></div>
-  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
 
   <aside id="sidebar">
     <button id="pinBtn" type="button">Pin</button>
@@ -723,9 +1391,11 @@
   <main id="main">
     <div class="topbar">
       <div class="top-actions">
-        <a class="glass-btn" href="apes-unit1.html">← Unit 1</a>
+        <a class="glass-btn" href="apes-index.html">← All Units</a>
+        <a class="glass-btn" href="apes-unit1.html">Unit 1</a>
         <a class="glass-btn" href="apes-unit2.html" style="color:var(--g);border-color:rgba(56,188,212,.32);">Unit 2</a>
-        <a class="glass-btn" href="apes-unit3.html">→ Unit 3</a>
+        <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
+        <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
@@ -738,7 +1408,8 @@
       <header class="page-header">
         <span class="unit-tag">Unit 2 · The Living World: Biodiversity</span>
         <h2>The Variety of Life</h2>
-        <p>Ecosystem Services · Biodiversity Levels · Island Biogeography · Succession · Invasive Species · Disturbance</p>
+        <p>Ecosystem Services · Biodiversity Levels · Island Biogeography · Succession · Invasive Species · Disturbance
+        </p>
       </header>
 
       <div class="hero-grid">
@@ -746,8 +1417,14 @@
           <div class="card-sub">Core Frame</div>
           <div class="card-title">What Unit 2 Is Really About</div>
           <div class="body-copy">
-            <p>Unit 2 zooms in on <strong class="ap-term">biodiversity</strong> — what it is, why it matters, how it's measured, what threatens it, and how ecosystems respond to disturbance. The thread connecting every section is that biodiversity underpins the <strong class="ap-term">ecosystem services</strong> humans depend on for free.</p>
-            <p>The big organizing idea: biodiversity at the <strong class="ap-term">genetic, species, and ecosystem</strong> levels all contribute to resilience. Lose diversity, lose stability. Every FRQ mechanism you write should trace a cause-effect chain from biodiversity loss to a concrete ecological or human consequence.</p>
+            <p>Unit 2 zooms in on <strong class="ap-term">biodiversity</strong> — what it is, why it matters, how it's
+              measured, what threatens it, and how ecosystems respond to disturbance. The thread connecting every
+              section is that biodiversity underpins the <strong class="ap-term">ecosystem services</strong> humans
+              depend on for free.</p>
+            <p>The big organizing idea: biodiversity at the <strong class="ap-term">genetic, species, and
+                ecosystem</strong> levels all contribute to resilience. Lose diversity, lose stability. Every FRQ
+              mechanism you write should trace a cause-effect chain from biodiversity loss to a concrete ecological or
+              human consequence.</p>
           </div>
           <div class="dash-stats">
             <div class="stat-box"><span>Study Sections</span><strong>8</strong></div>
@@ -756,7 +1433,9 @@
           </div>
           <div class="focus-callout">
             <div class="label">Exam Strategy</div>
-            <div class="body-copy">FRQs here love mechanism questions: don't just name a threat — explain the chain. "Habitat fragmentation → increases edge effects → specialist species decline → food-web simplification → reduced ecosystem services." Never stop at naming; always explain how.</div>
+            <div class="body-copy">FRQs here love mechanism questions: don't just name a threat — explain the chain.
+              "Habitat fragmentation → increases edge effects → specialist species decline → food-web simplification →
+              reduced ecosystem services." Never stop at naming; always explain how.</div>
           </div>
         </article>
 
@@ -764,15 +1443,21 @@
           <div class="card-sub">Fast Review</div>
           <div class="card-title">What You Must Be Able to Explain</div>
           <ul class="bullet-list">
-            <li>List and give examples of the four <strong class="ap-term">ecosystem service categories</strong> (provisioning, regulating, supporting, cultural).</li>
-            <li>Distinguish <strong class="ap-term">genetic, species, and ecosystem diversity</strong> — don't mix up levels.</li>
+            <li>List and give examples of the four <strong class="ap-term">ecosystem service categories</strong>
+              (provisioning, regulating, supporting, cultural).</li>
+            <li>Distinguish <strong class="ap-term">genetic, species, and ecosystem diversity</strong> — don't mix up
+              levels.</li>
             <li>Explain <strong class="ap-term">species richness vs. evenness</strong> and why both matter.</li>
             <li>Define <strong class="ap-term">keystone species</strong> and explain the trophic cascade mechanism.</li>
-            <li>Apply <strong class="ap-term">island biogeography</strong> to fragmented habitats (not just literal islands).</li>
+            <li>Apply <strong class="ap-term">island biogeography</strong> to fragmented habitats (not just literal
+              islands).</li>
             <li>Distinguish <strong class="ap-term">primary vs. secondary succession</strong> using soil presence.</li>
-            <li>Explain why invasive species succeed using <strong class="ap-term">enemy release</strong> and generalist traits.</li>
-            <li>Describe how <strong class="ap-term">wildfires, floods, and volcanic eruptions</strong> can both harm and benefit ecosystems.</li>
-            <li>Distinguish <strong class="ap-term">resistance vs. resilience</strong> in disturbance-recovery scenarios.</li>
+            <li>Explain why invasive species succeed using <strong class="ap-term">enemy release</strong> and generalist
+              traits.</li>
+            <li>Describe how <strong class="ap-term">wildfires, floods, and volcanic eruptions</strong> can both harm
+              and benefit ecosystems.</li>
+            <li>Distinguish <strong class="ap-term">resistance vs. resilience</strong> in disturbance-recovery
+              scenarios.</li>
           </ul>
           <div class="tag-row">
             <span class="tag">Biodiversity</span><span class="tag">Succession</span>
@@ -786,27 +1471,42 @@
           <div class="mini-label">Common Mistakes</div>
           <h3>Avoid These</h3>
           <ul class="bullet-list">
-            <li>Treating <strong class="ap-term">biodiversity</strong> as only species richness — it has three levels, and evenness matters too.</li>
-            <li>Calling <strong class="ap-term">nutrient cycling</strong> a regulating service — it's a supporting service. Water purification is regulating.</li>
-            <li>Assuming <strong class="ap-term">keystone species</strong> are always top predators — they can be ecosystem engineers or critical mutualists.</li>
-            <li>Defining deserts by heat — deserts are defined by <strong class="ap-term">low precipitation</strong>, not temperature.</li>
-            <li>Saying tropical rainforest soil is <strong class="ap-term">nutrient-rich</strong> — most nutrients are stored in biomass, not soil.</li>
-            <li>Calling any introduced species "invasive" — <strong class="ap-term">invasive</strong> requires non-native + rapid spread + harm.</li>
-            <li>Calling <strong class="ap-term">biological control</strong> always safe — biocontrol agents can harm non-target species.</li>
-            <li>Confusing <strong class="ap-term">resilience</strong> (recovery speed) with <strong class="ap-term">resistance</strong> (magnitude of change).</li>
+            <li>Treating <strong class="ap-term">biodiversity</strong> as only species richness — it has three levels,
+              and evenness matters too.</li>
+            <li>Calling <strong class="ap-term">nutrient cycling</strong> a regulating service — it's a supporting
+              service. Water purification is regulating.</li>
+            <li>Assuming <strong class="ap-term">keystone species</strong> are always top predators — they can be
+              ecosystem engineers or critical mutualists.</li>
+            <li>Defining deserts by heat — deserts are defined by <strong class="ap-term">low precipitation</strong>,
+              not temperature.</li>
+            <li>Saying tropical rainforest soil is <strong class="ap-term">nutrient-rich</strong> — most nutrients are
+              stored in biomass, not soil.</li>
+            <li>Calling any introduced species "invasive" — <strong class="ap-term">invasive</strong> requires
+              non-native + rapid spread + harm.</li>
+            <li>Calling <strong class="ap-term">biological control</strong> always safe — biocontrol agents can harm
+              non-target species.</li>
+            <li>Confusing <strong class="ap-term">resilience</strong> (recovery speed) with <strong
+                class="ap-term">resistance</strong> (magnitude of change).</li>
           </ul>
         </article>
         <article class="exam-card feature-card accent-gold">
           <div class="mini-label">Study Order</div>
           <h3>Best Way to Review</h3>
           <ul class="bullet-list">
-            <li>Start with <strong>ecosystem services</strong>: learn all four categories with at least two examples each.</li>
-            <li>Master <strong>biodiversity levels</strong>: genetic (MVP, bottleneck), species (richness vs. evenness), ecosystem.</li>
-            <li>Study <strong>keystone and indicator species</strong>: know specific examples and the mechanism of impact.</li>
-            <li>Cover <strong>island biogeography</strong> and habitat fragmentation — apply it to forest patches, not just islands.</li>
-            <li>Learn <strong>terrestrial biomes and aquatic systems</strong> from climate graphs — temperature + precipitation.</li>
-            <li>Study <strong>ecological succession</strong> — primary vs. secondary, pioneer species, r vs. K strategists.</li>
-            <li>Finish with <strong>invasive species and disturbance</strong> — mechanisms, management trade-offs, and fire ecology.</li>
+            <li>Start with <strong>ecosystem services</strong>: learn all four categories with at least two examples
+              each.</li>
+            <li>Master <strong>biodiversity levels</strong>: genetic (MVP, bottleneck), species (richness vs. evenness),
+              ecosystem.</li>
+            <li>Study <strong>keystone and indicator species</strong>: know specific examples and the mechanism of
+              impact.</li>
+            <li>Cover <strong>island biogeography</strong> and habitat fragmentation — apply it to forest patches, not
+              just islands.</li>
+            <li>Learn <strong>terrestrial biomes and aquatic systems</strong> from climate graphs — temperature +
+              precipitation.</li>
+            <li>Study <strong>ecological succession</strong> — primary vs. secondary, pioneer species, r vs. K
+              strategists.</li>
+            <li>Finish with <strong>invasive species and disturbance</strong> — mechanisms, management trade-offs, and
+              fire ecology.</li>
           </ul>
         </article>
       </div>
@@ -817,19 +1517,28 @@
       <header class="page-header">
         <span class="unit-tag">Study Notes</span>
         <h2>Unit 2 Deep Dive</h2>
-        <p>Ecosystem Services · Biodiversity · Island Biogeography · Tolerance · Biomes · Aquatic · Succession · Invasive Species</p>
+        <p>Ecosystem Services · Biodiversity · Island Biogeography · Tolerance · Biomes · Aquatic · Succession ·
+          Invasive Species</p>
       </header>
       <div class="notes-shell">
         <aside class="notes-index">
           <div class="notes-index-title">Sections</div>
-          <button class="note-jump" type="button" data-note-target="n-services"><span>Ecosystem Services</span><span>01</span></button>
-          <button class="note-jump" type="button" data-note-target="n-biodiversity"><span>Biodiversity Levels</span><span>02</span></button>
-          <button class="note-jump" type="button" data-note-target="n-island"><span>Island Biogeography</span><span>03</span></button>
-          <button class="note-jump" type="button" data-note-target="n-tolerance"><span>Tolerance & Adaptation</span><span>04</span></button>
-          <button class="note-jump" type="button" data-note-target="n-biomes"><span>Terrestrial Biomes</span><span>05</span></button>
-          <button class="note-jump" type="button" data-note-target="n-aquatic"><span>Aquatic Biomes</span><span>06</span></button>
-          <button class="note-jump" type="button" data-note-target="n-succession"><span>Succession</span><span>07</span></button>
-          <button class="note-jump" type="button" data-note-target="n-invasive"><span>Invasive Species</span><span>08</span></button>
+          <button class="note-jump" type="button" data-note-target="n-services"><span>Ecosystem
+              Services</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-biodiversity"><span>Biodiversity
+              Levels</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-island"><span>Island
+              Biogeography</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-tolerance"><span>Tolerance &
+              Adaptation</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-biomes"><span>Terrestrial
+              Biomes</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-aquatic"><span>Aquatic
+              Biomes</span><span>06</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="n-succession"><span>Succession</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-invasive"><span>Invasive
+              Species</span><span>08</span></button>
         </aside>
 
         <div class="notes-stack">
@@ -839,35 +1548,55 @@
             <div class="mini-label">01 · Ecosystem Services & Why Biodiversity Matters</div>
             <h3>What Ecosystems Do for Free</h3>
             <div class="body-copy">
-              <p><strong class="ap-term">Ecosystem services</strong> are the benefits people obtain from ecosystems. Healthy ecosystems do work "for free" — when they are damaged, society often pays to replace those services with technology, which is usually more expensive and less effective.</p>
+              <p><strong class="ap-term">Ecosystem services</strong> are the benefits people obtain from ecosystems.
+                Healthy ecosystems do work "for free" — when they are damaged, society often pays to replace those
+                services with technology, which is usually more expensive and less effective.</p>
             </div>
             <h4>Four Categories of Ecosystem Services</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>Provisioning Services</strong>
-                <div class="body-copy">Tangible goods: food (fish, crops), fresh water, timber, medicinal resources, fiber (wool), meat, milk. These are the most visible and easily valued services.</div>
+                <div class="body-copy">Tangible goods: food (fish, crops), fresh water, timber, medicinal resources,
+                  fiber (wool), meat, milk. These are the most visible and easily valued services.</div>
               </div>
               <div class="mini-note"><strong>Regulating Services</strong>
-                <div class="body-copy">Natural processes that regulate conditions: water purification, flood control, climate regulation (carbon storage), erosion control, disease regulation, <strong class="ap-term">natural pest control</strong> — predators keep pest populations in balance, reducing pesticide need.</div>
+                <div class="body-copy">Natural processes that regulate conditions: water purification, flood control,
+                  climate regulation (carbon storage), erosion control, disease regulation, <strong
+                    class="ap-term">natural pest control</strong> — predators keep pest populations in balance, reducing
+                  pesticide need.</div>
               </div>
               <div class="mini-note"><strong>Supporting Services</strong>
-                <div class="body-copy">Underlying processes that make other services possible: <strong class="ap-term">nutrient cycling</strong>, soil formation, primary production (photosynthesis). If these collapse, provisioning and regulating services collapse too. A common trap: nutrient cycling is supporting, not regulating.</div>
+                <div class="body-copy">Underlying processes that make other services possible: <strong
+                    class="ap-term">nutrient cycling</strong>, soil formation, primary production (photosynthesis). If
+                  these collapse, provisioning and regulating services collapse too. A common trap: nutrient cycling is
+                  supporting, not regulating.</div>
               </div>
               <div class="mini-note"><strong>Cultural Services</strong>
-                <div class="body-copy">Nonmaterial benefits: recreation, aesthetic value, spiritual or educational value. Sustainable fisheries, recreational fishing, ecotourism. These are real economic values even if harder to quantify.</div>
+                <div class="body-copy">Nonmaterial benefits: recreation, aesthetic value, spiritual or educational
+                  value. Sustainable fisheries, recreational fishing, ecotourism. These are real economic values even if
+                  harder to quantify.</div>
               </div>
             </div>
             <h4>Biodiversity → Ecosystem Stability</h4>
             <div class="body-copy">
-              <p>Biodiversity supports ecosystem services because different organisms play different ecological roles. Systems with greater functional variety tend to maintain productivity under changing conditions, resist disturbances (drought, pests, storms), and recover faster afterward. Think of biodiversity as a diversified team: if roles are shared across many species, losing one doesn't collapse the whole system.</p>
-              <p><strong class="ap-term">Pollination</strong> example: Many flowering plants depend on animal pollinators (insects, birds, bats). Pollinator diversity stabilizes pollination — if one pollinator declines due to disease or pesticide exposure, others can fill the gap. Assuming "it's just bees" is a common mistake.</p>
-              <p><strong class="ap-term">Wetlands</strong> act as natural water filters: water slows, sediments settle, plants and microbes absorb nutrients and pollutants. Remove wetlands → need engineered water treatment + greater flood vulnerability.</p>
+              <p>Biodiversity supports ecosystem services because different organisms play different ecological roles.
+                Systems with greater functional variety tend to maintain productivity under changing conditions, resist
+                disturbances (drought, pests, storms), and recover faster afterward. Think of biodiversity as a
+                diversified team: if roles are shared across many species, losing one doesn't collapse the whole system.
+              </p>
+              <p><strong class="ap-term">Pollination</strong> example: Many flowering plants depend on animal
+                pollinators (insects, birds, bats). Pollinator diversity stabilizes pollination — if one pollinator
+                declines due to disease or pesticide exposure, others can fill the gap. Assuming "it's just bees" is a
+                common mistake.</p>
+              <p><strong class="ap-term">Wetlands</strong> act as natural water filters: water slows, sediments settle,
+                plants and microbes absorb nutrients and pollutants. Remove wetlands → need engineered water treatment +
+                greater flood vulnerability.</p>
             </div>
             <div class="code-block">Trade-off chain (FRQ structure):
-  Clearing a forest
-  → Short-term: ↑ provisioning (timber, farmland)
-  → Long-term: ↓ regulating (carbon storage, flood control)
-            ↓ supporting (soil formation, nutrient cycling)
-  → Net: ecosystem services lost > economic gain from clearing</div>
+              Clearing a forest
+              → Short-term: ↑ provisioning (timber, farmland)
+              → Long-term: ↓ regulating (carbon storage, flood control)
+              ↓ supporting (soil formation, nutrient cycling)
+              → Net: ecosystem services lost > economic gain from clearing</div>
           </article>
 
           <!-- 02 -->
@@ -876,39 +1605,106 @@
             <h3>Three Levels of Biodiversity</h3>
             <div class="note-grid">
               <div class="mini-note"><strong>Genetic Diversity</strong>
-                <div class="body-copy">Variation in DNA within a species. Larger gene pools increase the chance some individuals survive disease, climate shifts, etc. <strong class="ap-term">Population bottleneck</strong>: catastrophic reduction shrinks the gene pool, increasing inbreeding risk. <strong class="ap-term">MVP</strong>: minimum viable population — smallest size at which a population can persist without extinction risk from random events.</div>
+                <div class="body-copy">Variation in DNA within a species. Larger gene pools increase the chance some
+                  individuals survive disease, climate shifts, etc. <strong class="ap-term">Population
+                    bottleneck</strong>: catastrophic reduction shrinks the gene pool, increasing inbreeding risk.
+                  <strong class="ap-term">MVP</strong>: minimum viable population — smallest size at which a population
+                  can persist without extinction risk from random events.</div>
               </div>
               <div class="mini-note"><strong>Species Diversity</strong>
-                <div class="body-copy"><strong class="ap-term">Species richness</strong>: number of different species in an area. <strong class="ap-term">Species evenness</strong>: how evenly individuals are distributed among species. Both matter — a community dominated by one species has low diversity even with many species present.</div>
+                <div class="body-copy"><strong class="ap-term">Species richness</strong>: number of different species in
+                  an area. <strong class="ap-term">Species evenness</strong>: how evenly individuals are distributed
+                  among species. Both matter — a community dominated by one species has low diversity even with many
+                  species present.</div>
               </div>
               <div class="mini-note"><strong>Ecosystem Diversity</strong>
-                <div class="body-copy">Range of habitats/ecosystems in a specific area. More ecosystem types support more species and provide a broader set of ecosystem services. Confusing this with species diversity is a frequent exam error.</div>
+                <div class="body-copy">Range of habitats/ecosystems in a specific area. More ecosystem types support
+                  more species and provide a broader set of ecosystem services. Confusing this with species diversity is
+                  a frequent exam error.</div>
               </div>
             </div>
             <h4>Richness vs. Evenness: Classic Exam Scenario</h4>
             <div class="code-block">Community A: 100 individuals, 10 species → 91 from one species
-Community B: 100 individuals, 10 species → ~10 each
+              Community B: 100 individuals, 10 species → ~10 each
 
-Same richness. Community B has HIGHER diversity because greater evenness.
-→ Community A is more vulnerable if the dominant species is harmed.</div>
+              Same richness. Community B has HIGHER diversity because greater evenness.
+              → Community A is more vulnerable if the dominant species is harmed.</div>
             <h4>Key Species Roles</h4>
             <table class="compare-table">
-              <tr><th>Role</th><th>Definition</th><th>Examples</th></tr>
-              <tr><td><strong class="ap-term">Keystone Species</strong></td><td>Disproportionately large impact on ecosystem structure relative to its abundance. Removing one can trigger cascades and extinctions.</td><td>Sea stars (prey on mussels/urchins), prairie dogs (aerate soil, provide burrows), grizzly bears (nutrient transfer from ocean to forest)</td></tr>
-              <tr><td><strong class="ap-term">Indicator Species</strong></td><td>Organism whose presence, absence, or abundance reflects a specific environmental condition and indicates ecosystem health.</td><td>Caddisflies/mayflies/stoneflies → high dissolved oxygen; lichens → air quality; sludge worms → oxygen-poor water; mosses → acidic soil</td></tr>
-              <tr><td><strong class="ap-term">Specialist Species</strong></td><td>Require unique resources; limited diets; specific habitat needs. First to disappear with habitat loss.</td><td>Giant panda (bamboo only), koala (eucalyptus only)</td></tr>
-              <tr><td><strong class="ap-term">Generalist Species</strong></td><td>Tolerate many conditions; varied diets; survive in many habitat types. Persist and sometimes thrive when disturbance removes specialists.</td><td>Raccoons, crows, cockroaches, humans</td></tr>
+              <tr>
+                <th>Role</th>
+                <th>Definition</th>
+                <th>Examples</th>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Keystone Species</strong></td>
+                <td>Disproportionately large impact on ecosystem structure relative to its abundance. Removing one can
+                  trigger cascades and extinctions.</td>
+                <td>Sea stars (prey on mussels/urchins), prairie dogs (aerate soil, provide burrows), grizzly bears
+                  (nutrient transfer from ocean to forest)</td>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Indicator Species</strong></td>
+                <td>Organism whose presence, absence, or abundance reflects a specific environmental condition and
+                  indicates ecosystem health.</td>
+                <td>Caddisflies/mayflies/stoneflies → high dissolved oxygen; lichens → air quality; sludge worms →
+                  oxygen-poor water; mosses → acidic soil</td>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Specialist Species</strong></td>
+                <td>Require unique resources; limited diets; specific habitat needs. First to disappear with habitat
+                  loss.</td>
+                <td>Giant panda (bamboo only), koala (eucalyptus only)</td>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Generalist Species</strong></td>
+                <td>Tolerate many conditions; varied diets; survive in many habitat types. Persist and sometimes thrive
+                  when disturbance removes specialists.</td>
+                <td>Raccoons, crows, cockroaches, humans</td>
+              </tr>
             </table>
             <h4>Human Activities That Reduce Biodiversity</h4>
             <table class="compare-table">
-              <tr><th>Activity</th><th>Mechanism</th><th>Remediation</th></tr>
-              <tr><td>Burning fossil fuels</td><td>Acid rain changes water pH; many species intolerant</td><td>Carbon taxes, scrubbers, renewable energy</td></tr>
-              <tr><td>Deforestation</td><td>Reduces habitat quality and quantity for flora/fauna</td><td>Require replanting; selective cutting</td></tr>
-              <tr><td>Industrial agriculture</td><td>Monoculture reduces habitat diversity, genetic and species diversity</td><td>Crop rotation, intercropping, polyculture, polyvarietal cultivation</td></tr>
-              <tr><td>Overfishing</td><td>Harms keystone species; threatens lower-trophic organisms, disrupting niches</td><td>International treaties, quotas, enforce Endangered Species Act</td></tr>
-              <tr><td>Pesticide use</td><td>Kills beneficial organisms indiscriminately</td><td>Integrated pest management (IPM)</td></tr>
-              <tr><td>GMO crop uniformity</td><td>Genetic uniformity reduces resilience to environmental change</td><td>Require labeling, sterile GMO crops, vigorous testing</td></tr>
-              <tr><td>Water pollution</td><td>High nutrients or low dissolved oxygen lethal to sensitive species</td><td>Secondary/tertiary water treatment, recycled water</td></tr>
+              <tr>
+                <th>Activity</th>
+                <th>Mechanism</th>
+                <th>Remediation</th>
+              </tr>
+              <tr>
+                <td>Burning fossil fuels</td>
+                <td>Acid rain changes water pH; many species intolerant</td>
+                <td>Carbon taxes, scrubbers, renewable energy</td>
+              </tr>
+              <tr>
+                <td>Deforestation</td>
+                <td>Reduces habitat quality and quantity for flora/fauna</td>
+                <td>Require replanting; selective cutting</td>
+              </tr>
+              <tr>
+                <td>Industrial agriculture</td>
+                <td>Monoculture reduces habitat diversity, genetic and species diversity</td>
+                <td>Crop rotation, intercropping, polyculture, polyvarietal cultivation</td>
+              </tr>
+              <tr>
+                <td>Overfishing</td>
+                <td>Harms keystone species; threatens lower-trophic organisms, disrupting niches</td>
+                <td>International treaties, quotas, enforce Endangered Species Act</td>
+              </tr>
+              <tr>
+                <td>Pesticide use</td>
+                <td>Kills beneficial organisms indiscriminately</td>
+                <td>Integrated pest management (IPM)</td>
+              </tr>
+              <tr>
+                <td>GMO crop uniformity</td>
+                <td>Genetic uniformity reduces resilience to environmental change</td>
+                <td>Require labeling, sterile GMO crops, vigorous testing</td>
+              </tr>
+              <tr>
+                <td>Water pollution</td>
+                <td>High nutrients or low dissolved oxygen lethal to sensitive species</td>
+                <td>Secondary/tertiary water treatment, recycled water</td>
+              </tr>
             </table>
           </article>
 
@@ -917,27 +1713,37 @@ Same richness. Community B has HIGHER diversity because greater evenness.
             <div class="mini-label">03 · Island Biogeography & Habitat Fragmentation</div>
             <h3>Islands Are Anywhere Habitat Is Isolated</h3>
             <div class="body-copy">
-              <p>In APES, an <strong class="ap-term">island</strong> can be any suitable habitat surrounded by unsuitable habitat — a forest fragment surrounded by farmland functions as an island for forest species. <strong class="ap-term">Island biogeography theory</strong> predicts that species richness on an island reflects a balance between <strong class="ap-term">immigration</strong> (new species arriving) and <strong class="ap-term">extinction</strong> (species disappearing).</p>
+              <p>In APES, an <strong class="ap-term">island</strong> can be any suitable habitat surrounded by
+                unsuitable habitat — a forest fragment surrounded by farmland functions as an island for forest species.
+                <strong class="ap-term">Island biogeography theory</strong> predicts that species richness on an island
+                reflects a balance between <strong class="ap-term">immigration</strong> (new species arriving) and
+                <strong class="ap-term">extinction</strong> (species disappearing).</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Island Size Effect</strong>
-                <div class="body-copy">Larger islands → more habitats, larger populations, lower extinction rates, easier target for migrants → higher species richness.</div>
+                <div class="body-copy">Larger islands → more habitats, larger populations, lower extinction rates,
+                  easier target for migrants → higher species richness.</div>
               </div>
               <div class="mini-note"><strong>Isolation Effect</strong>
-                <div class="body-copy">Closer islands → higher immigration rates → higher species richness. Distance = barrier. Fragmented habitats isolated by roads or fields behave like distant islands.</div>
+                <div class="body-copy">Closer islands → higher immigration rates → higher species richness. Distance =
+                  barrier. Fragmented habitats isolated by roads or fields behave like distant islands.</div>
               </div>
               <div class="mini-note"><strong>Habitat Fragmentation</strong>
-                <div class="body-copy">Habitat broken into pieces by development, logging, roads. Reduces total area, increases isolation between patches (less immigration, more local extinction), and increases edge habitat proportion.</div>
+                <div class="body-copy">Habitat broken into pieces by development, logging, roads. Reduces total area,
+                  increases isolation between patches (less immigration, more local extinction), and increases edge
+                  habitat proportion.</div>
               </div>
               <div class="mini-note"><strong>Edge Effects</strong>
-                <div class="body-copy">Conditions near habitat boundaries differ: more light, wind, temperature fluctuation, easier access for predators and invasive species. Interior specialists decline; edge-adapted and invasive species may expand.</div>
+                <div class="body-copy">Conditions near habitat boundaries differ: more light, wind, temperature
+                  fluctuation, easier access for predators and invasive species. Interior specialists decline;
+                  edge-adapted and invasive species may expand.</div>
               </div>
             </div>
             <div class="code-block">FRQ Application: Forest reserve design
-  Larger reserve → lower extinction risk (more habitat, larger populations)
-  Connected reserves (corridors) → higher immigration → more resilience
-  More edge relative to core → ↑ invasive species, ↑ predation on nest-nesters
-  → Interior specialist birds (neotropical migrants) especially vulnerable</div>
+              Larger reserve → lower extinction risk (more habitat, larger populations)
+              Connected reserves (corridors) → higher immigration → more resilience
+              More edge relative to core → ↑ invasive species, ↑ predation on nest-nesters
+              → Interior specialist birds (neotropical migrants) especially vulnerable</div>
           </article>
 
           <!-- 04 -->
@@ -945,20 +1751,30 @@ Same richness. Community B has HIGHER diversity because greater evenness.
             <div class="mini-label">04 · Ecological Tolerance & Adaptations</div>
             <h3>Law of Tolerance & How Species Adjust</h3>
             <div class="body-copy">
-              <p>The <strong class="ap-term">Law of Tolerance</strong> states that the existence, abundance, and distribution of species depend on each species' tolerance level to physical and chemical factors. Each organism has a minimum, maximum, and optimum range for each factor. Outside the range, survival and reproduction decline. <strong class="ap-term">Limiting factors</strong> are those closest to tolerance extremes.</p>
+              <p>The <strong class="ap-term">Law of Tolerance</strong> states that the existence, abundance, and
+                distribution of species depend on each species' tolerance level to physical and chemical factors. Each
+                organism has a minimum, maximum, and optimum range for each factor. Outside the range, survival and
+                reproduction decline. <strong class="ap-term">Limiting factors</strong> are those closest to tolerance
+                extremes.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Behavioral Adaptations</strong>
-                <div class="body-copy">Instincts, mating behavior, vocalizations, migration to avoid extreme temperatures. These are often the most flexible and fastest responses.</div>
+                <div class="body-copy">Instincts, mating behavior, vocalizations, migration to avoid extreme
+                  temperatures. These are often the most flexible and fastest responses.</div>
               </div>
               <div class="mini-note"><strong>Physiological Adaptations</strong>
-                <div class="body-copy">Internal temperature regulation (ectotherm vs. endotherm), digestive enzymes, camouflage coloration, altered metabolic rate in extremes.</div>
+                <div class="body-copy">Internal temperature regulation (ectotherm vs. endotherm), digestive enzymes,
+                  camouflage coloration, altered metabolic rate in extremes.</div>
               </div>
               <div class="mini-note"><strong>Structural Adaptations</strong>
-                <div class="body-copy">Physical features: thick fur, waxy leaf coatings, spines, root depth, conical tree shapes that shed snow, succulents for water storage.</div>
+                <div class="body-copy">Physical features: thick fur, waxy leaf coatings, spines, root depth, conical
+                  tree shapes that shed snow, succulents for water storage.</div>
               </div>
               <div class="mini-note"><strong>Short-term vs. Long-term</strong>
-                <div class="body-copy"><strong class="ap-term">Short-term</strong>: temporary, not inherited, no DNA change, not evolutionary. <strong class="ap-term">Long-term</strong>: involves DNA changes over generations via natural selection. Calling any short-term adjustment an "evolutionary adaptation" is a grading error.</div>
+                <div class="body-copy"><strong class="ap-term">Short-term</strong>: temporary, not inherited, no DNA
+                  change, not evolutionary. <strong class="ap-term">Long-term</strong>: involves DNA changes over
+                  generations via natural selection. Calling any short-term adjustment an "evolutionary adaptation" is a
+                  grading error.</div>
               </div>
             </div>
           </article>
@@ -968,35 +1784,55 @@ Same richness. Community B has HIGHER diversity because greater evenness.
             <div class="mini-label">05 · Terrestrial Biomes</div>
             <h3>Temperature + Precipitation → Biome</h3>
             <div class="body-copy">
-              <p>A <strong class="ap-term">biome</strong> is a large ecological region characterized by climate and typical plant/animal communities. The two organizing variables are <strong class="ap-term">temperature</strong> and <strong class="ap-term">precipitation</strong>, including their seasonality. Focus on: water availability, growing season length, and disturbance patterns (fire, frozen soil). Biomes blend through <strong class="ap-term">ecotones</strong> — transition zones that can have high biodiversity from both neighboring regions.</p>
+              <p>A <strong class="ap-term">biome</strong> is a large ecological region characterized by climate and
+                typical plant/animal communities. The two organizing variables are <strong
+                  class="ap-term">temperature</strong> and <strong class="ap-term">precipitation</strong>, including
+                their seasonality. Focus on: water availability, growing season length, and disturbance patterns (fire,
+                frozen soil). Biomes blend through <strong class="ap-term">ecotones</strong> — transition zones that can
+                have high biodiversity from both neighboring regions.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Tropical Rainforest</strong>
-                <div class="body-copy">Warm year-round; high precipitation. Highest species richness. Soils often nutrient-poor — nutrients are in biomass, not soil. Rapid decomposition. Deforestation here has long-term productivity consequences.</div>
+                <div class="body-copy">Warm year-round; high precipitation. Highest species richness. Soils often
+                  nutrient-poor — nutrients are in biomass, not soil. Rapid decomposition. Deforestation here has
+                  long-term productivity consequences.</div>
               </div>
               <div class="mini-note"><strong>Tropical Seasonal / Savanna</strong>
-                <div class="body-copy">Warm with distinct wet and dry seasons. Savanna = grasses with scattered trees, shaped by seasonal rain, fire, and grazing.</div>
+                <div class="body-copy">Warm with distinct wet and dry seasons. Savanna = grasses with scattered trees,
+                  shaped by seasonal rain, fire, and grazing.</div>
               </div>
               <div class="mini-note"><strong>Subtropical Desert</strong>
-                <div class="body-copy">Defined by low precipitation (not temperature). Hot or cold. Adaptations: succulents (water storage), nocturnal animals, reduced leaf area, CAM photosynthesis, deep/shallow root systems, waxy coatings.</div>
+                <div class="body-copy">Defined by low precipitation (not temperature). Hot or cold. Adaptations:
+                  succulents (water storage), nocturnal animals, reduced leaf area, CAM photosynthesis, deep/shallow
+                  root systems, waxy coatings.</div>
               </div>
               <div class="mini-note"><strong>Woodland / Chaparral</strong>
-                <div class="body-copy">Mild wet winters, hot dry summers. Fire is a common natural disturbance. Many plants resprout after fire or have seeds that germinate after heat/smoke cues. Fire suppression → fuel buildup → hotter fires.</div>
+                <div class="body-copy">Mild wet winters, hot dry summers. Fire is a common natural disturbance. Many
+                  plants resprout after fire or have seeds that germinate after heat/smoke cues. Fire suppression → fuel
+                  buildup → hotter fires.</div>
               </div>
               <div class="mini-note"><strong>Temperate Grassland</strong>
-                <div class="body-copy">Moderate precipitation, not enough for trees. Very fertile soils (deep roots, organic matter). Fire and grazing maintain grass dominance. Most converted to agriculture globally.</div>
+                <div class="body-copy">Moderate precipitation, not enough for trees. Very fertile soils (deep roots,
+                  organic matter). Fire and grazing maintain grass dominance. Most converted to agriculture globally.
+                </div>
               </div>
               <div class="mini-note"><strong>Temperate Deciduous Forest</strong>
-                <div class="body-copy">Warm summers, cold winters, moderate precipitation. Trees drop leaves to reduce water loss. Fertile soils from leaf litter. Often heavily modified by human land use.</div>
+                <div class="body-copy">Warm summers, cold winters, moderate precipitation. Trees drop leaves to reduce
+                  water loss. Fertile soils from leaf litter. Often heavily modified by human land use.</div>
               </div>
               <div class="mini-note"><strong>Temperate Rainforest</strong>
-                <div class="body-copy">Cooler than tropical but high precipitation. High biomass, significant carbon storage. Dense vegetation, epiphytes common.</div>
+                <div class="body-copy">Cooler than tropical but high precipitation. High biomass, significant carbon
+                  storage. Dense vegetation, epiphytes common.</div>
               </div>
               <div class="mini-note"><strong>Boreal Forest (Taiga)</strong>
-                <div class="body-copy">Largest terrestrial biome. Long cold winters, short summers. Evergreen conifers. Slow decomposition. Stores massive carbon. Needle leaves reduce water loss; conical shapes shed snow.</div>
+                <div class="body-copy">Largest terrestrial biome. Long cold winters, short summers. Evergreen conifers.
+                  Slow decomposition. Stores massive carbon. Needle leaves reduce water loss; conical shapes shed snow.
+                </div>
               </div>
               <div class="mini-note"><strong>Tundra</strong>
-                <div class="body-copy">Cold, low precipitation, short growing season. <strong class="ap-term">Permafrost</strong> limits roots and slows decomposition, affecting nutrient cycling. Low NPP. Warming → permafrost thaw → methane release (positive feedback).</div>
+                <div class="body-copy">Cold, low precipitation, short growing season. <strong
+                    class="ap-term">Permafrost</strong> limits roots and slows decomposition, affecting nutrient
+                  cycling. Low NPP. Warming → permafrost thaw → methane release (positive feedback).</div>
               </div>
             </div>
           </article>
@@ -1006,43 +1842,61 @@ Same richness. Community B has HIGHER diversity because greater evenness.
             <div class="mini-label">06 · Aquatic Biomes</div>
             <h3>Salinity · Depth · Light · Nutrients</h3>
             <div class="body-copy">
-              <p>Aquatic biomes are organized by <strong class="ap-term">salinity</strong>, <strong class="ap-term">water depth</strong>, <strong class="ap-term">light availability</strong>, <strong class="ap-term">nutrient levels</strong>, and <strong class="ap-term">water movement</strong>. The <strong class="ap-term">photic zone</strong> has enough light for photosynthesis; the <strong class="ap-term">aphotic zone</strong> does not. Light strongly shapes aquatic productivity since food webs begin with photosynthetic producers.</p>
+              <p>Aquatic biomes are organized by <strong class="ap-term">salinity</strong>, <strong
+                  class="ap-term">water depth</strong>, <strong class="ap-term">light availability</strong>, <strong
+                  class="ap-term">nutrient levels</strong>, and <strong class="ap-term">water movement</strong>. The
+                <strong class="ap-term">photic zone</strong> has enough light for photosynthesis; the <strong
+                  class="ap-term">aphotic zone</strong> does not. Light strongly shapes aquatic productivity since food
+                webs begin with photosynthetic producers.</p>
             </div>
             <h4>Freshwater Systems</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>Streams & Rivers</strong>
-                <div class="body-copy">Upstream: colder, clearer, faster, higher dissolved oxygen. Downstream: warmer, slower, more sediments and nutrients. Upstream land use affects communities far downstream — important for FRQs on pollution.</div>
+                <div class="body-copy">Upstream: colder, clearer, faster, higher dissolved oxygen. Downstream: warmer,
+                  slower, more sediments and nutrients. Upstream land use affects communities far downstream — important
+                  for FRQs on pollution.</div>
               </div>
               <div class="mini-note"><strong>Lake Zones</strong>
-                <div class="body-copy">Littoral (shallow, rooted plants) → Limnetic (open water, plankton) → Profundal (deep, low light, decomposition dominates). Thermal stratification affects oxygen distribution and nutrient cycling.</div>
+                <div class="body-copy">Littoral (shallow, rooted plants) → Limnetic (open water, plankton) → Profundal
+                  (deep, low light, decomposition dominates). Thermal stratification affects oxygen distribution and
+                  nutrient cycling.</div>
               </div>
               <div class="mini-note"><strong>Freshwater Wetlands</strong>
-                <div class="body-copy">Marshes and swamps. Store water, mitigate flooding, provide habitat, filter water. High plant productivity. Degraded by agriculture, drainage, and development.</div>
+                <div class="body-copy">Marshes and swamps. Store water, mitigate flooding, provide habitat, filter
+                  water. High plant productivity. Degraded by agriculture, drainage, and development.</div>
               </div>
             </div>
             <h4>Marine & Coastal Systems</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>Estuaries</strong>
-                <div class="body-copy">Freshwater meets saltwater → brackish, highly variable. Highly productive from river nutrients and shallow well-lit water. Nurseries for fish/shellfish. Buffer storms. Vulnerable to nutrient runoff.</div>
+                <div class="body-copy">Freshwater meets saltwater → brackish, highly variable. Highly productive from
+                  river nutrients and shallow well-lit water. Nurseries for fish/shellfish. Buffer storms. Vulnerable to
+                  nutrient runoff.</div>
               </div>
               <div class="mini-note"><strong>Intertidal Zone</strong>
-                <div class="body-copy">Exposed at low tide, submerged at high tide. Organisms tolerate drying, wave action, temperature swings, and salinity changes. High biodiversity despite physical stress.</div>
+                <div class="body-copy">Exposed at low tide, submerged at high tide. Organisms tolerate drying, wave
+                  action, temperature swings, and salinity changes. High biodiversity despite physical stress.</div>
               </div>
               <div class="mini-note"><strong>Coral Reefs</strong>
-                <div class="body-copy">Warm, shallow, clear water. Highest marine biodiversity. Corals + zooxanthellae (photosynthetic algae). Need clear water for light — excess nutrients fuel algal growth that harms reefs. Sensitive to temperature (bleaching) and acidification.</div>
+                <div class="body-copy">Warm, shallow, clear water. Highest marine biodiversity. Corals + zooxanthellae
+                  (photosynthetic algae). Need clear water for light — excess nutrients fuel algal growth that harms
+                  reefs. Sensitive to temperature (bleaching) and acidification.</div>
               </div>
               <div class="mini-note"><strong>Open Ocean</strong>
-                <div class="body-copy">Covers most of Earth's surface. Often nutrient-limited at surface → low productivity. Productivity concentrated where nutrients are supplied: <strong class="ap-term">upwelling</strong> zones (cold nutrient-rich water rises) and coastal delivery.</div>
+                <div class="body-copy">Covers most of Earth's surface. Often nutrient-limited at surface → low
+                  productivity. Productivity concentrated where nutrients are supplied: <strong
+                    class="ap-term">upwelling</strong> zones (cold nutrient-rich water rises) and coastal delivery.
+                </div>
               </div>
             </div>
             <h4>Eutrophication</h4>
             <div class="code-block">Full FRQ chain (never stop early):
-  Fertilizer runoff (N, P) → enters water body
-  → Algal bloom (excess nutrients fuel rapid algal growth)
-  → Algae die → decomposers break down dead algae
-  → Decomposers consume dissolved oxygen → hypoxia / dead zone
-  → Fish kills, loss of aquatic biodiversity
-  → Reduced ecosystem services (fisheries, water recreation, water quality)</div>
+              Fertilizer runoff (N, P) → enters water body
+              → Algal bloom (excess nutrients fuel rapid algal growth)
+              → Algae die → decomposers break down dead algae
+              → Decomposers consume dissolved oxygen → hypoxia / dead zone
+              → Fish kills, loss of aquatic biodiversity
+              → Reduced ecosystem services (fisheries, water recreation, water quality)</div>
           </article>
 
           <!-- 07 -->
@@ -1050,41 +1904,67 @@ Same richness. Community B has HIGHER diversity because greater evenness.
             <div class="mini-label">07 · Ecological Succession & Disturbance</div>
             <h3>How Communities Change Through Time</h3>
             <div class="body-copy">
-              <p><strong class="ap-term">Ecological succession</strong> is the gradual, directional process of ecosystem development as community composition changes through time, often after disturbance. The key distinction on exams is whether <strong class="ap-term">soil is present</strong>.</p>
+              <p><strong class="ap-term">Ecological succession</strong> is the gradual, directional process of ecosystem
+                development as community composition changes through time, often after disturbance. The key distinction
+                on exams is whether <strong class="ap-term">soil is present</strong>.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Primary Succession</strong>
-                <div class="body-copy">Starts on barren areas with <em>no soil</em> (new volcanic rock, land exposed by retreating glaciers). Pioneer species (lichens, mosses) break down rock, add organic matter, slowly form soil. Very slow: 1000+ years. Soil must develop before other organisms can colonize.</div>
+                <div class="body-copy">Starts on barren areas with <em>no soil</em> (new volcanic rock, land exposed by
+                  retreating glaciers). Pioneer species (lichens, mosses) break down rock, add organic matter, slowly
+                  form soil. Very slow: 1000+ years. Soil must develop before other organisms can colonize.</div>
               </div>
               <div class="mini-note"><strong>Secondary Succession</strong>
-                <div class="body-copy">Starts after disturbance that removes organisms but <em>leaves soil intact</em> (fire, storms, abandoned farmland). Faster (50–200 years) because soil, seeds, roots, and nutrients remain. Fast-growing grasses first, then shrubs, then trees.</div>
+                <div class="body-copy">Starts after disturbance that removes organisms but <em>leaves soil intact</em>
+                  (fire, storms, abandoned farmland). Faster (50–200 years) because soil, seeds, roots, and nutrients
+                  remain. Fast-growing grasses first, then shrubs, then trees.</div>
               </div>
               <div class="mini-note"><strong>Pioneer Species</strong>
-                <div class="body-copy">Early successional organisms; often <strong class="ap-term">r-strategists</strong>: rapid maturity, short-lived, high population size, niche generalists. They modify conditions to allow later species to establish (<strong class="ap-term">facilitation</strong>).</div>
+                <div class="body-copy">Early successional organisms; often <strong
+                    class="ap-term">r-strategists</strong>: rapid maturity, short-lived, high population size, niche
+                  generalists. They modify conditions to allow later species to establish (<strong
+                    class="ap-term">facilitation</strong>).</div>
               </div>
               <div class="mini-note"><strong>Late Succession / K-strategists</strong>
-                <div class="body-copy">Slow maturity, long-lived, lower population size, niche specialists, greater biodiversity. Late-stage communities have higher biomass, more complex nutrient cycling, and greater ecosystem stability.</div>
+                <div class="body-copy">Slow maturity, long-lived, lower population size, niche specialists, greater
+                  biodiversity. Late-stage communities have higher biomass, more complex nutrient cycling, and greater
+                  ecosystem stability.</div>
               </div>
               <div class="mini-note"><strong>Resistance vs. Resilience</strong>
-                <div class="body-copy"><strong class="ap-term">Resistance</strong>: how much an ecosystem changes when disturbed. <strong class="ap-term">Resilience</strong>: how quickly it returns to prior state. Biodiversity supports resilience — if one species declines, others performing similar roles can partially compensate.</div>
+                <div class="body-copy"><strong class="ap-term">Resistance</strong>: how much an ecosystem changes when
+                  disturbed. <strong class="ap-term">Resilience</strong>: how quickly it returns to prior state.
+                  Biodiversity supports resilience — if one species declines, others performing similar roles can
+                  partially compensate.</div>
               </div>
               <div class="mini-note"><strong>Species Interactions in Succession</strong>
-                <div class="body-copy"><strong class="ap-term">Facilitation</strong>: one species modifies environment to benefit another. <strong class="ap-term">Inhibition</strong>: one species modifies environment unfavorably for another. <strong class="ap-term">Tolerance</strong>: species are not affected by others' presence.</div>
+                <div class="body-copy"><strong class="ap-term">Facilitation</strong>: one species modifies environment
+                  to benefit another. <strong class="ap-term">Inhibition</strong>: one species modifies environment
+                  unfavorably for another. <strong class="ap-term">Tolerance</strong>: species are not affected by
+                  others' presence.</div>
               </div>
             </div>
             <h4>Natural Disturbances: Not Always Harmful</h4>
             <div class="note-grid">
               <div class="mini-note"><strong>Wildfires</strong>
-                <div class="body-copy">Kill wildlife and remove vegetation → erosion risk. But also: clear dead vegetation, increase light for survivors, ash adds nutrients. Some plants require fire. Fire suppression allows fuel buildup → hotter, more destructive fires later.</div>
+                <div class="body-copy">Kill wildlife and remove vegetation → erosion risk. But also: clear dead
+                  vegetation, increase light for survivors, ash adds nutrients. Some plants require fire. Fire
+                  suppression allows fuel buildup → hotter, more destructive fires later.</div>
               </div>
               <div class="mini-note"><strong>Flooding</strong>
-                <div class="body-copy">Kills plants (roots need oxygen), destroys burrows/nests. But: floodplain species are often adapted; floods deposit nutrient-rich sediment along banks. Increases surface runoff and nutrient transport.</div>
+                <div class="body-copy">Kills plants (roots need oxygen), destroys burrows/nests. But: floodplain species
+                  are often adapted; floods deposit nutrient-rich sediment along banks. Increases surface runoff and
+                  nutrient transport.</div>
               </div>
               <div class="mini-note"><strong>Volcanic Eruptions</strong>
-                <div class="body-copy">Remove vegetation, expose soil to erosion. But: over time, volcanic rock weathers into rich soils. Volcanic sulfur gases form atmospheric droplets that cool the troposphere ~2–3°C for years.</div>
+                <div class="body-copy">Remove vegetation, expose soil to erosion. But: over time, volcanic rock weathers
+                  into rich soils. Volcanic sulfur gases form atmospheric droplets that cool the troposphere ~2–3°C for
+                  years.</div>
               </div>
               <div class="mini-note"><strong>Process Timescales</strong>
-                <div class="body-copy"><strong class="ap-term">Episodic</strong>: irregular intervals (El Niño/La Niña). <strong class="ap-term">Periodic</strong>: repeated intervals (tides). <strong class="ap-term">Random</strong>: no pattern (meteorite impacts). Scale and pattern affect which species adapt and how ecosystems recover.</div>
+                <div class="body-copy"><strong class="ap-term">Episodic</strong>: irregular intervals (El Niño/La Niña).
+                  <strong class="ap-term">Periodic</strong>: repeated intervals (tides). <strong
+                    class="ap-term">Random</strong>: no pattern (meteorite impacts). Scale and pattern affect which
+                  species adapt and how ecosystems recover.</div>
               </div>
             </div>
           </article>
@@ -1094,29 +1974,61 @@ Same richness. Community B has HIGHER diversity because greater evenness.
             <div class="mini-label">08 · Invasive Species</div>
             <h3>Why Invaders Win & How to Stop Them</h3>
             <div class="body-copy">
-              <p>A species is <strong class="ap-term">invasive</strong> when it is: (1) non-native, (2) spreads rapidly, and (3) causes harm (ecological, economic, or health). Not all introduced species become invasive — "invasive" requires harmful spread. Invasive species are a major driver of biodiversity loss, especially combined with habitat fragmentation.</p>
+              <p>A species is <strong class="ap-term">invasive</strong> when it is: (1) non-native, (2) spreads rapidly,
+                and (3) causes harm (ecological, economic, or health). Not all introduced species become invasive —
+                "invasive" requires harmful spread. Invasive species are a major driver of biodiversity loss, especially
+                combined with habitat fragmentation.</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Enemy Release</strong>
-                <div class="body-copy">Key mechanism: in the native range, predators/parasites/pathogens keep the species in check. In the new range, those enemies are absent — the invader escapes natural control and can reproduce unchecked.</div>
+                <div class="body-copy">Key mechanism: in the native range, predators/parasites/pathogens keep the
+                  species in check. In the new range, those enemies are absent — the invader escapes natural control and
+                  can reproduce unchecked.</div>
               </div>
               <div class="mini-note"><strong>Generalist Advantage</strong>
-                <div class="body-copy">Many successful invaders are generalists: broad diet, wide habitat tolerance, high reproductive rate. Native specialist species may lack defenses or competitive strategies because they never coevolved with the invader.</div>
+                <div class="body-copy">Many successful invaders are generalists: broad diet, wide habitat tolerance,
+                  high reproductive rate. Native specialist species may lack defenses or competitive strategies because
+                  they never coevolved with the invader.</div>
               </div>
               <div class="mini-note"><strong>Introduction Pathways</strong>
-                <div class="body-copy">Ballast water (ships), hull attachments, firewood transport, ornamental plant escapes, pet releases, intentional pest-control introductions. Prevention targeting these pathways is most cost-effective.</div>
+                <div class="body-copy">Ballast water (ships), hull attachments, firewood transport, ornamental plant
+                  escapes, pet releases, intentional pest-control introductions. Prevention targeting these pathways is
+                  most cost-effective.</div>
               </div>
               <div class="mini-note"><strong>Impacts on Biodiversity</strong>
-                <div class="body-copy">Predation (prey lack defenses), competition for light/nutrients/space, habitat alteration (fire regimes, hydrology, soil chemistry), disease introduction. Simplifies food webs, degrades ecosystem services.</div>
+                <div class="body-copy">Predation (prey lack defenses), competition for light/nutrients/space, habitat
+                  alteration (fire regimes, hydrology, soil chemistry), disease introduction. Simplifies food webs,
+                  degrades ecosystem services.</div>
               </div>
             </div>
             <h4>Management Strategies & Trade-offs</h4>
             <table class="compare-table">
-              <tr><th>Strategy</th><th>Method</th><th>Trade-off / Drawback</th></tr>
-              <tr><td><strong class="ap-term">Prevention</strong></td><td>Inspections, quarantines, transport restrictions</td><td>Most cost-effective, but requires international cooperation; hard to catch everything</td></tr>
-              <tr><td><strong class="ap-term">Mechanical Control</strong></td><td>Physical removal: pulling plants, trapping animals</td><td>Effective for small invasions; very labor-intensive; rarely eradicates established populations</td></tr>
-              <tr><td><strong class="ap-term">Chemical Control</strong></td><td>Herbicides, pesticides</td><td>Effective but can harm non-target species; pollution concerns; resistance can develop</td></tr>
-              <tr><td><strong class="ap-term">Biological Control</strong></td><td>Introduce natural predator/parasite/pathogen</td><td>Can be effective long-term but biocontrol agents can become new invasives or harm non-target species; requires careful testing</td></tr>
+              <tr>
+                <th>Strategy</th>
+                <th>Method</th>
+                <th>Trade-off / Drawback</th>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Prevention</strong></td>
+                <td>Inspections, quarantines, transport restrictions</td>
+                <td>Most cost-effective, but requires international cooperation; hard to catch everything</td>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Mechanical Control</strong></td>
+                <td>Physical removal: pulling plants, trapping animals</td>
+                <td>Effective for small invasions; very labor-intensive; rarely eradicates established populations</td>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Chemical Control</strong></td>
+                <td>Herbicides, pesticides</td>
+                <td>Effective but can harm non-target species; pollution concerns; resistance can develop</td>
+              </tr>
+              <tr>
+                <td><strong class="ap-term">Biological Control</strong></td>
+                <td>Introduce natural predator/parasite/pathogen</td>
+                <td>Can be effective long-term but biocontrol agents can become new invasives or harm non-target
+                  species; requires careful testing</td>
+              </tr>
             </table>
           </article>
 
@@ -1182,77 +2094,77 @@ Same richness. Community B has HIGHER diversity because greater evenness.
 
   <script>
     const tabs = [
-      { id:"dashboard", icon:"◈", label:"Dashboard",   ambient:"radial-gradient(ellipse at 55% 15%, rgba(56,188,212,.09), transparent 65%)" },
-      { id:"notes",     icon:"≡", label:"Notes",       ambient:"radial-gradient(ellipse at 20% 50%, rgba(56,188,212,.07), transparent 60%)" },
-      { id:"glossary",  icon:"⊞", label:"Glossary",    ambient:"radial-gradient(ellipse at 80% 30%, rgba(94,155,218,.07), transparent 55%)" },
-      { id:"flashcards",icon:"⟁", label:"Flashcards",  ambient:"radial-gradient(ellipse at 40% 70%, rgba(109,212,200,.07), transparent 60%)" },
-      { id:"frq",       icon:"✎", label:"FRQ Prep",    ambient:"radial-gradient(ellipse at 60% 20%, rgba(212,168,67,.07), transparent 55%)" },
+      { id: "dashboard", icon: "◈", label: "Dashboard", ambient: "radial-gradient(ellipse at 55% 15%, rgba(56,188,212,.09), transparent 65%)" },
+      { id: "notes", icon: "≡", label: "Notes", ambient: "radial-gradient(ellipse at 20% 50%, rgba(56,188,212,.07), transparent 60%)" },
+      { id: "glossary", icon: "⊞", label: "Glossary", ambient: "radial-gradient(ellipse at 80% 30%, rgba(94,155,218,.07), transparent 55%)" },
+      { id: "flashcards", icon: "⟁", label: "Flashcards", ambient: "radial-gradient(ellipse at 40% 70%, rgba(109,212,200,.07), transparent 60%)" },
+      { id: "frq", icon: "✎", label: "FRQ Prep", ambient: "radial-gradient(ellipse at 60% 20%, rgba(212,168,67,.07), transparent 55%)" },
     ];
 
     const glossaryTerms = [
-      { term:"Ecosystem Services",        tab:"notes",      def:"Benefits people obtain from ecosystems, categorized as provisioning, regulating, supporting, and cultural." },
-      { term:"Provisioning Services",     tab:"notes",      def:"Tangible goods from ecosystems: food, fresh water, timber, medicinal resources, fiber, meat, milk." },
-      { term:"Regulating Services",       tab:"notes",      def:"Natural processes regulating conditions: water purification, flood control, carbon storage, erosion control, natural pest control." },
-      { term:"Supporting Services",       tab:"notes",      def:"Underlying processes making other services possible: nutrient cycling, soil formation, primary production (photosynthesis)." },
-      { term:"Cultural Services",         tab:"notes",      def:"Nonmaterial benefits: recreation, aesthetic value, spiritual or educational value." },
-      { term:"Biodiversity",              tab:"notes",      def:"The variety of life at genetic, species, and ecosystem levels. All three levels contribute to ecosystem resilience and services." },
-      { term:"Genetic Diversity",         tab:"notes",      def:"Variation in DNA within a species; a larger gene pool increases the chance some individuals survive environmental changes." },
-      { term:"Species Diversity",         tab:"notes",      def:"The variety of species in an area, encompassing both species richness (number) and species evenness (distribution)." },
-      { term:"Ecosystem Diversity",       tab:"notes",      def:"The range of habitats/ecosystems found in a specific area; more ecosystem types support more species and services." },
-      { term:"Species Richness",          tab:"notes",      def:"The number of different species represented in a community or region." },
-      { term:"Species Evenness",          tab:"notes",      def:"How evenly individuals are distributed among species; a community dominated by one species has low evenness." },
-      { term:"Population Bottleneck",     tab:"notes",      def:"A large reduction in population size due to a catastrophic event, leaving a smaller gene pool and lower genetic diversity in future generations." },
-      { term:"Minimum Viable Population", tab:"notes",      def:"The smallest population size at which a species can persist without facing extinction from natural disasters or random events." },
-      { term:"Keystone Species",          tab:"notes",      def:"A species with a disproportionately large impact on ecosystem structure relative to its abundance. Removing it can trigger trophic cascades." },
-      { term:"Indicator Species",         tab:"notes",      def:"An organism whose presence, absence, or abundance reflects a specific environmental condition, indicating ecosystem health." },
-      { term:"Specialist Species",        tab:"notes",      def:"Species requiring unique resources and specific habitats; first to disappear with habitat loss. Example: giant panda." },
-      { term:"Generalist Species",        tab:"notes",      def:"Species tolerating many conditions with varied diets and broad habitat tolerance. Example: raccoons, crows." },
-      { term:"Island Biogeography",       tab:"notes",      def:"Theory that species richness on an island reflects a balance between immigration and extinction, shaped by island size and isolation." },
-      { term:"Habitat Fragmentation",     tab:"notes",      def:"Habitat broken into isolated patches by development, roads, or logging; reduces area, increases isolation and edge effects." },
-      { term:"Edge Effects",              tab:"notes",      def:"Changes in abiotic/biotic conditions near habitat boundaries: more light, wind, temperature fluctuation, easier access for predators and invasives." },
-      { term:"Law of Tolerance",          tab:"notes",      def:"Each species has a range of minimum, maximum, and optimum values for environmental factors; outside the range, survival declines." },
-      { term:"Behavioral Adaptation",     tab:"notes",      def:"Instincts, mating behavior, vocalizations, migration — flexible responses to environmental change." },
-      { term:"Physiological Adaptation",  tab:"notes",      def:"Internal temperature regulation, digestive enzymes, altered metabolic rate — internal biological adjustments." },
-      { term:"Structural Adaptation",     tab:"notes",      def:"Physical features like thick fur, waxy leaf coatings, spines, conical tree shapes, or succulents for water storage." },
-      { term:"Biome",                     tab:"notes",      def:"A large ecological region characterized by climate (temperature + precipitation) and typical plant/animal communities." },
-      { term:"Permafrost",                tab:"notes",      def:"Permanently frozen soil in tundra and taiga; limits root growth, slows decomposition, and can release methane if thawed." },
-      { term:"Ecotone",                   tab:"notes",      def:"A transition zone between biomes; can have high biodiversity as it contains species from both neighboring regions." },
-      { term:"Photic Zone",               tab:"notes",      def:"Water layer with enough sunlight for photosynthesis; depth varies by turbidity and clarity." },
-      { term:"Aphotic Zone",              tab:"notes",      def:"Water layer too deep for photosynthesis; food webs depend on detritus from above." },
-      { term:"Estuary",                   tab:"notes",      def:"A mixing zone where freshwater meets seawater; highly productive, serves as nursery for fish/shellfish, buffers storms." },
-      { term:"Upwelling",                 tab:"notes",      def:"A process where cold, nutrient-rich water rises to the ocean surface, creating highly productive zones." },
-      { term:"Eutrophication",            tab:"notes",      def:"Excess nutrient loading → algal bloom → algae die → decomposers consume O₂ → hypoxia → fish kills and biodiversity loss." },
-      { term:"Ecological Succession",     tab:"notes",      def:"Gradual, directional process of ecosystem development as community composition changes through time, often after disturbance." },
-      { term:"Primary Succession",        tab:"notes",      def:"Succession starting on barren areas with no soil; begins with pioneer species like lichens/mosses; takes 1000+ years." },
-      { term:"Secondary Succession",      tab:"notes",      def:"Succession after disturbance that leaves soil intact; faster (50–200 years) because soil/seeds/nutrients remain." },
-      { term:"Pioneer Species",           tab:"notes",      def:"Early successional organisms, often r-strategists; colonize bare areas and modify conditions to allow later species in." },
-      { term:"Facilitation",              tab:"notes",      def:"One species modifies the environment so it better meets the needs of another, helping succession proceed." },
-      { term:"Inhibition",                tab:"notes",      def:"One species modifies the environment in a way that is unfavorable for another, slowing succession." },
-      { term:"r-strategist",              tab:"notes",      def:"Species with rapid maturity, short lifespan, high reproduction, generalist niche; typical of early succession and disturbed habitats." },
-      { term:"K-strategist",              tab:"notes",      def:"Species with slow maturity, long lifespan, fewer offspring, specialist niche; typical of late-successional stable habitats." },
-      { term:"Resistance",                tab:"notes",      def:"How much an ecosystem changes when disturbed; high resistance = little change during disturbance." },
-      { term:"Resilience",                tab:"notes",      def:"How quickly an ecosystem returns to its prior state after disturbance; biodiversity often supports resilience." },
-      { term:"Invasive Species",          tab:"notes",      def:"A non-native species that spreads rapidly and causes ecological, economic, or human health harm. Not all introduced species are invasive." },
-      { term:"Enemy Release",             tab:"notes",      def:"Mechanism explaining invasive success: in the new range, natural predators/parasites from the native range are absent." },
-      { term:"Biological Control",        tab:"notes",      def:"Management of invasive species by introducing a natural predator, parasite, or pathogen; effective but carries risk of harming non-target species." },
-      { term:"Integrated Pest Management",tab:"notes",      def:"Pest control combining biological, cultural, physical, and minimal chemical methods to reduce harm to non-target species." },
+      { term: "Ecosystem Services", tab: "notes", def: "Benefits people obtain from ecosystems, categorized as provisioning, regulating, supporting, and cultural." },
+      { term: "Provisioning Services", tab: "notes", def: "Tangible goods from ecosystems: food, fresh water, timber, medicinal resources, fiber, meat, milk." },
+      { term: "Regulating Services", tab: "notes", def: "Natural processes regulating conditions: water purification, flood control, carbon storage, erosion control, natural pest control." },
+      { term: "Supporting Services", tab: "notes", def: "Underlying processes making other services possible: nutrient cycling, soil formation, primary production (photosynthesis)." },
+      { term: "Cultural Services", tab: "notes", def: "Nonmaterial benefits: recreation, aesthetic value, spiritual or educational value." },
+      { term: "Biodiversity", tab: "notes", def: "The variety of life at genetic, species, and ecosystem levels. All three levels contribute to ecosystem resilience and services." },
+      { term: "Genetic Diversity", tab: "notes", def: "Variation in DNA within a species; a larger gene pool increases the chance some individuals survive environmental changes." },
+      { term: "Species Diversity", tab: "notes", def: "The variety of species in an area, encompassing both species richness (number) and species evenness (distribution)." },
+      { term: "Ecosystem Diversity", tab: "notes", def: "The range of habitats/ecosystems found in a specific area; more ecosystem types support more species and services." },
+      { term: "Species Richness", tab: "notes", def: "The number of different species represented in a community or region." },
+      { term: "Species Evenness", tab: "notes", def: "How evenly individuals are distributed among species; a community dominated by one species has low evenness." },
+      { term: "Population Bottleneck", tab: "notes", def: "A large reduction in population size due to a catastrophic event, leaving a smaller gene pool and lower genetic diversity in future generations." },
+      { term: "Minimum Viable Population", tab: "notes", def: "The smallest population size at which a species can persist without facing extinction from natural disasters or random events." },
+      { term: "Keystone Species", tab: "notes", def: "A species with a disproportionately large impact on ecosystem structure relative to its abundance. Removing it can trigger trophic cascades." },
+      { term: "Indicator Species", tab: "notes", def: "An organism whose presence, absence, or abundance reflects a specific environmental condition, indicating ecosystem health." },
+      { term: "Specialist Species", tab: "notes", def: "Species requiring unique resources and specific habitats; first to disappear with habitat loss. Example: giant panda." },
+      { term: "Generalist Species", tab: "notes", def: "Species tolerating many conditions with varied diets and broad habitat tolerance. Example: raccoons, crows." },
+      { term: "Island Biogeography", tab: "notes", def: "Theory that species richness on an island reflects a balance between immigration and extinction, shaped by island size and isolation." },
+      { term: "Habitat Fragmentation", tab: "notes", def: "Habitat broken into isolated patches by development, roads, or logging; reduces area, increases isolation and edge effects." },
+      { term: "Edge Effects", tab: "notes", def: "Changes in abiotic/biotic conditions near habitat boundaries: more light, wind, temperature fluctuation, easier access for predators and invasives." },
+      { term: "Law of Tolerance", tab: "notes", def: "Each species has a range of minimum, maximum, and optimum values for environmental factors; outside the range, survival declines." },
+      { term: "Behavioral Adaptation", tab: "notes", def: "Instincts, mating behavior, vocalizations, migration — flexible responses to environmental change." },
+      { term: "Physiological Adaptation", tab: "notes", def: "Internal temperature regulation, digestive enzymes, altered metabolic rate — internal biological adjustments." },
+      { term: "Structural Adaptation", tab: "notes", def: "Physical features like thick fur, waxy leaf coatings, spines, conical tree shapes, or succulents for water storage." },
+      { term: "Biome", tab: "notes", def: "A large ecological region characterized by climate (temperature + precipitation) and typical plant/animal communities." },
+      { term: "Permafrost", tab: "notes", def: "Permanently frozen soil in tundra and taiga; limits root growth, slows decomposition, and can release methane if thawed." },
+      { term: "Ecotone", tab: "notes", def: "A transition zone between biomes; can have high biodiversity as it contains species from both neighboring regions." },
+      { term: "Photic Zone", tab: "notes", def: "Water layer with enough sunlight for photosynthesis; depth varies by turbidity and clarity." },
+      { term: "Aphotic Zone", tab: "notes", def: "Water layer too deep for photosynthesis; food webs depend on detritus from above." },
+      { term: "Estuary", tab: "notes", def: "A mixing zone where freshwater meets seawater; highly productive, serves as nursery for fish/shellfish, buffers storms." },
+      { term: "Upwelling", tab: "notes", def: "A process where cold, nutrient-rich water rises to the ocean surface, creating highly productive zones." },
+      { term: "Eutrophication", tab: "notes", def: "Excess nutrient loading → algal bloom → algae die → decomposers consume O₂ → hypoxia → fish kills and biodiversity loss." },
+      { term: "Ecological Succession", tab: "notes", def: "Gradual, directional process of ecosystem development as community composition changes through time, often after disturbance." },
+      { term: "Primary Succession", tab: "notes", def: "Succession starting on barren areas with no soil; begins with pioneer species like lichens/mosses; takes 1000+ years." },
+      { term: "Secondary Succession", tab: "notes", def: "Succession after disturbance that leaves soil intact; faster (50–200 years) because soil/seeds/nutrients remain." },
+      { term: "Pioneer Species", tab: "notes", def: "Early successional organisms, often r-strategists; colonize bare areas and modify conditions to allow later species in." },
+      { term: "Facilitation", tab: "notes", def: "One species modifies the environment so it better meets the needs of another, helping succession proceed." },
+      { term: "Inhibition", tab: "notes", def: "One species modifies the environment in a way that is unfavorable for another, slowing succession." },
+      { term: "r-strategist", tab: "notes", def: "Species with rapid maturity, short lifespan, high reproduction, generalist niche; typical of early succession and disturbed habitats." },
+      { term: "K-strategist", tab: "notes", def: "Species with slow maturity, long lifespan, fewer offspring, specialist niche; typical of late-successional stable habitats." },
+      { term: "Resistance", tab: "notes", def: "How much an ecosystem changes when disturbed; high resistance = little change during disturbance." },
+      { term: "Resilience", tab: "notes", def: "How quickly an ecosystem returns to its prior state after disturbance; biodiversity often supports resilience." },
+      { term: "Invasive Species", tab: "notes", def: "A non-native species that spreads rapidly and causes ecological, economic, or human health harm. Not all introduced species are invasive." },
+      { term: "Enemy Release", tab: "notes", def: "Mechanism explaining invasive success: in the new range, natural predators/parasites from the native range are absent." },
+      { term: "Biological Control", tab: "notes", def: "Management of invasive species by introducing a natural predator, parasite, or pathogen; effective but carries risk of harming non-target species." },
+      { term: "Integrated Pest Management", tab: "notes", def: "Pest control combining biological, cultural, physical, and minimal chemical methods to reduce harm to non-target species." },
     ];
 
     const flashcards = [
-      { front:"What are the four categories of ecosystem services? Give one example of each.", back:"Provisioning (food/timber), Regulating (flood control/water purification), Supporting (nutrient cycling/soil formation), Cultural (recreation/aesthetic value)." },
-      { front:"What is the difference between species richness and species evenness?", back:"Richness = number of species present. Evenness = how evenly individuals are distributed among those species. High richness + low evenness ≠ high diversity." },
-      { front:"Explain a population bottleneck and its effect on genetic diversity.", back:"A catastrophic event drastically reduces population size. The surviving gene pool is smaller, leaving future generations with reduced genetic diversity and higher inbreeding risk." },
-      { front:"What is a keystone species and why does its removal matter?", back:"A species with a disproportionately large ecosystem impact relative to its abundance. Its removal can trigger trophic cascades, habitat collapse, and loss of other species." },
-      { front:"Apply island biogeography: what happens to species richness when a forest reserve is reduced in size?", back:"Smaller habitat area → lower immigration rate (smaller target) + higher extinction rate (smaller populations) → lower species richness equilibrium." },
-      { front:"What is the key difference between primary and secondary succession?", back:"Primary: no soil present (new volcanic rock, retreating glacier). Secondary: soil is intact after disturbance (fire, flood, abandoned farmland). Secondary is faster." },
-      { front:"What is 'enemy release' and how does it explain invasive species success?", back:"In its native range, a species is kept in check by predators/parasites. Introduced to a new environment, those natural enemies are absent, allowing unchecked reproduction and spread." },
-      { front:"Distinguish resistance from resilience.", back:"Resistance = how much an ecosystem CHANGES during disturbance. Resilience = how quickly it RETURNS to prior state after disturbance. Biodiversity supports resilience." },
-      { front:"Why does the eutrophication chain NOT stop at 'algae grow'?", back:"Full chain: nutrients → algal bloom → algae die → decomposers consume dissolved oxygen → hypoxia → fish kills → biodiversity loss. Always complete the chain on FRQs." },
-      { front:"Why is tropical rainforest soil often nutrient-poor despite high productivity?", back:"Most nutrients are stored in living biomass (plants, animals), not in soil. Heavy rainfall leaches nutrients from soil rapidly. Decomposition quickly returns nutrients to plants." },
-      { front:"What distinguishes a short-term adaptation from an evolutionary (long-term) adaptation?", back:"Short-term: temporary, not inherited, no DNA change. Long-term/evolutionary: involves DNA changes over generations through natural selection. Calling any short-term response 'evolutionary' is an error." },
-      { front:"How do edge effects from habitat fragmentation harm interior specialist species?", back:"More edge area = more light, wind, temp fluctuation, predator access, and invasive-species entry points. Interior specialists (e.g., neotropical migratory birds) that need stable core conditions decline as edge grows relative to core." },
-      { front:"Why can wildfires be beneficial to ecosystems?", back:"Clear dead vegetation → more light for surviving plants. Ash adds nutrients to depleted soil. Some plants require fire for seed germination. Fire suppression allows fuel buildup → hotter, more destructive fires." },
-      { front:"What makes biological control risky?", back:"Biocontrol agents (introduced predators/parasites) can become invasives themselves or harm non-target species. Must be carefully tested and monitored before release." },
+      { front: "What are the four categories of ecosystem services? Give one example of each.", back: "Provisioning (food/timber), Regulating (flood control/water purification), Supporting (nutrient cycling/soil formation), Cultural (recreation/aesthetic value)." },
+      { front: "What is the difference between species richness and species evenness?", back: "Richness = number of species present. Evenness = how evenly individuals are distributed among those species. High richness + low evenness ≠ high diversity." },
+      { front: "Explain a population bottleneck and its effect on genetic diversity.", back: "A catastrophic event drastically reduces population size. The surviving gene pool is smaller, leaving future generations with reduced genetic diversity and higher inbreeding risk." },
+      { front: "What is a keystone species and why does its removal matter?", back: "A species with a disproportionately large ecosystem impact relative to its abundance. Its removal can trigger trophic cascades, habitat collapse, and loss of other species." },
+      { front: "Apply island biogeography: what happens to species richness when a forest reserve is reduced in size?", back: "Smaller habitat area → lower immigration rate (smaller target) + higher extinction rate (smaller populations) → lower species richness equilibrium." },
+      { front: "What is the key difference between primary and secondary succession?", back: "Primary: no soil present (new volcanic rock, retreating glacier). Secondary: soil is intact after disturbance (fire, flood, abandoned farmland). Secondary is faster." },
+      { front: "What is 'enemy release' and how does it explain invasive species success?", back: "In its native range, a species is kept in check by predators/parasites. Introduced to a new environment, those natural enemies are absent, allowing unchecked reproduction and spread." },
+      { front: "Distinguish resistance from resilience.", back: "Resistance = how much an ecosystem CHANGES during disturbance. Resilience = how quickly it RETURNS to prior state after disturbance. Biodiversity supports resilience." },
+      { front: "Why does the eutrophication chain NOT stop at 'algae grow'?", back: "Full chain: nutrients → algal bloom → algae die → decomposers consume dissolved oxygen → hypoxia → fish kills → biodiversity loss. Always complete the chain on FRQs." },
+      { front: "Why is tropical rainforest soil often nutrient-poor despite high productivity?", back: "Most nutrients are stored in living biomass (plants, animals), not in soil. Heavy rainfall leaches nutrients from soil rapidly. Decomposition quickly returns nutrients to plants." },
+      { front: "What distinguishes a short-term adaptation from an evolutionary (long-term) adaptation?", back: "Short-term: temporary, not inherited, no DNA change. Long-term/evolutionary: involves DNA changes over generations through natural selection. Calling any short-term response 'evolutionary' is an error." },
+      { front: "How do edge effects from habitat fragmentation harm interior specialist species?", back: "More edge area = more light, wind, temp fluctuation, predator access, and invasive-species entry points. Interior specialists (e.g., neotropical migratory birds) that need stable core conditions decline as edge grows relative to core." },
+      { front: "Why can wildfires be beneficial to ecosystems?", back: "Clear dead vegetation → more light for surviving plants. Ash adds nutrients to depleted soil. Some plants require fire for seed germination. Fire suppression allows fuel buildup → hotter, more destructive fires." },
+      { front: "What makes biological control risky?", back: "Biocontrol agents (introduced predators/parasites) can become invasives themselves or harm non-target species. Must be carefully tested and monitored before release." },
     ];
 
     const essayOutlines = [
@@ -1280,7 +2192,7 @@ Same richness. Community B has HIGHER diversity because greater evenness.
         label: "Evaluate three methods of controlling an invasive plant species",
         blocks: [
           ["Define Invasive", "An invasive species is non-native, spreads rapidly, and causes ecological or economic harm. Success is often explained by enemy release (no natural predators in new range), generalist traits, and high reproductive rate."],
-          ["Prevention (Best)","Inspections, quarantines, transport restrictions on soil/plant material. Most cost-effective because post-establishment eradication is difficult. Requires international cooperation and consistent enforcement."],
+          ["Prevention (Best)", "Inspections, quarantines, transport restrictions on soil/plant material. Most cost-effective because post-establishment eradication is difficult. Requires international cooperation and consistent enforcement."],
           ["Mechanical Control", "Physical removal (pulling, mowing, cutting). Effective at small scales. Labor-intensive and expensive for large infestations; rarely achieves full eradication once established. May damage native vegetation."],
           ["Chemical Control", "Herbicides target specific plants. Effective but risk of non-target damage to native plants and soil organisms. Pollution of nearby water bodies possible. Repeated treatments often needed."],
           ["Biological Control", "Introduce a natural enemy (herbivore, pathogen) from the native range. Potentially self-sustaining long-term. Risk: biocontrol agent may harm non-target native species or become invasive itself. Requires rigorous testing."],
@@ -1399,7 +2311,7 @@ Same richness. Community B has HIGHER diversity because greater evenness.
 
     function renderNav() {
       nav.innerHTML = tabs.map(t => `
-        <button class="nav-btn ${t.id===currentTab?"active":""}" data-tab="${t.id}" type="button">
+        <button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button">
           <span class="nav-indicator"></span>
           <span class="nav-icon">${t.icon}</span>
           <span class="nav-label">${t.label}</span>
@@ -1408,17 +2320,17 @@ Same richness. Community B has HIGHER diversity because greater evenness.
 
     function switchTab(id) {
       currentTab = id;
-      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id===id));
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab===id));
-      const t = tabs.find(x=>x.id===id);
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id));
+      const t = tabs.find(x => x.id === id);
       if (t) ambientOverlay.style.background = t.ambient;
-      mainEl.scrollTo({top:0, behavior:"smooth"});
+      mainEl.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function renderGlossary(filter="") {
+    function renderGlossary(filter = "") {
       const v = filter.toLowerCase().trim();
-      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v)||t.def.toLowerCase().includes(v));
-      document.getElementById("glossaryGrid").innerHTML = items.map(item=>`
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item => `
         <article class="feature-card glossary-card" data-target-tab="${item.tab}">
           <div class="mini-label">${item.tab}</div>
           <h4>${item.term}</h4>
@@ -1427,7 +2339,7 @@ Same richness. Community B has HIGHER diversity because greater evenness.
     }
 
     function renderFlashcards() {
-      document.getElementById("flashGrid").innerHTML = flashcards.map(c=>`
+      document.getElementById("flashGrid").innerHTML = flashcards.map(c => `
         <article class="flash-card" tabindex="0">
           <div class="flash-inner">
             <div class="flash-front">
@@ -1443,23 +2355,23 @@ Same richness. Community B has HIGHER diversity because greater evenness.
     }
 
     function renderEssayTopics() {
-      ["essayTopics","essayTopics2"].forEach(id=>{
-        const el=document.getElementById(id);
-        if(el) el.innerHTML = essayOutlines.map((o,i)=>
+      ["essayTopics", "essayTopics2"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = essayOutlines.map((o, i) =>
           `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
       });
-      ["essayOutline","essayOutline2"].forEach(id=>{
-        const ol=document.getElementById(id);
-        if(ol){ ol.classList.remove("show"); ol.innerHTML=""; }
+      ["essayOutline", "essayOutline2"].forEach(id => {
+        const ol = document.getElementById(id);
+        if (ol) { ol.classList.remove("show"); ol.innerHTML = ""; }
       });
     }
 
     function selectEssay(i, outlineId) {
-      document.querySelectorAll(".essay-topic-btn").forEach(b=>b.classList.toggle("active", Number(b.dataset.essayIndex)===i));
+      document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i));
       const o = essayOutlines[i];
       const ol = document.getElementById(outlineId);
-      if(ol){
-        ol.innerHTML = o.blocks.map(([l,b])=>
+      if (ol) {
+        ol.innerHTML = o.blocks.map(([l, b]) =>
           `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join("");
         ol.classList.add("show");
       }
@@ -1469,27 +2381,27 @@ Same richness. Community B has HIGHER diversity because greater evenness.
       const qm = document.getElementById("quizMount");
       const q = quizQuestions[quizIndex];
       if (!q) {
-        const pct = Math.round((quizScore/quizQuestions.length)*100);
-        const prev = Number(localStorage.getItem("apes_u2_best")||0);
-        const best = Math.max(prev,pct);
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prev = Number(localStorage.getItem("apes_u2_best") || 0);
+        const best = Math.max(prev, pct);
         localStorage.setItem("apes_u2_best", String(best));
-        bestScoreEl.textContent = best+"%";
+        bestScoreEl.textContent = best + "%";
         qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review ecosystem services, biodiversity levels, and succession if you missed any. Use the Notes tab to reinforce weak areas.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
         return;
       }
       quizLocked = false;
-      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex+1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o,i)=>`<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
     }
 
-    function openModal(id){ document.getElementById(id).classList.add("open"); }
-    function closeModal(id){ document.getElementById(id).classList.remove("open"); }
-    function initBestScore(){ const b=localStorage.getItem("apes_u2_best"); bestScoreEl.textContent = b?b+"%":"--"; }
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function initBestScore() { const b = localStorage.getItem("apes_u2_best"); bestScoreEl.textContent = b ? b + "%" : "--"; }
 
     renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
 
     document.addEventListener("mousemove", e => {
       if (!window.matchMedia("(pointer:fine)").matches) return;
-      cursor.style.left = e.clientX+"px"; cursor.style.top = e.clientY+"px";
+      cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
     });
     document.addEventListener("mouseover", e => {
       if (!window.matchMedia("(pointer:fine)").matches) return;
@@ -1497,53 +2409,54 @@ Same richness. Community B has HIGHER diversity because greater evenness.
       cursor.style.height = cursor.style.width;
     });
 
-    pinBtn.addEventListener("click", ()=>{ sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned")?"Pinned":"Pin"; });
-    nav.addEventListener("click", e=>{ const b=e.target.closest(".nav-btn"); if(b) switchTab(b.dataset.tab); });
-    document.querySelectorAll(".note-jump").forEach(b=>b.addEventListener("click",()=>{ const t=document.getElementById(b.dataset.noteTarget); if(t){ switchTab("notes"); setTimeout(()=>t.scrollIntoView({behavior:"smooth",block:"start"}),100); } }));
-    document.getElementById("glossaryFilter").addEventListener("input", e=>renderGlossary(e.target.value));
-    document.getElementById("flashGrid").addEventListener("click", e=>{ const c=e.target.closest(".flash-card"); if(c) c.classList.toggle("flipped"); });
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin"; });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100); } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
 
-    document.getElementById("openSearch").addEventListener("click",()=>{ const p=document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if(p.classList.contains("open")) document.getElementById("sbInput").focus(); });
-    document.getElementById("sbInput").addEventListener("input", e=>{
-      const q=e.target.value.toLowerCase().trim();
-      const m=glossaryTerms.filter(t=>t.term.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)).slice(0,8);
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus(); });
+    document.getElementById("sbInput").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase().trim();
+      const m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8);
       document.getElementById("sbResults").innerHTML = m.length
-        ? m.map(i=>`<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
+        ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
         : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
     });
-    document.getElementById("sbResults").addEventListener("click", e=>{
-      const r=e.target.closest(".sb-result"); if(!r||!r.dataset.targetTab) return;
+    document.getElementById("sbResults").addEventListener("click", e => {
+      const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return;
       switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
-      document.getElementById("sbInput").value=""; document.getElementById("sbResults").innerHTML="";
-      if(r.dataset.targetTab==="glossary"){ document.getElementById("glossaryFilter").value=r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
+      document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+      if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
     });
-    document.getElementById("glossaryGrid").addEventListener("click", e=>{ const c=e.target.closest(".glossary-card"); if(c) switchTab(c.dataset.targetTab); });
-    apToggleBtn.addEventListener("click",()=>{ document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
-    document.getElementById("quizOpenBtn").addEventListener("click",()=>{ quizIndex=0; quizScore=0; renderQuizQuestion(); openModal("quizModal"); });
-    document.getElementById("essayOpenBtn").addEventListener("click",()=>{ renderEssayTopics(); openModal("essayModal"); });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
 
-    document.getElementById("essayTopics").addEventListener("click", e=>{ const b=e.target.closest(".essay-topic-btn"); if(b) selectEssay(Number(b.dataset.essayIndex),"essayOutline"); });
-    document.getElementById("essayTopics2").addEventListener("click", e=>{ const b=e.target.closest(".essay-topic-btn"); if(b) selectEssay(Number(b.dataset.essayIndex),"essayOutline2"); });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline"); });
+    document.getElementById("essayTopics2").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline2"); });
 
-    document.getElementById("quizMount").addEventListener("click", e=>{
-      const opt=e.target.closest(".quiz-option");
-      if(opt&&!quizLocked){
-        quizLocked=true;
-        const q=quizQuestions[quizIndex]; const sel=Number(opt.dataset.optionIndex);
-        document.querySelectorAll(".quiz-option").forEach((b,i)=>{ if(i===q.correct)b.classList.add("correct"); if(i===sel&&sel!==q.correct)b.classList.add("wrong"); });
-        if(sel===q.correct) quizScore++;
-        document.getElementById("quizFeedback").textContent=q.explanation;
-        document.getElementById("quizNext").innerHTML=`<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex===quizQuestions.length-1?"See Score":"Next Question"}</button>`;
+    document.getElementById("quizMount").addEventListener("click", e => {
+      const opt = e.target.closest(".quiz-option");
+      if (opt && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex]; const sel = Number(opt.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong"); });
+        if (sel === q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
       }
-      if(e.target.id==="nextQuizBtn"){ quizIndex++; renderQuizQuestion(); }
-      if(e.target.id==="restartQuizBtn"){ quizIndex=0; quizScore=0; renderQuizQuestion(); }
+      if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+      if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
     });
-    document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
-    document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{ if(e.target===m)m.classList.remove("open"); }));
-    mainEl.addEventListener("scroll",()=>{
-      const max=mainEl.scrollHeight-mainEl.clientHeight;
-      document.getElementById("readingProgressFill").style.width=(max>0?(mainEl.scrollTop/max)*100:0)+"%";
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+    mainEl.addEventListener("scroll", () => {
+      const max = mainEl.scrollHeight - mainEl.clientHeight;
+      document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%";
     });
   </script>
 </body>
+
 </html>

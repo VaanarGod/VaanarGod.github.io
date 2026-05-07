@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 4: Earth Systems & Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #040d12;
+      --card: #071520;
+      --card2: #0b1e2c;
+      --border: rgba(255, 255, 255, .055);
+      --text: #c8e0f0;
+      --muted: #3a6880;
+      --g: #4ab8d8;
+      --g2: #3dcfb0;
+      --g3: #5a8fd4;
+      --gold: #6ad8b8;
+      --blue: #7ab8f8;
+      --red: #d95f5f;
+      --teal: #4abca8;
+      --accent: #4ab8d8;
+      --body-copy-color: #7aaec4;
+      --mini-note-body: #4a7a94;
+      --code-bg: #02080d;
+      --code-border: rgba(74, 184, 216, .1);
+      --code-color: #4ab8d8;
+      --progress-bar: linear-gradient(90deg, #4ab8d8, #3dcfb0);
+    }
+
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #e8e8e8;
+      --muted: #666;
+      --g: #ccc;
+      --g2: #bbb;
+      --g3: #aaa;
+      --gold: #d4d4d4;
+      --blue: #c0c0c0;
+      --red: #c06060;
+      --teal: #70b0a0;
+      --accent: #ccc;
+      --body-copy-color: #888;
+      --mini-note-body: #666;
+      --code-bg: #0a0a0a;
+      --code-border: rgba(255, 255, 255, .08);
+      --code-color: #aaa;
+      --progress-bar: linear-gradient(90deg, #888, #aaa);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      cursor: none;
+      transition: background .4s, color .4s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(74, 184, 216, .010) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 184, 216, .010) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .22;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--g);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width .2s, height .2s;
+    }
+
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100;
+    }
+
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--progress-bar);
+      transition: background .4s;
+    }
+
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 55% 15%, rgba(74, 184, 216, .09), transparent 65%);
+      opacity: .14;
+      pointer-events: none;
+      transition: background 1s ease, opacity .25s ease;
+      z-index: 0;
+    }
+
+    body.theme-off #ambientOverlay {
+      opacity: 0;
+    }
+
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(2, 8, 14, .92);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(.23, 1, .32, 1), background .4s;
+    }
+
+    body.theme-off #sidebar {
+      background: rgba(5, 5, 5, .95);
+    }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 264px;
+    }
+
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .08em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s, color .2s, border-color .2s;
+    }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1;
+    }
+
+    #pinBtn.pinned {
+      color: var(--g);
+      border-color: rgba(74, 184, 216, .24);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      border: 1px solid rgba(74, 184, 216, .22);
+      background: rgba(74, 184, 216, .07);
+      color: var(--g);
+      flex-shrink: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1;
+    }
+
+    .logo-copy h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: .22em;
+      color: var(--g);
+    }
+
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px;
+    }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+    }
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(74, 184, 216, .2);
+    }
+
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(74, 184, 216, .18);
+      background: rgba(2, 8, 14, .98);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s, transform .22s;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .65);
+    }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+    }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto;
+    }
+
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      cursor: none;
+      transition: background .15s;
+    }
+
+    .sb-result:hover {
+      background: rgba(74, 184, 216, .06);
+    }
+
+    .sb-result:last-child {
+      border-bottom: none;
+    }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .sb-result-term {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: white;
+      letter-spacing: .04em;
+    }
+
+    .sb-result-snip {
+      font-family: 'Crimson Pro', serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
+
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto;
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      position: relative;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .025);
+      color: #78c4d8;
+    }
+
+    .nav-btn.active {
+      background: rgba(74, 184, 216, .07);
+      color: var(--g);
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1;
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 24px;
+      background: var(--g);
+      border-radius: 5px;
+      opacity: 0;
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    #sidebar:hover .sidebar-footer span:last-child,
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--g);
+      flex-shrink: 0;
+      animation: blink 2.4s ease-in-out infinite;
+    }
+
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .glass-btn,
+    #scoreTracker {
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      padding: 9px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--g);
+      border-color: rgba(74, 184, 216, .26);
+    }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(74, 184, 216, .32);
+      background: rgba(74, 184, 216, .07);
+    }
+
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(74, 184, 216, .35);
+      background: rgba(74, 184, 216, .08);
+      color: var(--g);
+      padding: 9px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #themeToggleBtn:hover {
+      background: rgba(74, 184, 216, .14);
+    }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255, 255, 255, .04);
+      color: #555;
+      border-color: rgba(255, 255, 255, .15);
+    }
+
+    .theme-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--g);
+      display: inline-block;
+      transition: background .4s;
+      flex-shrink: 0;
+    }
+
+    body.theme-off .theme-dot {
+      background: #555;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeUp .45s cubic-bezier(.23, 1, .32, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .unit-tag {
+      display: block;
+      color: var(--g);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .page-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(32px, 4.5vw, 56px);
+      letter-spacing: .06em;
+      line-height: .98;
+      color: white;
+    }
+
+    .page-header p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      margin-bottom: 26px;
+    }
+
+    .principle-grid,
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 22px;
+    }
+
+    .case-grid,
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px;
+    }
+
+    .card,
+    .feature-card,
+    .principle-card,
+    .case-card,
+    .exam-card,
+    .flash-card,
+    .writing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .24s, border-color .24s, box-shadow .24s, background .4s;
+    }
+
+    .card:hover,
+    .feature-card:hover,
+    .principle-card:hover,
+    .case-card:hover,
+    .exam-card:hover,
+    .flash-card:hover,
+    .writing-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, .11);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, .4);
+    }
+
+    .hero-card::before,
+    .feature-card::before,
+    .principle-card::before,
+    .case-card::before,
+    .exam-card::before,
+    .writing-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+      background: var(--accent, var(--g));
+      opacity: .65;
+    }
+
+    .hero-card {
+      --accent: var(--g);
+    }
+
+    .accent-g {
+      --accent: var(--g);
+    }
+
+    .accent-g2 {
+      --accent: var(--g2);
+    }
+
+    .accent-g3 {
+      --accent: var(--g3);
+    }
+
+    .accent-gold {
+      --accent: var(--gold);
+    }
+
+    .accent-blue {
+      --accent: var(--blue);
+    }
+
+    .accent-red {
+      --accent: var(--red);
+    }
+
+    .accent-teal {
+      --accent: var(--teal);
+    }
+
+    .card-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 21px;
+      letter-spacing: .04em;
+      color: white;
+      line-height: 1.18;
+      margin-bottom: 14px;
+    }
+
+    .body-copy {
+      font-family: 'Crimson Pro', serif;
+      font-size: 15px;
+      line-height: 1.82;
+      color: var(--body-copy-color);
+      transition: color .4s;
+    }
+
+    .body-copy p+p {
+      margin-top: 10px;
+    }
+
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      transition: background .4s;
+    }
+
+    .stat-box span {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-box strong {
+      font-family: 'Cinzel', serif;
+      font-size: 26px;
+      letter-spacing: .06em;
+      color: var(--g);
+    }
+
+    .focus-callout {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: rgba(74, 184, 216, .04);
+      border: 1px solid rgba(74, 184, 216, .13);
+      transition: background .4s;
+    }
+
+    body.theme-off .focus-callout {
+      background: rgba(255, 255, 255, .02);
+      border-color: rgba(255, 255, 255, .08);
+    }
+
+    .focus-callout .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .bullet-list li {
+      font-family: 'Crimson Pro', serif;
+      font-size: 14px;
+      line-height: 1.68;
+      color: var(--body-copy-color);
+      padding-left: 18px;
+      position: relative;
+      transition: color .4s;
+    }
+
+    .bullet-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--g);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border: 1px solid rgba(74, 184, 216, .2);
+      color: rgba(74, 184, 216, .6);
+      background: rgba(74, 184, 216, .04);
+      transition: border-color .4s, color .4s;
+    }
+
+    body.theme-off .tag {
+      border-color: rgba(255, 255, 255, .15);
+      color: rgba(255, 255, 255, .4);
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .mini-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px;
+    }
+
+    .notes-shell {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .notes-index {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: background .4s;
+    }
+
+    .notes-index-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 6px;
+      margin-bottom: 8px;
+    }
+
+    .note-jump {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .18s, color .18s;
+    }
+
+    .note-jump:hover {
+      background: rgba(74, 184, 216, .06);
+      color: var(--g);
+    }
+
+    .note-jump span:last-child {
+      color: rgba(74, 184, 216, .35);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .notes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: background .4s;
+    }
+
+    .note-section::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent, var(--g));
+      opacity: .55;
+    }
+
+    .note-section h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      letter-spacing: .05em;
+      color: white;
+      margin-bottom: 14px;
+    }
+
+    .note-section h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .1em;
+      color: var(--text);
+      margin: 20px 0 10px;
+      text-transform: uppercase;
+    }
+
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .mini-note {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      letter-spacing: .08em;
+      font-weight: 600;
+      color: var(--text);
+      transition: background .4s;
+    }
+
+    .mini-note .body-copy {
+      font-size: 13px;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: var(--mini-note-body);
+      margin-top: 7px;
+      transition: color .4s;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      line-height: 1.7;
+      color: var(--code-color);
+      letter-spacing: .04em;
+      overflow-x: auto;
+      white-space: pre;
+      margin-top: 10px;
+      transition: background .4s, color .4s;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+    }
+
+    .compare-table th {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--g);
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(74, 184, 216, .18);
+      text-align: left;
+    }
+
+    .compare-table td {
+      font-family: 'Crimson Pro', serif;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tr:hover td {
+      background: rgba(74, 184, 216, .025);
+    }
+
+    .glossary-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .glossary-toolbar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none;
+      transition: border-color .2s, background .4s;
+    }
+
+    .glossary-toolbar input:focus {
+      border-color: rgba(74, 184, 216, .3);
+    }
+
+    .glossary-card h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      letter-spacing: .04em;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .glossary-card {
+      cursor: none;
+    }
+
+    .flash-card {
+      perspective: 900px;
+      height: 200px;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .flash-card:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+    .flash-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform .55s cubic-bezier(.23, 1, .32, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color .2s, background .4s;
+    }
+
+    .flash-card:hover .flash-front,
+    .flash-card:hover .flash-back {
+      border-color: rgba(74, 184, 216, .2);
+    }
+
+    .flash-back {
+      transform: rotateY(180deg);
+      background: var(--card2);
+    }
+
+    .flash-front h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      letter-spacing: .04em;
+      color: white;
+    }
+
+    .flash-back .body-copy {
+      font-family: 'Crimson Pro', serif;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--body-copy-color);
+    }
+
+    .flash-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .72);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid rgba(74, 184, 216, .14);
+      border-radius: 24px;
+      padding: 36px;
+      max-width: 620px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      position: relative;
+      animation: fadeUp .4s cubic-bezier(.23, 1, .32, 1);
+      transition: background .4s;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      letter-spacing: .06em;
+      color: white;
+      margin-bottom: 22px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: none;
+      transition: color .2s, border-color .2s;
+    }
+
+    .modal-close:hover {
+      color: var(--red);
+      border-color: rgba(217, 95, 95, .3);
+    }
+
+    .quiz-status {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 14px;
+    }
+
+    .quiz-question {
+      font-family: 'Crimson Pro', serif;
+      font-size: 17px;
+      line-height: 1.72;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-option {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      cursor: none;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+
+    .quiz-option:hover {
+      border-color: rgba(74, 184, 216, .28);
+      color: var(--text);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: rgba(74, 188, 168, .08);
+    }
+
+    .quiz-option.wrong {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(217, 95, 95, .08);
+    }
+
+    .quiz-feedback {
+      font-family: 'Crimson Pro', serif;
+      font-size: 14px;
+      line-height: 1.72;
+      color: var(--muted);
+      min-height: 20px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-next {
+      text-align: right;
+    }
+
+    .essay-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .essay-topic-btn {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+      cursor: none;
+      transition: border-color .2s, color .2s, background .4s;
+    }
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      border-color: rgba(74, 184, 216, .28);
+      color: var(--g);
+    }
+
+    .essay-outline {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .essay-outline.show {
+      display: flex;
+    }
+
+    .essay-block {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      transition: background .4s;
+    }
+
+    .essay-block-label {
+      color: var(--g);
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    .essay-block-body {
+      font-family: 'Crimson Pro', serif;
+      color: var(--muted);
+      line-height: 1.82;
+      font-size: 15px;
+    }
+
+    strong.ap-term {
+      color: #6ad4e8;
+      font-weight: 600;
+    }
+
+    body.theme-off strong.ap-term {
+      color: #c0c0c0;
+    }
+
+    body.ap-highlight strong.ap-term {
+      background: rgba(74, 184, 216, .11);
+      padding: 0 3px;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(74, 184, 216, .14);
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .15
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @media(max-width:1020px) {
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .dash-stats {
+        grid-template-columns: 1fr
+      }
+
+      #main {
+        padding-left: 26px;
+        padding-right: 26px
+      }
+
+      .notes-shell {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:760px) {
+      body {
+        cursor: auto;
+        overflow: auto;
+        display: block
+      }
+
+      #cursor,
+      #readingProgress {
+        display: none
+      }
+
+      #sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border)
+      }
+
+      #sidebar:hover,
+      #sidebar.pinned {
+        width: 100%
+      }
+
+      .logo-copy,
+      .nav-label,
+      .sidebar-footer span:last-child,
+      .sb-search-trigger {
+        opacity: 1 !important;
+        pointer-events: auto !important
+      }
+
+      #pinBtn {
+        display: none
+      }
+
+      nav {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px
+      }
+
+      #main {
+        height: auto;
+        overflow: visible
+      }
+
+      .topbar {
+        position: static
+      }
+
+      .glossary-toolbar input {
+        min-width: 100%;
+        width: 100%
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="ambientOverlay"></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">🌍</div>
+      <div class="logo-copy">
+        <h1>APES UNIT 4</h1>
+        <p>Earth Systems</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">⌕ <span>Search Unit 4</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color:var(--g);font-size:12px;">⌕</span>
+          <input id="sbInput" type="text" placeholder="Find concepts, terms, or topics" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer"><span class="dot"></span><span>Study Mode Active</span></div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <a class="glass-btn" href="apes-index.html">← All Units</a>
+        <a class="glass-btn" href="apes-unit1.html">Unit 1</a>
+        <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
+        <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
+        <a class="glass-btn" href="apes-unit4.html" style="color:var(--g);border-color:rgba(74,184,216,.32);">Unit 4</a>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
+        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme
+            On</span></button>
+      </div>
+      <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 4 · Earth Systems &amp; Resources</span>
+        <h2>Tectonics, Soil &amp; Atmosphere</h2>
+        <p>Plate Tectonics · Rock Cycle · Soil Formation · Soil Degradation · Atmospheric Layers · Energy Balance</p>
+      </header>
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Core Frame</div>
+          <div class="card-title">What Unit 4 Is Really About</div>
+          <div class="body-copy">
+            <p>Unit 4 connects the physical Earth — its moving plates, dynamic soils, and layered atmosphere — to
+              environmental science. The thread: Earth's systems are <strong class="ap-term">interconnected</strong>.
+              Plate movement shapes where minerals and fertile soils form; soils determine agricultural productivity;
+              the atmosphere's energy balance drives climate.</p>
+            <p>Master three scales: the deep-Earth scale of <strong class="ap-term">plate tectonics</strong>, the
+              surface scale of <strong class="ap-term">soil formation and degradation</strong>, and the atmospheric
+              scale of <strong class="ap-term">energy balance and greenhouse gases</strong>. The exam ties each to human
+              impacts and policy.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Study Sections</span><strong>8</strong></div>
+            <div class="stat-box"><span>Key Terms</span><strong>90+</strong></div>
+            <div class="stat-box"><span>Quiz Items</span><strong>14</strong></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Strategy</div>
+            <div class="body-copy">Expect scenario-based questions: identify a plate boundary type from a description;
+              predict runoff vs infiltration from soil texture; explain why a temperature inversion traps pollutants.
+              Always connect physical processes to human consequences and environmental policy.</div>
+          </div>
+        </article>
+        <article class="card feature-card accent-g2">
+          <div class="card-sub">Fast Review</div>
+          <div class="card-title">What You Must Be Able to Do</div>
+          <ul class="bullet-list">
+            <li>Identify <strong class="ap-term">plate boundary types</strong> and predict associated hazards.</li>
+            <li>Explain the <strong class="ap-term">rock cycle</strong> and connect rock types to resource formation.
+            </li>
+            <li>Describe <strong class="ap-term">soil horizons</strong> (O, A, E, B, C) and why topsoil loss harms
+              agriculture.</li>
+            <li>Compare soil textures in terms of <strong class="ap-term">porosity, permeability, and water-holding
+                capacity</strong>.</li>
+            <li>Calculate <strong class="ap-term">porosity</strong>: Vw ÷ Vt.</li>
+            <li>Match <strong class="ap-term">soil conservation strategies</strong> to the correct erosion scenario.
+            </li>
+            <li>Distinguish <strong class="ap-term">greenhouse effect</strong> from ozone depletion — different problems
+              entirely.</li>
+            <li>Predict how <strong class="ap-term">albedo</strong> changes affect local and global temperature.</li>
+            <li>Explain why <strong class="ap-term">temperature inversions</strong> worsen air pollution episodes.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Plate Tectonics</span><span class="tag">Rock Cycle</span><span class="tag">Soil
+              Horizons</span>
+            <span class="tag">Porosity</span><span class="tag">Greenhouse Effect</span><span class="tag">Albedo</span>
+          </div>
+        </article>
+      </div>
+      <div class="exam-grid">
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Common Mistakes</div>
+          <h3>Avoid These</h3>
+          <ul class="bullet-list">
+            <li>Assuming all <strong class="ap-term">convergent boundaries</strong> produce volcanoes — continental
+              collision doesn't; subduction does.</li>
+            <li>Placing the <strong class="ap-term">ozone layer</strong> in the troposphere — it's in the stratosphere.
+            </li>
+            <li>Confusing <strong class="ap-term">porosity</strong> with <strong class="ap-term">permeability</strong>.
+              Clay has high porosity but low permeability.</li>
+            <li>Thinking clay holds less water than sand — clay holds <em>more</em>, drains more slowly.</li>
+            <li>Treating <strong class="ap-term">greenhouse effect</strong> and ozone depletion as the same problem.
+            </li>
+            <li>Saying soil forms quickly — productive topsoil takes <strong class="ap-term">centuries</strong>.</li>
+            <li>Calling <strong class="ap-term">salinization</strong> a fertilizer problem — it's a water-balance and
+              drainage issue.</li>
+            <li>Proposing windbreaks for <strong class="ap-term">water erosion</strong> on steep slopes — match strategy
+              to erosion type.</li>
+          </ul>
+        </article>
+        <article class="exam-card feature-card accent-gold">
+          <div class="mini-label">Formulas &amp; Key Numbers</div>
+          <h3>Cheatsheet</h3>
+          <ul class="bullet-list">
+            <li><strong>Porosity =</strong> Vw ÷ Vt &nbsp;(1 cm³ = 1 mL)</li>
+            <li><strong>Albedo</strong> = reflected ÷ incoming radiation</li>
+            <li><strong>Loam</strong> = balanced sand + silt + clay + humus</li>
+            <li><strong>Soil particle size</strong>: gravel &gt; sand &gt; silt &gt; clay (≤ 2 mm inorganic)</li>
+            <li><strong>Troposphere</strong>: 0–10 km; temp decreases with altitude; weather here</li>
+            <li><strong>Stratosphere</strong>: 10–50 km; ozone layer; temp increases with altitude</li>
+            <li><strong>Volcanic aerosols</strong> persist 1–3 years in stratosphere</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Unit 4 Deep Dive</h2>
+        <p>Plate Tectonics · Rock Cycle · Soil Formation · Soil Degradation · Conservation · Atmosphere · Energy Balance
+        </p>
+      </header>
+      <div class="notes-shell">
+        <aside class="notes-index">
+          <div class="notes-index-title">Sections</div>
+          <button class="note-jump" type="button" data-note-target="n-plates"><span>Plate
+              Tectonics</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-rock"><span>Rock
+              Cycle</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-soil"><span>Soil
+              Formation</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-texture"><span>Soil
+              Texture</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-degrade"><span>Soil
+              Degradation</span><span>05</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="n-conserve"><span>Conservation</span><span>06</span></button>
+          <button class="note-jump" type="button"
+            data-note-target="n-atmo"><span>Atmosphere</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-energy"><span>Energy
+              Balance</span><span>08</span></button>
+        </aside>
+        <div class="notes-stack">
+
+          <article class="note-section accent-g" id="n-plates">
+            <div class="mini-label">01 · Plate Tectonics and Geologic Processes</div>
+            <h3>Earth's Moving Surface</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Plate tectonics</strong> holds that Earth's <strong
+                  class="ap-term">lithosphere</strong> is broken into plates moving atop the ductile <strong
+                  class="ap-term">asthenosphere</strong>, driven by mantle <strong class="ap-term">convection</strong>.
+                In 1915, <strong class="ap-term">Alfred Wegener</strong> proposed all continents were once joined as
+                <strong class="ap-term">Pangaea</strong>, supported by matching fossils, rock types, coastline fit, and
+                paleoclimate evidence. Mechanism came later via <strong class="ap-term">seafloor spreading</strong> —
+                confirmed by magnetic stripe patterns and increasing rock age away from mid-ocean ridges.</p>
+            </div>
+            <h4>Plate Boundary Types</h4>
+            <table class="compare-table">
+              <tr>
+                <th>Boundary</th>
+                <th>Motion</th>
+                <th>Features</th>
+                <th>Examples</th>
+              </tr>
+              <tr>
+                <td>Divergent</td>
+                <td>Apart</td>
+                <td>New crust, shallow quakes, volcanism, rifts</td>
+                <td>Mid-Atlantic Ridge, East African Rift</td>
+              </tr>
+              <tr>
+                <td>Convergent / Subduction</td>
+                <td>Together (one sinks)</td>
+                <td>Deep trenches, volcanic arcs, powerful quakes; island arcs (2 oceanic)</td>
+                <td>Cascades, Aleutians</td>
+              </tr>
+              <tr>
+                <td>Convergent / Collision</td>
+                <td>Together (both buoyant)</td>
+                <td>Mountain ranges, quakes — NO volcanoes</td>
+                <td>Himalayas</td>
+              </tr>
+              <tr>
+                <td>Transform</td>
+                <td>Slide past</td>
+                <td>Earthquakes, minimal volcanism</td>
+                <td>San Andreas Fault</td>
+              </tr>
+            </table>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Hot Spots</strong>
+                <div class="body-copy">Mantle plumes pierce mid-plate lithosphere. As the plate moves, a chain of
+                  volcanoes forms — strong evidence for plate motion direction and rate. Example: Hawaiian island chain.
+                </div>
+              </div>
+              <div class="mini-note"><strong>Earthquake Damage Factors</strong>
+                <div class="body-copy">Magnitude, depth (shallow = more surface damage), distance from epicenter, local
+                  geology (soft sediments amplify; saturated soils liquify), and building codes. Two equal-magnitude
+                  quakes can have vastly different impacts.</div>
+              </div>
+              <div class="mini-note"><strong>Volcanic Effects</strong>
+                <div class="body-copy">Effusive (lava) = slow, destroys property. Explosive (ash, pyroclastic) = acutely
+                  deadly. Long-term: ash weathers to fertile soils; large eruptions inject stratospheric aerosols,
+                  temporarily cooling climate.</div>
+              </div>
+            </div>
+            <div class="focus-callout">
+              <div class="label">Exam Key</div>
+              <div class="body-copy">Volcanoes occur at subduction zones — NOT at continent-continent collisions. Plates
+                ride atop a ductile asthenosphere, not a global ocean of liquid magma.</div>
+            </div>
+          </article>
+
+          <article class="note-section accent-g2" id="n-rock">
+            <div class="mini-label">02 · The Rock Cycle</div>
+            <h3>How Rocks Transform & Why It Matters for Resources</h3>
+            <table class="compare-table">
+              <tr>
+                <th>Type</th>
+                <th>Formation</th>
+                <th>Key Features</th>
+                <th>APES Examples</th>
+              </tr>
+              <tr>
+                <td>Igneous</td>
+                <td>Cooled magma/lava</td>
+                <td>Intrusive (slow, coarse-grained) vs Extrusive (fast, fine-grained); classified by silica content
+                </td>
+                <td>Granite (intrusive), Basalt (extrusive)</td>
+              </tr>
+              <tr>
+                <td>Sedimentary</td>
+                <td>Compacted sediments or chemical precipitation</td>
+                <td>Fossils form ONLY here; often contain fossil fuels</td>
+                <td>Limestone, Sandstone, most Coal</td>
+              </tr>
+              <tr>
+                <td>Metamorphic</td>
+                <td>Heat + pressure (no melting)</td>
+                <td>Associated with collision zones and deep burial</td>
+                <td>Diamond, Marble, Slate, Anthracite coal</td>
+              </tr>
+            </table>
+            <div class="focus-callout">
+              <div class="label">Resource Connection</div>
+              <div class="body-copy">Sedimentary basins concentrate fossil fuels. Specific geologic settings concentrate
+                mineral ores. Weathering of all rock types produces soil parent material. APES focuses on connecting
+                rock type to hazards and resource distribution.</div>
+            </div>
+          </article>
+
+          <article class="note-section accent-g3" id="n-soil">
+            <div class="mini-label">03 · Soil Formation, Horizons & Ecology</div>
+            <h3>Soil Is a Living, Layered System</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Soil</strong> forms through rock <strong class="ap-term">weathering</strong>
+                plus accumulation and decomposition of organic matter. Productive topsoil can take <strong
+                  class="ap-term">centuries or longer</strong> to form — it is not quickly renewable on human
+                timescales.</p>
+            </div>
+            <h4>Five Factors of Soil Formation</h4>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Parent Material</strong>
+                <div class="body-copy">Rock/minerals from which soil derives (local bedrock or transported by water,
+                  wind, glaciers). Determines mineral composition and initial nutrients.</div>
+              </div>
+              <div class="mini-note"><strong>Climate</strong>
+                <div class="body-copy">Precipitation and temperature control weathering rates and organic matter
+                  decomposition. Tropics = rapid weathering; arid = slow formation.</div>
+              </div>
+              <div class="mini-note"><strong>Topography</strong>
+                <div class="body-copy">Slope affects drainage, erosion, and depth. Steep slopes lose topsoil; low areas
+                  accumulate sediment and organic matter.</div>
+              </div>
+              <div class="mini-note"><strong>Organisms</strong>
+                <div class="body-copy">Microbes, earthworms, roots, fungi decompose litter and cycle nutrients.
+                  Nitrogen-fixing bacteria (Rhizobium) convert N₂ to usable forms. Earthworms mix humus with minerals.
+                </div>
+              </div>
+              <div class="mini-note"><strong>Time</strong>
+                <div class="body-copy">Well-developed fertile soils take thousands of years. Loss is fast, recovery is
+                  slow — the core reason soil conservation matters.</div>
+              </div>
+            </div>
+            <h4>Soil Horizons</h4>
+            <table class="compare-table">
+              <tr>
+                <th>Horizon</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>O</td>
+                <td>Surface litter</td>
+                <td>Leaves and partially decomposed organic debris</td>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td>Topsoil ⭐</td>
+                <td>Most fertile; organic matter + organisms + minerals. Thick in grasslands. Key for agriculture —
+                  erosion here is most damaging.</td>
+              </tr>
+              <tr>
+                <td>E</td>
+                <td>Zone of leaching</td>
+                <td>Dissolved materials move downward; present in some soils</td>
+              </tr>
+              <tr>
+                <td>B</td>
+                <td>Subsoil</td>
+                <td>Accumulates iron, aluminum, clay leached from above; often yellowish/reddish</td>
+              </tr>
+              <tr>
+                <td>C</td>
+                <td>Parent material</td>
+                <td>Partially weathered inorganic material transitioning to bedrock</td>
+              </tr>
+            </table>
+            <div class="focus-callout">
+              <div class="label">Soil Ecology</div>
+              <div class="body-copy">The <strong class="ap-term">soil food web</strong> — bacteria, fungi, insects,
+                worms, roots — decomposes organic matter, releases plant-available nutrients, and improves aeration and
+                water movement. <strong class="ap-term">Humus</strong> (decomposed organic matter) improves structure,
+                water retention, aeration, and pH stability.</div>
+            </div>
+          </article>
+
+          <article class="note-section accent-gold" id="n-texture">
+            <div class="mini-label">04 · Soil Texture, Porosity & Permeability</div>
+            <h3>Particle Size Controls Water, Air & Nutrients</h3>
+            <table class="compare-table">
+              <tr>
+                <th>Type</th>
+                <th>Pore Size</th>
+                <th>Drainage</th>
+                <th>Nutrient Holding</th>
+                <th>Key Note</th>
+              </tr>
+              <tr>
+                <td>Sand</td>
+                <td>Largest</td>
+                <td>Very fast</td>
+                <td>Low</td>
+                <td>Low surface area; water moves too fast for many crops</td>
+              </tr>
+              <tr>
+                <td>Silt</td>
+                <td>Medium</td>
+                <td>Moderate</td>
+                <td>Moderate-high</td>
+                <td>Fertile; easily transported by water (erosion risk)</td>
+              </tr>
+              <tr>
+                <td>Clay</td>
+                <td>Smallest</td>
+                <td>Slow (low permeability)</td>
+                <td>Highest (large surface area)</td>
+                <td>Compacts easily; can waterlog; high porosity, low permeability</td>
+              </tr>
+              <tr>
+                <td>Loam</td>
+                <td>Mixed</td>
+                <td>Balanced — ideal</td>
+                <td>High</td>
+                <td>Best for most crops: sand + silt + clay + humus</td>
+              </tr>
+            </table>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Porosity</strong>
+                <div class="body-copy">Total pore space. Formula: Porosity = Vw ÷ Vt (water volume to saturate ÷ total
+                  saturated volume; 1 cm³ = 1 mL). Clay has HIGH porosity (many tiny pores) but LOW permeability.</div>
+              </div>
+              <div class="mini-note"><strong>Permeability</strong>
+                <div class="body-copy">How easily water flows through connected pores. Sand = HIGH permeability (large,
+                  connected pores). Clay = LOW permeability despite high porosity. Low permeability → more runoff,
+                  erosion, less groundwater recharge.</div>
+              </div>
+              <div class="mini-note"><strong>Infiltration</strong>
+                <div class="body-copy">Water entering soil from the surface. Low infiltration → high runoff → flood
+                  risk, erosion, less groundwater recharge. Vegetation and organic matter improve infiltration.</div>
+              </div>
+              <div class="mini-note"><strong>Leaching</strong>
+                <div class="body-copy">Downward movement of dissolved substances after saturation. Leaches nutrients
+                  into B horizon where roots may not reach — concern in high-rainfall regions and over-irrigated soils.
+                </div>
+              </div>
+            </div>
+            <div class="code-block">Porosity Calculation Example:
+              Soil sample total volume = 400 mL
+              Water needed to saturate = 160 mL
+              Porosity = 160 ÷ 400 = 0.40 = 40%
+
+              Remember: 1 cm³ = 1 mL
+              Clay: high porosity, low permeability (pores tiny, poorly connected)
+              Sand: lower porosity, HIGH permeability (pores large, well connected)</div>
+          </article>
+
+          <article class="note-section accent-teal" id="n-degrade">
+            <div class="mini-label">05 · Soil Degradation</div>
+            <h3>Erosion, Desertification, Salinization & More</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Water Erosion</strong>
+                <div class="body-copy">Flowing water removes topsoil. Increases with bare soil, steep slopes, intense
+                  rain, downslope plowing. Carries sediment, nutrients, pesticides → turbidity, eutrophication
+                  downstream.</div>
+              </div>
+              <div class="mini-note"><strong>Wind Erosion</strong>
+                <div class="body-copy">Common in dry, exposed fields. Removes fine fertile particles. Dust storms reduce
+                  soil quality. Prevented by vegetation, windbreaks, cover crops.</div>
+              </div>
+              <div class="mini-note"><strong>Landslides / Mudslides</strong>
+                <div class="body-copy">Triggered by heavy rain, earthquakes, wildfires, or construction removing
+                  vegetation. Most likely on steep slopes with prior slide history or concentrated runoff channels.
+                </div>
+              </div>
+              <div class="mini-note"><strong>Desertification</strong>
+                <div class="body-copy">Dryland degradation from overgrazing, deforestation, unsustainable farming,
+                  drought. NOT simply natural desert expansion — reflects land use exceeding dryland limits.</div>
+              </div>
+              <div class="mini-note"><strong>Salinization</strong>
+                <div class="body-copy">Salt accumulates as irrigation water evaporates; poor drainage prevents flushing.
+                  Arid/semi-arid regions. Water-balance problem, NOT too much fertilizer. Hard to reverse once severe.
+                </div>
+              </div>
+              <div class="mini-note"><strong>Waterlogging</strong>
+                <div class="body-copy">Soil becomes saturated, depleting oxygen for roots. Often co-occurs with
+                  salinization under poorly drained irrigation. Damages crops and structure.</div>
+              </div>
+            </div>
+            <div class="focus-callout">
+              <div class="label">Accelerated by Poor Practices</div>
+              <div class="body-copy">Improper plowing, <strong class="ap-term">monoculture</strong>, <strong
+                  class="ap-term">overgrazing</strong>, and removing crop residues all accelerate erosion and nutrient
+                depletion. Over-tilling breaks soil structure, reduces infiltration, and creates a runoff feedback loop.
+              </div>
+            </div>
+          </article>
+
+          <article class="note-section accent-blue" id="n-conserve">
+            <div class="mini-label">06 · Soil Conservation Strategies</div>
+            <h3>Matching Solutions to Degradation Causes</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Contour Plowing</strong>
+                <div class="body-copy">Plow along elevation contours, perpendicular to slope. Creates ridges that hold
+                  water and slow runoff. Best for hilly agricultural land — water erosion.</div>
+              </div>
+              <div class="mini-note"><strong>Terracing</strong>
+                <div class="body-copy">Level steps on steep slopes drastically reduce runoff speed. High initial cost,
+                  very effective long-term. Water erosion on steep hillsides.</div>
+              </div>
+              <div class="mini-note"><strong>Strip Cropping</strong>
+                <div class="body-copy">Alternating rows of crops and grass/cover strips. Grass strips slow runoff and
+                  catch sediment. Water erosion.</div>
+              </div>
+              <div class="mini-note"><strong>Riparian Buffers</strong>
+                <div class="body-copy">Vegetation along waterways traps sediment and nutrients before they reach
+                  streams. Protects water quality and aquatic habitat.</div>
+              </div>
+              <div class="mini-note"><strong>Windbreaks (Shelterbelts)</strong>
+                <div class="body-copy">Rows of trees perpendicular to prevailing winds reduce wind speed and protect
+                  topsoil. For wind erosion — NOT water erosion on slopes.</div>
+              </div>
+              <div class="mini-note"><strong>No-till / Cover Crops</strong>
+                <div class="body-copy">No-till: minimal disturbance, preserves structure, reduces erosion dramatically
+                  (but may increase herbicide use). Cover crops: keep soil rooted between seasons, add organic matter,
+                  can fix nitrogen.</div>
+              </div>
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Practice</th>
+                <th>Mechanism</th>
+                <th>Tradeoff</th>
+              </tr>
+              <tr>
+                <td>No-till</td>
+                <td>Preserves structure; reduces erosion up to 90%</td>
+                <td>May require more herbicide for weed control</td>
+              </tr>
+              <tr>
+                <td>Crop rotation</td>
+                <td>Breaks pest cycles; legumes restore nitrogen; varied roots improve structure</td>
+                <td>More planning; market constraints on crop choice</td>
+              </tr>
+              <tr>
+                <td>Compost / Manure</td>
+                <td>Adds organic matter; improves water retention, structure, microbial life</td>
+                <td>Labor, cost; excess phosphorus runoff risk</td>
+              </tr>
+            </table>
+          </article>
+
+          <article class="note-section accent-g" id="n-atmo">
+            <div class="mini-label">07 · The Atmosphere: Composition & Structure</div>
+            <h3>Earth's Protective Gaseous Shell</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Nitrogen (N₂) ~78%</strong>
+                <div class="body-copy">Most abundant. Essential for amino acids and nucleic acids. Enters ecosystems via
+                  nitrogen fixation and lightning; returns via denitrification and combustion.</div>
+              </div>
+              <div class="mini-note"><strong>Oxygen (O₂) ~21%</strong>
+                <div class="body-copy">Accumulated significantly ~2.5 billion years ago (<strong class="ap-term">Great
+                    Oxidation Event</strong>). Produced by photosynthesis; used in cellular respiration. GOE oxidized
+                  methane to CO₂, weakening greenhouse effect → global cooling.</div>
+              </div>
+              <div class="mini-note"><strong>Water Vapor (H₂O) 0–4%</strong>
+                <div class="body-copy">Highly variable; highest near equator and tropical oceans; lowest in deserts and
+                  poles. Sources: evaporation, transpiration, combustion, volcanic eruptions.</div>
+              </div>
+              <div class="mini-note"><strong>CO₂ (trace but critical)</strong>
+                <div class="body-copy">Small fraction, large climate influence as key greenhouse gas. Increasing from
+                  fossil fuel combustion and deforestation. Early Earth had high volcanic CO₂ enabling earliest life.
+                </div>
+              </div>
+            </div>
+            <h4>Atmospheric Layers</h4>
+            <table class="compare-table">
+              <tr>
+                <th>Layer</th>
+                <th>Altitude</th>
+                <th>Temperature Trend</th>
+                <th>Key Role</th>
+              </tr>
+              <tr>
+                <td>Troposphere</td>
+                <td>0–~10 km</td>
+                <td>Decreases with altitude</td>
+                <td>~75% of atmosphere; all weather; almost all water vapor; pressure decreases with height</td>
+              </tr>
+              <tr>
+                <td>Stratosphere</td>
+                <td>~10–50 km</td>
+                <td>Increases with altitude</td>
+                <td>Contains protective ozone (O₃) that absorbs UV. Do NOT place ozone in troposphere.</td>
+              </tr>
+            </table>
+            <div class="body-copy" style="margin-top:14px;">
+              <p>A <strong class="ap-term">temperature inversion</strong> occurs when a warm air layer caps cooler
+                surface air, preventing vertical mixing. Pollutants accumulate near the ground — worsening smog in
+                valleys and basins. Classic scenario: calm winter morning, city in a valley, cold air trapped under warm
+                cap.</p>
+            </div>
+          </article>
+
+          <article class="note-section accent-g2" id="n-energy">
+            <div class="mini-label">08 · Energy Balance, Greenhouse Effect & Albedo</div>
+            <h3>How Earth Heats and Cools</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Albedo</strong>
+                <div class="body-copy">Fraction of incoming sunlight reflected. Ice/snow = high albedo (~80%).
+                  Ocean/forests/asphalt = low albedo. Melting ice (replacing high albedo with low) creates a warming
+                  positive feedback. Land-cover change affects local and global temperatures.</div>
+              </div>
+              <div class="mini-note"><strong>Natural Greenhouse Effect</strong>
+                <div class="body-copy">H₂O, CO₂, CH₄, N₂O absorb and re-emit infrared radiation, warming the
+                  troposphere. Without this, Earth would be ~33°C colder. Essential for life.</div>
+              </div>
+              <div class="mini-note"><strong>Enhanced Greenhouse Effect</strong>
+                <div class="body-copy">Human-driven increases in greenhouse gases intensify warming. CO₂ from fossil
+                  fuels, CH₄ from agriculture/landfills, N₂O from fertilizers add to the atmospheric "blanket."</div>
+              </div>
+              <div class="mini-note"><strong>Ozone Layer — SEPARATE Issue</strong>
+                <div class="body-copy">Stratospheric O₃ absorbs UV radiation. Ozone depletion (CFCs) → more UV at
+                  surface → skin cancer, harm to phytoplankton. Different gases, different radiation (UV not IR),
+                  different layer from greenhouse effect.</div>
+              </div>
+              <div class="mini-note"><strong>Volcanic Aerosols</strong>
+                <div class="body-copy">Sulfur-rich eruptions inject aerosols into stratosphere → reflect sunlight →
+                  tropospheric cooling + stratospheric warming. Persist 1–3 years. Can also accelerate ozone
+                  destruction.</div>
+              </div>
+              <div class="mini-note"><strong>Convection & Weather</strong>
+                <div class="body-copy">Warm air rises, cool air sinks → pressure differences → wind. Unequal solar
+                  heating (tropics receive more than poles) drives global circulation patterns and weather systems.
+                </div>
+              </div>
+            </div>
+            <div class="code-block">Energy Balance Summary:
+
+              Incoming solar radiation (shortwave)
+              → Some REFLECTED by clouds, ice, land (albedo)
+              → Some ABSORBED by surface and atmosphere
+
+              Earth emits longwave (infrared) radiation outward
+              → Greenhouse gases ABSORB & RE-EMIT → warms troposphere
+
+              Equilibrium: Incoming = Outgoing
+              ↑ Greenhouse gases → less outgoing → warming
+              ↓ Albedo (less ice, more asphalt) → more absorption → warming
+              Volcanic aerosols → more reflection → temporary cooling (1–3 yrs)</div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Key Terms</span>
+        <h2>Unit 4 Glossary</h2>
+        <p>Search and click any term to explore its context</p>
+      </header>
+      <div class="glossary-toolbar">
+        <input id="glossaryFilter" type="text" placeholder="Search terms…" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Active Recall</span>
+        <h2>Unit 4 Flashcards</h2>
+        <p>Click any card to flip · Review until confident</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM -->
+    <section class="tab-content" id="exam">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>Key Concepts &amp; Strategies</h2>
+        <p>High-yield topics · Pattern recognition · Quick-reference</p>
+      </header>
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Plate Tectonics</div>
+          <h3>Boundary → Hazard Map</h3>
+          <ul class="bullet-list">
+            <li>Divergent → new crust, shallow quakes, volcanism (ridges, rifts)</li>
+            <li>Convergent / subduction → deep trenches, volcanic arcs, powerful quakes</li>
+            <li>Convergent / collision → mountains, quakes, NO volcanoes</li>
+            <li>Transform → lateral quakes, minimal volcanism (San Andreas)</li>
+            <li>Hot spots → mid-plate volcanoes, island chains (Hawaii)</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Soil Horizon Memory Aid</div>
+          <h3>O-A-E-B-C Top to Bottom</h3>
+          <ul class="bullet-list">
+            <li><strong>O</strong> = Organic litter (surface debris)</li>
+            <li><strong>A</strong> = topsoil — most fertile, most critical for agriculture</li>
+            <li><strong>E</strong> = Eluviation / leaching zone</li>
+            <li><strong>B</strong> = Buildup (iron, clay, minerals washed down)</li>
+            <li><strong>C</strong> = Crumbled parent rock → bedrock below</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-teal">
+          <div class="mini-label">Atmosphere</div>
+          <h3>Two Problems, Two Layers</h3>
+          <ul class="bullet-list">
+            <li><strong>Greenhouse effect</strong>: IR radiation + CO₂/CH₄/H₂O/N₂O → troposphere warming</li>
+            <li><strong>Ozone depletion</strong>: UV + CFCs → stratospheric ozone loss → more UV at surface</li>
+            <li><strong>Temperature inversion</strong>: warm cap traps cool air + pollutants near surface</li>
+            <li><strong>Albedo</strong>: high = more reflection = cooler; low = more absorption = warmer</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Soil Texture Shortcut</div>
+          <h3>Sand · Clay · Loam</h3>
+          <ul class="bullet-list">
+            <li>Sand: large pores → fast drain, LOW nutrient/water retention</li>
+            <li>Clay: tiny pores → slow drain (LOW permeability), HIGH surface area → holds MORE water than sand</li>
+            <li>Loam = best: balanced drainage + nutrient holding</li>
+            <li>Porosity = Vw ÷ Vt; clay porosity HIGH but permeability LOW</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Unit 4 Practice Quiz</div>
+      <button class="modal-close glass-btn" data-close="quizModal" type="button">✕ Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Bank — Unit 4</div>
+      <button class="modal-close glass-btn" data-close="essayModal" type="button">✕ Close</button>
+      <div class="essay-list" id="essayTopics"></div>
+      <div class="essay-outline" id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", icon: "🌍", label: "Dashboard", ambient: "radial-gradient(ellipse at 40% 20%, rgba(74,184,216,.09), transparent 65%)" },
+      { id: "notes", icon: "📋", label: "Notes", ambient: "radial-gradient(ellipse at 60% 30%, rgba(61,207,176,.07), transparent 65%)" },
+      { id: "glossary", icon: "📖", label: "Glossary", ambient: "radial-gradient(ellipse at 50% 10%, rgba(90,143,212,.08), transparent 65%)" },
+      { id: "flashcards", icon: "🃏", label: "Flashcards", ambient: "radial-gradient(ellipse at 30% 50%, rgba(106,216,184,.07), transparent 65%)" },
+      { id: "exam", icon: "🎯", label: "Exam Prep", ambient: "radial-gradient(ellipse at 70% 20%, rgba(122,184,248,.08), transparent 65%)" },
+    ];
+
+    const glossaryTerms = [
+      { term: "Plate Tectonics", tab: "notes", def: "Theory that Earth's outer lithosphere is broken into tectonic plates that move relative to each other, driven by mantle convection." },
+      { term: "Lithosphere", tab: "notes", def: "Earth's rigid outer shell: crust + uppermost mantle. Broken into tectonic plates." },
+      { term: "Asthenosphere", tab: "notes", def: "Ductile, slowly flowing layer beneath the lithosphere. Plates ride atop this — not on liquid magma." },
+      { term: "Pangaea", tab: "notes", def: "Wegener's proposed supercontinent — all present continents joined ~200 million years ago before breaking apart." },
+      { term: "Seafloor Spreading", tab: "notes", def: "New oceanic crust forms at mid-ocean ridges and moves outward. Confirmed by magnetic stripe patterns and increasing rock age away from ridges." },
+      { term: "Divergent Boundary", tab: "notes", def: "Plates move apart; new crust forms. Features: mid-ocean ridges, rift valleys, shallow earthquakes, volcanic activity." },
+      { term: "Convergent Boundary", tab: "notes", def: "Plates move toward each other. Subduction → trenches, volcanic arcs, powerful quakes. Continental collision → mountains, quakes, NO volcanoes." },
+      { term: "Transform Boundary", tab: "notes", def: "Plates slide past each other laterally. Earthquakes, minimal volcanism. Example: San Andreas Fault." },
+      { term: "Subduction Zone", tab: "notes", def: "Denser plate dives beneath lighter plate into mantle. Creates deep trenches, volcanic arcs, and powerful earthquakes." },
+      { term: "Hot Spot", tab: "notes", def: "Mantle plume rises through mid-plate lithosphere creating volcanoes. Plate movement creates a chain of volcanoes. Example: Hawaiian Islands." },
+      { term: "Rock Cycle", tab: "notes", def: "Continuous transformation among igneous, sedimentary, and metamorphic rocks through cooling, compaction, weathering, erosion, heat, and pressure." },
+      { term: "Igneous Rock", tab: "notes", def: "Formed from cooled magma. Intrusive: slow cooling, coarse-grained. Extrusive: fast cooling, fine-grained." },
+      { term: "Sedimentary Rock", tab: "notes", def: "Formed from compacted/cemented sediments or chemical precipitation. Fossils form ONLY in sedimentary rock. Often contains fossil fuels." },
+      { term: "Metamorphic Rock", tab: "notes", def: "Existing rock altered by heat and pressure without melting. Examples: marble, slate, diamond, anthracite coal." },
+      { term: "Soil", tab: "notes", def: "Mixture of mineral particles, organic matter, water, air, and organisms. A living, structured system essential for terrestrial ecosystems and agriculture." },
+      { term: "Soil Horizon", tab: "notes", def: "Distinct layer in a soil profile. From top: O (litter), A (topsoil), E (leaching), B (subsoil), C (parent material)." },
+      { term: "A Horizon (Topsoil)", tab: "notes", def: "Most fertile soil layer; rich in organic matter and organisms. Most critical for agriculture — erosion here is most damaging." },
+      { term: "Humus", tab: "notes", def: "Dark decomposed organic material in soil. Improves structure, water retention, aeration, root penetration, pH stability, and nutrient supply." },
+      { term: "Soil Texture", tab: "notes", def: "Distribution of particle sizes (gravel, sand, silt, clay). Determines drainage, nutrient holding, porosity, and permeability." },
+      { term: "Loam", tab: "notes", def: "Balanced mixture of sand, silt, clay, and humus. Nutrient-rich, holds water without waterlogging — generally best for crops." },
+      { term: "Porosity", tab: "notes", def: "Total pore space in soil. Formula: Vw ÷ Vt. Clay has high porosity but low permeability." },
+      { term: "Permeability", tab: "notes", def: "How easily water flows through connected pores. Sand = high permeability; clay = low permeability despite high porosity." },
+      { term: "Infiltration", tab: "notes", def: "Water entering soil from the surface. Low infiltration → high runoff → more erosion and flooding, less groundwater recharge." },
+      { term: "Leaching", tab: "notes", def: "Downward movement of dissolved substances through the soil profile after saturation. Can deplete topsoil nutrients into subsoil." },
+      { term: "Soil Erosion", tab: "notes", def: "Movement of weathered rock/soil by water, wind, or human activity. Destroys topsoil, reduces water-holding capacity, carries pollutants downstream." },
+      { term: "Desertification", tab: "notes", def: "Dryland degradation from overgrazing, deforestation, unsustainable farming, and drought. Not simply natural desert expansion." },
+      { term: "Salinization", tab: "notes", def: "Salt accumulation as irrigation water evaporates; worsened by poor drainage. A water-balance problem, not a fertilizer problem. Difficult to reverse." },
+      { term: "Contour Plowing", tab: "notes", def: "Plowing along elevation contours (perpendicular to slope) to slow water flow and reduce erosion." },
+      { term: "Terracing", tab: "notes", def: "Creating level steps on steep slopes to reduce runoff speed and erosion. Effective but labor-intensive." },
+      { term: "No-till Agriculture", tab: "notes", def: "Minimizes soil disturbance, preserves structure and organisms, greatly reduces erosion. May increase herbicide use for weeds." },
+      { term: "Troposphere", tab: "notes", def: "Lowest atmospheric layer (0–~10 km). Contains ~75% of mass, nearly all water vapor, all weather. Temperature decreases with altitude." },
+      { term: "Stratosphere", tab: "notes", def: "Atmospheric layer ~10–50 km. Contains most protective ozone. Temperature increases with altitude. Not where weather occurs." },
+      { term: "Greenhouse Effect", tab: "notes", def: "Greenhouse gases absorb and re-emit infrared radiation, warming the troposphere. Natural effect is essential; enhanced effect from human emissions drives climate change." },
+      { term: "Albedo", tab: "notes", def: "Fraction of incoming sunlight reflected by a surface. Ice/snow = high; forests/asphalt = low. Lower albedo → more energy absorbed → warming." },
+      { term: "Temperature Inversion", tab: "notes", def: "Warm air layer above cooler surface air prevents vertical mixing. Traps pollutants near the ground — common in valleys and basins." },
+      { term: "Great Oxidation Event", tab: "notes", def: "~2.5 billion years ago, atmospheric oxygen increased. Oxidized methane (potent greenhouse gas) to CO₂, cooling Earth. Killed most anaerobic life but enabled biological diversification." },
+      { term: "Ozone (O₃)", tab: "notes", def: "Stratospheric ozone absorbs harmful UV radiation. Ozone depletion (from CFCs) is a separate problem from the greenhouse effect — different gases, different radiation, different layer." },
+    ];
+
+    const flashcards = [
+      { front: "What three rock types cycle in the rock cycle?", back: "Igneous (cooled magma), Sedimentary (compacted sediments — only type with fossils), and Metamorphic (heat + pressure). Each can transform into any other type." },
+      { front: "Where does most protective ozone exist, and what does it do?", back: "In the stratosphere (~10–50 km). It absorbs harmful UV radiation, protecting life. Ozone depletion (from CFCs) is a SEPARATE problem from the greenhouse effect — different gases, different radiation type, different layer." },
+      { front: "What is the porosity formula and what units to remember?", back: "Porosity = Vw ÷ Vt (volume of water to saturate ÷ total volume of saturated soil). 1 cm³ = 1 mL. Clay has HIGH porosity but LOW permeability — pores tiny and poorly connected." },
+      { front: "What causes a temperature inversion and why does it matter for air quality?", back: "A warm air layer caps cooler air near the surface, preventing vertical mixing. Pollutants from vehicles and industry accumulate near ground level, worsening smog — especially in valleys and basins." },
+      { front: "Why doesn't a continent-continent convergent boundary produce volcanoes?", back: "Volcanoes form during subduction — when one plate sinks into the mantle and melts. Two buoyant continental plates don't subduct; they buckle and stack instead, forming mountain ranges like the Himalayas." },
+      { front: "Rank sand, clay, and loam from highest to lowest water-holding capacity.", back: "Clay (highest — tiny particles, huge surface area, clings to water) > Loam (balanced) > Sand (lowest — large pores drain quickly, water doesn't cling). Clay holds MORE water than sand but drains slowly." },
+      { front: "What is albedo and how does melting Arctic ice amplify warming?", back: "Albedo = fraction of sunlight reflected. Ice has high albedo (~80%). When it melts, dark ocean (low albedo, ~6% reflection) absorbs far more energy, creating a positive feedback that amplifies warming." },
+      { front: "Name four soil conservation practices and match each to its erosion type.", back: "Contour plowing → water erosion on slopes; Terracing → steep water erosion; Windbreaks → wind erosion; No-till → both; Cover crops → both; Riparian buffers → water runoff before entering streams." },
+      { front: "What is the A horizon and why is losing it so damaging?", back: "The A horizon (topsoil) is richest in organic matter and organisms — the foundation of agricultural productivity. It takes centuries to form. Losing it forces more fertilizer and irrigation use, with additional environmental impacts." },
+      { front: "How did the Great Oxidation Event affect Earth's climate?", back: "~2.5 billion years ago, free oxygen oxidized atmospheric methane (potent greenhouse gas) into CO₂ (weaker), weakening the greenhouse effect and triggering global cooling and glaciation. It also enabled aerobic biological diversification." },
+      { front: "What evidence supported Wegener's continental drift hypothesis?", back: "Matching fossils of extinct land animals on separated continents; tropical plant fossils under Greenland ice; similar rock types on opposite Atlantic shores; puzzle-piece coastline fit; glaciated landscapes in now-tropical regions." },
+      { front: "Distinguish salinization from waterlogging and explain their common cause.", back: "Salinization: salt buildup from evaporating irrigation water with poor drainage. Waterlogging: soil saturated, depriving roots of oxygen. Both stem from water-balance mismatch and inadequate drainage in arid irrigated regions — not fertilizer issues." },
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Plate Boundaries & Volcanic Hazards",
+        blocks: [
+          ["Context", "A coastal country sits at a convergent boundary where an oceanic plate subducts beneath a continental plate."],
+          ["Identify & Explain", "Subduction of denser oceanic plate → melting in mantle → magma rises → volcanoes on the overriding continent. Also expect deep offshore trenches and powerful earthquakes."],
+          ["Environmental Effects", "Explosive eruptions: ash reduces sunlight (temporary cooling), pyroclastic flows destroy ecosystems, lahars contaminate waterways. Long-term: volcanic ash weathers to fertile soils."],
+          ["Human Dimensions", "Dense populations near volcanoes face high risk. Building codes and early-warning systems affect casualties. Rich volcanic soils attract persistent agriculture near hazard zones."],
+          ["FRQ Tip", "Explain WHY volcanoes form at subduction zones (density difference → subduction → melting → magma). Don't just name the boundary — explain the mechanism."]
+        ]
+      },
+      {
+        label: "Soil Erosion, Downstream Impacts & Conservation",
+        blocks: [
+          ["Context", "A farmer removes crop residues after harvest and plows downslope. A heavy rain follows."],
+          ["Cause & Mechanism", "No root cover → raindrops break soil aggregates → runoff forms rills/gullies → topsoil (A horizon) transported into streams. Sediment carries attached phosphorus and pesticides."],
+          ["Downstream Effects", "Increased turbidity → less light for aquatic plants. Phosphorus → algal blooms → eutrophication → O₂ decline → hypoxic zones → fish kills."],
+          ["Conservation Strategies", "Contour plowing (slows runoff across slope). Cover crops (roots hold soil off-season). Riparian buffers (traps sediment before waterways). No-till (preserves structure)."],
+          ["FRQ Tip", "Connect erosion all the way downstream: bare soil → runoff → sediment → nutrient loading → eutrophication. Explain each step's mechanism."]
+        ]
+      },
+      {
+        label: "Greenhouse Effect vs. Ozone Depletion",
+        blocks: [
+          ["Distinguish the Two", "Greenhouse effect: CO₂, CH₄, H₂O, N₂O absorb and re-emit infrared radiation → warms troposphere. Ozone depletion: CFCs destroy stratospheric O₃ → more UV reaches surface. Different gases, different radiation, different layers."],
+          ["Natural vs. Enhanced Greenhouse Effect", "Natural greenhouse effect keeps Earth ~33°C warmer — essential for life. Enhanced effect: human CO₂ and CH₄ emissions intensify warming beyond the natural baseline."],
+          ["Consequences of Each", "Enhanced greenhouse → warming, sea level rise, extreme weather. Ozone depletion → increased UV → skin cancer, cataracts, harm to phytoplankton and plant productivity."],
+          ["FRQ Tip", "Always start by stating these are different problems. Name the gas type, radiation type, and atmospheric layer for each."]
+        ]
+      },
+      {
+        label: "Soil Texture & Agricultural Management",
+        blocks: [
+          ["The Problem", "A farmer must manage two fields: one sandy, one clay-rich. Different management strategies are needed for each."],
+          ["Sandy Soil Challenges", "Large pores → fast drainage → water and nutrients leach quickly. Crops wilt without frequent irrigation. Low retention → frequent fertilizer → runoff and cost risk."],
+          ["Clay Soil Challenges", "Tiny pores → low permeability → poor drainage → waterlogging, O₂ depletion. Compacts easily. High nutrient retention but restricted root growth if compacted."],
+          ["Best Solution: Loam + Amendments", "Adding compost improves sandy soils (better retention) and clay soils (better drainage and structure). No-till preserves structure. Both fields benefit from organic matter additions."],
+          ["FRQ Tip", "Explain mechanisms: WHY does sandy soil drain fast (large pores, low surface area)? WHY does clay hold more water (tiny particles, huge surface area)? Then justify your management solution."]
+        ]
+      },
+    ];
+
+    const quizQuestions = [
+      { question: "A deep ocean trench is located off the coast, and a volcanic mountain range runs parallel to the coast inland. This is MOST consistent with:", options: ["A divergent boundary with seafloor spreading", "A transform boundary like the San Andreas Fault", "A convergent subduction zone where oceanic crust sinks beneath continental crust", "A hot spot track from a rising mantle plume"], correct: 2, explanation: "Deep offshore trenches + volcanic arcs on the overriding plate are hallmarks of convergent subduction zones. The denser oceanic plate sinks into the mantle, generating magma that forms volcanoes above." },
+      { question: "Two continental plates collide. Which hazard is MOST expected?", options: ["Active volcanoes along the collision zone", "Deep ocean trenches offshore", "A large mountain range and strong earthquakes, but minimal volcanism", "Island arcs curving toward the open ocean"], correct: 2, explanation: "Continental collision produces mountains (like the Himalayas) and earthquakes, but not volcanoes. Volcanism requires subduction. Two buoyant continental plates buckle and stack instead of subducting." },
+      { question: "Fossils of terrestrial reptiles are found on currently separated continents. This BEST supports:", options: ["Seafloor spreading creating new ocean crust at ridges", "The Great Oxidation Event changing atmospheric composition", "Wegener's continental drift hypothesis — the continents were once joined", "Hot spot activity creating island chains"], correct: 2, explanation: "Wegener used matching fossils on now-separated landmasses as key evidence for continental drift (Pangaea). Seafloor spreading provided the mechanism Wegener lacked." },
+      { question: "Which soil horizon is MOST important to preserve for agriculture, and why?", options: ["B horizon, because it accumulates iron and clay", "C horizon, because it provides fresh mineral nutrients", "O horizon, because leaf litter is the primary food source", "A horizon (topsoil), because it is richest in organic matter and supports crop roots"], correct: 3, explanation: "The A horizon contains organic matter, living organisms, and nutrients — the foundation of agricultural productivity. Erosion here forces more fertilizer and irrigation use. Topsoil forms very slowly." },
+      { question: "A soil sample has 500 mL total volume and requires 200 mL of water to fully saturate. What is the soil's porosity?", options: ["0.20 (20%)", "0.40 (40%)", "0.60 (60%)", "0.25 (25%)"], correct: 1, explanation: "Porosity = Vw ÷ Vt = 200 ÷ 500 = 0.40 (40%). 1 cm³ = 1 mL. Porosity is the ratio of pore space to total volume." },
+      { question: "A farmer irrigates cropland in an arid region. White crusts appear on the soil surface and yields decline. This BEST illustrates:", options: ["Waterlogging causing oxygen depletion in root zones", "Salinization — salts accumulate as irrigation water evaporates and drainage is poor", "Leaching — nutrients washed into the subsoil", "Desertification from overgrazing removing vegetation cover"], correct: 1, explanation: "Salinization: irrigation water evaporates, leaving dissolved salts behind. Poor drainage prevents flushing. White crusts are characteristic. This is a water-balance and drainage problem, not a fertilizer issue." },
+      { question: "Clay soil holds large amounts of water but water moves very slowly through it. This is because clay has:", options: ["High porosity and high permeability", "Low porosity and high permeability", "High porosity but low permeability — pores tiny and poorly connected", "Low porosity and low permeability — very few pores total"], correct: 2, explanation: "Clay's tiny pore size gives high porosity (lots of space) but low permeability (poorly connected pores). Sand has lower porosity but much higher permeability because its large pores are well connected." },
+      { question: "A city in a mountain valley experiences a calm winter night. Cold air pools, a warmer mass sits above, and smog is severe the next morning. This BEST illustrates:", options: ["Convection dispersing pollutants away from the valley", "A temperature inversion trapping cold, polluted air near the surface", "High albedo from snow reflecting sunlight and cooling the valley", "Stratospheric ozone depletion allowing more UV to reach the surface"], correct: 1, explanation: "A temperature inversion (warm cap over cold surface air) prevents vertical mixing. Pollutants accumulate near street level. Geographic features — valleys, basins — make inversions more common and severe." },
+      { question: "Which conservation practice BEST addresses water erosion on a steep hillside farm?", options: ["Planting windbreaks perpendicular to prevailing winds", "Terracing the slope to create level planting areas and slow runoff", "Increasing irrigation frequency to reduce drought stress", "Adding fertilizer to compensate for topsoil nutrient loss"], correct: 1, explanation: "Terracing creates level steps on steep slopes, dramatically reducing runoff speed and erosion. Windbreaks address wind erosion, not water erosion. Fertilizer treats symptoms, not the cause." },
+      { question: "Replacing a large forest with black asphalt will MOST likely:", options: ["Increase albedo and cool the area", "Decrease albedo and cause local warming, plus reduce infiltration and increase runoff", "Increase evapotranspiration and reduce surface temperature", "Have no significant effect on local energy balance"], correct: 1, explanation: "Asphalt absorbs ~90% of sunlight (low albedo vs forests). It eliminates evapotranspiration and creates an impervious surface, dramatically increasing runoff. The result is local warming and greater flood risk." },
+      { question: "Fossils are found in which rock type?", options: ["Only metamorphic rock", "Only igneous rock", "Only sedimentary rock", "All rock types equally"], correct: 2, explanation: "Fossils form only in sedimentary rock — organisms buried in accumulating sediment. High heat and pressure in metamorphic and igneous formation would destroy organic material." },
+      { question: "Which statement CORRECTLY distinguishes the greenhouse effect from ozone depletion?", options: ["Both involve CO₂ and both warm the atmosphere", "Greenhouse effect: infrared + CO₂/CH₄ → troposphere warming; ozone depletion: UV + CFCs → stratospheric ozone loss — they are different problems", "Ozone depletion causes warming by trapping more heat in the troposphere", "Greenhouse effect occurs in the stratosphere; ozone depletion in the troposphere"], correct: 1, explanation: "Greenhouse effect: IR radiation + CO₂, CH₄, H₂O, N₂O → tropospheric warming. Ozone depletion: UV + CFCs → stratospheric ozone destruction → more UV at surface. Different gases, radiation, and layers." },
+      { question: "Which factor makes specialist species MORE vulnerable to extinction than generalists after habitat fragmentation?", options: ["They reproduce faster and deplete specialized resources", "They require specific, narrow resources and cannot adapt to altered conditions", "They have higher albedo and overheat in fragmented landscapes", "They outcompete generalists for limited resources in edge habitats"], correct: 1, explanation: "Specialist species depend on specific, rare resources and cannot switch alternatives when habitat changes. Fragmentation destroys the large areas of intact habitat they require, leading to rapid population decline." },
+      { question: "A volcanic eruption injects large quantities of SO₂ into the stratosphere. The MOST likely short-term atmospheric effects are:", options: ["Tropospheric warming and stratospheric cooling from greenhouse absorption", "Tropospheric cooling (aerosols reflect sunlight) and stratospheric warming; aerosols can also accelerate ozone destruction", "Immediate ozone recovery due to high-altitude UV absorption by SO₂", "Increased tropospheric albedo without affecting the stratosphere"], correct: 1, explanation: "Sulfur-rich stratospheric aerosols reflect incoming solar radiation → temporary tropospheric cooling (observed after major eruptions). They also warm the stratosphere and provide surfaces for ozone-destroying reactions. Aerosols persist 1–3 years." },
+    ];
+
+    const nav = document.getElementById("sidebarNav");
+    const mainEl = document.getElementById("main");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeLabel = document.getElementById("themeLabel");
+    let currentTab = "dashboard";
+    let quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map(t => `
+        <button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${t.icon}</span>
+          <span class="nav-label">${t.label}</span>
+        </button>`).join("");
+    }
+
+    function switchTab(id) {
+      currentTab = id;
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id));
+      const t = tabs.find(x => x.id === id);
+      if (t) ambientOverlay.style.background = t.ambient;
+      mainEl.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderGlossary(filter = "") {
+      const v = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map(c => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    function renderEssayTopics() {
+      const el = document.getElementById("essayTopics");
+      if (el) el.innerHTML = essayOutlines.map((o, i) =>
+        `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+      const ol = document.getElementById("essayOutline");
+      if (ol) { ol.classList.remove("show"); ol.innerHTML = ""; }
+    }
+
+    function selectEssay(i, outlineId) {
+      document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i));
+      const o = essayOutlines[i];
+      const ol = document.getElementById(outlineId);
+      if (ol) {
+        ol.innerHTML = o.blocks.map(([l, b]) =>
+          `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join("");
+        ol.classList.add("show");
+      }
+    }
+
+    function renderQuizQuestion() {
+      const qm = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prev = Number(localStorage.getItem("apes_u4_best") || 0);
+        const best = Math.max(prev, pct);
+        localStorage.setItem("apes_u4_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review plate boundaries, soil horizons, porosity calculations, and greenhouse vs ozone if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+        return;
+      }
+      quizLocked = false;
+      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function initBestScore() { const b = localStorage.getItem("apes_u4_best"); bestScoreEl.textContent = b ? b + "%" : "--"; }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+    });
+    document.addEventListener("mouseover", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.width = e.target.closest("button,a,.flash-card,.glossary-card") ? "20px" : "12px";
+      cursor.style.height = cursor.style.width;
+    });
+
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin"; });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100); } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus(); });
+    document.getElementById("sbInput").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase().trim();
+      const m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = m.length
+        ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
+        : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+    document.getElementById("sbResults").addEventListener("click", e => {
+      const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return;
+      switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+      if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
+    });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+
+    themeToggleBtn.addEventListener("click", () => {
+      const off = document.body.classList.toggle("theme-off");
+      themeLabel.textContent = off ? "Theme Off" : "Theme On";
+    });
+
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline"); });
+
+    document.getElementById("quizMount").addEventListener("click", e => {
+      const opt = e.target.closest(".quiz-option");
+      if (opt && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex]; const sel = Number(opt.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong"); });
+        if (sel === q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+      if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+    });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+    mainEl.addEventListener("scroll", () => {
+      const max = mainEl.scrollHeight - mainEl.clientHeight;
+      document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%";
+    });
+  </script>
+</body>
+
+</html>
