@@ -1324,8 +1324,7 @@
 
 
     /* Codex fix: restore native cursor and disable decorative cursor layer */
-    html,
-    body {
+    *, html, body {
       cursor: auto !important;
     }
 
@@ -2308,13 +2307,7 @@
     ];
 
     const nav = document.getElementById("sidebarNav"), mainEl = document.getElementById("main"), ambientOverlay = document.getElementById("ambientOverlay"), cursor = document.getElementById("cursor"), pinBtn = document.getElementById("pinBtn"), sidebar = document.getElementById("sidebar"), apToggleBtn = document.getElementById("apToggleBtn"), bestScoreEl = document.getElementById("bestScore"), themeToggleBtn = document.getElementById("themeToggleBtn"), themeLabel = document.getElementById("themeLabel");
-    const themeToggleBtn = document.getElementById("themeToggleBtn"); const themeLabel = document.getElementById("themeLabel");
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener("click", () => {
-        const off = document.body.classList.toggle("theme-off");
-        themeLabel.textContent = off ? "Theme Off" : "Theme On";
-      });
-    }
+
 
     let currentTab = "dashboard", quizIndex = 0, quizScore = 0, quizLocked = false;
 

@@ -488,6 +488,50 @@
       background: rgba(56, 188, 212, .07);
     }
 
+
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(74, 184, 216, .35);
+      background: rgba(74, 184, 216, .08);
+      color: var(--g);
+      padding: 9px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #themeToggleBtn:hover {
+      background: rgba(74, 184, 216, .14);
+    }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255, 255, 255, .04);
+      color: #555;
+      border-color: rgba(255, 255, 255, .15);
+    }
+
+    .theme-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--g);
+      display: inline-block;
+      transition: background .4s;
+      flex-shrink: 0;
+    }
+
+    body.theme-off .theme-dot {
+      background: #555;
+    }
+
     .tab-content {
       display: none;
       animation: fadeUp .45s cubic-bezier(.23, 1, .32, 1);
@@ -1402,6 +1446,7 @@
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
+        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
       </div>
       <div id="scoreTracker">Best Quiz: <span id="bestScore">--</span></div>
     </div>
@@ -2458,6 +2503,10 @@
     mainEl.addEventListener("scroll", () => {
       const max = mainEl.scrollHeight - mainEl.clientHeight;
       document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%";
+    });
+    document.getElementById("themeToggleBtn").addEventListener("click", () => {
+      const off = document.body.classList.toggle("theme-off");
+      document.getElementById("themeLabel").textContent = off ? "Theme Off" : "Theme On";
     });
   </script>
 </body>
