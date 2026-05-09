@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 5: Land &amp; Water Use</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root {
+      --bg: #0c0a06;
+      --card: #131009;
+      --card2: #1a1610;
+      --border: rgba(255,255,255,.055);
+      --text: #e8dfc8;
+      --muted: #6b5c3a;
+      --g: #c8934a;
+      --g2: #7db87a;
+      --g3: #d4b26a;
+      --gold: #d4b26a;
+      --blue: #8abcb0;
+      --red: #c45c3a;
+      --teal: #6daa8a;
+      --accent: #c8934a;
+      --body-copy-color: #a89070;
+      --mini-note-body: #7a6045;
+      --code-bg: #070604;
+      --code-border: rgba(200,147,74,.1);
+      --code-color: #c8934a;
+      --progress-bar: linear-gradient(90deg,#c8934a,#7db87a);
+    }
+
+    body.theme-off {
+      --bg: #000;--card: #0d0d0d;--card2: #151515;--border: rgba(255,255,255,.07);
+      --text: #e8e8e8;--muted: #666;--g: #ccc;--g2: #bbb;--g3: #aaa;--gold: #d4d4d4;
+      --blue: #c0c0c0;--red: #c06060;--teal: #70b0a0;--accent: #ccc;
+      --body-copy-color: #888;--mini-note-body: #666;--code-bg: #0a0a0a;
+      --code-border: rgba(255,255,255,.08);--code-color: #aaa;
+      --progress-bar: linear-gradient(90deg,#888,#aaa);
+    }
+
+    html{scroll-behavior:smooth}
+
+    body {
+      min-height:100vh;display:flex;background:var(--bg);color:var(--text);
+      font-family:'Space Grotesk',sans-serif;overflow:hidden;cursor:none;
+      transition:background .4s,color .4s;
+    }
+
+    body::before {
+      content:'';position:fixed;inset:0;
+      background-image:
+        linear-gradient(rgba(200,147,74,.008) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(200,147,74,.008) 1px,transparent 1px);
+      background-size:72px 72px;
+      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 80%);
+      pointer-events:none;z-index:1;
+    }
+
+    body::after {
+      content:'';position:fixed;inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity:.22;pointer-events:none;z-index:1;
+    }
+
+    #cursor {
+      position:fixed;width:12px;height:12px;border-radius:50%;background:var(--g);
+      pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+      mix-blend-mode:difference;transition:width .2s,height .2s;
+    }
+
+    #readingProgress{position:fixed;top:0;left:72px;right:0;height:2px;z-index:100}
+    #readingProgressFill{width:0%;height:100%;background:var(--progress-bar);transition:background .4s}
+
+    #ambientOverlay {
+      position:fixed;inset:0;
+      background:radial-gradient(ellipse at 55% 15%,rgba(200,147,74,.09),transparent 65%);
+      opacity:.14;pointer-events:none;transition:background 1s ease,opacity .25s ease;z-index:0;
+    }
+    body.theme-off #ambientOverlay{opacity:0}
+
+    #sidebar {
+      width:72px;height:100vh;flex-shrink:0;background:rgba(10,8,4,.92);
+      border-right:1px solid var(--border);backdrop-filter:blur(24px);overflow:hidden;
+      position:relative;z-index:10;transition:width .4s cubic-bezier(.23,1,.32,1),background .4s;
+    }
+    body.theme-off #sidebar{background:rgba(5,5,5,.95)}
+    #sidebar:hover,#sidebar.pinned{width:264px}
+
+    #pinBtn {
+      position:absolute;top:12px;right:10px;padding:4px 7px;border-radius:6px;
+      border:1px solid var(--border);background:transparent;color:var(--muted);
+      font:inherit;font-size:8px;letter-spacing:.08em;opacity:0;cursor:none;
+      transition:opacity .25s,color .2s,border-color .2s;
+    }
+    #sidebar:hover #pinBtn,#sidebar.pinned #pinBtn{opacity:1}
+    #pinBtn.pinned{color:var(--g);border-color:rgba(200,147,74,.24)}
+
+    .sidebar-logo{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid var(--border);white-space:nowrap}
+    .logo-icon {
+      width:36px;height:36px;display:grid;place-items:center;border-radius:10px;
+      border:1px solid rgba(200,147,74,.22);background:rgba(200,147,74,.07);
+      color:var(--g);flex-shrink:0;font-family:'Cinzel',serif;font-size:9px;font-weight:700;
+    }
+    .logo-copy{opacity:0;transition:opacity .25s}
+    #sidebar:hover .logo-copy,#sidebar.pinned .logo-copy{opacity:1}
+    .logo-copy h1{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.22em;color:var(--g)}
+    .logo-copy p{color:var(--muted);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+
+    .search-wrap{position:relative;padding:10px}
+    .sb-search-trigger {
+      width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+      border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--muted);cursor:none;
+      opacity:0;pointer-events:none;transition:opacity .25s,border-color .2s;
+      font-family:'DM Mono',monospace;font-size:10px;
+    }
+    #sidebar:hover .sb-search-trigger,#sidebar.pinned .sb-search-trigger{opacity:1;pointer-events:auto}
+    .sb-search-trigger:hover{border-color:rgba(200,147,74,.2)}
+
+    #sbSearchPanel {
+      position:absolute;top:calc(100% - 4px);left:10px;right:10px;
+      border:1px solid rgba(200,147,74,.18);background:rgba(10,8,4,.98);border-radius:12px;overflow:hidden;
+      opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .22s,transform .22s;
+      z-index:80;box-shadow:0 18px 60px rgba(0,0,0,.65);
+    }
+    #sbSearchPanel.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+    #sbSearchInner{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05)}
+    #sbInput{flex:1;border:none;background:transparent;color:var(--text);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;outline:none;cursor:none}
+    #sbResults{max-height:280px;overflow:auto}
+    .sb-result{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);cursor:none;transition:background .15s}
+    .sb-result:hover{background:rgba(200,147,74,.06)}
+    .sb-result:last-child{border-bottom:none}
+    .sb-result-tab{font-size:8px;color:var(--g);letter-spacing:.22em;text-transform:uppercase;margin-bottom:3px;font-family:'DM Mono',monospace}
+    .sb-result-term{font-family:'Cinzel',serif;font-size:13px;color:white;letter-spacing:.04em}
+    .sb-result-snip{font-family:'Crimson Pro',serif;font-size:12px;color:var(--muted);line-height:1.45;margin-top:2px}
+
+    nav{height:calc(100vh - 176px);padding:0 10px 14px;overflow:auto}
+    .nav-btn {
+      width:100%;display:flex;align-items:center;gap:14px;padding:10px 14px;border:none;border-radius:10px;
+      background:transparent;color:var(--muted);cursor:none;white-space:nowrap;
+      transition:background .2s,color .2s;position:relative;font-family:'Space Grotesk',sans-serif;
+    }
+    .nav-btn:hover{background:rgba(255,255,255,.025);color:#d4a87a}
+    .nav-btn.active{background:rgba(200,147,74,.07);color:var(--g)}
+    .nav-btn.active .nav-indicator{opacity:1}
+    .nav-indicator{position:absolute;left:0;width:2px;height:24px;background:var(--g);border-radius:5px;opacity:0}
+    .nav-icon{font-size:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:20px;height:20px}
+    .nav-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+    .nav-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:0;transition:opacity .25s}
+    #sidebar:hover .nav-label,#sidebar.pinned .nav-label{opacity:1}
+
+    .sidebar-footer {
+      position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;
+      padding:14px 18px;border-top:1px solid var(--border);color:var(--muted);
+      font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;overflow:hidden;white-space:nowrap;
+    }
+    .sidebar-footer span:last-child{opacity:0;transition:opacity .25s}
+    #sidebar:hover .sidebar-footer span:last-child,#sidebar.pinned .sidebar-footer span:last-child{opacity:1}
+
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--g);flex-shrink:0;animation:blink 2.4s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+    #main{flex:1;height:100vh;overflow-y:auto;padding:36px 54px 80px;position:relative;z-index:2}
+    .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px;padding:8px 0 20px;backdrop-filter:blur(8px)}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+    .glass-btn,#scoreTracker {
+      border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);
+      color:var(--muted);padding:9px 14px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;
+      text-transform:uppercase;cursor:none;backdrop-filter:blur(12px);
+      transition:border-color .2s,color .2s,background .2s;white-space:nowrap;text-decoration:none;display:inline-block;
+    }
+    .glass-btn:hover,#scoreTracker:hover{color:var(--g);border-color:rgba(200,147,74,.26)}
+    .glass-btn.active{color:var(--g);border-color:rgba(200,147,74,.32);background:rgba(200,147,74,.07)}
+
+    #themeToggleBtn {
+      border-radius:20px;border:1px solid rgba(200,147,74,.35);background:rgba(200,147,74,.08);color:var(--g);
+      padding:9px 16px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+      cursor:none;backdrop-filter:blur(12px);transition:border-color .2s,color .2s,background .2s;white-space:nowrap;
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    #themeToggleBtn:hover{background:rgba(200,147,74,.14)}
+    body.theme-off #themeToggleBtn{background:rgba(255,255,255,.04);color:#555;border-color:rgba(255,255,255,.15)}
+    .theme-dot{width:8px;height:8px;border-radius:50%;background:var(--g);display:inline-block;transition:background .4s;flex-shrink:0}
+    body.theme-off .theme-dot{background:#555}
+
+    .tab-content{display:none;animation:fadeUp .45s cubic-bezier(.23,1,.32,1)}
+    .tab-content.active{display:block}
+
+    .page-header{margin-bottom:34px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+    .unit-tag{display:block;color:var(--g);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.35em;text-transform:uppercase;margin-bottom:10px}
+    .page-header h2{font-family:'Cinzel',serif;font-size:clamp(32px,4.5vw,56px);letter-spacing:.06em;line-height:.98;color:white}
+    .page-header p{margin-top:10px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;margin-bottom:26px}
+    .principle-grid,.glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+    .case-grid,.flash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+    .exam-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px}
+
+    .card,.feature-card,.principle-card,.case-card,.exam-card,.flash-card,.writing-card {
+      background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;
+      position:relative;overflow:hidden;transition:transform .24s,border-color .24s,box-shadow .24s,background .4s;
+    }
+    .card:hover,.feature-card:hover,.principle-card:hover,.case-card:hover,.exam-card:hover,.flash-card:hover,.writing-card:hover {
+      transform:translateY(-2px);border-color:rgba(255,255,255,.11);box-shadow:0 20px 48px rgba(0,0,0,.4);
+    }
+
+    .hero-card::before,.feature-card::before,.principle-card::before,.case-card::before,.exam-card::before,.writing-card::before {
+      content:'';position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent,var(--g));opacity:.65;
+    }
+    .hero-card{--accent:var(--g)}
+    .accent-g{--accent:var(--g)}
+    .accent-g2{--accent:var(--g2)}
+    .accent-g3{--accent:var(--g3)}
+    .accent-gold{--accent:var(--gold)}
+    .accent-blue{--accent:var(--blue)}
+    .accent-red{--accent:var(--red)}
+    .accent-teal{--accent:var(--teal)}
+
+    .card-sub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--g);margin-bottom:10px}
+    .card-title{font-family:'Cinzel',serif;font-size:21px;letter-spacing:.04em;color:white;line-height:1.18;margin-bottom:14px}
+
+    .body-copy{font-family:'Crimson Pro',serif;font-size:15px;line-height:1.82;color:var(--body-copy-color);transition:color .4s}
+    .body-copy p+p{margin-top:10px}
+
+    .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+    .stat-box{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;transition:background .4s}
+    .stat-box span{display:block;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .stat-box strong{font-family:'Cinzel',serif;font-size:26px;letter-spacing:.06em;color:var(--g)}
+
+    .focus-callout{margin-top:20px;padding:16px 18px;border-radius:12px;background:rgba(200,147,74,.04);border:1px solid rgba(200,147,74,.13);transition:background .4s}
+    body.theme-off .focus-callout{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.08)}
+    .focus-callout .label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--g);margin-bottom:8px}
+
+    .ap-term{color:var(--g2);font-weight:600;border-bottom:1px dashed rgba(125,184,122,.35)}
+    body:not(.ap-highlight) .ap-term{color:inherit;border-bottom:none;font-weight:inherit}
+
+    .mini-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--g);margin-bottom:10px}
+    .note-section{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;margin-bottom:22px;transition:background .4s}
+    .note-section::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent,var(--g));opacity:.55}
+    .note-section h3{font-family:'Cinzel',serif;font-size:20px;letter-spacing:.04em;color:white;margin-bottom:14px}
+    .note-section h4{font-family:'Cinzel',serif;font-size:15px;letter-spacing:.04em;color:var(--g);margin:18px 0 10px}
+
+    .note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+    .mini-note{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:background .4s}
+    .mini-note strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--text);margin-bottom:6px}
+    .mini-note .body-copy{font-size:13px;line-height:1.7;color:var(--mini-note-body)}
+
+    .compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-family:'Crimson Pro',serif;font-size:14px}
+    .compare-table th{background:var(--card2);color:var(--g);font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+    .compare-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--body-copy-color);vertical-align:top}
+    .compare-table tr:last-child td{border-bottom:none}
+    .compare-table tr:hover td{background:rgba(255,255,255,.015)}
+
+    .code-block{background:var(--code-bg);border:1px solid var(--code-border);border-radius:10px;padding:16px 18px;margin-top:16px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.75;color:var(--code-color);white-space:pre-wrap;letter-spacing:.05em}
+
+    .bullet-list{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .bullet-list li{display:flex;gap:10px;font-family:'Crimson Pro',serif;font-size:14px;line-height:1.65;color:var(--body-copy-color)}
+    .bullet-list li::before{content:'›';color:var(--g);flex-shrink:0;font-family:'Space Grotesk',sans-serif;font-size:14px;margin-top:1px}
+
+    .glossary-toolbar{margin-bottom:22px}
+    .glossary-toolbar input{width:100%;max-width:360px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;outline:none;transition:border-color .2s;cursor:none}
+    .glossary-toolbar input:focus{border-color:rgba(200,147,74,.3)}
+    .glossary-card h4{font-family:'Cinzel',serif;font-size:16px;letter-spacing:.04em;color:white;margin-bottom:8px}
+    .glossary-card:hover{cursor:none}
+
+    .flash-card{cursor:none;perspective:1000px}
+    .flash-inner{position:relative;width:100%;height:200px;transition:transform .5s cubic-bezier(.23,1,.32,1);transform-style:preserve-3d}
+    .flash-card.flipped .flash-inner{transform:rotateY(180deg)}
+    .flash-front,.flash-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;justify-content:space-between}
+    .flash-back{transform:rotateY(180deg)}
+    .flash-front h3,.flash-back h3{font-family:'Cinzel',serif;font-size:17px;letter-spacing:.04em;color:white;line-height:1.3}
+    .flash-hint{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+    .modal.open{display:flex}
+    .modal-box{background:var(--card);border:1px solid rgba(200,147,74,.15);border-radius:20px;padding:32px;max-width:640px;width:90vw;max-height:80vh;overflow-y:auto;position:relative}
+    .modal-title{font-family:'Cinzel',serif;font-size:20px;letter-spacing:.06em;color:white;margin-bottom:20px}
+    .modal-close{position:absolute;top:20px;right:20px}
+
+    .quiz-status{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .quiz-question{font-family:'Cinzel',serif;font-size:16px;letter-spacing:.03em;color:white;line-height:1.45;margin-bottom:20px}
+    .quiz-options{display:flex;flex-direction:column;gap:10px}
+    .quiz-option{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--body-copy-color);font-family:'Crimson Pro',serif;font-size:14px;text-align:left;cursor:none;transition:border-color .2s,background .2s}
+    .quiz-option:hover{border-color:rgba(200,147,74,.22);background:rgba(200,147,74,.04)}
+    .quiz-option.correct{border-color:rgba(125,184,122,.5);background:rgba(125,184,122,.08);color:#a8e4a5}
+    .quiz-option.wrong{border-color:rgba(196,92,58,.5);background:rgba(196,92,58,.08);color:#e4a8a5}
+    .quiz-feedback{margin-top:16px;font-family:'Crimson Pro',serif;font-size:14px;color:var(--body-copy-color);line-height:1.6}
+    .quiz-next{margin-top:16px}
+
+    .essay-topic-btn{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:none;transition:border-color .2s,color .2s;margin:4px}
+    .essay-topic-btn:hover,.essay-topic-btn.active{color:var(--g);border-color:rgba(200,147,74,.3)}
+    #essayOutline{display:none;margin-top:20px;flex-direction:column;gap:12px}
+    #essayOutline.show{display:flex}
+    .essay-block{background:var(--card2);border-radius:10px;padding:14px 16px;border-left:2px solid var(--g)}
+    .essay-block-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+    .essay-block-body{font-family:'Crimson Pro',serif;font-size:14px;line-height:1.65;color:var(--body-copy-color)}
+
+    /* NOTE JUMP LINKS */
+    .note-jump{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;cursor:none;transition:border-color .2s,color .2s;margin:3px}
+    .note-jump:hover{color:var(--g);border-color:rgba(200,147,74,.28)}
+
+    .notes-toc{margin-bottom:24px;display:flex;flex-wrap:wrap;gap:6px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+
+    @media(max-width:900px){#main{padding:20px 18px 60px}.hero-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="ambientOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">U5</div>
+      <div class="logo-copy">
+        <h1>APES</h1>
+        <p>Land &amp; Water Use</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">
+        <span>⌕</span><span>Search terms…</span>
+      </button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <span style="color:var(--g);font-size:11px">⌕</span>
+          <input id="sbInput" placeholder="Type to search…" autocomplete="off" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="dot"></div>
+      <span>AP Env Sci · Unit 5</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div class="topbar">
+      <div id="scoreTracker">Best Score: <strong id="bestScore">--</strong></div>
+      <div class="top-actions">
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
+        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 5 · AP Environmental Science</span>
+        <h2>Land &amp; Water Use</h2>
+        <p>Commons · Agriculture · Soil · Fisheries · Mining · Urbanization</p>
+      </header>
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Unit Overview</div>
+          <div class="card-title">Shared Resources &amp; Human Impact</div>
+          <div class="body-copy">
+            <p>Unit 5 explores how humans extract, manage, and degrade land and water resources. Every topic connects to a central tension: <strong class="ap-term">individual benefit vs. shared cost</strong>. Garrett Hardin called this the <strong class="ap-term">Tragedy of the Commons</strong> — when a shared resource is overused because no single user bears the full cost of depletion.</p>
+            <p>Whether it's fishing in the open ocean, pumping groundwater, clearing forests, or paving farmland, the same pattern repeats: short-term incentives undermine long-term sustainability. Unit 5 asks you to identify the pattern and propose realistic solutions.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Big Topics</span><strong>9</strong></div>
+            <div class="stat-box"><span>Key Terms</span><strong>60+</strong></div>
+            <div class="stat-box"><span>Exam Weight</span><strong>~12%</strong></div>
+          </div>
+        </article>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <article class="card feature-card accent-g2">
+            <div class="card-sub">Core Pattern</div>
+            <div class="card-title">The Commons Problem</div>
+            <div class="body-copy">Individual gains → shared costs → overuse → collapse. Solutions: regulation, privatization, or community governance.</div>
+          </article>
+          <article class="card feature-card accent-red">
+            <div class="card-sub">FRQ Alert</div>
+            <div class="card-title">Chain Reactions Count</div>
+            <div class="body-copy">Agriculture → soil erosion → runoff → eutrophication → fishery collapse. Practice writing multi-step cause-and-effect chains.</div>
+          </article>
+        </div>
+      </div>
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Agriculture</div>
+          <h3>Green Revolution &amp; Beyond</h3>
+          <div class="body-copy">HYV seeds, synthetic fertilizers, irrigation, and pesticides dramatically raised yields — but created runoff, groundwater depletion, and reduced genetic diversity.</div>
+          <button class="note-jump" data-note-target="n-agri">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Soil</div>
+          <h3>Degradation &amp; Conservation</h3>
+          <div class="body-copy">Erosion, salinization, and waterlogging reduce productivity. No-till, contour plowing, terracing, and cover crops protect topsoil.</div>
+          <button class="note-jump" data-note-target="n-soil">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Irrigation</div>
+          <h3>Methods &amp; Tradeoffs</h3>
+          <div class="body-copy">Drip irrigation is most efficient; flood irrigation wastes the most. Over-irrigation causes salinization (evaporation) and waterlogging (saturation).</div>
+          <button class="note-jump" data-note-target="n-irr">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-teal">
+          <div class="mini-label">Pest Control</div>
+          <h3>IPM vs. Pesticide Treadmill</h3>
+          <div class="body-copy">Pesticide resistance is natural selection. IPM uses monitoring + biological + chemical controls to minimize resistance and non-target impacts.</div>
+          <button class="note-jump" data-note-target="n-ipm">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-blue">
+          <div class="mini-label">Fisheries</div>
+          <h3>Overfishing &amp; Aquaculture</h3>
+          <div class="body-copy">Coastal waters (&lt;10% ocean area) hold ~90% of marine species. Overfishing is a classic commons problem. Aquaculture can help — but creates waste and disease issues.</div>
+          <button class="note-jump" data-note-target="n-fish">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Urbanization</div>
+          <h3>Sprawl, Runoff &amp; Smart Growth</h3>
+          <div class="body-copy">Impervious surfaces increase runoff, reduce infiltration, and create heat islands. Smart growth uses density, mixed-use, and green infrastructure to reduce impact.</div>
+          <button class="note-jump" data-note-target="n-urban">View Notes →</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Unit 5 Deep Dive</h2>
+        <p>Scroll through all topics · Use links to jump</p>
+      </header>
+
+      <div class="notes-toc">
+        <button class="note-jump" data-note-target="n-commons">Commons</button>
+        <button class="note-jump" data-note-target="n-forest">Forestry</button>
+        <button class="note-jump" data-note-target="n-agri">Agriculture</button>
+        <button class="note-jump" data-note-target="n-range">Rangelands</button>
+        <button class="note-jump" data-note-target="n-soil">Soil</button>
+        <button class="note-jump" data-note-target="n-irr">Irrigation</button>
+        <button class="note-jump" data-note-target="n-ipm">Pest Control / IPM</button>
+        <button class="note-jump" data-note-target="n-meat">Meat / CAFOs</button>
+        <button class="note-jump" data-note-target="n-fish">Fisheries</button>
+        <button class="note-jump" data-note-target="n-mining">Mining</button>
+        <button class="note-jump" data-note-target="n-urban">Urbanization</button>
+        <button class="note-jump" data-note-target="n-sustain">Sustainable Ag</button>
+      </div>
+
+      <div>
+
+        <article class="note-section accent-g" id="n-commons">
+          <div class="mini-label">01 · Shared Resources</div>
+          <h3>Tragedy of the Commons</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Common-pool resources</strong> are rival (your use reduces what's left) but non-excludable (hard to keep others out) — fisheries, aquifers, the atmosphere, grazing land.</p>
+            <p>In 1968, Garrett Hardin's <strong class="ap-term">Tragedy of the Commons</strong> described how rational individuals overuse shared resources: each user captures the full benefit of one more unit of use but shares only a fraction of the cost.</p>
+          </div>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Regulation (top-down)</strong><div class="body-copy">Catch limits, grazing permits, groundwater pumping caps. Requires monitoring and enforcement to work.</div></div>
+            <div class="mini-note"><strong>Privatization</strong><div class="body-copy">Owner has incentive to maintain future value. Works for land; harder to apply to fish or air.</div></div>
+            <div class="mini-note"><strong>Community Governance</strong><div class="body-copy">Local rules, monitoring, enforcement. Works when group is well-defined and compliance is verifiable.</div></div>
+            <div class="mini-note"><strong>Commons Examples</strong><div class="body-copy">Fisheries, groundwater aquifers, open grazing land, the atmosphere (CO₂), old-growth forests.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Explain WHY a resource is vulnerable (rival + hard to exclude). Propose and justify a management strategy. Identify the "individual benefit vs. shared cost" mechanism in scenarios.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g2" id="n-forest">
+          <div class="mini-label">02 · Forestry &amp; Deforestation</div>
+          <h3>Clear-Cutting, Edge Effect &amp; Mitigation</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Clear-Cutting</strong><div class="body-copy">All trees cut at once. Creates habitat loss, more sunlight → hotter/drier ground, increased runoff &amp; erosion, loss of carbon sinks, reduced biodiversity.</div></div>
+            <div class="mini-note"><strong>Edge Effect</strong><div class="body-copy">Environment changes at habitat boundaries. Canopy removal shifts microclimate: hotter, drier, windier — harms interior-forest species.</div></div>
+            <div class="mini-note"><strong>Deforestation Impacts</strong><div class="body-copy">Runs off into aquatic systems → erosion → drier soils → 80% of land species threatened → habitat fragmentation → CO₂ emissions from burning/decay.</div></div>
+            <div class="mini-note"><strong>Mitigation</strong><div class="body-copy">Uneven-aged management, longer rotations, reduced road-building, enforcement of logging laws, sustainable methods, reducing fragmentation.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Outcomes of clear-cutting: erosion, habitat loss, carbon sink reduction, microclimate change. Connect edge effect to biodiversity. Always include the hydrology: runoff and erosion follow canopy removal.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-gold" id="n-agri">
+          <div class="mini-label">03 · Agriculture</div>
+          <h3>Systems, Revolutions &amp; the Green Revolution</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Subsistence vs. Commercial</strong><div class="body-copy">Subsistence: feeds local community, low inputs, locally adapted. Commercial: market-oriented, mechanized, fertilized, irrigated — maximizes yield and profit.</div></div>
+            <div class="mini-note"><strong>Monoculture</strong><div class="body-copy">Single crop over large area — efficient for machinery but low diversity makes pest/disease spread easy. Relies heavily on pesticides and fertilizers.</div></div>
+            <div class="mini-note"><strong>Polyculture / Intercropping</strong><div class="body-copy">Multiple crops simultaneously on same land. Reduces pest outbreaks, improves soil health, increases ecological resilience.</div></div>
+            <div class="mini-note"><strong>Agricultural Revolutions</strong><div class="body-copy">1st: domestication (2000+ BCE). 2nd: industrialization (1700–1900). 3rd: mechanization + biotech (1900–present).</div></div>
+          </div>
+          <h4>Green Revolution</h4>
+          <table class="compare-table">
+            <tr><th>Component</th><th>What Changed</th><th>Environmental Cost</th></tr>
+            <tr><td>High-Yield Varieties (HYVs)</td><td>More food per hectare — reduced hunger risk</td><td>Reduced genetic diversity of crop plants</td></tr>
+            <tr><td>Synthetic Fertilizers</td><td>Consistent nutrient supply, higher yields</td><td>Runoff → eutrophication downstream</td></tr>
+            <tr><td>Expanded Irrigation</td><td>Farming in dry regions becomes possible</td><td>Groundwater depletion, salinization</td></tr>
+            <tr><td>Pesticides</td><td>Reduced crop losses</td><td>Non-target species harm, resistance, bioaccumulation</td></tr>
+            <tr><td>GMOs (2nd wave)</td><td>Bt corn (insect resistance), Golden Rice (Vitamin A)</td><td>Ecological concerns, monoculture risk</td></tr>
+          </table>
+          <div class="focus-callout">
+            <div class="label">Common Mistakes</div>
+            <div class="body-copy">The Green Revolution is NOT just "new seeds" — include fertilizers + irrigation + pesticides + mechanization. Do NOT confuse it with organic farming. Tradeoffs exist in all directions.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-teal" id="n-range">
+          <div class="mini-label">04 · Rangelands &amp; Land Degradation</div>
+          <h3>Overgrazing, Desertification &amp; Slash-and-Burn</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Rangelands</strong><div class="body-copy">Native grasslands, wetlands, woodlands, and deserts managed via grazing and prescribed fire rather than intensive cultivation.</div></div>
+            <div class="mini-note"><strong>Overgrazing</strong><div class="body-copy">Plants grazed faster than roots recover — root growth can drop by up to 90%. Removes vegetation, increases erosion and compaction.</div></div>
+            <div class="mini-note"><strong>Desertification</strong><div class="body-copy">Productive potential of arid/semiarid land declines by ≥10% from human activity and/or climate. NOT simply "desert expanding naturally."</div></div>
+            <div class="mini-note"><strong>Slash-and-Burn</strong><div class="body-copy">Clear-cut and burn wild land — provides short-term ash nutrients, but drives deforestation and CO₂ emissions; soil degrades if fallow periods are too short.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Diagnose overgrazing/desertification from a scenario. Explain how slash-and-burn gives short-term benefits but causes long-term degradation. Always emphasize human drivers.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-blue" id="n-soil">
+          <div class="mini-label">05 · Soil Degradation &amp; Conservation</div>
+          <h3>Erosion, Salinization, Waterlogging &amp; Solutions</h3>
+          <table class="compare-table">
+            <tr><th>Degradation Type</th><th>Cause</th><th>Key Detail</th></tr>
+            <tr><td>Water Erosion</td><td>Bare soil + rain + slope</td><td>Loses nutrient-rich topsoil; sediment pollutes waterways</td></tr>
+            <tr><td>Wind Erosion</td><td>Bare, dry, exposed fields</td><td>Fine fertile particles removed; prevented by windbreaks</td></tr>
+            <tr><td>Salinization</td><td>Irrigation water evaporates, leaves salts</td><td>Common in arid regions — water balance problem, NOT fertilizer</td></tr>
+            <tr><td>Waterlogging</td><td>Over-irrigation saturates soil</td><td>O₂ depleted in root zone; co-occurs with salinization</td></tr>
+            <tr><td>Nutrient Depletion</td><td>Harvest removes nutrients without replenishment</td><td>Requires compost, manure, or fertilizer to restore</td></tr>
+          </table>
+          <h4>Conservation Practices</h4>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Contour Plowing</strong><div class="body-copy">Plow along slope contours → ridges hold water → slows runoff. Best for hilly cropland (water erosion).</div></div>
+            <div class="mini-note"><strong>Terracing</strong><div class="body-copy">Flat steps on steep slopes drastically reduce runoff speed. High upfront cost, very effective long-term.</div></div>
+            <div class="mini-note"><strong>No-Till / Cover Crops</strong><div class="body-copy">No-till leaves structure intact, reduces erosion. Cover crops protect soil between seasons and add organic matter.</div></div>
+            <div class="mini-note"><strong>Windbreaks &amp; Strip Cropping</strong><div class="body-copy">Windbreaks: trees perpendicular to wind (wind erosion). Strip cropping: alternating crop rows slow both wind and water erosion.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Match practice to erosion type (wind vs. water, slope vs. flat). Salinization ≠ "too much fertilizer" — it's salt accumulation from evaporation. Erosion is also a water-quality problem downstream.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g" id="n-irr">
+          <div class="mini-label">06 · Irrigation</div>
+          <h3>Methods, Efficiency &amp; Environmental Consequences</h3>
+          <table class="compare-table">
+            <tr><th>Method</th><th>How It Works</th><th>Water Efficiency</th><th>Main Risk</th></tr>
+            <tr><td>Flood Irrigation</td><td>Fields flooded; water flows among crops</td><td>Lowest</td><td>High water loss, waterlogging</td></tr>
+            <tr><td>Furrow / Ditch</td><td>Water flows down small channels by gravity</td><td>Low–moderate</td><td>Infiltration loss at head; erosion</td></tr>
+            <tr><td>Spray / Sprinkler</td><td>Overhead sprinklers distribute water</td><td>Moderate</td><td>Wind drift and evaporation losses</td></tr>
+            <tr><td>Drip Irrigation</td><td>Water drips directly to root zone via tubes</td><td>Highest</td><td>Higher cost; tube clogging</td></tr>
+          </table>
+          <div class="note-grid" style="margin-top:14px">
+            <div class="mini-note"><strong>Salinization from Irrigation</strong><div class="body-copy">Especially in dry climates — irrigation water evaporates, leaving dissolved salts behind. Reduces yield over time. Hard to reverse once severe.</div></div>
+            <div class="mini-note"><strong>Waterlogging</strong><div class="body-copy">Over-irrigation raises water table, saturating root zone. Oxygen depleted → plants suffer. Often co-occurs with salinization.</div></div>
+            <div class="mini-note"><strong>Aquifer Depletion</strong><div class="body-copy">Pumping exceeds recharge → water table drops → wells fail → connected wetlands/streams shrink. "Invisible" until crisis.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Compare irrigation methods by efficiency and environmental impact. Explain WHY dry climate irrigation causes salinization (evaporation leaves salts). Propose drip irrigation + scheduling as solutions.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g2" id="n-ipm">
+          <div class="mini-label">07 · Pest Control &amp; IPM</div>
+          <h3>Pesticides, Resistance &amp; Integrated Pest Management</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Pesticide Types</strong><div class="body-copy">Insecticides (insects), herbicides (weeds), fungicides (fungi). Also: organophosphates (toxic, short-lived), POPs (persistent, bioaccumulate), biological pesticides (living organisms).</div></div>
+            <div class="mini-note"><strong>Pesticide Treadmill</strong><div class="body-copy">Resistance builds → farmers use more → more resistance. Natural selection favors resistant individuals already in the population — the pesticide doesn't "make" pests resistant.</div></div>
+            <div class="mini-note"><strong>Bioaccumulation &amp; Biomagnification</strong><div class="body-copy">Persistent fat-soluble pesticides concentrate in fatty tissue and increase up the food web. Top predators receive the highest doses.</div></div>
+            <div class="mini-note"><strong>Non-Target Impacts</strong><div class="body-copy">Pollinators, natural predators, and aquatic organisms all at risk. Runoff carries pesticides into waterways. Spray drift affects nearby habitats.</div></div>
+          </div>
+          <h4>IPM Components</h4>
+          <ul class="bullet-list">
+            <li>Regular monitoring (visual inspection + traps + record-keeping)</li>
+            <li>Prevention first: crop rotation, resistant varieties, habitat for beneficial insects</li>
+            <li>Biological controls: natural predators, parasites, pathogens of the pest</li>
+            <li>Mechanical/physical controls: barriers, traps, sterilized insect release</li>
+            <li>Intercropping and polyculture to slow pest spread</li>
+            <li>Pheromones and hormone interrupters</li>
+            <li>Chemical pesticides as a LAST RESORT — targeted, rotated to slow resistance</li>
+          </ul>
+          <div class="code-block">IPM Reduces:
+  → Bioaccumulation and biomagnification
+  → Chance of resistance to any single pesticide
+  → Destruction of beneficial/non-target organisms
+  → Overall pesticide use and associated runoff</div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Resistance evolves because resistant individuals already exist and survive — it's selection, not adaptation. Biological control is NOT always safe (invasive risk). IPM is a SYSTEM, not a single tactic.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-red" id="n-meat">
+          <div class="mini-label">08 · Meat Production &amp; CAFOs</div>
+          <h3>Grazing, Feedlots &amp; Environmental Impacts</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Rangeland Grazing</strong><div class="body-copy">Uses land unsuitable for crops. Risk: overgrazing degrades vegetation and soil. Compaction and habitat fragmentation are concerns.</div></div>
+            <div class="mini-note"><strong>Feedlots / CAFOs</strong><div class="body-copy">CAFO = Concentrated Animal Feeding Operation (confined &gt;45 days/year). Efficient meat production but concentrates waste. Depends on cropland for feed (indirect land/fertilizer impacts).</div></div>
+            <div class="mini-note"><strong>Water Pollution</strong><div class="body-copy">Manure contains soluble nitrogen and phosphorus. Spills and runoff contaminate surface and groundwater. States with high CAFO concentration average 20–30 serious water-quality problems per year.</div></div>
+            <div class="mini-note"><strong>Air Pollution</strong><div class="body-copy">Manure decomposition releases ammonia, hydrogen sulfide, methane, and particulate matter. Methane is a significant greenhouse gas from livestock systems.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Compare grazing vs. CAFOs with one advantage and one disadvantage each. Connect meat production to land use change, nutrient runoff, and water pollution. Waste concentration is the central CAFO issue.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-blue" id="n-fish">
+          <div class="mini-label">09 · Fisheries &amp; Aquaculture</div>
+          <h3>Overfishing, Bycatch &amp; Management</h3>
+          <div class="body-copy">
+            <p>Coastal waters make up <strong>less than 10%</strong> of the world's ocean area yet contain about <strong>90% of all marine species</strong> — making coastal habitat especially critical. Fisheries are classic commons: exclusion is difficult, and harvesting directly reduces the breeding population.</p>
+          </div>
+          <div class="note-grid" style="margin-top:14px">
+            <div class="mini-note"><strong>Overfishing</strong><div class="body-copy">Harvest exceeds reproduction. Breeding population drops → recovery slow or impossible. Improved technology (sonar, large nets, refrigeration) increases pressure.</div></div>
+            <div class="mini-note"><strong>Bycatch</strong><div class="body-copy">Unintentional capture of non-target species (turtles, dolphins, juvenile fish). Some gear physically damages seafloor habitat.</div></div>
+            <div class="mini-note"><strong>Aquaculture (Mariculture)</strong><div class="body-copy">Fish farming reduces wild fishery pressure but creates waste/nutrient pollution, disease spread, escape risks, and still depends on wild-caught fishmeal for feed.</div></div>
+            <div class="mini-note"><strong>Management Tools</strong><div class="body-copy">Catch limits/quotas, size limits, seasonal closures, gear restrictions, marine protected areas, licenses, trade sanctions, elimination of fishing subsidies.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Aquaculture does NOT automatically solve overfishing. Bycatch is a major impact even when target catch is within limits. Propose solutions beyond biology: subsidies, labeling, import restrictions, sanctuaries.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-gold" id="n-mining">
+          <div class="mini-label">10 · Mining</div>
+          <h3>Extraction Methods &amp; Environmental Damage</h3>
+          <table class="compare-table">
+            <tr><th>Method</th><th>Description</th><th>Key Impact</th></tr>
+            <tr><td>Open Pit</td><td>Large pit dug where deposit is near surface</td><td>Massive land disturbance, acid drainage</td></tr>
+            <tr><td>Strip Mining</td><td>Soil removed over each coal seam</td><td>Habitat destruction, erosion, sediment runoff</td></tr>
+            <tr><td>Mountaintop Removal</td><td>Mountaintops blasted to expose coal; debris in valley fills</td><td>Aquatic habitat destruction from valley fill runoff</td></tr>
+            <tr><td>Contour Mining</td><td>Follows ridge contours along a hillside seam</td><td>Slope erosion, acid drainage</td></tr>
+            <tr><td>Dredging</td><td>Material scooped from water body bottom</td><td>Habitat disturbance in aquatic systems</td></tr>
+            <tr><td>In Situ / Leaching</td><td>Chemical solvents injected through small holes</td><td>Groundwater contamination risk</td></tr>
+            <tr><td>Room &amp; Pillar / Longwall</td><td>Underground; rotating drum or half coal left as pillars</td><td>Land subsidence, dust, worker health</td></tr>
+          </table>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Match method to likely land disturbance pattern. Water-quality threats (acid mine drainage, in situ leaching) are high-yield topics. AP often gives descriptions rather than names — read carefully.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-teal" id="n-urban">
+          <div class="mini-label">11 · Urbanization &amp; Sprawl</div>
+          <h3>Impervious Surfaces, Runoff &amp; Smart Growth</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Impervious Surfaces</strong><div class="body-copy">Roads, rooftops, parking lots prevent infiltration → more runoff → flooding, stream bank erosion, groundwater recharge decreases.</div></div>
+            <div class="mini-note"><strong>Urban Heat Island</strong><div class="body-copy">Dark surfaces absorb heat; reduced vegetation lowers evapotranspiration cooling. Cities are measurably warmer than surrounding rural areas.</div></div>
+            <div class="mini-note"><strong>Urban Sprawl</strong><div class="body-copy">Low-density, car-dependent development. Single-family homes on large lots, single-use zoning, job sprawl, loss of agricultural land.</div></div>
+            <div class="mini-note"><strong>Smart Growth</strong><div class="body-copy">Compact, walkable, transit-oriented, mixed-use development. Greenbelts around cities, mass transit subsidies, incentives to locate in urban centers.</div></div>
+            <div class="mini-note"><strong>Urban Runoff Pollution</strong><div class="body-copy">Carries oil, metals, fertilizers, pesticides, sediment, trash into waterways. Thermal pollution as urban heat transfers to streams — harms fish and aquatic wildlife.</div></div>
+            <div class="mini-note"><strong>Green Infrastructure Solutions</strong><div class="body-copy">Bioswales, rain gardens, permeable pavement, green roofs, constructed wetlands, retention basins. Mimic natural hydrology, filter pollutants.</div></div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Explain the mechanism: impervious surfaces → less infiltration → more runoff (not "cities are bad"). Per-capita land use can be LOWER in dense cities than suburbs. Hydrology is heavily tested — don't focus only on air.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g2" id="n-sustain">
+          <div class="mini-label">12 · Sustainable Agriculture</div>
+          <h3>Long-Term Resource Management</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Soil Health Practices</strong><div class="body-copy">No-till, cover crops, compost, green manure, crop residues, perennial crops. Build organic matter, improve water retention, reduce erosion.</div></div>
+            <div class="mini-note"><strong>Biodiversity Strategies</strong><div class="body-copy">Polyculture, intercropping, crop rotation, agroforestry, habitat for beneficial insects. Reduce pest outbreaks and improve ecosystem services.</div></div>
+            <div class="mini-note"><strong>Organic Agriculture</strong><div class="body-copy">Natural inputs; reduced synthetic pesticides and fertilizers. Tradeoff: lower yields in some contexts may require more land. NOT pesticide-free — some natural pesticides allowed.</div></div>
+            <div class="mini-note"><strong>Ecological Footprint</strong><div class="body-copy">Biologically productive land + sea needed to supply resources and absorb waste. Connected to the IPAT equation: I = P × A × T.</div></div>
+          </div>
+          <div class="code-block">Planetary Boundaries (Selected):
+  Biodiversity loss:  Boundary = 10 extinctions/million/yr  |  Current: >100  |  EXCEEDED
+  Climate change:     Boundary = 350 ppm CO₂              |  Current: ~420  |  EXCEEDED
+  Freshwater use:     Boundary = 4000 km³/yr              |  Current: 2600  |  Not exceeded
+  Land use:           Boundary = 15% cropland             |  Current: 11.7% |  Not exceeded</div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Sustainability requires combining strategies — no single practice fixes everything. "Organic" isn't automatically more sustainable on all dimensions. Use IPAT as a conceptual framework, not a precise calculator.</div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Key Terms</span>
+        <h2>Unit 5 Glossary</h2>
+        <p>Search and click any term to explore its context</p>
+      </header>
+      <div class="glossary-toolbar">
+        <input id="glossaryFilter" type="text" placeholder="Search terms…" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Active Recall</span>
+        <h2>Unit 5 Flashcards</h2>
+        <p>Click any card to flip · Review until confident</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM PREP -->
+    <section class="tab-content" id="exam">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>Key Concepts &amp; Strategies</h2>
+        <p>High-yield topics · Pattern recognition · Quick-reference</p>
+      </header>
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Commons Pattern</div>
+          <h3>Why Resources Get Overused</h3>
+          <ul class="bullet-list">
+            <li>Individual captures FULL benefit of one more unit of use</li>
+            <li>Cost shared across ALL users → each bears only a fraction</li>
+            <li>Result: every individual is incentivized to overuse</li>
+            <li>Solutions: regulation (caps), privatization, community governance</li>
+            <li>Easy to control: land, lakes, forests. Hard: open ocean, atmosphere</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Irrigation Consequences</div>
+          <h3>Salinization vs. Waterlogging</h3>
+          <ul class="bullet-list">
+            <li>Salinization: water evaporates → salts left behind → arid regions</li>
+            <li>Waterlogging: over-irrigation raises water table → saturated roots</li>
+            <li>Both can come from irrigation but through DIFFERENT mechanisms</li>
+            <li>Fix: drip irrigation + scheduling + improved drainage</li>
+            <li>Aquifer depletion: "invisible" until wells start failing</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-teal">
+          <div class="mini-label">Pesticide Resistance</div>
+          <h3>How the Treadmill Works</h3>
+          <ul class="bullet-list">
+            <li>Resistant individuals already EXIST in the population</li>
+            <li>Pesticide kills susceptible ones → resistant ones reproduce</li>
+            <li>Pesticide did NOT "create" resistance — it selected for it</li>
+            <li>IPM slows resistance by rotating modes of action + using as last resort</li>
+            <li>Biological control ≠ always safe — invasive potential</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Urbanization Hydrology</div>
+          <h3>Impervious Surface Chain</h3>
+          <ul class="bullet-list">
+            <li>Impervious surface → less infiltration → more runoff → more flooding</li>
+            <li>Less infiltration → less groundwater recharge → wells decline</li>
+            <li>Runoff carries oil, metals, nutrients, pesticides → water pollution</li>
+            <li>Green infrastructure mimics natural hydrology to reduce these</li>
+            <li>Dense cities often have lower per-capita land use than suburbs</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">CAFO Impacts</div>
+          <h3>Concentrated Waste Problem</h3>
+          <ul class="bullet-list">
+            <li>CAFO: confined animals &gt;45 days/year in large numbers</li>
+            <li>Water: nitrogen + phosphorus in manure runoff → eutrophication</li>
+            <li>Air: ammonia, H₂S, methane, particulates from manure decomposition</li>
+            <li>Indirect: feedlots need cropland for feed (secondary land/fertilizer use)</li>
+            <li>~20–30 serious water-quality problems/year in high-CAFO states</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-blue">
+          <div class="mini-label">Green Revolution Summary</div>
+          <h3>Yield ↑ + Environmental Cost</h3>
+          <ul class="bullet-list">
+            <li>HYV seeds + synthetic fertilizer + expanded irrigation + pesticides</li>
+            <li>Dramatically raised food production, reduced famine risk</li>
+            <li>Cost: fertilizer runoff, groundwater depletion, reduced genetic diversity</li>
+            <li>2nd wave: GMOs (Bt corn, Golden Rice) + biotechnology</li>
+            <li>Do NOT confuse with organic farming — nearly opposite approach</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Unit 5 Practice Quiz</div>
+      <button class="modal-close glass-btn" data-close="quizModal" type="button">✕ Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Bank — Unit 5</div>
+      <button class="modal-close glass-btn" data-close="essayModal" type="button">✕ Close</button>
+      <div id="essayTopics" style="margin-bottom:8px"></div>
+      <div id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", icon: `<svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>`, label: "Dashboard", ambient: "radial-gradient(ellipse at 55% 15%,rgba(200,147,74,.09),transparent 65%)" },
+      { id: "notes",     icon: `<svg viewBox="0 0 16 16"><rect x="2" y="1" width="12" height="14" rx="1.5"/><line x1="5" y1="5" x2="11" y2="5"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="5" y1="11" x2="9" y2="11"/></svg>`, label: "Notes",     ambient: "radial-gradient(ellipse at 30% 50%,rgba(125,184,122,.07),transparent 65%)" },
+      { id: "glossary",  icon: `<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r=".6" fill="currentColor" stroke="none"/></svg>`, label: "Glossary",  ambient: "radial-gradient(ellipse at 70% 30%,rgba(109,170,138,.07),transparent 65%)" },
+      { id: "flashcards",icon: `<svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1.5"/><line x1="4" y1="8" x2="12" y2="8"/></svg>`, label: "Flashcards",ambient: "radial-gradient(ellipse at 50% 80%,rgba(212,178,106,.07),transparent 65%)" },
+      { id: "exam",      icon: `<svg viewBox="0 0 16 16"><polygon points="8,1 15,13 1,13"/></svg>`, label: "Exam Prep", ambient: "radial-gradient(ellipse at 20% 60%,rgba(196,92,58,.06),transparent 65%)" },
+    ];
+
+    const glossaryTerms = [
+      {tab:"notes",term:"Tragedy of the Commons",def:"When individuals acting in self-interest overuse a shared resource, degrading it for all — because each captures full benefit but shares only a fraction of the cost."},
+      {tab:"notes",term:"Common-Pool Resource",def:"A resource that is rival (use reduces what's left) but non-excludable (hard to prevent others from using). Examples: fisheries, aquifers, open grazing land."},
+      {tab:"notes",term:"Clear-Cutting",def:"All trees in an area removed at once. Causes habitat loss, increased runoff and erosion, microclimate change, and loss of carbon sinks."},
+      {tab:"notes",term:"Edge Effect",def:"Environmental changes along a habitat boundary. Forest edge is hotter, drier, and windier than interior — harms interior-forest species."},
+      {tab:"notes",term:"Deforestation",def:"Permanent conversion of forested land to non-forest use. Increases runoff, CO₂ emissions, reduces biodiversity, and fragments habitat."},
+      {tab:"notes",term:"Subsistence Agriculture",def:"Farming primarily to feed the farmer and local community with low external inputs, locally adapted to the environment."},
+      {tab:"notes",term:"Monoculture",def:"Planting a single crop over a large area. Efficient for machinery but ecologically simplified; vulnerable to pest/disease outbreaks."},
+      {tab:"notes",term:"Polyculture / Intercropping",def:"Growing multiple crops simultaneously on the same land. Reduces pest spread, improves soil health, and increases resilience."},
+      {tab:"notes",term:"Green Revolution",def:"Spread of high-yield varieties (HYVs), synthetic fertilizers, expanded irrigation, and pesticides that dramatically raised crop yields — at ecological cost."},
+      {tab:"notes",term:"High-Yield Varieties (HYVs)",def:"Crop strains bred or engineered for maximum productivity. Key component of the Green Revolution."},
+      {tab:"notes",term:"Bt Corn",def:"Genetically modified corn containing a bacterial gene that produces insect toxins within the plant's cells, reducing pest damage without spraying."},
+      {tab:"notes",term:"Golden Rice",def:"Genetically modified rice with daffodil genes that produce beta-carotene, addressing Vitamin A deficiency in populations that rely on rice."},
+      {tab:"notes",term:"Overgrazing",def:"Grazing plants faster than roots can recover. Can reduce root growth by up to 90%, increasing erosion and soil compaction."},
+      {tab:"notes",term:"Desertification",def:"Decline in productive potential of arid/semiarid land by ≥10% due to human activity and/or climate change. NOT simply natural desert expansion."},
+      {tab:"notes",term:"Slash-and-Burn Agriculture",def:"Clear-cutting and burning wild or forested land for farming. Provides short-term ash nutrients but drives deforestation and CO₂ emissions."},
+      {tab:"notes",term:"Salinization",def:"Buildup of salts in soil, typically from irrigation water evaporating in arid regions. Creates osmotic stress and reduces crop yields."},
+      {tab:"notes",term:"Waterlogging",def:"Soil saturation (often from over-irrigation) that depletes oxygen in the root zone, harming plant growth."},
+      {tab:"notes",term:"Contour Plowing",def:"Plowing along slope contours to create ridges that slow runoff and reduce water erosion on hilly agricultural land."},
+      {tab:"notes",term:"Terracing",def:"Creating flat steps on steep slopes to dramatically reduce runoff speed and erosion. High upfront cost, very effective long-term."},
+      {tab:"notes",term:"No-Till Agriculture",def:"Farming with minimal soil disturbance; residues left on surface. Reduces erosion and improves soil structure but may require more herbicide."},
+      {tab:"notes",term:"Windbreaks (Shelterbelts)",def:"Rows of trees perpendicular to prevailing winds that reduce wind speed and wind erosion. Do NOT confuse with water erosion controls."},
+      {tab:"notes",term:"Drip Irrigation",def:"Most water-efficient irrigation method: water delivered directly to the root zone through small tubes, minimizing evaporation and runoff."},
+      {tab:"notes",term:"Furrow Irrigation",def:"Water flows through small parallel channels (furrows) by gravity. Cheap but wastes water through evaporation and infiltration losses."},
+      {tab:"notes",term:"Flood Irrigation",def:"Fields flooded and water flows among crops. Lowest efficiency; high water loss; widely used in less-developed countries."},
+      {tab:"notes",term:"Pesticide Resistance",def:"Natural selection for resistant individuals in a pest population after pesticide application. The pesticide selects for resistance — it doesn't create it."},
+      {tab:"notes",term:"Pesticide Treadmill",def:"Cycle where rising resistance forces farmers to use more (or more toxic) pesticides, which further increases resistance."},
+      {tab:"notes",term:"Persistent Organic Pollutants (POPs)",def:"Organic compounds that don't break down and accumulate in fatty tissue; biomagnify up the food chain. Example: older pesticides like DDT."},
+      {tab:"notes",term:"Bioaccumulation",def:"Buildup of a substance (e.g., a fat-soluble pesticide) within an organism's tissues over time."},
+      {tab:"notes",term:"Biomagnification",def:"Increasing concentration of a substance at each successive trophic level in a food chain. Top predators receive the highest doses."},
+      {tab:"notes",term:"Integrated Pest Management (IPM)",def:"Ecologically based pest control combining monitoring, biological, cultural, mechanical, and (last-resort) chemical methods to minimize resistance and non-target harm."},
+      {tab:"notes",term:"CAFO",def:"Concentrated Animal Feeding Operation — large numbers of animals confined in feeding pens for more than 45 days/year."},
+      {tab:"notes",term:"Bycatch",def:"Unintentional capture of non-target species during fishing operations. A major ecological impact independent of catch limits for target species."},
+      {tab:"notes",term:"Aquaculture (Mariculture)",def:"Commercial growing of aquatic organisms in controlled environments. Reduces wild harvest pressure but creates waste, disease, and escape risks."},
+      {tab:"notes",term:"Overfishing",def:"Harvesting fish faster than they can reproduce and grow. Reduces breeding populations — recovery can be slow or impossible."},
+      {tab:"notes",term:"Open Pit Mining",def:"Rock and minerals extracted from a large open pit when deposits are near the surface. Causes major land disturbance and acid drainage."},
+      {tab:"notes",term:"Mountaintop Removal Mining",def:"Mountaintops blasted to expose coal seams; overburden dumped in valley fills, destroying aquatic habitats downstream."},
+      {tab:"notes",term:"Acid Mine Drainage",def:"Sulfur-containing rocks exposed by mining react with water and oxygen to form sulfuric acid, which drains into waterways, harming aquatic life."},
+      {tab:"notes",term:"Urban Sprawl",def:"Low-density, car-dependent expansion away from city centers. Consumes agricultural land, increases driving, and contributes to impervious surfaces."},
+      {tab:"notes",term:"Smart Growth",def:"Planning approach emphasizing compact, walkable, mixed-use, transit-oriented development to reduce sprawl and concentrate growth sustainably."},
+      {tab:"notes",term:"Impervious Surface",def:"Hard surface (roads, rooftops, parking lots) that prevents water infiltration, increasing runoff, flooding risk, and pollution of waterways."},
+      {tab:"notes",term:"Urban Heat Island",def:"City areas measurably warmer than surrounding rural areas due to dark surfaces absorbing heat and reduced vegetation (less evapotranspiration cooling)."},
+      {tab:"notes",term:"Urban Runoff",def:"Surface runoff created by urbanization. Carries oil, metals, fertilizers, pesticides, sediment, and trash into waterways; major source of nonpoint pollution."},
+      {tab:"notes",term:"Ecological Footprint",def:"Amount of biologically productive land and sea needed to supply a population's resource consumption and assimilate its waste."},
+      {tab:"notes",term:"IPAT Equation",def:"I = P × A × T. Impact = Population × Affluence × Technology. Conceptual framework for understanding drivers of environmental impact."},
+      {tab:"notes",term:"Sustainable Agriculture",def:"Food production that meets current needs without undermining future ecosystem capacity — profitable, environmentally sound, and community-health-oriented."},
+      {tab:"notes",term:"Cover Crops",def:"Off-season crops planted to protect soil from erosion, add organic matter, and sometimes fix nitrogen. Common sustainable ag practice."},
+      {tab:"notes",term:"Crop Rotation",def:"Alternating crop species on a field between seasons to break pest cycles, restore soil nitrogen (via legumes), and improve soil health."},
+      {tab:"notes",term:"Strip Cropping",def:"Alternating strips of different crops on a field. Slows both wind and water erosion by breaking up flow across the field."},
+      {tab:"notes",term:"Tillage",def:"Plowing and breaking up soil surface for planting. Improves short-term planting conditions but increases erosion risk and disrupts soil structure."},
+      {tab:"notes",term:"Inorganic Fertilizers",def:"Mined from mineral deposits or manufactured synthetically. Provide precise nutrients but can cause runoff and eutrophication if misapplied."},
+      {tab:"notes",term:"Soil Erosion",def:"Movement of weathered rock or soil by flowing water, wind, or human activity. Loses nutrient-rich topsoil and pollutes waterways with sediment."},
+      {tab:"notes",term:"Soil Degradation",def:"Broader decline in soil condition from improper use or management — includes erosion, salinization, compaction, and nutrient depletion."},
+    ];
+
+    const flashcards = [
+      {front:"What is the Tragedy of the Commons and why does it happen?",back:"When individuals acting rationally in self-interest overuse a shared resource. Happens because each user gets full benefit of one more unit of use but shares only a fraction of the cost — making overuse individually rational even when collectively destructive."},
+      {front:"Why does monoculture increase pest vulnerability?",back:"Low genetic and species diversity means a single pest or disease can spread rapidly across all plants. Monocultures trade ecological resilience for uniform productivity and must rely on pesticides to compensate."},
+      {front:"Explain the difference between salinization and waterlogging.",back:"Salinization: irrigation water evaporates in arid climates, leaving dissolved salts behind — an evaporation/drainage problem. Waterlogging: over-irrigation raises the water table, saturating roots and depleting oxygen — a drainage problem. Both can occur together."},
+      {front:"How does pesticide resistance evolve?",back:"Resistant individuals already exist due to genetic variation. When pesticide is applied, susceptible pests die but resistant ones survive and reproduce. Over time the resistant genotype increases in frequency. The pesticide selects for resistance — it doesn't create it."},
+      {front:"What are the main components of IPM?",back:"Monitoring (inspection + traps + records), prevention first (rotation, resistant varieties, habitat for predators), biological controls, mechanical controls, intercropping, pheromones, and chemical pesticides as a last resort rotated to slow resistance."},
+      {front:"What is bycatch and why does it matter even when catch limits exist?",back:"Bycatch = unintentional capture of non-target species. Even if target-fish quotas are met, bycatch kills sea turtles, dolphins, juvenile fish, and others — a major ecological impact that exists alongside (not instead of) target-species overfishing."},
+      {front:"Explain how drip irrigation reduces salinization risk compared to flood irrigation.",back:"Drip irrigation delivers water directly to the root zone at a controlled rate, minimizing the amount of water that evaporates from bare soil. Less evaporation means less salt concentration buildup, unlike flood irrigation which wets large surface areas and loses much to evaporation."},
+      {front:"Why do impervious surfaces increase flood risk and water pollution?",back:"Hard surfaces (pavement, rooftops) prevent infiltration — water runs off instead of soaking in. This increases peak stormwater flow (flood risk), decreases groundwater recharge, and washes pollutants (oil, metals, fertilizers, pesticides) into waterways."},
+      {front:"What is mountaintop removal mining and what is its main environmental impact?",back:"Mountaintops are blasted to expose coal seams; overburden is dumped into adjacent valleys. The main impact is destruction of aquatic habitats through valley fill runoff — streams are buried and acid drainage contaminates downstream water."},
+      {front:"What are the benefits and costs of the Green Revolution?",back:"Benefits: higher yields of staple grains reduced famine risk; less pressure to clear new land. Costs: fertilizer runoff → eutrophication; pesticide impacts on non-target species; groundwater depletion from irrigation; reduced genetic diversity; economic inequality for small farmers who couldn't afford inputs."},
+      {front:"How does overgrazing lead to desertification?",back:"Overgrazing removes vegetation faster than it can regrow, weakening root systems (up to 90% reduction). Without roots, soil erodes and compacts. Bare, compacted soil loses more water and supports less vegetation — a feedback loop that can reduce productive potential by ≥10%, meeting the definition of desertification."},
+      {front:"Compare grazing vs. CAFOs on land use and water pollution.",back:"Grazing uses land unsuitable for crops (advantage) but can overgraze and fragment habitat. CAFOs are land-efficient per unit of meat but concentrate manure in one place, creating major water pollution risk from nitrogen and phosphorus runoff — and still depend on cropland for feed."},
+      {front:"Why are coastal waters especially important to protect?",back:"Coastal waters make up less than 10% of the world's ocean area but contain about 90% of all marine species. Loss or degradation of coastal habitat — through overfishing, pollution, or coastal development — has disproportionately large impacts on marine biodiversity."},
+      {front:"What is the IPAT equation and what does each variable represent?",back:"I = P × A × T. Impact = Population × Affluence × Technology. It's a conceptual framework showing that environmental impact rises with population size, per-capita consumption (affluence), and the ecological intensity of production methods (technology). Used to identify leverage points for reducing impact."},
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Tragedy of the Commons — Fishery Scenario",
+        blocks: [
+          ["Identify the Commons Problem","A commercial fishery in international waters is a classic common-pool resource: rival (catching one fish reduces what's available) and non-excludable (hard to keep vessels out). Each boat has incentive to catch as much as possible before others do."],
+          ["Mechanism","Each vessel captures the full market value of each additional fish caught, but the cost — reduced breeding population — is shared across all fishers globally. No individual vessel bears enough of the long-term cost to self-limit."],
+          ["Management Options","(1) International catch quotas (regulation); (2) Fishing licenses and trade sanctions (exclusion); (3) Marine protected areas and seasonal closures (habitat recovery); (4) Eliminate subsidies that make overfishing economically viable; (5) Require sustainability labeling."],
+          ["FRQ Tip","State the mechanism explicitly: 'Individual benefit is captured fully; costs are shared.' Then justify your proposed solution by explaining how it changes the incentive structure — not just that it 'limits fishing.'"]
+        ]
+      },
+      {
+        label: "Agricultural Practices — Soil and Water Tradeoffs",
+        blocks: [
+          ["The Problem","A farm in an arid region uses conventional tillage, flood irrigation, and synthetic fertilizers. Yields are declining, white crusts appear on soil, and a nearby river shows algal blooms."],
+          ["Diagnose Each Problem","White crusts = salinization (evaporation leaving salts from flood irrigation). Yield decline = compaction + salinization + possible nutrient depletion. Algal blooms = eutrophication from nitrogen/phosphorus fertilizer runoff."],
+          ["Propose Solutions","Switch to drip irrigation (reduces salinization and water waste). Adopt no-till to reduce compaction and erosion. Use slow-release or precision fertilizers to reduce runoff. Plant riparian buffers to trap nutrients before they reach the river."],
+          ["FRQ Tip","Explain the mechanism for each: WHY does drip irrigation reduce salinization (less evaporation → less salt)? WHY does no-till reduce erosion (roots intact, surface covered)? Multi-mechanism answers score higher."]
+        ]
+      },
+      {
+        label: "Urbanization — Impervious Surfaces and Runoff",
+        blocks: [
+          ["What Changed","A forested watershed is 30% converted to roads, rooftops, and parking lots. Flood frequency downstream increases."],
+          ["The Mechanism","Impervious surfaces prevent infiltration → rainfall runs off rapidly → peak stormwater flows increase → streams exceed bank capacity → flooding. Less infiltration also reduces groundwater recharge, potentially affecting wells and dry-season streamflow."],
+          ["Water Quality","Runoff carries: oil and heavy metals from roads; fertilizers and pesticides from lawns; sediment from construction; trash. Thermal pollution as hot pavement heats stormwater → harms cold-water fish."],
+          ["Mitigation","Green infrastructure: bioswales, rain gardens, permeable pavement, constructed wetlands, green roofs. These mimic natural hydrology by slowing, filtering, and infiltrating runoff. Smart growth (density + mixed use) reduces total impervious area per capita."],
+          ["FRQ Tip","Always state the mechanism. 'Flooding increases because impervious surfaces reduce infiltration so water runs off faster' scores better than 'cities cause flooding.'"]
+        ]
+      },
+      {
+        label: "IPM vs. Conventional Pesticide Use",
+        blocks: [
+          ["Define IPM","Ecologically based strategy combining monitoring, biological, cultural, mechanical, and (last-resort) chemical methods to keep pests below economically damaging levels."],
+          ["Resistance Mechanism","Pesticide resistance: genetic variation exists in pest population → susceptible individuals die → resistant individuals survive and reproduce → resistance frequency increases. The pesticide selects, it doesn't create resistance."],
+          ["Benefits of IPM Over Routine Spraying","Slows resistance development (fewer applications, rotated modes of action). Reduces bioaccumulation and biomagnification. Preserves natural predators and pollinators. Reduces cost and runoff."],
+          ["Limitations","Requires more knowledge and monitoring. Biological controls can become invasive if introduced species spread. May require higher skill from farmers."],
+          ["FRQ Tip","When asked to compare IPM to conventional: give at least two environmental benefits of IPM, acknowledge one limitation, and explain the resistance mechanism. Avoid saying pesticides 'make' pests resistant."]
+        ]
+      },
+    ];
+
+    const quizQuestions = [
+      {question:"A fishing cooperative imposes a voluntary catch limit. Within a season, several boats defect and exceed their quota because they can sell the extra fish at a profit. This BEST illustrates:",options:["Aquaculture creating disease problems in wild fish populations","The tragedy of the commons — individual incentive to overuse despite collective harm","Bycatch regulations failing because gear is not inspected","Salinization of coastal waters reducing fish habitat"],correct:1,explanation:"Each boat's extra catch earns full profit while the cost (reduced breeding stock) is shared by all. This is the tragedy of the commons: rational individual behavior leads to collective overuse. Voluntary limits without enforcement collapse under defection."},
+      {question:"A farm in an arid region irrigates with flood irrigation. After five years, white crystalline crusts appear on the soil and crop yields decline. The MOST direct cause is:",options:["Waterlogging depleting oxygen in the root zone","Salinization — irrigation water evaporated, leaving dissolved salts behind","Acid mine drainage from a nearby abandoned mine","Desertification from overgrazing by livestock"],correct:1,explanation:"Salinization occurs when irrigation water evaporates in arid climates, concentrating dissolved salts in the topsoil. The white crusts are characteristic. Waterlogging involves saturation, not crusting. Acid mine drainage and overgrazing are different processes."},
+      {question:"A farmer replaces fixed-schedule pesticide spraying with an IPM approach: monitoring aphid numbers, releasing predatory beetles, and applying insecticide ONLY when aphids exceed a threshold. This change MOST directly reduces:",options:["The risk of waterlogging in poorly drained soils","The rate at which pesticide-resistant aphid genotypes accumulate in the population","Salinization of nearby waterways","The need for drip irrigation on the farm"],correct:1,explanation:"IPM reduces application frequency and rotates modes of action — both slow selection for resistant genotypes. Fewer spray events means fewer selection events, giving susceptible individuals a chance to remain in the population. Resistance builds slower."},
+      {question:"Mountaintop removal mining disposes of overburden in valley fills. The MOST significant environmental impact on downstream ecosystems is:",options:["Increased albedo from exposed rock surfaces warming the climate","Aquatic habitat destruction from valley fill runoff and stream burial","Soil salinization from heavy metal leaching","Wind erosion of disturbed surface soils"],correct:1,explanation:"Valley fills bury headwater streams and release sediment, heavy metals, and acid drainage downstream. This destroys macroinvertebrate communities, reduces dissolved oxygen, and harms fish — aquatic habitat destruction is the signature downstream impact."},
+      {question:"A city converts 40% of a forested watershed to roads and parking lots. During the same storm events, stream flow peaks are now much higher than before development. The PRIMARY reason is:",options:["The urban heat island increased evaporation from the stream","Impervious surfaces prevent infiltration, so rainfall runs off rapidly instead of soaking in","Deforestation eliminated transpiration, leaving more water in the soil","The city's wastewater treatment plant is releasing excess stormwater"],correct:1,explanation:"Impervious surfaces eliminate infiltration pathways — rainfall that would have soaked into soil now runs directly into drains and streams. Peak flows spike higher and arrive faster. Groundwater recharge also decreases because less water enters the subsurface."},
+      {question:"The Green Revolution dramatically increased rice and wheat yields beginning in the 1940s. Which combination of inputs was CENTRAL to this yield increase?",options:["Organic fertilizers, traditional seed varieties, and drip irrigation","High-yield variety seeds, synthetic (inorganic) fertilizers, expanded irrigation, and pesticides","Polyculture, cover crops, and integrated pest management","Community-based fishing quotas and aquaculture expansion"],correct:1,explanation:"The Green Revolution's four pillars: HYV seeds bred for high output, synthetic nitrogen/phosphorus fertilizers, expanded irrigation (reducing rainfall dependence), and pesticides (reducing crop losses). Organic/sustainable approaches are largely the opposite."},
+      {question:"A rangeland receives twice as many cattle as it can sustainably support. Root growth in grasses declines by 90%. Over time, bare soil patches expand and soil compacts. This BEST describes:",options:["Salinization from irrigation in an arid climate","Desertification caused by overgrazing — vegetation removed faster than roots can recover","Waterlogging from excess rainfall saturating the soil","Acid mine drainage from a legacy mining site"],correct:1,explanation:"Overgrazing removes vegetation faster than roots recover; root growth can decline 90%. Without root networks, soil erodes and compacts. Bare, compacted soil loses productivity — eventually meeting the definition of desertification (≥10% decline in productive potential)."},
+      {question:"Which fishing regulation BEST protects the ability of a fish population to recover?",options:["Subsidizing the purchase of larger fishing vessels to improve efficiency","Setting minimum size limits so fish reach reproductive maturity before harvest","Replacing all fishers with aquaculture operations immediately","Banning all non-native fish species from entering coastal waters"],correct:1,explanation:"Minimum size limits ensure fish reach sexual maturity and reproduce at least once before being caught. This maintains the reproductive base of the population. Larger vessels actually worsen overfishing; aquaculture doesn't directly regulate wild populations."},
+      {question:"An APES student proposes switching an entire crop farm from flood irrigation to drip irrigation. Which environmental benefit is MOST directly expected?",options:["Elimination of fertilizer runoff into nearby streams","Reduced salinization risk and less aquifer depletion","Elimination of pesticide resistance in crop pests","Prevention of habitat fragmentation on adjacent rangeland"],correct:1,explanation:"Drip irrigation delivers water directly to the root zone, minimizing evaporation. Less evaporation means fewer salts left behind (reduced salinization). It also uses significantly less total water, reducing aquifer drawdown. Fertilizer runoff and resistance are separate issues."},
+      {question:"A CAFO with 10,000 cattle produces large volumes of manure stored in open lagoons. After a flood, lagoon contents overflow into a nearby river. Which TWO pollutants are the MOST significant water-quality threats?",options:["Mercury and lead from industrial waste","Soluble nitrogen compounds and phosphorus from manure","Carbon dioxide and methane from decomposition","Pesticide residues from nearby crop fields"],correct:1,explanation:"Manure is rich in soluble nitrogen (nitrates, ammonia) and phosphorus. When these enter waterways, they trigger eutrophication — algal blooms, oxygen depletion, and fish kills. Mercury/lead are mining issues; CO₂/CH₄ are air concerns, not the primary water-quality problem."},
+      {question:"Which soil conservation practice BEST addresses wind erosion on flat, dry cropland?",options:["Terracing to create flat steps on a steep hillside","Windbreaks (shelterbelts) — rows of trees perpendicular to prevailing winds","Contour plowing along slope elevation lines","Subsurface drip irrigation to keep the soil surface moist"],correct:1,explanation:"Windbreaks (shelterbelts) reduce wind velocity across adjacent fields, preventing the detachment and transport of fine topsoil particles by wind. Terracing and contour plowing address water erosion on slopes, not wind erosion on flat land."},
+      {question:"A coastal city builds bioswales, permeable pavement, and rain gardens throughout its downtown. These 'green infrastructure' investments MOST directly address:",options:["Reducing urban heat island effects by increasing albedo","Stormwater runoff — slowing, filtering, and infiltrating rain where it falls","Eliminating bycatch from commercial fishing operations","Preventing salinization of agricultural soils from irrigation"],correct:1,explanation:"Green infrastructure mimics natural hydrology: bioswales channel and filter runoff, permeable pavement allows infiltration, and rain gardens store water that slowly infiltrates or evaporates. Together, they reduce peak stormwater flows, filter pollutants, and recharge groundwater."},
+    ];
+
+    const nav = document.getElementById("sidebarNav");
+    const mainEl = document.getElementById("main");
+    const ambientOverlay = document.getElementById("ambientOverlay");
+    const cursor = document.getElementById("cursor");
+    const pinBtn = document.getElementById("pinBtn");
+    const sidebar = document.getElementById("sidebar");
+    const apToggleBtn = document.getElementById("apToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeLabel = document.getElementById("themeLabel");
+    let currentTab = "dashboard";
+    let quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() {
+      nav.innerHTML = tabs.map(t => `
+        <button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button">
+          <span class="nav-indicator"></span>
+          <span class="nav-icon">${t.icon}</span>
+          <span class="nav-label">${t.label}</span>
+        </button>`).join("");
+    }
+
+    function switchTab(id) {
+      currentTab = id;
+      document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id));
+      const t = tabs.find(x => x.id === id);
+      if (t) ambientOverlay.style.background = t.ambient;
+      mainEl.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderGlossary(filter = "") {
+      const v = filter.toLowerCase().trim();
+      const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v));
+      document.getElementById("glossaryGrid").innerHTML = items.map(item => `
+        <article class="feature-card glossary-card" data-target-tab="${item.tab}">
+          <div class="mini-label">${item.tab}</div>
+          <h4>${item.term}</h4>
+          <div class="body-copy">${item.def}</div>
+        </article>`).join("");
+    }
+
+    function renderFlashcards() {
+      document.getElementById("flashGrid").innerHTML = flashcards.map(c => `
+        <article class="flash-card" tabindex="0">
+          <div class="flash-inner">
+            <div class="flash-front">
+              <div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div>
+              <div class="flash-hint">Click to reveal</div>
+            </div>
+            <div class="flash-back">
+              <div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div>
+              <div class="flash-hint">Click to flip back</div>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    function renderEssayTopics() {
+      const el = document.getElementById("essayTopics");
+      if (el) el.innerHTML = essayOutlines.map((o, i) =>
+        `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join("");
+      const ol = document.getElementById("essayOutline");
+      if (ol) { ol.classList.remove("show"); ol.innerHTML = ""; }
+    }
+
+    function selectEssay(i, outlineId) {
+      document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i));
+      const o = essayOutlines[i];
+      const ol = document.getElementById(outlineId);
+      if (ol) {
+        ol.innerHTML = o.blocks.map(([l, b]) =>
+          `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join("");
+        ol.classList.add("show");
+      }
+    }
+
+    function renderQuizQuestion() {
+      const qm = document.getElementById("quizMount");
+      const q = quizQuestions[quizIndex];
+      if (!q) {
+        const pct = Math.round((quizScore / quizQuestions.length) * 100);
+        const prev = Number(localStorage.getItem("apes_u5_best") || 0);
+        const best = Math.max(prev, pct);
+        localStorage.setItem("apes_u5_best", String(best));
+        bestScoreEl.textContent = best + "%";
+        qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review commons, irrigation, IPM, and urbanization hydrology if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+        return;
+      }
+      quizLocked = false;
+      qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>`;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function initBestScore() { const b = localStorage.getItem("apes_u5_best"); bestScoreEl.textContent = b ? b + "%" : "--"; }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px";
+    });
+    document.addEventListener("mouseover", e => {
+      if (!window.matchMedia("(pointer:fine)").matches) return;
+      cursor.style.width = e.target.closest("button,a,.flash-card,.glossary-card") ? "20px" : "12px";
+      cursor.style.height = cursor.style.width;
+    });
+
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin"; });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab); });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100); } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped"); });
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus(); });
+    document.getElementById("sbInput").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase().trim();
+      const m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8);
+      document.getElementById("sbResults").innerHTML = m.length
+        ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("")
+        : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>`;
+    });
+    document.getElementById("sbResults").addEventListener("click", e => {
+      const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return;
+      switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open");
+      document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = "";
+      if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm); }
+    });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+
+    themeToggleBtn.addEventListener("click", () => {
+      const off = document.body.classList.toggle("theme-off");
+      themeLabel.textContent = off ? "Theme Off" : "Theme On";
+    });
+
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline"); });
+
+    document.getElementById("quizMount").addEventListener("click", e => {
+      const opt = e.target.closest(".quiz-option");
+      if (opt && !quizLocked) {
+        quizLocked = true;
+        const q = quizQuestions[quizIndex]; const sel = Number(opt.dataset.optionIndex);
+        document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong"); });
+        if (sel === q.correct) quizScore++;
+        document.getElementById("quizFeedback").textContent = q.explanation;
+        document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>`;
+      }
+      if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion(); }
+      if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion(); }
+    });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open"); }));
+    mainEl.addEventListener("scroll", () => {
+      const max = mainEl.scrollHeight - mainEl.clientHeight;
+      document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%";
+    });
+
+    // Activate first tab initially
+    switchTab("dashboard");
+  </script>
+</body>
+</html>
