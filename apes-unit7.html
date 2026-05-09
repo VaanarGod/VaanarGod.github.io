@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 7: Atmospheric Pollution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+
+    :root {
+      --bg: #0e0a06;
+      --card: #130e08;
+      --card2: #1a1208;
+      --border: rgba(220, 150, 60, .08);
+      --text: #e8d5b0;
+      --muted: #6b5030;
+      --g: #e8922a;
+      --g2: #c4562a;
+      --g3: #d4a84b;
+      --gold: #f0c060;
+      --orange: #e8922a;
+      --red: #c4562a;
+      --amber: #d4a84b;
+      --accent: #e8922a;
+      --body-copy-color: #8a6840;
+      --mini-note-body: #5a4020;
+      --code-bg: #080502;
+      --code-border: rgba(232, 146, 42, .12);
+      --code-color: #e8922a;
+      --progress-bar: linear-gradient(90deg, #e8922a, #c4562a);
+    }
+
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255,255,255,.07);
+      --text: #e0e0e0;
+      --muted: #555;
+      --g: #aaa;
+      --g2: #999;
+      --g3: #888;
+      --gold: #bbb;
+      --orange: #aaa;
+      --red: #c06060;
+      --amber: #a09060;
+      --accent: #aaa;
+      --body-copy-color: #777;
+      --mini-note-body: #555;
+      --code-bg: #0a0a0a;
+      --code-border: rgba(255,255,255,.08);
+      --code-color: #999;
+      --progress-bar: linear-gradient(90deg,#666,#999);
+          --light-bg: #f7f8fb;
+      --light-card: #ffffff;
+      --light-card2: #f2f4f8;
+      --light-border: rgba(15, 23, 42, .08);
+      --light-text: #111827;
+      --light-muted: #6b7280;
+      --light-cyan: #2563eb;
+      --light-teal: #0f766e;
+    }
+
+    html { scroll-behavior: smooth }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      cursor: none;
+      transition: background .4s, color .4s
+    }
+
+    /* Hazy smog grid — warm amber tones */
+    body.light-theme {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+
+    body.light-theme .topbar,
+    body.light-theme .glass-btn,
+    body.light-theme #scoreTracker,
+    body.light-theme .course-link {
+      background: rgba(255, 255, 255, .86);
+      border-color: var(--light-border);
+      color: var(--light-text);
+    }
+
+    body.light-theme .glass-btn:hover,
+    body.light-theme .course-link:hover {
+      background: rgba(255, 255, 255, .95);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(232,146,42,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(232,146,42,.018) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+      opacity: .22;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--g);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      mix-blend-mode: screen;
+      transition: width .2s, height .2s
+    }
+
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 3px;
+      z-index: 100
+    }
+
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--progress-bar);
+      transition: background .4s
+    }
+
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 40% 20%, rgba(232,146,42,.09), transparent 60%), radial-gradient(ellipse at 80% 70%, rgba(196,86,42,.05), transparent 50%);
+      opacity: .22;
+      pointer-events: none;
+      transition: background 1s, opacity .25s;
+      z-index: 0
+    }
+
+    body.theme-off #ambientOverlay { opacity: 0 }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(8,5,2,.96);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(.23,1,.32,1), background .4s
+    }
+
+    body.theme-off #sidebar { background: rgba(5,5,5,.95) }
+
+    #sidebar:hover, #sidebar.pinned { width: 264px }
+
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .1em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s, color .2s, border-color .2s;
+      font-family: 'Space Mono', monospace
+    }
+
+    #sidebar:hover #pinBtn, #sidebar.pinned #pinBtn { opacity: 1 }
+    #pinBtn.pinned { color: var(--g); border-color: rgba(232,146,42,.3) }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(232,146,42,.3);
+      background: rgba(232,146,42,.07);
+      color: var(--g);
+      flex-shrink: 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .05em
+    }
+
+    .logo-copy { opacity: 0; transition: opacity .25s }
+    #sidebar:hover .logo-copy, #sidebar.pinned .logo-copy { opacity: 1 }
+
+    .logo-copy h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--g);
+      text-transform: uppercase
+    }
+
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      font-family: 'Space Mono', monospace
+    }
+
+    .search-wrap { position: relative; padding: 10px }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px
+    }
+
+    #sidebar:hover .sb-search-trigger, #sidebar.pinned .sb-search-trigger { opacity: 1; pointer-events: auto }
+    .sb-search-trigger:hover { border-color: rgba(232,146,42,.25) }
+
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(232,146,42,.2);
+      background: rgba(8,5,2,.98);
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s, transform .22s;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0,0,0,.8)
+    }
+
+    #sbSearchPanel.open { opacity: 1; pointer-events: auto; transform: translateY(0) }
+
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.05)
+    }
+
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none
+    }
+
+    #sbResults { max-height: 280px; overflow: auto }
+
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      cursor: none;
+      transition: background .15s
+    }
+
+    .sb-result:hover { background: rgba(232,146,42,.05) }
+    .sb-result:last-child { border-bottom: none }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'Space Mono', monospace
+    }
+
+    .sb-result-term {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: .04em
+    }
+
+    .sb-result-snip {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px
+    }
+
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      position: relative;
+      font-family: 'Space Mono', monospace
+    }
+
+    .nav-btn:hover { background: rgba(232,146,42,.05); color: #c8904a }
+
+    .nav-btn.active {
+      background: rgba(232,146,42,.10);
+      color: var(--g)
+    }
+
+    .nav-btn.active .nav-indicator { opacity: 1 }
+
+    .nav-indicator {
+      position: absolute;
+      left: 8px;
+      width: 4px;
+      height: 4px;
+      background: var(--g);
+      border-radius: 50%;
+      opacity: 0
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px
+    }
+
+    .nav-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .nav-label {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .nav-label, #sidebar.pinned .nav-label { opacity: 1 }
+
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap
+    }
+
+    .sidebar-footer span:last-child { opacity: 0; transition: opacity .25s }
+    #sidebar:hover .sidebar-footer span:last-child, #sidebar.pinned .sidebar-footer span:last-child { opacity: 1 }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--g);
+      flex-shrink: 0;
+      animation: blink 2.4s ease-in-out infinite
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1 }
+      50% { opacity: .2 }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px) }
+      to { opacity: 1; transform: translateY(0) }
+    }
+
+    /* ── MAIN ── */
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px)
+    }
+
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap }
+
+    .glass-btn, #scoreTracker {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(232,146,42,.05);
+      color: var(--muted);
+      padding: 9px 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block
+    }
+
+    .glass-btn:hover, #scoreTracker:hover { color: var(--g); border-color: rgba(232,146,42,.3) }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(232,146,42,.36);
+      background: rgba(232,146,42,.1)
+    }
+
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(232,146,42,.35);
+      background: rgba(232,146,42,.08);
+      color: var(--g);
+      padding: 9px 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    #themeToggleBtn:hover { background: rgba(232,146,42,.16) }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255,255,255,.04);
+      color: #555;
+      border-color: rgba(255,255,255,.15)
+    }
+
+    .theme-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--g);
+      display: inline-block;
+      transition: background .4s;
+      flex-shrink: 0
+    }
+
+    body.theme-off .theme-dot { background: #555 }
+
+    .tab-content { display: none; animation: fadeUp .45s cubic-bezier(.23,1,.32,1) }
+    .tab-content.active { display: block }
+
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .unit-tag {
+      display: block;
+      color: var(--g);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px
+    }
+
+    .page-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: .95;
+      color: white;
+      text-transform: uppercase
+    }
+
+    .page-header p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase
+    }
+
+    .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; margin-bottom: 26px }
+
+    .principle-grid, .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px }
+
+    .case-grid, .flash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px }
+
+    .exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 22px }
+
+    .card, .feature-card, .principle-card, .case-card, .exam-card, .flash-card, .writing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .24s, border-color .24s, box-shadow .24s, background .4s
+    }
+
+    .card:hover, .feature-card:hover, .principle-card:hover, .case-card:hover,
+    .exam-card:hover, .flash-card:hover, .writing-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(232,146,42,.18);
+      box-shadow: 0 20px 60px rgba(30,10,0,.6)
+    }
+
+    .hero-card::before, .feature-card::before, .principle-card::before,
+    .case-card::before, .exam-card::before, .writing-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+      background: var(--accent, var(--g));
+      opacity: .8
+    }
+
+    .hero-card { --accent: var(--g) }
+    .accent-g { --accent: var(--g) }
+    .accent-g2 { --accent: var(--g2) }
+    .accent-g3 { --accent: var(--g3) }
+    .accent-gold { --accent: var(--gold) }
+    .accent-orange { --accent: var(--orange) }
+    .accent-red { --accent: var(--red) }
+    .accent-amber { --accent: var(--amber) }
+
+    .card-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px
+    }
+
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: .03em;
+      color: white;
+      line-height: 1.12;
+      margin-bottom: 14px
+    }
+
+    .body-copy {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--body-copy-color);
+      transition: color .4s
+    }
+
+    .body-copy p+p { margin-top: 10px }
+
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px
+    }
+
+    .stat-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      transition: background .4s
+    }
+
+    .stat-box span {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .stat-box strong {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: var(--g)
+    }
+
+    .focus-callout {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 8px;
+      background: rgba(232,146,42,.04);
+      border: 1px solid rgba(232,146,42,.12);
+      transition: background .4s
+    }
+
+    body.theme-off .focus-callout {
+      background: rgba(255,255,255,.02);
+      border-color: rgba(255,255,255,.08)
+    }
+
+    .focus-callout .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .ap-term {
+      color: var(--amber);
+      font-weight: 600;
+      border-bottom: 1px dashed rgba(212,168,75,.35)
+    }
+
+    body:not(.ap-highlight) .ap-term {
+      color: inherit;
+      border-bottom: none;
+      font-weight: inherit
+    }
+
+    .mini-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px
+    }
+
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 22px;
+      transition: background .4s
+    }
+
+    .note-section::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent, var(--g));
+      opacity: .7;
+      border-radius: 0 0 0 12px
+    }
+
+    .note-section h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: white;
+      margin-bottom: 14px;
+      text-transform: uppercase
+    }
+
+    .note-section h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin: 20px 0 10px
+    }
+
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 16px
+    }
+
+    .mini-note {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      transition: background .4s
+    }
+
+    .mini-note strong {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 8px
+    }
+
+    .mini-note .body-copy { font-size: 13px; color: var(--mini-note-body) }
+
+    .notes-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px
+    }
+
+    .note-jump {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: border-color .2s, color .2s
+    }
+
+    .note-jump:hover { color: var(--g); border-color: rgba(232,146,42,.3) }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 6px;
+      padding: 14px 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--code-color);
+      white-space: pre-wrap;
+      margin-top: 14px
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px
+    }
+
+    .compare-table th {
+      background: var(--card2);
+      color: var(--g);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      text-align: left
+    }
+
+    .compare-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      color: var(--body-copy-color);
+      vertical-align: top;
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1.5
+    }
+
+    .compare-table tr:hover td { background: rgba(232,146,42,.03) }
+
+    /* Glossary */
+    .glossary-filter-wrap { margin-bottom: 20px }
+
+    #glossaryFilter {
+      width: 100%;
+      max-width: 360px;
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      outline: none;
+      cursor: none;
+      transition: border-color .2s
+    }
+
+    #glossaryFilter:focus { border-color: rgba(232,146,42,.3) }
+
+    .glossary-card h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+      letter-spacing: .04em
+    }
+
+    /* Flashcards */
+    .flash-card { cursor: none; perspective: 1000px }
+
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      transform-style: preserve-3d;
+      transition: transform .5s cubic-bezier(.23,1,.32,1)
+    }
+
+    .flash-card.flipped .flash-inner { transform: rotateY(180deg) }
+
+    .flash-front, .flash-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px
+    }
+
+    .flash-back { transform: rotateY(180deg) }
+
+    .flash-front h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      line-height: 1.4
+    }
+
+    .flash-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    /* Modals */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px)
+    }
+
+    .modal.open { display: flex }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid rgba(232,146,42,.15);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 640px;
+      width: 90vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative
+    }
+
+    .modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: white;
+      margin-bottom: 20px
+    }
+
+    .modal-close { position: absolute; top: 20px; right: 20px }
+
+    .quiz-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px
+    }
+
+    .quiz-question {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: .02em;
+      color: white;
+      line-height: 1.45;
+      margin-bottom: 20px
+    }
+
+    .quiz-options { display: flex; flex-direction: column; gap: 10px }
+
+    .quiz-option {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--body-copy-color);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      text-align: left;
+      cursor: none;
+      transition: border-color .2s, background .2s
+    }
+
+    .quiz-option:hover { border-color: rgba(232,146,42,.25); background: rgba(232,146,42,.04) }
+
+    .quiz-option.correct {
+      border-color: rgba(100,200,100,.5);
+      background: rgba(100,200,100,.07);
+      color: #90d890
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(196,86,42,.5);
+      background: rgba(196,86,42,.07);
+      color: #e8a888
+    }
+
+    .quiz-feedback {
+      margin-top: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      color: var(--body-copy-color);
+      line-height: 1.6
+    }
+
+    .quiz-next { margin-top: 16px }
+
+    .essay-topic-btn {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 10px 14px;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: border-color .2s, color .2s;
+      margin: 4px
+    }
+
+    .essay-topic-btn:hover, .essay-topic-btn.active { color: var(--g); border-color: rgba(232,146,42,.32) }
+
+    #essayOutline { display: none; margin-top: 20px; flex-direction: column; gap: 12px }
+    #essayOutline.show { display: flex }
+
+    .essay-block {
+      background: var(--card2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--g)
+    }
+
+    .essay-block-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 6px
+    }
+
+    .essay-block-body {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--body-copy-color)
+    }
+
+    /* Smog timeline visual */
+    .smog-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 14px
+    }
+
+    .smog-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .smog-row:last-child { border-bottom: none }
+
+    .smog-time {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--g);
+      min-width: 90px;
+      letter-spacing: .06em
+    }
+
+    .smog-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,.04); border-radius: 3px; overflow: hidden }
+
+    .smog-bar { height: 100%; border-radius: 3px; background: var(--accent, var(--g)); transition: width .5s }
+
+    .smog-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      color: var(--body-copy-color);
+      min-width: 180px
+    }
+
+    @media (max-width: 900px) {
+      #main { padding: 24px 20px 80px }
+      .hero-grid { grid-template-columns: 1fr }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="readingProgress"><div id="readingProgressFill"></div></div>
+  <div id="ambientOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">U7</div>
+      <div class="logo-copy">
+        <h1>APES</h1>
+        <p>Atmospheric Pollution</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">
+        <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search terms…
+      </button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="sbInput" type="text" placeholder="Search…" autocomplete="off" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="dot"></div>
+      <span>APES</span>
+      <span>Unit 7 · Atmospheric</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Outlines</button>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
+        <div id="scoreTracker">Best: <span id="bestScore">--</span></div>
+      </div>
+      <button id="themeToggleBtn" type="button"><div class="theme-dot"></div><span id="themeLabel">Theme On</span></button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">AP Environmental Science · Unit 7</span>
+        <h2>Atmospheric<br>Pollution</h2>
+        <p>Air quality · Smog · Acid deposition · Ozone · Indoor air · Policy</p>
+      </header>
+
+      <div class="hero-grid">
+        <article class="card hero-card accent-g">
+          <div class="card-sub">Unit Overview</div>
+          <h2 class="card-title">From Emission to Impact</h2>
+          <div class="body-copy">
+            <p>Unit 7 traces how pollutants enter the atmosphere, transform through chemistry driven by sunlight, disperse via wind and inversions, and deposit back as acid rain or smog — damaging ecosystems, human health, and global systems.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Key Topics</span><strong>9</strong></div>
+            <div class="stat-box"><span>Flashcards</span><strong>18</strong></div>
+            <div class="stat-box"><span>Quiz Qs</span><strong>12</strong></div>
+          </div>
+        </article>
+
+        <article class="card accent-amber">
+          <div class="card-sub">Why It Matters</div>
+          <h2 class="card-title">The Atmosphere as a Reactor</h2>
+          <div class="body-copy">
+            <p>The atmosphere isn't passive — it's a moving, layered fluid and chemical reactor. Pollutants are emitted, transported, transformed by sunlight, and removed by deposition. Understanding this system is how APES connects sources to consequences.</p>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Big Picture</div>
+            <div class="body-copy">Primary vs. secondary pollutants · Point vs. non-point sources · Thermal inversions · Acid deposition · Ozone paradox · Indoor air · Clean Air Act</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Air Pollution Basics</div>
+          <h3>Sources &amp; Measurement</h3>
+          <div class="body-copy">Point vs. non-point sources. Six criteria pollutants regulated by the Clean Air Act. Concentration measured in ppm/ppb.</div>
+          <button class="note-jump" data-note-target="n-basics">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-amber">
+          <div class="mini-label">Atmospheric System</div>
+          <h3>Layers, Inversions &amp; Dispersal</h3>
+          <div class="body-copy">Troposphere vs. stratosphere. Thermal inversions trap pollutants. Residence time controls local vs. global reach.</div>
+          <button class="note-jump" data-note-target="n-atmosphere">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Primary vs Secondary</div>
+          <h3>Pollutant Types</h3>
+          <div class="body-copy">Primary pollutants are emitted directly; secondary form via atmospheric chemistry. Ozone, PANs, and acids are secondary.</div>
+          <button class="note-jump" data-note-target="n-types">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Photochemical Smog</div>
+          <h3>NOx + VOCs + Sunlight</h3>
+          <div class="body-copy">Brownish haze from vehicle emissions reacting in sunlight. Ozone and PANs peak downwind and in afternoon hours.</div>
+          <button class="note-jump" data-note-target="n-smog">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Acid Deposition</div>
+          <h3>Regional Ecosystem Damage</h3>
+          <div class="body-copy">SO₂ + NOx → sulfuric + nitric acid. Wet and dry deposition. Lakes acidify, forests decline, stonework erodes.</div>
+          <button class="note-jump" data-note-target="n-acid">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g3">
+          <div class="mini-label">Ozone Depletion</div>
+          <h3>CFCs &amp; the Stratosphere</h3>
+          <div class="body-copy">CFCs destroy stratospheric ozone → increased UV-B. Montreal Protocol is the landmark success story.</div>
+          <button class="note-jump" data-note-target="n-ozone">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-amber">
+          <div class="mini-label">Indoor Air Quality</div>
+          <h3>Hidden Hazards at Home</h3>
+          <div class="body-copy">Radon, VOCs, CO, asbestos, mold. Indoor air can be worse than outdoor. Ventilation is the key remedy.</div>
+          <button class="note-jump" data-note-target="n-indoor">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Noise &amp; Light Pollution</div>
+          <h3>Overlooked Pollutants</h3>
+          <div class="body-copy">Noise disrupts wildlife communication and human health. Light pollution alters circadian rhythms and disrupts ecosystems.</div>
+          <button class="note-jump" data-note-target="n-noise">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Policy</div>
+          <h3>Clean Air Act &amp; Controls</h3>
+          <div class="body-copy">CAA, NAAQS, catalytic converters, scrubbers, cap-and-trade. How science translates into enforceable standards.</div>
+          <button class="note-jump" data-note-target="n-policy">View Notes →</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Unit 7 Deep Dive</h2>
+        <p>Scroll through all topics · Use links to jump</p>
+      </header>
+      <div class="notes-toc">
+        <button class="note-jump" data-note-target="n-basics">Air Pollution Basics</button>
+        <button class="note-jump" data-note-target="n-atmosphere">Atmospheric System</button>
+        <button class="note-jump" data-note-target="n-types">Pollutant Types</button>
+        <button class="note-jump" data-note-target="n-smog">Photochem Smog</button>
+        <button class="note-jump" data-note-target="n-industrial">Industrial Smog</button>
+        <button class="note-jump" data-note-target="n-acid">Acid Deposition</button>
+        <button class="note-jump" data-note-target="n-ozone">Ozone Depletion</button>
+        <button class="note-jump" data-note-target="n-indoor">Indoor Air</button>
+        <button class="note-jump" data-note-target="n-noise">Noise &amp; Light</button>
+        <button class="note-jump" data-note-target="n-policy">Policy &amp; Controls</button>
+      </div>
+
+      <article class="note-section accent-g" id="n-basics">
+        <div class="mini-label">01 · Introduction</div>
+        <h3>Air Pollution Basics</h3>
+        <div class="body-copy">
+          <p>Air pollution occurs when harmful substances enter Earth's atmosphere in concentrations that damage health, ecosystems, or materials. Concentration is typically expressed in <strong class="ap-term">parts per million (ppm)</strong> or ppb. The atmosphere is not just a container — it's a chemical reactor where pollutants are emitted, transported by wind, transformed by sunlight, and removed by deposition.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Point vs. Non-Point</strong>
+            <div class="body-copy"><strong class="ap-term">Point source</strong>: identifiable single source (e.g., a smokestack). <strong class="ap-term">Non-point source</strong>: many diffuse sources not attributable to one location (e.g., citywide vehicle emissions). Most urban smog is non-point.</div>
+          </div>
+          <div class="mini-note"><strong>Six Criteria Pollutants (CAA)</strong>
+            <div class="body-copy">CO · NO₂ · SO₂ · Particulate Matter (PM) · Tropospheric Ozone · Lead (Pb). These are regulated by National Ambient Air Quality Standards (NAAQS). Know each pollutant's major source and health impact.</div>
+          </div>
+          <div class="mini-note"><strong>Measuring Concentration</strong>
+            <div class="body-copy">ppm = parts per million by volume. ppb = parts per billion. Higher concentration = worse exposure. Exam prompts often give concentration and ask you to identify source, conditions, and impacts.</div>
+          </div>
+          <div class="mini-note"><strong>Emission vs. Exposure</strong>
+            <div class="body-copy">Emission is what leaves the source. Exposure is what reaches the receptor (person/ecosystem). Wind, inversions, and distance affect how much emitted pollution becomes actual exposure.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Classify a source as point vs. non-point. Know the six criteria pollutants and match each to sources and impacts. Interpret ppm concentrations in a scenario. Don't confuse "criteria pollutants" with "any important pollutant."</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-amber" id="n-atmosphere">
+        <div class="mini-label">02 · Atmospheric System</div>
+        <h3>Layers, Inversions &amp; Dispersal</h3>
+        <div class="body-copy">
+          <p>The atmosphere has multiple layers. For APES, two matter most: the <strong class="ap-term">troposphere</strong> (lowest, where weather and smog occur) and the <strong class="ap-term">stratosphere</strong> (above, where the protective ozone layer sits). Same ozone molecule — very different consequences depending on altitude.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Thermal Inversion</strong>
+            <div class="body-copy">Normally warm air rises and mixes. In a <strong class="ap-term">temperature inversion</strong>, a warmer air layer sits atop cooler surface air, capping vertical mixing. Pollutants accumulate near the ground. Common at night, in valleys, during high-pressure systems, and near cold ocean currents.</div>
+          </div>
+          <div class="mini-note"><strong>Wind &amp; Precipitation</strong>
+            <div class="body-copy">Wind dilutes pollutants by mixing with cleaner air. Precipitation removes them through <strong class="ap-term">wet deposition</strong> (rain/snow carrying dissolved pollutants). Calm, dry conditions = worst air quality days.</div>
+          </div>
+          <div class="mini-note"><strong>Residence Time</strong>
+            <div class="body-copy">How long a pollutant stays in the atmosphere before removal. Short-lived → local problem. Long-lived (like CFCs) → regional or global. PM10 settles in hours; PM2.5 persists weeks; CFCs last decades in the stratosphere.</div>
+          </div>
+          <div class="mini-note"><strong>Urban Heat Island</strong>
+            <div class="body-copy">Cities are warmer than surroundings due to impervious surfaces, waste heat from buildings/vehicles, and lack of vegetation. Warmer air speeds smog chemistry and raises health risks. Rainfall can be ~30% higher downwind of cities.</div>
+          </div>
+          <div class="mini-note"><strong>Street Canyon Effect</strong>
+            <div class="body-copy">Streets flanked by tall buildings reduce air circulation, concentrating pollutants at street level where people breathe. A key environmental justice issue — pedestrians and residents bear the highest exposure.</div>
+          </div>
+          <div class="mini-note"><strong>Tropospheric vs. Stratospheric Ozone</strong>
+            <div class="body-copy">Tropospheric O₃: harmful ground-level pollutant from NOx + VOCs + sunlight. Stratospheric O₃: beneficial UV shield. Same molecule, opposite effects. Never mix these up on the exam.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Explain why inversions increase pollution concentration (less mixing, not more wind). Predict when ozone will be worst (hot, sunny, calm, downwind of urban areas). Distinguish tropospheric vs. stratospheric ozone by location, cause, and impact.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-red" id="n-types">
+        <div class="mini-label">03 · Pollutant Classification</div>
+        <h3>Primary vs. Secondary Pollutants</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Primary pollutants</strong> are emitted directly from a source. <strong class="ap-term">Secondary pollutants</strong> form in the atmosphere through reactions, often driven by sunlight. This distinction matters because controlling secondary pollutants means targeting their precursors, not the end product.</p>
+        </div>
+        <table class="compare-table">
+          <tr><th>Pollutant</th><th>Primary / Secondary</th><th>Major Sources</th><th>Key Impacts</th></tr>
+          <tr><td>Carbon monoxide (CO)</td><td>Primary</td><td>Incomplete combustion, vehicles, fires</td><td>Blocks blood oxygen; dangerous indoors</td></tr>
+          <tr><td>NOx (NO, NO₂)</td><td>Primary + precursor</td><td>High-temp combustion: vehicles, power plants</td><td>Forms ozone + nitric acid; respiratory irritation</td></tr>
+          <tr><td>SO₂</td><td>Primary + precursor</td><td>Coal/oil combustion, metal smelting</td><td>Acid deposition; respiratory harm; sulfate PM</td></tr>
+          <tr><td>PM2.5 / PM10</td><td>Both</td><td>Combustion, road dust, wildfires; secondary from SO₂/NOx</td><td>Deep lung penetration; cardiovascular disease</td></tr>
+          <tr><td>Tropospheric Ozone (O₃)</td><td>Secondary</td><td>NOx + VOCs + sunlight</td><td>Lung irritation; crop damage; materials degradation</td></tr>
+          <tr><td>Lead (Pb)</td><td>Primary</td><td>Industrial processes, legacy contamination</td><td>Neurotoxin; developmental harm</td></tr>
+          <tr><td>VOCs</td><td>Primary (precursor)</td><td>Fuels, solvents, paints, some plants</td><td>Smog formation; some toxic/carcinogenic</td></tr>
+          <tr><td>PANs</td><td>Secondary</td><td>NOx + VOCs + sunlight (smog)</td><td>Eye irritation; plant damage; inhibit photosynthesis</td></tr>
+        </table>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Classify pollutants as primary or secondary and justify. Identify precursors (NOx, VOCs, SO₂) and connect them to secondary products (ozone, acids, secondary PM). Control secondary pollutants by reducing precursors — you can't just "filter" ozone.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-g2" id="n-smog">
+        <div class="mini-label">04 · Photochemical Smog</div>
+        <h3>NOx + VOCs + Sunlight → Smog</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Photochemical smog</strong> is the brownish haze typical of sunny, car-dense cities. It is <strong>nitrogen-based</strong> and UV-driven, forming when NOx and VOCs react in sunlight to produce ozone, PANs, and other oxidants. Worst conditions: high emissions + strong sunlight + stagnant air.</p>
+        </div>
+        <h4>Daily Smog Timeline</h4>
+        <div class="smog-timeline">
+          <div class="smog-row">
+            <div class="smog-time">6–9 AM</div>
+            <div class="smog-bar-wrap"><div class="smog-bar" style="width:70%;--accent:var(--g2)"></div></div>
+            <div class="smog-label">Rush hour ↑ NOx &amp; VOCs build up</div>
+          </div>
+          <div class="smog-row">
+            <div class="smog-time">9–11 AM</div>
+            <div class="smog-bar-wrap"><div class="smog-bar" style="width:55%;--accent:var(--amber)"></div></div>
+            <div class="smog-label">Traffic eases; NO₂ increases</div>
+          </div>
+          <div class="smog-row">
+            <div class="smog-time">11 AM–4 PM</div>
+            <div class="smog-bar-wrap"><div class="smog-bar" style="width:95%;--accent:var(--g)"></div></div>
+            <div class="smog-label">Peak sunlight → O₃ and PANs peak</div>
+          </div>
+          <div class="smog-row">
+            <div class="smog-time">4 PM–sunset</div>
+            <div class="smog-bar-wrap"><div class="smog-bar" style="width:35%;--accent:var(--muted)"></div></div>
+            <div class="smog-label">Sunlight fades → ozone production stops</div>
+          </div>
+        </div>
+        <div class="note-grid" style="margin-top:16px">
+          <div class="mini-note"><strong>Why Ozone Is Harmful</strong>
+            <div class="body-copy">Strong oxidant — aggressively damages lung tissue. Worsens asthma and bronchitis, reduces lung function, increases infection susceptibility. Also damages plant leaves, reducing crop yields.</div>
+          </div>
+          <div class="mini-note"><strong>PANs</strong>
+            <div class="body-copy"><strong class="ap-term">Peroxyacyl nitrates</strong> form in photochemical smog, decompose slowly, and travel far from cities. Cause eye irritation, respiratory problems, inhibited photosynthesis, and reduced crop yields.</div>
+          </div>
+          <div class="mini-note"><strong>Downwind Ozone Peak</strong>
+            <div class="body-copy">Photochemical reactions take time. Winds transport NOx/VOC mixtures as they "cook" in sunlight, so ozone often peaks miles downwind of the urban emission source — not directly over the city.</div>
+          </div>
+          <div class="mini-note"><strong>Controls</strong>
+            <div class="body-copy">Reduce NOx + VOCs: catalytic converters, reformulated gasoline, vapor recovery, low-NOx burners, public transit, and walkable urban planning. Targeting precursors is the only effective strategy.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Ozone peaks AFTER rush hour — not during it. Explain why: chemistry takes time + sunlight needed. Ozone is secondary — you can't scrub it, you must reduce NOx and VOCs. Smog worst when hot + sunny + calm + downwind.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-gold" id="n-industrial">
+        <div class="mini-label">05 · Industrial Smog</div>
+        <h3>Gray Smog: SO₂, Soot &amp; Particulates</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Industrial smog</strong> (gray smog) is sulfur-based, historically associated with coal-burning cities. The dominant pollutants are SO₂, particulate matter (soot, ash), and CO from incomplete combustion — plus secondary sulfate aerosols.</p>
+        </div>
+        <h4>Industrial Smog Formation Chain</h4>
+        <div class="code-block">Carbon in coal burns → CO₂ + CO (incomplete) + soot (PM)
+Sulfur in coal + O₂ → SO₂
+SO₂ + O₂ → SO₃
+SO₃ + H₂O → H₂SO₄ (sulfuric acid)
+H₂SO₄ + NH₃ → (NH₄)₂SO₄ (ammonium sulfate — brown haze)</div>
+        <div class="note-grid" style="margin-top:14px">
+          <div class="mini-note"><strong>PM2.5 vs. PM10</strong>
+            <div class="body-copy">PM10 reaches upper respiratory tract. PM2.5 penetrates deep into lungs and can enter the bloodstream. Fine PM linked to cardiovascular disease, stroke, and premature death. Size determines health risk — treat PM as a size category, not a single substance.</div>
+          </div>
+          <div class="mini-note"><strong>SO₂ Direct Effects</strong>
+            <div class="body-copy">Irritates throat and lungs; dissolves in airway moisture forming acid. Toxic to plants — reduces crop yields. Combines with moisture at ground level to dissolve stonework. Major contributor to acid deposition.</div>
+          </div>
+          <div class="mini-note"><strong>Visibility &amp; Haze</strong>
+            <div class="body-copy">PM and sulfate/nitrate aerosols scatter and absorb light, reducing visibility. Haze is not just smoke — secondary aerosols from SO₂ and NOx chemistry are a major contributor.</div>
+          </div>
+          <div class="mini-note"><strong>PM Source Comparison</strong>
+            <div class="body-copy">Natural: dust storms, wildfires, sea spray, volcanoes. Anthropogenic: fossil fuel combustion, waste incineration, vehicle exhaust, soil erosion from land clearing. Wildfires can spike PM2.5 regionally with no sunlight required (unlike smog ozone).</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Trace SO₂ → sulfuric acid → sulfate PM chain. Compare PM2.5 vs. PM10 penetration and health risk. Industrial vs. photochemical smog differ in precursors (sulfur/soot vs. NOx/VOC) and conditions (cold/cloudy vs. hot/sunny).</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-g3" id="n-acid">
+        <div class="mini-label">06 · Acid Deposition</div>
+        <h3>From Emissions to Ecosystem Damage</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Acid deposition</strong> occurs when SO₂ and NOx in the atmosphere are converted to sulfuric and nitric acids, which fall as wet deposition (acid rain, snow, fog) or dry deposition (acidic particles and gases). It links atmospheric chemistry to soil, freshwater, and forest health — often hundreds of miles from emission sources.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Main Precursors</strong>
+            <div class="body-copy">SO₂: coal/oil combustion, metal smelting. NOx: vehicle engines, power plants, some natural sources. Natural rain is slightly acidic (pH ~5.6) from CO₂ → carbonic acid. Acid deposition adds sulfuric and nitric acid, lowering pH further.</div>
+          </div>
+          <div class="mini-note"><strong>Wet vs. Dry Deposition</strong>
+            <div class="body-copy"><strong class="ap-term">Wet deposition</strong>: acids dissolved in rain, snow, or fog falling to the ground. <strong class="ap-term">Dry deposition</strong>: acidic gases and particles settling onto surfaces; rainstorms later wash these into waterways as acidic runoff.</div>
+          </div>
+          <div class="mini-note"><strong>Aquatic Ecosystem Impacts</strong>
+            <div class="body-copy">Lakes and streams become acidic → fish eggs fail to hatch → food web collapses. Acid mobilizes aluminum ions from soil, which are toxic to fish gills. Sensitive ecosystems: thin-soil granite watersheds (Adirondacks, Scandinavia).</div>
+          </div>
+          <div class="mini-note"><strong>Forest &amp; Soil Damage</strong>
+            <div class="body-copy">Acid leaches calcium and magnesium from soils → nutrient deficiency → tree weakness → increased susceptibility to pests, disease, and drought. High-elevation forests (fir, spruce) bathed in acidic fog suffer most.</div>
+          </div>
+          <div class="mini-note"><strong>Human Infrastructure</strong>
+            <div class="body-copy">Acid dissolves limestone, marble, and metal in buildings and monuments. Corrodes bridges and pipelines. Economic costs from material degradation are significant and ongoing.</div>
+          </div>
+          <div class="mini-note"><strong>Transboundary Problem</strong>
+            <div class="body-copy">Emissions in one country cause acid deposition hundreds of miles away (e.g., U.S. Midwest → Canadian lakes; UK/Germany → Scandinavian forests). Requires international cooperation. Addressed by 1990 Clean Air Act amendments and cap-and-trade for SO₂.</div>
+          </div>
+        </div>
+        <h4>Acid Deposition Formation Pathways</h4>
+        <div class="code-block">SO₂ + H₂O → H₂SO₃ → oxidized → H₂SO₄ (sulfuric acid) → wet/dry deposition
+NOx (from combustion) → atmospheric reactions → HNO₃ (nitric acid) → wet/dry deposition
+Both acids lower pH of rain below 5.6 → "acid rain"</div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Distinguish wet vs. dry deposition. Explain why aquatic systems are most vulnerable (buffering capacity, aluminum mobilization). Acid deposition is a regional problem — emissions travel hundreds of miles before depositing. SO₂ scrubbers and NOx controls are the primary solutions.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-amber" id="n-ozone">
+        <div class="mini-label">07 · Stratospheric Ozone Depletion</div>
+        <h3>CFCs, UV-B &amp; the Ozone Layer</h3>
+        <div class="body-copy">
+          <p>The stratospheric ozone layer absorbs harmful UV-B radiation. <strong class="ap-term">Chlorofluorocarbons (CFCs)</strong> — stable in the troposphere — drift into the stratosphere where UV radiation breaks them apart, releasing chlorine atoms that destroy ozone catalytically. One Cl atom can destroy ~100,000 ozone molecules.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>CFC Sources</strong>
+            <div class="body-copy">Refrigerants (freon), aerosol propellants, foam-blowing agents, dry-cleaning solvents. Non-reactive at ground level → long atmospheric lifetime → accumulate and rise into stratosphere where UV radiation breaks the C-Cl bond.</div>
+          </div>
+          <div class="mini-note"><strong>The Antarctic Ozone Hole</strong>
+            <div class="body-copy">Severe seasonal thinning over Antarctica each Southern Hemisphere spring. Cold polar stratospheric clouds provide surfaces for ozone-destroying reactions to occur. First observed 1985; at worst by ~2000; slowly recovering under the Montreal Protocol.</div>
+          </div>
+          <div class="mini-note"><strong>Effects of UV-B Increase</strong>
+            <div class="body-copy">Increased skin cancer and cataracts in humans. Damage to phytoplankton (base of marine food webs). Reduced crop yields. UV-B penetrates water up to 20 m — aquatic productivity threatened.</div>
+          </div>
+          <div class="mini-note"><strong>Montreal Protocol (1987)</strong>
+            <div class="body-copy">International treaty to phase out CFC production. Considered the most successful international environmental agreement. CFC levels in the stratosphere peaked ~1999 and are slowly declining. Ozone layer projected to recover to 1980 levels by ~2060-2070.</div>
+          </div>
+          <div class="mini-note"><strong>N₂O and Ozone Depletion</strong>
+            <div class="body-copy">Nitrous oxide (N₂O) is now the largest ozone-depleting substance emitted by humans. Comes from microbial processes (nitrification/denitrification) in soils and agriculture. Atmospheric N₂O has risen ~15% since 1750.</div>
+          </div>
+          <div class="mini-note"><strong>Ozone vs. Climate</strong>
+            <div class="body-copy">Ozone depletion ≠ greenhouse effect (though they interact). CFCs are also potent greenhouse gases. HFCs (CFC substitutes) are not ozone-depleting but are powerful GHGs — addressed by the Kigali Amendment (2016).</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">CFCs are stable → long residence time → reach stratosphere. One Cl atom destroys many ozone molecules (catalytic). Montreal Protocol is the success story for international cooperation. Don't confuse ozone depletion with the greenhouse effect — different mechanisms, different molecules.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-red" id="n-indoor">
+        <div class="mini-label">08 · Indoor Air Quality</div>
+        <h3>Hidden Hazards: Radon, VOCs &amp; More</h3>
+        <div class="body-copy">
+          <p>Indoor air can be more polluted than outdoor air. People spend ~90% of time indoors. Poor ventilation concentrates pollutants from building materials, combustion, and consumer products. Indoor air quality is a major public health concern — especially in tight, energy-efficient buildings.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Radon</strong>
+            <div class="body-copy">Radioactive gas from natural uranium decay in soil and rock. Seeps into basements through cracks. #1 cause of lung cancer among nonsmokers in the U.S. Detected by test kits; mitigated by sub-slab depressurization and ventilation.</div>
+          </div>
+          <div class="mini-note"><strong>Carbon Monoxide (CO)</strong>
+            <div class="body-copy">Odorless, colorless gas from incomplete combustion of fuels (gas stoves, heaters, fireplaces, attached garages). Binds to hemoglobin, blocking O₂ transport. CO detectors and proper ventilation are essential preventions.</div>
+          </div>
+          <div class="mini-note"><strong>VOCs (Indoor)</strong>
+            <div class="body-copy">Emitted from paints, carpets, furniture, cleaning products, adhesives. Benzene (carcinogen) from some building materials. "Sick building syndrome" linked to high indoor VOC concentrations and inadequate ventilation.</div>
+          </div>
+          <div class="mini-note"><strong>Asbestos</strong>
+            <div class="body-copy">Fibrous mineral used in insulation and building materials before 1980. Inhalation of fibers → mesothelioma (lung cancer) and asbestosis. Banned in many applications; abatement (removal or encapsulation) required in older buildings.</div>
+          </div>
+          <div class="mini-note"><strong>Lead Paint</strong>
+            <div class="body-copy">Lead-based paint in pre-1978 buildings. Peeling paint creates lead-contaminated dust. Major risk for children — neurological and developmental damage. Abatement programs and disclosure laws address the legacy problem.</div>
+          </div>
+          <div class="mini-note"><strong>Mold &amp; Biological Pollutants</strong>
+            <div class="body-copy">Moisture promotes mold, bacteria, and dust mites. Triggers asthma and allergic reactions. Pets and cockroach allergens contribute. Solution: moisture control, HEPA filtration, and ventilation. Environmental justice: low-income housing has higher mold rates.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Radon is natural but manageable — know its source (uranium decay), pathway (soil gas), and fix (ventilation). CO is from combustion — needs a detector. VOCs need fresh air dilution. Asbestos and lead are legacy materials — abatement, not just cleanup.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-g2" id="n-noise">
+        <div class="mini-label">09 · Noise &amp; Light Pollution</div>
+        <h3>Overlooked Pollutants</h3>
+        <div class="body-copy">
+          <p>Pollution extends beyond chemicals. <strong class="ap-term">Noise pollution</strong> and <strong class="ap-term">light pollution</strong> are physical disturbances that alter ecological and human health — yet are rarely the focus of traditional pollution policy.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Noise Pollution Sources</strong>
+            <div class="body-copy">Traffic, aircraft, construction, industry, and recreational noise. Decibels (dB) scale logarithmically: 10 dB increase = 10× sound intensity. Prolonged exposure above 85 dB causes hearing damage. Ocean noise pollution from shipping disrupts whale communication and navigation.</div>
+          </div>
+          <div class="mini-note"><strong>Wildlife Impacts of Noise</strong>
+            <div class="body-copy">Disrupts animal communication (mating calls, alarm signals). Birds in noisy urban areas shift call frequency or timing. Marine mammals rely on sound for navigation and feeding — noise pollution is a serious threat. Alters animal behavior and reduces reproductive success.</div>
+          </div>
+          <div class="mini-note"><strong>Human Health &amp; Noise</strong>
+            <div class="body-copy">Chronic noise exposure raises stress hormones, blood pressure, and cardiovascular risk. Disrupts sleep, which has cascading health effects. Disproportionately affects communities near highways, airports, and industrial zones — an environmental justice issue.</div>
+          </div>
+          <div class="mini-note"><strong>Light Pollution</strong>
+            <div class="body-copy">Excess artificial light at night (ALAN) from cities, streetlights, and advertising. Disrupts circadian rhythms in humans and wildlife. Reduces melatonin production, affecting sleep. Sea turtle hatchlings disoriented by beach lights. Migrating birds collide with lit buildings.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Noise and light pollution are physical, not chemical. Both disrupt ecological systems (communication, migration, reproduction) and human health (sleep, stress, hearing). Solutions include sound barriers, dark-sky ordinances, shielded lighting, and traffic management.</div>
+        </div>
+      </article>
+
+      <article class="note-section accent-g" id="n-policy">
+        <div class="mini-label">10 · Policy &amp; Control Technologies</div>
+        <h3>Clean Air Act, NAAQS &amp; Controls</h3>
+        <div class="body-copy">
+          <p>The <strong class="ap-term">Clean Air Act (CAA)</strong>, originally passed in 1970 and significantly amended in 1990, is the primary U.S. federal law regulating air quality. It established <strong class="ap-term">National Ambient Air Quality Standards (NAAQS)</strong> for the six criteria pollutants and required states to develop implementation plans.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>NAAQS</strong>
+            <div class="body-copy">Primary standards protect human health; secondary standards protect public welfare (crops, ecosystems, visibility, materials). EPA sets the standards; states must meet them through State Implementation Plans (SIPs). Non-attainment areas face stricter controls.</div>
+          </div>
+          <div class="mini-note"><strong>Catalytic Converters</strong>
+            <div class="body-copy">Required on cars since 1975. Convert CO → CO₂, unburned hydrocarbons → CO₂ + H₂O, and NOx → N₂ + O₂. Dramatically reduced vehicle emissions. Trade-off: CO₂ output increases (a greenhouse gas).</div>
+          </div>
+          <div class="mini-note"><strong>Scrubbers</strong>
+            <div class="body-copy">Wet scrubbers spray alkaline solution (lime/limestone) into smokestack exhaust to absorb SO₂ → gypsum (calcium sulfate). Target SO₂, not CO₂. Required under the CAA for large coal plants. Creates solid waste (scrubber sludge) requiring disposal.</div>
+          </div>
+          <div class="mini-note"><strong>Electrostatic Precipitators</strong>
+            <div class="body-copy">Electrically charge particulates so they stick to oppositely charged plates — then shaken off for disposal. Very effective at removing PM from power plant exhaust. Does not remove SO₂, NOx, or CO₂.</div>
+          </div>
+          <div class="mini-note"><strong>Cap-and-Trade (SO₂)</strong>
+            <div class="body-copy">The 1990 CAA established an SO₂ cap-and-trade system. Total emissions capped; firms with low abatement costs reduce more and sell permits to firms where reductions are more expensive. Reduced U.S. SO₂ emissions ~90% from 1990 to 2020.</div>
+          </div>
+          <div class="mini-note"><strong>Vehicle Emission Standards</strong>
+            <div class="body-copy">EPA and California (via CARB) set progressively tighter tailpipe emission standards. CAFE standards reduce fuel consumption, indirectly cutting air pollutants and CO₂. Zero-emission vehicle (ZEV) mandates push electric vehicle adoption.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Match each technology to the pollutant it controls: scrubbers → SO₂; electrostatic precipitators → PM; catalytic converters → CO, NOx, hydrocarbons. Cap-and-trade is a market-based incentive — not a direct regulation. NAAQS has primary (health) and secondary (welfare) standards.</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Key Terms</span>
+        <h2>Glossary</h2>
+        <p>Search or browse · Click a card to jump to that topic's notes</p>
+      </header>
+      <div class="glossary-filter-wrap">
+        <input type="text" id="glossaryFilter" placeholder="Search terms…" autocomplete="off" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Active Recall</span>
+        <h2>Flashcards</h2>
+        <p>Click a card to flip · Test yourself before looking</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM PREP -->
+    <section class="tab-content" id="examprep">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>Common Mistakes &amp; Traps</h2>
+        <p>High-yield patterns · Things the AP loves to test</p>
+      </header>
+      <div class="exam-grid">
+        <article class="exam-card feature-card accent-g">
+          <div class="mini-label">Trap #1</div>
+          <h3 class="card-title">Ozone Confusion</h3>
+          <div class="body-copy">Ground-level ozone = harmful smog pollutant. Stratospheric ozone = helpful UV shield. Same molecule, completely different consequences. Know the layer, know the impact. Never say "the ozone layer is coming down."</div>
+        </article>
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Trap #2</div>
+          <h3 class="card-title">Primary vs Secondary</h3>
+          <div class="body-copy">Ozone and PANs are secondary — you can't scrub them. To control ozone, reduce NOx and VOCs. Thinking you can install a filter to remove ozone from city air is a classic wrong answer.</div>
+        </article>
+        <article class="exam-card feature-card accent-amber">
+          <div class="mini-label">Trap #3</div>
+          <h3 class="card-title">Inversions Reduce Mixing</h3>
+          <div class="body-copy">Inversions are NOT more wind — they suppress vertical mixing. A warm air cap traps cooler, polluted surface air. Smog builds for days during inversions, not because emissions increase.</div>
+        </article>
+        <article class="exam-card feature-card accent-g2">
+          <div class="mini-label">Trap #4</div>
+          <h3 class="card-title">Ozone Peaks After Rush Hour</h3>
+          <div class="body-copy">Traffic provides the ingredients, sunlight does the cooking. Ozone peaks in the afternoon — sometimes downwind of the city. Rush hour peaks ≠ ozone peaks. Always link smog timing to photochemistry.</div>
+        </article>
+        <article class="exam-card feature-card accent-gold">
+          <div class="mini-label">Trap #5</div>
+          <h3 class="card-title">Scrubbers ≠ CO₂ Control</h3>
+          <div class="body-copy">Scrubbers remove SO₂. Electrostatic precipitators remove PM. Catalytic converters reduce CO, NOx, hydrocarbons. None of these control CO₂ — that requires switching fuel or carbon capture.</div>
+        </article>
+        <article class="exam-card feature-card accent-g3">
+          <div class="mini-label">Trap #6</div>
+          <h3 class="card-title">Acid Deposition Is Regional</h3>
+          <div class="body-copy">Acid deposition falls hundreds of miles from the emission source. A country or state burning coal can damage forests and lakes across a border. Always describe as a transboundary issue requiring multi-jurisdictional solutions.</div>
+        </article>
+        <article class="exam-card feature-card accent-orange">
+          <div class="mini-label">Trap #7</div>
+          <h3 class="card-title">CFC ≠ Greenhouse Effect</h3>
+          <div class="body-copy">Ozone depletion and the greenhouse effect are different problems with different mechanisms. CFCs do both, but ozone depletion works via UV chemistry in the stratosphere; greenhouse warming works via IR absorption in the troposphere.</div>
+        </article>
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Trap #8</div>
+          <h3 class="card-title">Radon Is Natural but Harmful</h3>
+          <div class="body-copy">Radon comes from natural uranium decay — but that doesn't make it safe. It's the #1 cause of lung cancer among non-smokers. Natural source, serious indoor hazard. The fix is ventilation, not eliminating the mineral.</div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Practice Quiz — Unit 7</div>
+      <button class="glass-btn modal-close" data-close="quizModal" type="button">✕ Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Outlines — Unit 7</div>
+      <button class="glass-btn modal-close" data-close="essayModal" type="button">✕ Close</button>
+      <div id="essayTopics"></div>
+      <div id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", label: "Dashboard", icon: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`, ambient: "radial-gradient(ellipse at 50% 10%, rgba(232,146,42,.10), transparent 60%)" },
+      { id: "notes", label: "Notes", icon: `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`, ambient: "radial-gradient(ellipse at 20% 30%, rgba(196,86,42,.08), transparent 55%)" },
+      { id: "glossary", label: "Glossary", icon: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`, ambient: "radial-gradient(ellipse at 70% 20%, rgba(212,168,75,.07), transparent 55%)" },
+      { id: "flashcards", label: "Flashcards", icon: `<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>`, ambient: "radial-gradient(ellipse at 40% 60%, rgba(232,146,42,.08), transparent 55%)" },
+      { id: "examprep", label: "Exam Prep", icon: `<svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`, ambient: "radial-gradient(ellipse at 60% 40%, rgba(196,86,42,.07), transparent 55%)" }
+    ];
+
+    const glossaryTerms = [
+      { term: "Air pollution", def: "Presence of harmful or excessive substances in Earth's atmosphere that damage health, ecosystems, or materials.", tab: "notes" },
+      { term: "Point source", def: "Identifiable, single-location emission source such as a specific smokestack or discharge pipe.", tab: "notes" },
+      { term: "Non-point source", def: "Diffuse pollution from many spread-out sources not attributable to one location; e.g., citywide vehicle emissions.", tab: "notes" },
+      { term: "Criteria air pollutants", def: "Six pollutants regulated by NAAQS under the Clean Air Act: CO, NO₂, SO₂, PM, tropospheric O₃, and Pb.", tab: "notes" },
+      { term: "Primary pollutant", def: "Pollutant emitted directly from a source into the atmosphere (e.g., CO, SO₂, soot).", tab: "notes" },
+      { term: "Secondary pollutant", def: "Pollutant formed in the atmosphere through chemical reactions, often driven by sunlight (e.g., O₃, PANs, sulfuric acid).", tab: "notes" },
+      { term: "Troposphere", def: "Lowest atmospheric layer where weather and most air pollution occur; all smog forms here.", tab: "notes" },
+      { term: "Stratosphere", def: "Atmospheric layer above the troposphere containing the protective ozone layer that absorbs UV-B radiation.", tab: "notes" },
+      { term: "Thermal inversion", def: "Atmospheric condition where warmer air overlies cooler surface air, suppressing vertical mixing and trapping pollutants near the ground.", tab: "notes" },
+      { term: "Residence time", def: "How long a pollutant remains in the atmosphere before being removed or transformed. Longer = broader geographic impact.", tab: "notes" },
+      { term: "Photochemical smog", def: "Brownish haze formed when NOx and VOCs react in sunlight, producing ozone, PANs, and other oxidants.", tab: "notes" },
+      { term: "NOx", def: "Nitrogen oxides (mainly NO and NO₂) formed during high-temperature combustion; key precursor to ozone and nitric acid.", tab: "notes" },
+      { term: "VOCs", def: "Volatile organic compounds that evaporate easily at room temperature; key precursors to tropospheric ozone and smog.", tab: "notes" },
+      { term: "PANs", def: "Peroxyacyl nitrates — secondary smog pollutants that cause eye irritation, respiratory harm, and plant damage; travel far from cities.", tab: "notes" },
+      { term: "Industrial smog", def: "Gray smog dominated by SO₂ and particulate matter from coal combustion and heavy industry.", tab: "notes" },
+      { term: "Particulate matter (PM)", def: "Solid or liquid particles suspended in air; PM2.5 penetrates deep into lungs; PM10 reaches upper respiratory tract.", tab: "notes" },
+      { term: "Acid deposition", def: "Sulfuric and nitric acids (from SO₂ and NOx) falling as wet deposition (rain, snow, fog) or dry deposition (particles, gases).", tab: "notes" },
+      { term: "Wet deposition", def: "Acids dissolved in rain, snow, or fog falling to the ground — what most people call 'acid rain.'", tab: "notes" },
+      { term: "Dry deposition", def: "Acidic gases and particles settling onto surfaces; later washed into waterways by rain, increasing acidic runoff.", tab: "notes" },
+      { term: "Chlorofluorocarbons (CFCs)", def: "Stable synthetic compounds that drift into the stratosphere where UV breaks them apart, releasing Cl atoms that catalytically destroy ozone.", tab: "notes" },
+      { term: "Ozone hole", def: "Severe seasonal thinning of the stratospheric ozone layer over Antarctica, caused by CFC chemistry on polar stratospheric clouds.", tab: "notes" },
+      { term: "Montreal Protocol", def: "1987 international agreement to phase out ozone-depleting substances (CFCs). Considered the most successful global environmental treaty.", tab: "notes" },
+      { term: "Radon", def: "Radioactive gas from natural uranium decay in soil and rock; seeps into buildings; #1 cause of lung cancer in non-smokers.", tab: "notes" },
+      { term: "Urban heat island", def: "Metropolitan areas significantly warmer than surrounding rural areas due to dark surfaces, waste heat, and lack of vegetation.", tab: "notes" },
+      { term: "Scrubber", def: "Technology that sprays alkaline solution into smokestack exhaust to capture SO₂; produces gypsum as a byproduct.", tab: "notes" },
+      { term: "Electrostatic precipitator", def: "Device that electrically charges particles so they adhere to oppositely charged plates; very effective for PM removal from power plants.", tab: "notes" },
+      { term: "Catalytic converter", def: "Device on vehicles that converts CO, NOx, and unburned hydrocarbons into CO₂, N₂, and H₂O using platinum-group catalysts.", tab: "notes" },
+      { term: "NAAQS", def: "National Ambient Air Quality Standards — EPA limits for the six criteria pollutants; primary standards protect human health, secondary protect welfare.", tab: "notes" },
+      { term: "Clean Air Act (CAA)", def: "U.S. federal law (1970, major 1990 amendments) establishing EPA authority to regulate air pollution, set NAAQS, and control emissions.", tab: "notes" },
+      { term: "Cap-and-trade", def: "Market-based policy that sets a total emission cap and allows firms to buy/sell pollution permits, achieving reductions at lowest cost.", tab: "notes" },
+    ];
+
+    const flashcards = [
+      { front: "What is the difference between a primary and secondary pollutant? Give one example of each.", back: "Primary: emitted directly from a source (e.g., SO₂ from coal combustion). Secondary: forms in the atmosphere via chemical reactions (e.g., tropospheric ozone from NOx + VOCs + sunlight)." },
+      { front: "Why does tropospheric ozone peak in the afternoon rather than during rush hour?", back: "Ozone is a secondary pollutant — it requires sunlight to form from NOx and VOCs. Rush hour provides the precursors; afternoon sunlight drives the photochemical reactions that produce peak ozone concentrations." },
+      { front: "Explain how a thermal inversion traps air pollution near the surface.", back: "Normally warm air rises and mixes. In a thermal inversion, a warmer air mass sits above cooler surface air, 'capping' vertical mixing. Pollutants accumulate in the cooler surface layer where people breathe." },
+      { front: "List the six criteria air pollutants regulated by NAAQS under the Clean Air Act.", back: "Carbon monoxide (CO), Nitrogen dioxide (NO₂), Sulfur dioxide (SO₂), Particulate matter (PM), Tropospheric ozone (O₃), Lead (Pb)." },
+      { front: "How do CFCs cause stratospheric ozone depletion?", back: "CFCs are stable in the troposphere and drift into the stratosphere. UV radiation breaks the C–Cl bond, releasing chlorine atoms. Each Cl atom catalytically destroys ~100,000 ozone molecules before being inactivated." },
+      { front: "What is the difference between wet and dry acid deposition?", back: "Wet deposition: acids dissolved in rain, snow, or fog falling to the ground. Dry deposition: acidic gases and particles settling onto surfaces, later washed into waterways by rain." },
+      { front: "Why is PM2.5 more dangerous to human health than PM10?", back: "PM2.5 (fine particles < 2.5 μm) penetrates deep into the lung's gas-exchange region and can enter the bloodstream, causing cardiovascular and respiratory disease. PM10 reaches only the upper respiratory tract." },
+      { front: "What pollutant does a scrubber remove, and how does it work?", back: "Scrubbers remove SO₂. They spray alkaline limestone or lime slurry into exhaust gas; SO₂ reacts with the calcium compound to form gypsum (calcium sulfate), which is removed as solid waste." },
+      { front: "What is an urban heat island and why does it worsen air quality?", back: "Cities are warmer than surroundings due to impervious surfaces, waste heat, and lack of vegetation. Higher temperatures speed photochemical smog formation and intensify heat-health risks." },
+      { front: "Why is radon a serious indoor air hazard even though it comes from nature?", back: "Radon (from uranium decay in soil/rock) seeps into basements through cracks. Being radioactive, it decays into particles that lodge in lungs and cause cancer. It's the #1 lung cancer cause in non-smokers." },
+      { front: "What is the significance of the Montreal Protocol?", back: "1987 international treaty phasing out CFC production. Considered the most successful global environmental agreement — stratospheric CFC levels peaked ~1999 and are slowly declining, with ozone layer recovery projected by ~2060–2070." },
+      { front: "What is the difference between photochemical smog and industrial smog?", back: "Photochemical smog (brown/orange): nitrogen-based, driven by sunlight + NOx + VOCs, typical of sunny car-dependent cities, ozone and PANs dominant. Industrial smog (gray): sulfur-based, from coal/heavy industry, SO₂ and PM dominant, worse in cold/cloudy conditions." },
+      { front: "Why does acid deposition often affect areas far from the emission source?", back: "SO₂ and NOx can travel hundreds of miles before converting to sulfuric and nitric acids in the atmosphere and depositing. It is a transboundary problem — emissions in one country damage ecosystems in another." },
+      { front: "How do electrostatic precipitators work and what pollutant do they target?", back: "They electrically charge particulates so they adhere to oppositely charged collection plates, then are shaken off for disposal. They target particulate matter (PM) — not SO₂, NOx, or CO₂." },
+      { front: "What are PANs and why do they form far from the urban emission source?", back: "Peroxyacyl nitrates are secondary photochemical smog pollutants. They decompose slowly, allowing winds to transport them hundreds of miles from cities before releasing NOx radicals — causing crop damage and eye irritation in rural areas." },
+      { front: "Explain the acid deposition impact chain on freshwater lakes.", back: "Acid rain lowers lake pH → fish eggs fail to hatch → food web collapses. Acidification also mobilizes aluminum ions from surrounding soil, which are toxic to fish gills. Thin-soil granite watersheds have lowest buffering capacity and are most vulnerable." },
+      { front: "What indoor air pollutant is the #1 cause of lung cancer in non-smokers, and what is its source?", back: "Radon — a radioactive gas produced naturally by uranium decay in soil and rock. It seeps into buildings through cracks in foundations. Detected by test kits; mitigated by sub-slab depressurization and ventilation." },
+      { front: "What is the 'ozone paradox' in APES?", back: "Ozone is beneficial in the stratosphere (absorbs UV-B radiation, protecting life) but harmful in the troposphere (strong oxidant that damages lungs and crops). Same molecule — location determines whether it's helpful or harmful." },
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Photochemical Smog Formation & Control",
+        blocks: [
+          ["Thesis", "Photochemical smog forms when NOx and VOCs react in sunlight to produce ozone and PANs; effective control requires reducing precursor emissions, not the end products."],
+          ["Background", "Define photochemical smog as a secondary pollution problem driven by nitrogen-based chemistry and UV radiation. Contrast with industrial gray smog. Identify key conditions: high NOx/VOC emissions, strong sunlight, stagnant air."],
+          ["Formation Mechanism", "NOx emitted from vehicles and combustion → reacts with VOCs in sunlight → produces tropospheric ozone (peak mid-afternoon), PANs, and other oxidants. Explain daily timeline: rush-hour precursors, afternoon photochemical peak, downwind transport."],
+          ["Impacts", "Human health: lung irritation, worsened asthma, reduced lung function, cardiovascular effects. Ecological: crop damage, plant tissue destruction, reduced photosynthesis. Economic: healthcare costs, agricultural losses."],
+          ["Control Strategies", "Catalytic converters reduce NOx, CO, hydrocarbons. Reformulated gasoline and vapor recovery reduce VOC evaporation. Low-NOx burners in industry. Public transit and VMT reduction. Emissions trading / NAAQS enforcement."],
+          ["Conclusion", "Because ozone is secondary, the solution lies upstream at the precursor. Policy must address both mobile (vehicles) and stationary (industry) sources of NOx and VOCs to achieve sustained air quality improvement."]
+        ]
+      },
+      {
+        label: "Acid Deposition: Causes, Impacts & Policy",
+        blocks: [
+          ["Thesis", "Acid deposition, produced when SO₂ and NOx transform into sulfuric and nitric acids in the atmosphere, damages freshwater ecosystems, forests, and infrastructure across national boundaries — requiring both technological and market-based policy responses."],
+          ["Background", "Define acid deposition — wet (rain, snow, fog) and dry (particles, gases). Natural rain pH ~5.6; acid deposition lowers pH further. Distinguish from local air pollution — a regional, transboundary problem."],
+          ["Formation Pathways", "SO₂ from coal combustion + atmospheric oxidation → H₂SO₄. NOx from vehicles/power plants → HNO₃. Both dissolve in precipitation or deposit as dry particles, traveling hundreds of miles from emission sources."],
+          ["Ecosystem Impacts", "Aquatic: acidified lakes, fish egg failure, aluminum ion mobilization toxic to gills, loss of macroinvertebrates. Terrestrial: soil nutrient leaching (Ca, Mg), tree weakening, forest decline especially at high altitude. Human: monument and building corrosion."],
+          ["Control Technologies & Policy", "Scrubbers remove SO₂ from power plant exhaust. Low-NOx burners. 1990 CAA SO₂ cap-and-trade reduced U.S. emissions >90%. International cooperation needed (e.g., U.S.-Canada Air Quality Agreement). Switching to natural gas and renewables reduces both SO₂ and NOx."],
+          ["Conclusion", "Acid deposition illustrates how combustion externalities cross borders. Success of SO₂ cap-and-trade shows market mechanisms can achieve environmental goals cost-effectively, but continued NOx and SO₂ reductions — especially in developing economies — are essential."]
+        ]
+      },
+      {
+        label: "Stratospheric Ozone Depletion & Montreal Protocol",
+        blocks: [
+          ["Thesis", "CFCs released by human activity have catalytically destroyed stratospheric ozone, increasing harmful UV-B exposure; the Montreal Protocol demonstrates that international cooperation can successfully reverse large-scale atmospheric damage."],
+          ["Background", "Stratospheric ozone absorbs UV-B radiation, protecting life. CFCs are inert in the troposphere (hence widely used) but photolyzed in the stratosphere, releasing Cl atoms. One Cl atom destroys ~100,000 ozone molecules before being inactivated."],
+          ["The Ozone Hole", "Severe seasonal thinning over Antarctica due to polar stratospheric clouds providing reaction surfaces. First detected 1985. Largest in late 1990s–2000s. N₂O is now the largest ozone-depleting substance from human activities."],
+          ["Health & Ecological Impacts", "Increased UV-B: higher rates of skin cancer and cataracts in humans. Damage to phytoplankton (base of marine food webs). Reduced crop yields. UV-B penetrates water to 20 m — entire marine surface productivity at risk."],
+          ["Montreal Protocol", "1987 international treaty; nearly universally ratified. Phased out CFC production; CFC concentrations peaked ~1999 and are declining. Ozone layer projected to recover to 1980 levels by ~2060–2070. Kigali Amendment (2016) addresses HFC replacements (potent GHGs)."],
+          ["Conclusion", "The ozone layer case is the strongest evidence that global environmental problems can be solved through science-based international agreements. Precautionary action before full scientific certainty — combined with economic alternatives to CFCs — made the Protocol succeed."]
+        ]
+      },
+      {
+        label: "Indoor Air Pollution: Sources, Risks & Solutions",
+        blocks: [
+          ["Thesis", "Indoor air often contains higher concentrations of harmful pollutants than outdoor air; addressing radon, CO, VOCs, and biological contaminants requires a combination of source control, ventilation, and monitoring."],
+          ["Background", "People spend ~90% of time indoors. Energy-efficient, tightly sealed buildings can trap pollutants. Indoor air quality is both a public health and environmental justice issue — low-income housing has higher exposure rates to mold, lead paint, and radon."],
+          ["Key Pollutants", "Radon: radioactive gas from uranium decay in soil; seeps through foundation; #1 lung cancer cause in non-smokers. CO: from incomplete combustion (heaters, stoves); binds hemoglobin. VOCs: from paints, carpets, cleaning products; some carcinogenic. Asbestos: pre-1980 insulation; causes mesothelioma. Lead paint: pre-1978 buildings; neurological harm in children. Mold: moisture-driven; triggers asthma."],
+          ["Solutions", "Radon: test and install sub-slab depressurization/ventilation. CO: install detectors; maintain appliances. VOCs: increase ventilation; use low-VOC products. Asbestos: professional abatement. Lead: encapsulation or removal; disclosure laws. Mold: moisture control and HEPA filtration."],
+          ["Environmental Justice", "Low-income communities and renters have less ability to remediate. Older housing stock has higher rates of legacy pollutants. Disproportionate health burden falls on communities of color and low-income populations."],
+          ["Conclusion", "Indoor air quality requires proactive monitoring and design — not just outdoor air standards. Equity-focused policies that address legacy materials in affordable housing are essential for environmental justice."]
+        ]
+      }
+    ];
+
+    const quizQuestions = [
+      { question: "A city's ozone levels peak at 2 PM, several hours after morning rush hour. Which explanation BEST accounts for this timing?", options: ["Vehicles emit the most ozone during commute hours when engine temperatures are highest", "Ozone is a secondary pollutant — rush-hour NOx and VOCs react in afternoon sunlight to produce peak ozone concentrations downwind", "Traffic is highest at 2 PM in most cities, producing more exhaust", "High temperatures at 2 PM cause more ozone to descend from the stratosphere"], correct: 1, explanation: "Ozone is secondary — it is NOT directly emitted. Rush-hour vehicles supply NOx and VOCs; afternoon sunlight drives the photochemical reactions. Ozone often peaks downwind of the city after precursors have had hours of photochemical 'cooking time.'" },
+      { question: "A monitoring station in a mountain valley records dangerous PM2.5 levels every morning in winter, even though industrial activity is low. What atmospheric condition MOST likely explains this pattern?", options: ["Increased photochemical smog activity from stronger winter UV radiation", "Thermal inversion — cold air settles into the valley overnight and is capped by warmer air above, trapping pollutants", "Higher wind speeds channeled through the valley concentrate particulates", "Sea breezes from a nearby ocean transport coastal pollution inland"], correct: 1, explanation: "Valley inversions are classic: cold dense air drains into the valley at night and becomes trapped under warmer air above. Without vertical mixing, any pollutants from wood stoves, vehicles, or industry accumulate at surface level — exactly where people breathe." },
+      { question: "A student argues that to reduce ozone pollution, regulators should install ozone scrubbers on smokestacks. What is the fundamental flaw in this reasoning?", options: ["Smokestacks don't emit enough ozone to justify the cost of scrubbers", "Tropospheric ozone is a secondary pollutant — it forms in the atmosphere from NOx and VOC precursors, so the solution is reducing precursor emissions, not scrubbing the end product", "Ozone is beneficial and should not be removed from the atmosphere", "Scrubbers only work on particulate matter, not any type of gas"], correct: 1, explanation: "Ozone is secondary — it is formed in the atmosphere, not emitted by smokestacks. The correct strategy is targeting NOx and VOC emissions through vehicle standards, industrial controls, and fuel reformulation. Trying to 'catch' ozone after it forms is both technically difficult and misdiagnoses the problem." },
+      { question: "Lakes in the Adirondack Mountains of New York have become acidic despite being hundreds of miles from major coal-fired power plants in the Midwest. Which concept BEST explains this?", options: ["Acid deposition is a local problem caused by nearby sources only", "SO₂ and NOx emitted in the Midwest are converted to sulfuric and nitric acids in the atmosphere and deposited via wet and dry deposition far downwind — a transboundary pollution problem", "The Adirondacks naturally produce acidic water from organic decomposition in forests", "Photochemical smog from Northeastern cities is reacting with lake water directly"], correct: 1, explanation: "Acid deposition is regional — SO₂ from coal combustion can travel hundreds of miles before atmospheric chemistry converts it to sulfuric acid and it precipitates. The Adirondacks sit on thin granite soils with low buffering capacity, making them particularly vulnerable to acidification from emissions far to the west." },
+      { question: "Why are CFCs specifically responsible for stratospheric ozone depletion, rather than other industrial chemicals?", options: ["CFCs are emitted in such high volumes that they overwhelm the natural ozone production cycle", "CFCs are chemically inert in the troposphere — allowing them to reach the stratosphere intact, where UV radiation breaks the C–Cl bond, releasing Cl atoms that catalytically destroy ozone", "CFCs react directly with tropospheric ozone, depleting both layers simultaneously", "CFCs are heavier than air and sink directly to the stratosphere through gravity"], correct: 1, explanation: "The key is CFCs' tropospheric stability — they don't react with water, ozone, or other chemicals at low altitudes. This allows them to drift upward intact over years. Once in the stratosphere, intense UV radiation breaks the C-Cl bond, releasing highly reactive chlorine atoms. One Cl atom can destroy ~100,000 ozone molecules before being inactivated — a catalytic chain reaction." },
+      { question: "A homeowner discovers radon levels in their basement are 8 pCi/L — above the EPA action level of 4 pCi/L. Radon is a naturally occurring gas. Should action be taken, and why?", options: ["No — since radon is natural, it poses no greater risk than normal background radiation", "Yes — radon is a radioactive gas that decays into particles lodging in lung tissue; it is the leading cause of lung cancer in non-smokers regardless of its natural origin", "No — radon is only dangerous above 20 pCi/L; 8 pCi/L is within acceptable limits", "Yes — but only if the house has poor insulation, since radon only concentrates in well-insulated buildings"], correct: 1, explanation: "Natural origin does not equal safe. Radon decays into radioactive particles that lodge in lung tissue, causing DNA damage. At 8 pCi/L — double the EPA action level — the risk of lung cancer is significant. Mitigation through sub-slab depressurization and/or ventilation effectively reduces indoor radon to safe levels." },
+      { question: "A county installs scrubbers on a large coal-fired power plant. Which air quality improvement will be MOST direct?", options: ["Reduction in tropospheric ozone formation", "Reduction in CO₂ emissions and slowing of climate change", "Reduction in SO₂ emissions, leading to less acid deposition and secondary sulfate PM formation", "Reduction in NOx emissions, leading to less photochemical smog formation"], correct: 2, explanation: "Scrubbers target SO₂ — they use alkaline solution to react with and capture sulfur dioxide, producing gypsum. This directly reduces SO₂ at the stack, which in turn reduces downwind acid deposition (sulfuric acid formation) and secondary sulfate aerosol formation. Scrubbers do NOT control CO₂, NOx, or CO." },
+      { question: "Ground-level ozone irritates lungs, while stratospheric ozone is essential for life. A politician says 'we should move ozone from the ground to the sky where it's needed.' Why is this not a viable solution?", options: ["It is a viable solution — catalytic reactions can transfer ozone upward", "Tropospheric ozone is formed continuously from NOx and VOCs in sunlight; it cannot be 'moved' to the stratosphere in meaningful quantities, and ozone in the stratosphere is also continuously produced and destroyed via natural UV chemistry", "Ozone is too heavy to rise into the stratosphere naturally", "The stratosphere already has too much ozone and does not need more"], correct: 1, explanation: "Ozone in both layers is in dynamic equilibrium — constantly produced and destroyed. Ground-level ozone is generated locally by photochemical reactions and breaks down within days; it cannot be efficiently collected and relocated. Stratospheric ozone is produced by UV splitting O₂ — a separate process. The only real solutions are reducing precursor emissions for smog and phasing out CFCs for the ozone layer." },
+      { question: "Which scenario BEST illustrates an environmental justice issue related to air pollution?", options: ["A national park recording elevated ozone levels due to regional transport from distant cities", "A low-income urban neighborhood with predominantly minority residents located near a highway interchange with significantly higher rates of asthma than surrounding wealthier areas", "A farmer in a rural area whose crops are damaged by photochemical smog drifting from an urban center", "A coastal city with air quality that varies seasonally due to changes in wind direction"], correct: 1, explanation: "Environmental justice refers to the disproportionate burden of environmental harm on low-income communities and communities of color, who often have less political power to resist harmful facility siting. Highway infrastructure and industrial facilities are disproportionately located in disadvantaged neighborhoods, creating concentrated pollution exposure and associated health disparities." },
+      { question: "An indoor air quality test reveals elevated benzene levels in a new office building. What is the MOST likely source?", options: ["Radon gas seeping from the foundation", "Benzene emitted from new carpeting, furniture, adhesives, and paints — a form of VOC off-gassing that is common in new construction and tightly sealed buildings", "Carbon monoxide from an improperly vented HVAC system", "Lead dust from renovation work in adjacent older building sections"], correct: 1, explanation: "New buildings often have 'sick building syndrome' from off-gassing VOCs — including benzene (a known carcinogen) — from carpets, furniture, adhesives, paints, and building materials. This is especially problematic in tightly sealed, energy-efficient buildings with poor ventilation. The solution is increased fresh air exchange and low-VOC materials." },
+      { question: "The 1990 Clean Air Act amendments established a cap-and-trade system for SO₂ from power plants. What makes cap-and-trade economically efficient compared to a uniform emission standard?", options: ["It requires all power plants to install the same scrubber technology, ensuring consistent reductions", "It sets a total cap on SO₂ emissions and allows firms to buy and sell permits, so reductions occur where they are cheapest — achieving the same environmental outcome at lower total cost", "It eliminates the need for monitoring, since firms self-report compliance", "It allows firms to pay fines instead of reducing emissions, raising government revenue"], correct: 1, explanation: "Cap-and-trade works because firms have different abatement costs. Firms that can reduce emissions cheaply do so (and sell surplus permits); firms where reductions are expensive buy permits instead. The environmental goal (total SO₂ cap) is met, but at lower total cost than requiring identical reductions from every firm. U.S. SO₂ fell over 90% from 1990 to 2020 under this system." },
+      { question: "A researcher studying acid deposition in a remote Canadian lake finds pH has dropped from 6.8 in 1970 to 4.5 today, even though there are no local emission sources. Which sequence of events BEST explains this?", options: ["Natural volcanic activity has increased acid production in the watershed over the past 50 years", "SO₂ and NOx from industrial combustion sources in the U.S. Midwest are converted to sulfuric and nitric acids during atmospheric transport and deposited via precipitation into the lake's watershed, acidifying the lake over decades", "CO₂ dissolved in rainwater formed carbonic acid, gradually lowering lake pH over 50 years", "Organic decomposition in the lake's catchment naturally produces acidic compounds that accumulate over time"], correct: 1, explanation: "The pH drop from 6.8 to 4.5 — far below natural rainfall pH of 5.6 — indicates anthropogenic acid deposition. The remote location rules out local sources, pointing to long-range transport of SO₂/NOx from distant coal combustion. Atmospheric chemistry converts these gases to sulfuric and nitric acids; precipitation deposits them into the watershed. CO₂/carbonic acid alone could not cause such a large pH decrease." },
+    ];
+
+    const nav = document.getElementById("sidebarNav"), mainEl = document.getElementById("main"), ambientOverlay = document.getElementById("ambientOverlay"), cursor = document.getElementById("cursor"), pinBtn = document.getElementById("pinBtn"), sidebar = document.getElementById("sidebar"), apToggleBtn = document.getElementById("apToggleBtn"), bestScoreEl = document.getElementById("bestScore"), themeToggleBtn = document.getElementById("themeToggleBtn"), themeLabel = document.getElementById("themeLabel");
+        const themeToggleBtn = document.getElementById("themeToggleBtn");
+        const themeStorageKey = "siteTheme";
+
+        function setTheme(theme) {
+          document.body.classList.toggle("light-theme", theme === "light");
+          localStorage.setItem(themeStorageKey, theme);
+          if (themeToggleBtn) {
+            themeToggleBtn.textContent = theme === "light" ? "Light Theme" : "Dark Theme";
+          }
+        }
+
+        function initializeTheme() {
+          const savedTheme = localStorage.getItem(themeStorageKey);
+          setTheme(savedTheme === "light" ? "light" : "dark");
+
+          if (themeToggleBtn) {
+            themeToggleBtn.addEventListener("click", () => {
+              const nextTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
+              setTheme(nextTheme);
+            });
+          }
+        }
+
+        initializeTheme();
+
+    let currentTab = "dashboard", quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() { nav.innerHTML = tabs.map(t => `<button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button"><span class="nav-indicator"></span><span class="nav-icon">${t.icon}</span><span class="nav-label">${t.label}</span></button>`).join("") }
+
+    function switchTab(id) { currentTab = id; document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id)); document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id)); const t = tabs.find(x => x.id === id); if (t) ambientOverlay.style.background = t.ambient; mainEl.scrollTo({ top: 0, behavior: "smooth" }) }
+
+    function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
+
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
+
+    function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
+
+    function selectEssay(i, outlineId) { document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i)); const o = essayOutlines[i], ol = document.getElementById(outlineId); if (ol) { ol.innerHTML = o.blocks.map(([l, b]) => `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join(""); ol.classList.add("show") } }
+
+    function renderQuizQuestion() { const qm = document.getElementById("quizMount"), q = quizQuestions[quizIndex]; if (!q) { const pct = Math.round((quizScore / quizQuestions.length) * 100), prev = Number(localStorage.getItem("apes_u7_best") || 0), best = Math.max(prev, pct); localStorage.setItem("apes_u7_best", String(best)); bestScoreEl.textContent = best + "%"; qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review smog formation, acid deposition, ozone depletion, thermal inversions, and control technologies if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`; return } quizLocked = false; qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>` }
+
+    function openModal(id) { document.getElementById(id).classList.add("open") }
+    function closeModal(id) { document.getElementById(id).classList.remove("open") }
+    function initBestScore() { const b = localStorage.getItem("apes_u7_best"); bestScoreEl.textContent = b ? b + "%" : "--" }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => { if (!window.matchMedia("(pointer:fine)").matches) return; cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px" });
+    document.addEventListener("mouseover", e => { if (!window.matchMedia("(pointer:fine)").matches) return; const s = e.target.closest("button,a,.flash-card,.glossary-card") ? "18px" : "10px"; cursor.style.width = s; cursor.style.height = s });
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin" });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab) });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100) } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped") });
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus() });
+    document.getElementById("sbInput").addEventListener("input", e => { const q = e.target.value.toLowerCase().trim(), m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8); document.getElementById("sbResults").innerHTML = m.length ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>` });
+    document.getElementById("sbResults").addEventListener("click", e => { const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return; switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open"); document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = ""; if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm) } });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab) });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active") });
+    themeToggleBtn.addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); themeLabel.textContent = off ? "Theme Off" : "Theme On" });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal") });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal") });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline") });
+    document.getElementById("quizMount").addEventListener("click", e => { const opt = e.target.closest(".quiz-option"); if (opt && !quizLocked) { quizLocked = true; const q = quizQuestions[quizIndex], sel = Number(opt.dataset.optionIndex); document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong") }); if (sel === q.correct) quizScore++; document.getElementById("quizFeedback").textContent = q.explanation; document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>` } if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion() } if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion() } });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
+    mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
+    switchTab("dashboard");
+  </script>
+</body>
+</html>

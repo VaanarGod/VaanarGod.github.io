@@ -17,6 +17,25 @@
     }
     html { scroll-behavior: smooth; }
     body { min-height:100vh; display:flex; background:var(--bg); color:var(--text); font-family:"DM Mono",monospace; overflow:hidden; cursor:none; }
+    body.light-theme {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+
+    body.light-theme .topbar,
+    body.light-theme .glass-btn,
+    body.light-theme #scoreTracker,
+    body.light-theme .course-link {
+      background: rgba(255, 255, 255, .86);
+      border-color: var(--light-border);
+      color: var(--light-text);
+    }
+
+    body.light-theme .glass-btn:hover,
+    body.light-theme .course-link:hover {
+      background: rgba(255, 255, 255, .95);
+    }
+
     body::before { content:""; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity:.35; pointer-events:none; z-index:1; }
     #cursor { position:fixed; width:12px; height:12px; border-radius:50%; background:var(--cyan); pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:width .2s ease, height .2s ease; }
     #readingProgress { position:fixed; top:0; left:72px; right:0; height:2px; z-index:100; }
@@ -200,6 +219,7 @@
         <a class="glass-btn" href="apcsp-unit4.html">Big Idea 4</a>
         <a class="glass-btn" href="apcsp-unit5.html">Big Idea 5</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="themeToggleBtn" type="button">Toggle Theme</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
       </div>
@@ -674,6 +694,36 @@ DISPLAY(countHot)   // outputs 2</div>
     const pinBtn = document.getElementById("pinBtn");
     const sidebar = document.getElementById("sidebar");
     const apToggleBtn = document.getElementById("apToggleBtn");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+    const themeStorageKey = "siteTheme";
+
+    function setTheme(theme) {
+      document.body.classList.toggle("light-theme", theme === "light");
+      localStorage.setItem(themeStorageKey, theme);
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = theme === "light" ? "Light Theme" : "Dark Theme";
+      }
+    }
+
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      setTheme(savedTheme === "light" ? "light" : "dark");
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          const nextTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
+          setTheme(nextTheme);
+        });
+      }
+    }
+
+    initializeTheme();
+
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";
     let quizIndex = 0;

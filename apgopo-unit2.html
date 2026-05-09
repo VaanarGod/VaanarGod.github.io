@@ -31,6 +31,14 @@
       --red: #d95f5f;
       --orange: #f28749;
       --purple: #9b86f4;
+          --light-bg: #f7f8fb;
+      --light-card: #ffffff;
+      --light-card2: #f2f4f8;
+      --light-border: rgba(15, 23, 42, .08);
+      --light-text: #111827;
+      --light-muted: #6b7280;
+      --light-cyan: #2563eb;
+      --light-teal: #0f766e;
     }
 
     html {
@@ -45,6 +53,25 @@
       font-family: "DM Mono", monospace;
       overflow: hidden;
       cursor: none;
+    }
+
+    body.light-theme {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+
+    body.light-theme .topbar,
+    body.light-theme .glass-btn,
+    body.light-theme #scoreTracker,
+    body.light-theme .course-link {
+      background: rgba(255, 255, 255, .86);
+      border-color: var(--light-border);
+      color: var(--light-text);
+    }
+
+    body.light-theme .glass-btn:hover,
+    body.light-theme .course-link:hover {
+      background: rgba(255, 255, 255, .95);
     }
 
     body::before {
@@ -1271,6 +1298,7 @@
         <a class="glass-btn course-link" href="apgopo-unit2.html">Unit 2</a>
         <a class="glass-btn course-link" href="apgopo-unit3.html">Unit 3</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="themeToggleBtn" type="button">Toggle Theme</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
       </div>
@@ -2308,6 +2336,36 @@
     const pinBtn = document.getElementById("pinBtn");
     const sidebar = document.getElementById("sidebar");
     const apToggleBtn = document.getElementById("apToggleBtn");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const bestScoreEl = document.getElementById("bestScore");
+    let currentTab = "dashboard";
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizLocked = false;
+    const themeStorageKey = "siteTheme";
+
+    function setTheme(theme) {
+      document.body.classList.toggle("light-theme", theme === "light");
+      localStorage.setItem(themeStorageKey, theme);
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = theme === "light" ? "Light Theme" : "Dark Theme";
+      }
+    }
+
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      setTheme(savedTheme === "light" ? "light" : "dark");
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          const nextTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
+          setTheme(nextTheme);
+        });
+      }
+    }
+
+    initializeTheme();
+
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";
     let quizIndex = 0;

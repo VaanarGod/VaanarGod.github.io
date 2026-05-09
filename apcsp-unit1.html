@@ -33,6 +33,15 @@
       --orange: #f28749;
       --purple: #9b86f4;
       --green: #4caf7d;
+
+      --light-bg: #f7f8fb;
+      --light-card: #ffffff;
+      --light-card2: #f2f4f8;
+      --light-border: rgba(15, 23, 42, .08);
+      --light-text: #111827;
+      --light-muted: #6b7280;
+      --light-cyan: #2563eb;
+      --light-teal: #0f766e;
     }
 
     html {
@@ -47,6 +56,25 @@
       font-family: "DM Mono", monospace;
       overflow: hidden;
       cursor: none;
+    }
+
+    body.light-theme {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+
+    body.light-theme .topbar,
+    body.light-theme .glass-btn,
+    body.light-theme #scoreTracker,
+    body.light-theme .course-link {
+      background: rgba(255, 255, 255, .86);
+      border-color: var(--light-border);
+      color: var(--light-text);
+    }
+
+    body.light-theme .glass-btn:hover,
+    body.light-theme .course-link:hover {
+      background: rgba(255, 255, 255, .95);
     }
 
     body::before {
@@ -1355,6 +1383,7 @@
         <a class="glass-btn course-link" href="apcsp-unit4.html">Big Idea 4</a>
         <a class="glass-btn course-link" href="apcsp-unit5.html">Big Idea 5</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="themeToggleBtn" type="button">Toggle Theme</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
       </div>
@@ -1399,7 +1428,8 @@
             <li>How <strong class="ap-term">computing innovation</strong> reflects creativity and human design choices.
             </li>
             <li>The difference between a program's <strong class="ap-term">purpose</strong> (intended goal) and its
-              <strong class="ap-term">function</strong> (what it actually does).</li>
+              <strong class="ap-term">function</strong> (what it actually does).
+            </li>
             <li>Why <strong class="ap-term">collaboration</strong> produces better programs and how it works in
               practice.</li>
             <li>What a <strong class="ap-term">computational artifact</strong> is and examples of each type.</li>
@@ -1462,6 +1492,14 @@
               Development</span><span>05</span></button>
           <button class="note-jump" type="button" data-note-target="n-create"><span>Create Performance
               Task</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-human"><span>Human-Centered
+              Design</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-design-tools"><span>Design
+              Techniques</span><span>08</span></button>
+          <button class="note-jump" type="button" data-note-target="n-testing"><span>Testing &
+              Debugging</span><span>09</span></button>
+          <button class="note-jump" type="button" data-note-target="n-reuse"><span>Responsible
+              Reuse</span><span>10</span></button>
         </aside>
         <div class="notes-stack">
           <article class="note-section accent-cyan" id="n-innovation">
@@ -1630,6 +1668,102 @@
               <p>You must write a <strong class="ap-term">written response</strong> explaining the program's purpose,
                 function, how a list and a procedure work, and how your algorithm reflects complexity beyond simple
                 sequencing.</p>
+            </div>
+          </article>
+          <article class="note-section accent-red" id="n-human">
+            <div class="mini-label">07 · Human-Centered Design</div>
+            <h3>Designing for Real Users</h3>
+            <div class="body-copy">
+              <p><strong class="ap-term">Human-centered design</strong> focuses on building programs around user needs,
+                goals, and experiences rather than just technical features.</p>
+              <p>Developers use empathy, observation, and testing with real users to make software usable and accessible
+                for as many people as possible.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Usability</strong>
+                <div class="body-copy">Programs should be intuitive, easy to navigate, and efficient to use.</div>
+              </div>
+              <div class="mini-note"><strong>Accessibility</strong>
+                <div class="body-copy">Readable fonts, contrast, labels, captions, and keyboard navigation make software
+                  usable for more people.</div>
+              </div>
+              <div class="mini-note"><strong>User Feedback</strong>
+                <div class="body-copy">Testing with users reveals confusing workflows and design flaws.</div>
+              </div>
+            </div>
+          </article>
+          <article class="note-section accent-purple" id="n-design-tools">
+            <div class="mini-label">08 · Design Techniques</div>
+            <h3>Planning Before Building</h3>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Brainstorming</strong>
+                <div class="body-copy">Generate multiple solution ideas before choosing one.</div>
+              </div>
+              <div class="mini-note"><strong>Storyboards</strong>
+                <div class="body-copy">Visualize user interaction step-by-step.</div>
+              </div>
+              <div class="mini-note"><strong>Wireframes</strong>
+                <div class="body-copy">Rough interface sketches for layout planning.</div>
+              </div>
+              <div class="mini-note"><strong>Flowcharts</strong>
+                <div class="body-copy">Map program logic and decision paths.</div>
+              </div>
+              <div class="mini-note"><strong>Pseudocode</strong>
+                <div class="body-copy">Describe logic in plain language before formal code.</div>
+              </div>
+              <div class="mini-note"><strong>Decomposition</strong>
+                <div class="body-copy">Break complex systems into manageable smaller parts.</div>
+              </div>
+            </div>
+          </article>
+          <article class="note-section accent-blue" id="n-testing">
+            <div class="mini-label">09 · Testing and Debugging</div>
+            <h3>Finding and Fixing Errors</h3>
+            <div class="body-copy">
+              <p>Testing verifies behavior using normal and edge-case inputs. Debugging identifies and fixes issues
+                revealed by testing.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Typical Cases</strong>
+                <div class="body-copy">Expected everyday inputs.</div>
+              </div>
+              <div class="mini-note"><strong>Edge Cases</strong>
+                <div class="body-copy">Extreme or unusual inputs that expose weaknesses.</div>
+              </div>
+              <div class="mini-note"><strong>Syntax Errors</strong>
+                <div class="body-copy">Violations of language rules.</div>
+              </div>
+              <div class="mini-note"><strong>Runtime Errors</strong>
+                <div class="body-copy">Errors that happen during execution.</div>
+              </div>
+              <div class="mini-note"><strong>Logic Errors</strong>
+                <div class="body-copy">Program runs but produces wrong results.</div>
+              </div>
+              <div class="mini-note"><strong>Overflow Errors</strong>
+                <div class="body-copy">Values exceed storage limits.</div>
+              </div>
+            </div>
+          </article>
+          <article class="note-section accent-teal" id="n-reuse">
+            <div class="mini-label">10 · Responsible Reuse</div>
+            <h3>Using Existing Work Ethically</h3>
+            <div class="body-copy">
+              <p>Developers often reuse code, media, and ideas. Responsible reuse requires attribution and following
+                licensing rules.</p>
+            </div>
+            <div class="note-grid">
+              <div class="mini-note"><strong>Attribution</strong>
+                <div class="body-copy">Credit creators when using their work.</div>
+              </div>
+              <div class="mini-note"><strong>Open Source</strong>
+                <div class="body-copy">Code licenses may allow reuse with conditions.</div>
+              </div>
+              <div class="mini-note"><strong>Creative Commons</strong>
+                <div class="body-copy">Media licenses specify reuse permissions.</div>
+              </div>
+              <div class="mini-note"><strong>Documentation</strong>
+                <div class="body-copy">Record borrowed sources and team contributions clearly.</div>
+              </div>
             </div>
           </article>
         </div>
@@ -2131,11 +2265,35 @@
     const pinBtn = document.getElementById("pinBtn");
     const sidebar = document.getElementById("sidebar");
     const apToggleBtn = document.getElementById("apToggleBtn");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";
     let quizIndex = 0;
     let quizScore = 0;
     let quizLocked = false;
+    const themeStorageKey = "siteTheme";
+
+    function setTheme(theme) {
+      document.body.classList.toggle("light-theme", theme === "light");
+      localStorage.setItem(themeStorageKey, theme);
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = theme === "light" ? "Light Theme" : "Dark Theme";
+      }
+    }
+
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      setTheme(savedTheme === "light" ? "light" : "dark");
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          const nextTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
+          setTheme(nextTheme);
+        });
+      }
+    }
+
+    initializeTheme();
 
     function renderNav() {
       nav.innerHTML = tabs.map(tab => `
@@ -2205,7 +2363,7 @@
         const best = Math.max(prevBest, pct);
         localStorage.setItem("apcsp_bi1_best", String(best));
         bestScoreEl.textContent = best + "%";
-        quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review purpose vs. function, collaboration benefits, and iteration if you missed any questions.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
+        quizMount.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length}</div><div class="quiz-feedback">Review binary place value, lossless vs. lossy, and correlation vs. causation if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`;
         return;
       }
       quizLocked = false;
