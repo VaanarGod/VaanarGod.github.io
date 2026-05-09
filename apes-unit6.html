@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 6: Energy Resources &amp; Consumption</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #050810;
+      --card: #080c18;
+      --card2: #0d1220;
+      --border: rgba(100, 160, 255, .07);
+      --text: #c8d8f0;
+      --muted: #3a5070;
+      --g: #4a9eff;
+      --g2: #7b5ff7;
+      --g3: #00d4aa;
+      --gold: #f0b840;
+      --blue: #4a9eff;
+      --red: #ff5050;
+      --teal: #00d4aa;
+      --accent: #4a9eff;
+      --body-copy-color: #7090b8;
+      --mini-note-body: #4a6080;
+      --code-bg: #020408;
+      --code-border: rgba(74, 158, 255, .12);
+      --code-color: #4a9eff;
+      --progress-bar: linear-gradient(90deg, #4a9eff, #7b5ff7);
+    }
+
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #e0e0e0;
+      --muted: #555;
+      --g: #aaa;
+      --g2: #999;
+      --g3: #888;
+      --gold: #bbb;
+      --blue: #aaa;
+      --red: #c06060;
+      --teal: #70b0a0;
+      --accent: #aaa;
+      --body-copy-color: #777;
+      --mini-note-body: #555;
+      --code-bg: #0a0a0a;
+      --code-border: rgba(255, 255, 255, .08);
+      --code-color: #999;
+      --progress-bar: linear-gradient(90deg, #666, #999);
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      overflow: hidden;
+      cursor: none;
+      transition: background .4s, color .4s
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(74, 158, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(74, 158, 255, .025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .18;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 0;
+      background: var(--g);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%) rotate(45deg);
+      mix-blend-mode: screen;
+      transition: width .2s, height .2s
+    }
+
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 2px;
+      z-index: 100
+    }
+
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--progress-bar);
+      transition: background .4s
+    }
+
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 55% 15%, rgba(74, 158, 255, .07), transparent 65%);
+      opacity: .18;
+      pointer-events: none;
+      transition: background 1s, opacity .25s;
+      z-index: 0
+    }
+
+    body.theme-off #ambientOverlay {
+      opacity: 0
+    }
+
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(4, 6, 14, .95);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(.23, 1, .32, 1), background .4s
+    }
+
+    body.theme-off #sidebar {
+      background: rgba(5, 5, 5, .95)
+    }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 264px
+    }
+
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .1em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s, color .2s, border-color .2s;
+      font-family: 'IBM Plex Mono', monospace
+    }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1
+    }
+
+    #pinBtn.pinned {
+      color: var(--g);
+      border-color: rgba(74, 158, 255, .3)
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      border: 1px solid rgba(74, 158, 255, .3);
+      background: rgba(74, 158, 255, .06);
+      color: var(--g);
+      flex-shrink: 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: .05em
+    }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1
+    }
+
+    .logo-copy h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .28em;
+      color: var(--g);
+      text-transform: uppercase
+    }
+
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      font-family: 'IBM Plex Mono', monospace
+    }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px
+    }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px
+    }
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(74, 158, 255, .2)
+    }
+
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(74, 158, 255, .2);
+      background: rgba(4, 6, 14, .98);
+      border-radius: 4px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s, transform .22s;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .8)
+    }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0)
+    }
+
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .05)
+    }
+
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none
+    }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto
+    }
+
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      cursor: none;
+      transition: background .15s
+    }
+
+    .sb-result:hover {
+      background: rgba(74, 158, 255, .05)
+    }
+
+    .sb-result:last-child {
+      border-bottom: none
+    }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'IBM Plex Mono', monospace
+    }
+
+    .sb-result-term {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: .06em
+    }
+
+    .sb-result-snip {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px
+    }
+
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      position: relative;
+      font-family: 'IBM Plex Mono', monospace
+    }
+
+    .nav-btn:hover {
+      background: rgba(74, 158, 255, .04);
+      color: #7ab0e0
+    }
+
+    .nav-btn.active {
+      background: rgba(74, 158, 255, .08);
+      color: var(--g)
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 24px;
+      background: var(--g);
+      border-radius: 0;
+      opacity: 0
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px
+    }
+
+    .nav-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .nav-label {
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap
+    }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .sidebar-footer span:last-child,
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 0;
+      transform: rotate(45deg);
+      background: var(--g);
+      flex-shrink: 0;
+      animation: blink 2.4s ease-in-out infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .25
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px)
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .glass-btn,
+    #scoreTracker {
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      background: rgba(74, 158, 255, .04);
+      color: var(--muted);
+      padding: 9px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block
+    }
+
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--g);
+      border-color: rgba(74, 158, 255, .3)
+    }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(74, 158, 255, .36);
+      background: rgba(74, 158, 255, .08)
+    }
+
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(74, 158, 255, .35);
+      background: rgba(74, 158, 255, .07);
+      color: var(--g);
+      padding: 9px 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    #themeToggleBtn:hover {
+      background: rgba(74, 158, 255, .14)
+    }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255, 255, 255, .04);
+      color: #555;
+      border-color: rgba(255, 255, 255, .15)
+    }
+
+    .theme-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 0;
+      transform: rotate(45deg);
+      background: var(--g);
+      display: inline-block;
+      transition: background .4s;
+      flex-shrink: 0
+    }
+
+    body.theme-off .theme-dot {
+      background: #555
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeUp .45s cubic-bezier(.23, 1, .32, 1)
+    }
+
+    .tab-content.active {
+      display: block
+    }
+
+    .page-header {
+      margin-bottom: 34px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .unit-tag {
+      display: block;
+      color: var(--g);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      margin-bottom: 10px
+    }
+
+    .page-header h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: .08em;
+      line-height: .95;
+      color: white;
+      text-transform: uppercase
+    }
+
+    .page-header p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      margin-bottom: 26px
+    }
+
+    .principle-grid,
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 22px
+    }
+
+    .case-grid,
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px
+    }
+
+    .card,
+    .feature-card,
+    .principle-card,
+    .case-card,
+    .exam-card,
+    .flash-card,
+    .writing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .24s, border-color .24s, box-shadow .24s, background .4s
+    }
+
+    .card:hover,
+    .feature-card:hover,
+    .principle-card:hover,
+    .case-card:hover,
+    .exam-card:hover,
+    .flash-card:hover,
+    .writing-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(74, 158, 255, .14);
+      box-shadow: 0 20px 60px rgba(0, 10, 30, .6)
+    }
+
+    .hero-card::before,
+    .feature-card::before,
+    .principle-card::before,
+    .case-card::before,
+    .exam-card::before,
+    .writing-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+      background: var(--accent, var(--g));
+      opacity: .7
+    }
+
+    .hero-card {
+      --accent: var(--g)
+    }
+
+    .accent-g {
+      --accent: var(--g)
+    }
+
+    .accent-g2 {
+      --accent: var(--g2)
+    }
+
+    .accent-g3 {
+      --accent: var(--g3)
+    }
+
+    .accent-gold {
+      --accent: var(--gold)
+    }
+
+    .accent-blue {
+      --accent: var(--blue)
+    }
+
+    .accent-red {
+      --accent: var(--red)
+    }
+
+    .accent-teal {
+      --accent: var(--teal)
+    }
+
+    .card-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px
+    }
+
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      color: white;
+      line-height: 1.12;
+      margin-bottom: 14px
+    }
+
+    .body-copy {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--body-copy-color);
+      transition: color .4s
+    }
+
+    .body-copy p+p {
+      margin-top: 10px
+    }
+
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px
+    }
+
+    .stat-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14px;
+      text-align: center;
+      transition: background .4s
+    }
+
+    .stat-box span {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
+
+    .stat-box strong {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--g)
+    }
+
+    .focus-callout {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 4px;
+      background: rgba(74, 158, 255, .04);
+      border: 1px solid rgba(74, 158, 255, .12);
+      transition: background .4s
+    }
+
+    body.theme-off .focus-callout {
+      background: rgba(255, 255, 255, .02);
+      border-color: rgba(255, 255, 255, .08)
+    }
+
+    .focus-callout .label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .ap-term {
+      color: var(--g3);
+      font-weight: 600;
+      border-bottom: 1px dashed rgba(0, 212, 170, .35)
+    }
+
+    body:not(.ap-highlight) .ap-term {
+      color: inherit;
+      border-bottom: none;
+      font-weight: inherit
+    }
+
+    .mini-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 10px
+    }
+
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 22px;
+      transition: background .4s
+    }
+
+    .note-section::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent, var(--g));
+      opacity: .6
+    }
+
+    .note-section h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: white;
+      margin-bottom: 14px;
+      text-transform: uppercase
+    }
+
+    .note-section h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      color: var(--g);
+      margin: 18px 0 10px;
+      text-transform: uppercase
+    }
+
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 14px
+    }
+
+    .mini-note {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px;
+      transition: background .4s
+    }
+
+    .mini-note strong {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      color: var(--text);
+      margin-bottom: 6px
+    }
+
+    .mini-note .body-copy {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--mini-note-body)
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px
+    }
+
+    .compare-table th {
+      background: var(--card2);
+      color: var(--g);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .compare-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(74, 158, 255, .04);
+      color: var(--body-copy-color);
+      vertical-align: top
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .compare-table tr:hover td {
+      background: rgba(74, 158, 255, .02)
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 4px;
+      padding: 16px 18px;
+      margin-top: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      line-height: 1.75;
+      color: var(--code-color);
+      white-space: pre-wrap;
+      letter-spacing: .04em
+    }
+
+    .bullet-list {
+      list-style: none;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .bullet-list li {
+      display: flex;
+      gap: 10px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--body-copy-color)
+    }
+
+    .bullet-list li::before {
+      content: '▸';
+      color: var(--g);
+      flex-shrink: 0;
+      font-size: 11px;
+      margin-top: 3px
+    }
+
+    .glossary-toolbar {
+      margin-bottom: 22px
+    }
+
+    .glossary-toolbar input {
+      width: 100%;
+      max-width: 360px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      outline: none;
+      transition: border-color .2s;
+      cursor: none
+    }
+
+    .glossary-toolbar input:focus {
+      border-color: rgba(74, 158, 255, .35)
+    }
+
+    .glossary-card h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      color: white;
+      margin-bottom: 8px
+    }
+
+    .glossary-card:hover {
+      cursor: none
+    }
+
+    .flash-card {
+      cursor: none;
+      perspective: 1000px
+    }
+
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      transition: transform .5s cubic-bezier(.23, 1, .32, 1);
+      transform-style: preserve-3d
+    }
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg)
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px
+    }
+
+    .flash-back {
+      transform: rotateY(180deg)
+    }
+
+    .flash-front h3,
+    .flash-back h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: white;
+      line-height: 1.3
+    }
+
+    .flash-hint {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .8);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px)
+    }
+
+    .modal.open {
+      display: flex
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid rgba(74, 158, 255, .15);
+      border-radius: 6px;
+      padding: 32px;
+      max-width: 640px;
+      width: 90vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative
+    }
+
+    .modal-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: white;
+      margin-bottom: 20px
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px
+    }
+
+    .quiz-status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px
+    }
+
+    .quiz-question {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: .03em;
+      color: white;
+      line-height: 1.45;
+      margin-bottom: 20px
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .quiz-option {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 16px;
+      color: var(--body-copy-color);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      text-align: left;
+      cursor: none;
+      transition: border-color .2s, background .2s
+    }
+
+    .quiz-option:hover {
+      border-color: rgba(74, 158, 255, .25);
+      background: rgba(74, 158, 255, .04)
+    }
+
+    .quiz-option.correct {
+      border-color: rgba(0, 212, 170, .5);
+      background: rgba(0, 212, 170, .07);
+      color: #80e8d8
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(255, 80, 80, .5);
+      background: rgba(255, 80, 80, .07);
+      color: #e8a8a8
+    }
+
+    .quiz-feedback {
+      margin-top: 16px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      color: var(--body-copy-color);
+      line-height: 1.6
+    }
+
+    .quiz-next {
+      margin-top: 16px
+    }
+
+    .essay-topic-btn {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 14px;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: border-color .2s, color .2s;
+      margin: 4px
+    }
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      color: var(--g);
+      border-color: rgba(74, 158, 255, .32)
+    }
+
+    #essayOutline {
+      display: none;
+      margin-top: 20px;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    #essayOutline.show {
+      display: flex
+    }
+
+    .essay-block {
+      background: var(--card2);
+      border-radius: 4px;
+      padding: 14px 16px;
+      border-left: 2px solid var(--g)
+    }
+
+    .essay-block-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 6px
+    }
+
+    .essay-block-body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--body-copy-color)
+    }
+
+    .note-jump {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 12px;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: border-color .2s, color .2s;
+      margin: 3px
+    }
+
+    .note-jump:hover {
+      color: var(--g);
+      border-color: rgba(74, 158, 255, .3)
+    }
+
+    .notes-toc {
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    @media(max-width:900px) {
+      #main {
+        padding: 20px 18px 60px
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
+  <div id="ambientOverlay"></div>
+
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">U6</div>
+      <div class="logo-copy">
+        <h1>APES</h1>
+        <p>Energy Resources</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button"><span>⌕</span><span>Search terms…</span></button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner"><span style="color:var(--g);font-size:11px">⌕</span><input id="sbInput"
+            placeholder="Type to search…" autocomplete="off" /></div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="dot"></div><span>AP Env Sci · Unit 6</span>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="topbar">
+      <div id="scoreTracker">Best Score: <strong id="bestScore">--</strong></div>
+      <div class="top-actions">
+        <a class="glass-btn" href="apes-index.html">← All Units</a>
+        <a class="glass-btn" href="apes-unit1.html">Unit 1</a>
+        <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
+        <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
+        <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
+        <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
+        <a class="glass-btn" href="apes-unit6.html" style="color:var(--g);border-color:rgba(74,158,255,.36);">Unit 6</a>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
+        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme
+            On</span></button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 6 · AP Environmental Science</span>
+        <h2>Energy Resources &amp; Consumption</h2>
+        <p>Thermodynamics · Fossil Fuels · Nuclear · Renewables · Efficiency · Policy</p>
+      </header>
+      <div class="hero-grid">
+        <article class="card hero-card">
+          <div class="card-sub">Unit Overview</div>
+          <div class="card-title">Where Energy Comes From &amp; What It Costs</div>
+          <div class="body-copy">
+            <p>Unit 6 is about <strong class="ap-term">energy transformations</strong> — and their environmental
+              consequences. Humans don't use energy up; we convert it from one form to another, and every conversion
+              produces waste heat and pollution. The core question is not which energy source is "clean" but what
+              tradeoffs each source brings across its full <strong class="ap-term">life cycle</strong>.</p>
+            <p>Fossil fuels dominate because of their energy density and existing infrastructure, but combustion drives
+              climate change, acid rain, and health impacts. Renewables are growing, but no source is consequence-free.
+              Understanding <strong class="ap-term">efficiency</strong>, <strong class="ap-term">net energy</strong>,
+              and <strong class="ap-term">externalities</strong> is the key to thinking through energy tradeoffs the way
+              the AP exam expects.</p>
+          </div>
+          <div class="dash-stats">
+            <div class="stat-box"><span>Big Topics</span><strong>10</strong></div>
+            <div class="stat-box"><span>Key Terms</span><strong>65+</strong></div>
+            <div class="stat-box"><span>Exam Weight</span><strong>~10%</strong></div>
+          </div>
+        </article>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <article class="card feature-card accent-g2">
+            <div class="card-sub">Core Pattern</div>
+            <div class="card-title">Every Conversion Has Losses</div>
+            <div class="body-copy">The 2nd Law of Thermodynamics: no conversion is 100% efficient. Always ask: how much
+              useful energy out vs. total energy in?</div>
+          </article>
+          <article class="card feature-card accent-red">
+            <div class="card-sub">FRQ Alert</div>
+            <div class="card-title">Life Cycle Thinking</div>
+            <div class="body-copy">Extraction → processing → transport → combustion → waste. Exams reward students who
+              trace impacts beyond just the smokestack.</div>
+          </article>
+        </div>
+      </div>
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Fossil Fuels</div>
+          <h3>Coal, Oil &amp; Natural Gas</h3>
+          <div class="body-copy">High energy density, existing infrastructure — but combustion emits CO₂, SOₓ, NOₓ, and
+            particulates. Extraction causes land and water damage.</div>
+          <button class="note-jump" data-note-target="n-fossil">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Nuclear</div>
+          <h3>Fission, Waste &amp; Risk</h3>
+          <div class="body-copy">Low operational CO₂, high energy yield — but radioactive waste, meltdown risk, thermal
+            pollution, and high construction cost are real tradeoffs.</div>
+          <button class="note-jump" data-note-target="n-nuclear">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-teal">
+          <div class="mini-label">Solar &amp; Wind</div>
+          <h3>Intermittent Renewables</h3>
+          <div class="body-copy">No combustion emissions during operation, but intermittent output, land use, storage
+            needs, and manufacturing impacts matter.</div>
+          <button class="note-jump" data-note-target="n-solar">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Hydro &amp; Geothermal</div>
+          <h3>Dispatchable Renewables</h3>
+          <div class="body-copy">Hydropower can be dispatched on demand but fragments rivers and blocks fish. Geothermal
+            is reliable but geographically limited.</div>
+          <button class="note-jump" data-note-target="n-hydro">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Efficiency &amp; Conservation</div>
+          <h3>The Fastest "New" Resource</h3>
+          <div class="body-copy">Reducing demand is often cheaper and faster than building new supply. Efficiency (same
+            output, less energy) ≠ conservation (using less). Rebound effect can erode gains.</div>
+          <button class="note-jump" data-note-target="n-efficiency">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-blue">
+          <div class="mini-label">Biomass &amp; Hydrogen</div>
+          <h3>Stored &amp; Carrier Energy</h3>
+          <div class="body-copy">Biomass burns on demand but is only carbon-neutral if regrowth matches harvest.
+            Hydrogen is an energy carrier — clean output depends entirely on production method.</div>
+          <button class="note-jump" data-note-target="n-biomass">View Notes →</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Unit 6 Deep Dive</h2>
+        <p>Scroll through all topics · Use links to jump</p>
+      </header>
+      <div class="notes-toc">
+        <button class="note-jump" data-note-target="n-thermo">Thermodynamics</button>
+        <button class="note-jump" data-note-target="n-fossil">Fossil Fuels</button>
+        <button class="note-jump" data-note-target="n-coal">Coal</button>
+        <button class="note-jump" data-note-target="n-oil">Oil &amp; Gas</button>
+        <button class="note-jump" data-note-target="n-nuclear">Nuclear</button>
+        <button class="note-jump" data-note-target="n-solar">Solar &amp; Wind</button>
+        <button class="note-jump" data-note-target="n-hydro">Hydro &amp; Geo</button>
+        <button class="note-jump" data-note-target="n-biomass">Biomass &amp; H₂</button>
+        <button class="note-jump" data-note-target="n-efficiency">Efficiency</button>
+        <button class="note-jump" data-note-target="n-policy">Policy</button>
+      </div>
+      <div>
+
+        <article class="note-section accent-g" id="n-thermo">
+          <div class="mini-label">01 · Energy Fundamentals</div>
+          <h3>Thermodynamics &amp; Net Energy</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Energy</strong> is the capacity to do work. <strong
+                class="ap-term">Power</strong> is the rate of energy use (energy ÷ time). The sun drives almost all
+              Earth's energy — directly (solar, wind, biomass, hydro) or indirectly via ancient photosynthesis (fossil
+              fuels). The <strong class="ap-term">First Law</strong>: energy cannot be created or destroyed — only
+              converted. The <strong class="ap-term">Second Law</strong>: every conversion degrades some energy to
+              low-quality heat. No real-world process is 100% efficient.</p>
+          </div>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Energy Quality</strong>
+              <div class="body-copy">High-quality energy (electricity, concentrated fuels) can do more work. Low-quality
+                heat is harder to use. Every conversion steps down quality — this is the Second Law in practice.</div>
+            </div>
+            <div class="mini-note"><strong>Efficiency Formula</strong>
+              <div class="body-copy">Efficiency = useful energy out ÷ total energy in × 100%. A coal plant converting
+                coal to electricity might be ~35% efficient — 65% is waste heat released to cooling water or the
+                atmosphere.</div>
+            </div>
+            <div class="mini-note"><strong>Net Energy / EROI</strong>
+              <div class="body-copy">Net energy = total energy produced − energy required to produce it. EROI (Energy
+                Return on Investment) = energy out ÷ energy in. Higher EROI = more useful energy per unit invested.
+                Conventional oil: ~30:1. Tar sands: ~5:1.</div>
+            </div>
+            <div class="mini-note"><strong>kWh Math</strong>
+              <div class="body-copy">Energy (kWh) = Power (kW) × Time (h). 100 W bulb for 10 h = 0.1 kW × 10 h = 1 kWh.
+                Multiply by cost per kWh for savings. Always convert watts → kilowatts first.</div>
+            </div>
+            <div class="mini-note"><strong>Units to Know</strong>
+              <div class="body-copy">Joule (J): SI unit of energy. Watt (W) = 1 J/s. Kilowatt-hour (kWh): billing unit.
+                BTU: heat energy. Quad: 10¹⁵ BTU, used for national statistics.</div>
+            </div>
+            <div class="mini-note"><strong>Energy Flow Chain</strong>
+              <div class="body-copy">Source → extraction → conversion → transmission → end use. Each step has losses.
+                Life-cycle analysis accounts for all steps — not just combustion at the point of use.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Calculate efficiency from given inputs/outputs. Explain why the 2nd Law makes waste
+              heat unavoidable. Distinguish net energy from gross energy. Connect high EROI to economic viability. Show
+              unit math step-by-step — partial credit for correct setup even with arithmetic errors.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g2" id="n-fossil">
+          <div class="mini-label">02 · Fossil Fuels Overview</div>
+          <h3>Formation, Combustion &amp; Externalities</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Fossil fuels</strong> (coal, oil, natural gas) are ancient organic matter
+              compressed over millions of years. Combustion releases CO₂, water vapor, and pollutants locked away for
+              geologic time — dramatically raising atmospheric CO₂. They dominate because of high energy density, easy
+              transport and storage, existing infrastructure, and historically low prices. Switching has massive inertia
+              costs.</p>
+          </div>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Combustion Products</strong>
+              <div class="body-copy">Complete combustion: CO₂ + H₂O + heat. Incomplete combustion adds CO, unburned
+                hydrocarbons, soot. Impurities add SO₂ (sulfur) and NOₓ. Each has different environmental outcomes: CO₂
+                → greenhouse; SO₂ → acid rain; NOₓ → smog and acid rain.</div>
+            </div>
+            <div class="mini-note"><strong>Externalities</strong>
+              <div class="body-copy">Costs not reflected in market price: health damage from air pollution, climate
+                change, water contamination from spills, habitat destruction from extraction — paid by society, not the
+                fuel purchaser.</div>
+            </div>
+            <div class="mini-note"><strong>Life-Cycle Impacts</strong>
+              <div class="body-copy">Extraction: land clearing, habitat loss, spill risk. Refining: air and water
+                pollution. Transport: pipeline leaks, tanker spills. Combustion: GHG + criteria pollutants. Waste: ash,
+                produced water, CO₂.</div>
+            </div>
+            <div class="mini-note"><strong>Why Policy Is Hard</strong>
+              <div class="body-copy">Fossil fuel subsidies, existing infrastructure, political power of the industry,
+                and concentrated short-term economic benefits vs. diffuse long-term harms create powerful barriers to
+                transition. Externalities are the core market failure.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Trace the full life cycle — not just combustion. Define externality and give
+              examples. Explain WHY market prices understate the true cost of fossil fuels. Connect combustion products
+              to specific environmental problems (SO₂ → acid rain; CO₂ → greenhouse effect).</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-gold" id="n-coal">
+          <div class="mini-label">03 · Coal</div>
+          <h3>Mining, Combustion &amp; Pollution Control</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Coal Types / Ranks</strong>
+              <div class="body-copy">Lignite (lowest energy, most moisture) → sub-bituminous → bituminous (most common
+                for power) → anthracite (highest energy, least sulfur). Higher rank = more carbon, less water, more
+                energy per ton.</div>
+            </div>
+            <div class="mini-note"><strong>Surface Mining</strong>
+              <div class="body-copy">Strip mining and mountaintop removal (MTR): remove overburden to expose coal seams.
+                MTR blasts peaks; valley fills bury headwater streams. Faster and cheaper than underground but causes
+                severe surface disruption and AMD.</div>
+            </div>
+            <div class="mini-note"><strong>Underground Mining</strong>
+              <div class="body-copy">Shafts and tunnels preserve surface but risk cave-ins, methane explosions, and
+                black lung disease. Produces acid mine drainage (AMD) when water contacts pyrite (FeS₂) in exposed coal
+                seams.</div>
+            </div>
+            <div class="mini-note"><strong>Acid Mine Drainage</strong>
+              <div class="body-copy">FeS₂ + O₂ + H₂O → H₂SO₄. Acidic water dissolves heavy metals, runs into streams,
+                kills aquatic life. Long-lasting — continues decades after mining ends. Hard and expensive to treat.
+              </div>
+            </div>
+            <div class="mini-note"><strong>Combustion Pollutants</strong>
+              <div class="body-copy">CO₂ (climate), SO₂ (acid rain), NOₓ (smog, acid rain), mercury (neurotoxin,
+                bioaccumulates), particulates (respiratory), fly ash (contains toxic metals). Coal is the dirtiest
+                fossil fuel per unit energy.</div>
+            </div>
+            <div class="mini-note"><strong>Pollution Controls</strong>
+              <div class="body-copy">Scrubbers remove SO₂. Electrostatic precipitators catch particulates. Low-NOₓ
+                burners reduce NOₓ. Carbon capture and storage (CCS) can reduce CO₂ but is expensive and not widely
+                deployed. Fly ash requires careful disposal.</div>
+            </div>
+          </div>
+          <h4>Mountaintop Removal — Valley Fill Chain</h4>
+          <div class="code-block">MTR blasts summit → overburden fills adjacent valleys → headwater streams buried
+            → AMD and sediment runoff downstream → fish kills and macroinvertebrate loss
+            → Reclamation replaces forest with grass — biodiversity rarely recovered</div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Distinguish surface vs. underground mining impacts. Explain AMD chemistry (pyrite +
+              water + oxygen → sulfuric acid). Match each pollutant to its control technology. Coal ash contains toxic
+              metals — it's a solid waste problem, not just an air issue. Scrubbers target SO₂, not CO₂.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-teal" id="n-oil">
+          <div class="mini-label">04 · Oil &amp; Natural Gas</div>
+          <h3>Extraction, Transport &amp; Fracking</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Crude Oil Formation</strong>
+              <div class="body-copy">Ancient marine organisms → buried under sediment → heat + pressure over millions of
+                years → liquid hydrocarbons trapped in porous rock. Refining separates crude into gasoline, diesel, jet
+                fuel, plastics feedstocks.</div>
+            </div>
+            <div class="mini-note"><strong>Oil Spill Impacts</strong>
+              <div class="body-copy">Coats feathers and fur → hypothermia. Smothers intertidal habitats and coral. Toxic
+                to fish gills and eggs. Persists in sediments for decades. Dispersants break oil into smaller droplets
+                but don't remove it — ecological debate continues.</div>
+            </div>
+            <div class="mini-note"><strong>Natural Gas</strong>
+              <div class="body-copy">Mostly methane (CH₄). Burns cleaner than coal: less CO₂ per unit energy, less SO₂
+                and particulates. BUT: methane is a potent GHG (~80× CO₂ over 20 years) — leaks during extraction and
+                transport matter enormously.</div>
+            </div>
+            <div class="mini-note"><strong>Hydraulic Fracturing</strong>
+              <div class="body-copy">High-pressure fluid injected into shale rock → fractures rock → releases trapped
+                oil/gas. Enabled U.S. shale boom. Concerns: water use, wastewater disposal (induced seismicity),
+                groundwater contamination risk from well casing failures.</div>
+            </div>
+            <div class="mini-note"><strong>Tar Sands / Oil Sands</strong>
+              <div class="body-copy">Bitumen (semi-solid oil) mixed with sand. Requires strip mining or steam injection
+                to extract. Energy-intensive processing. Higher CO₂ per barrel than conventional oil. Destroys boreal
+                forest habitat in Alberta, Canada.</div>
+            </div>
+            <div class="mini-note"><strong>Methane Hydrates</strong>
+              <div class="body-copy">Ice-like CH₄ on seafloor and permafrost — vast potential resource. Destabilization
+                risk if permafrost thaws due to climate change could release enormous methane — a dangerous feedback
+                loop.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Explain how methane leakage undermines natural gas's climate advantage. Describe
+              fracking's water concerns: high use + wastewater injection seismicity + groundwater risk. Connect tar
+              sands to higher lifecycle emissions. Dispersants don't "clean up" spills — they change where the oil goes.
+            </div>
+          </div>
+        </article>
+
+        <article class="note-section accent-blue" id="n-nuclear">
+          <div class="mini-label">05 · Nuclear Power</div>
+          <h3>Fission, Reactor Design &amp; Waste</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Nuclear fission</strong> splits heavy atoms (U-235 or Pu-239), releasing enormous
+              heat to make steam and spin turbines — identical to fossil fuel plants, just a different heat source. One
+              uranium pellet ≈ energy of one ton of coal.</p>
+          </div>
+          <table class="compare-table">
+            <tr>
+              <th>Component</th>
+              <th>Role</th>
+              <th>Key Detail</th>
+            </tr>
+            <tr>
+              <td>Fuel rods</td>
+              <td>Contain enriched uranium pellets</td>
+              <td>U-235 enriched from ~0.7% to 3–5% for reactor fuel</td>
+            </tr>
+            <tr>
+              <td>Control rods</td>
+              <td>Absorb neutrons to slow/stop reaction</td>
+              <td>Made of boron or cadmium; inserted to shut down</td>
+            </tr>
+            <tr>
+              <td>Moderator</td>
+              <td>Slows neutrons to sustain chain reaction</td>
+              <td>Typically water (light or heavy) or graphite</td>
+            </tr>
+            <tr>
+              <td>Coolant</td>
+              <td>Transfers heat from reactor to steam generator</td>
+              <td>Water most common; loss of coolant → meltdown risk</td>
+            </tr>
+          </table>
+          <div class="note-grid" style="margin-top:14px">
+            <div class="mini-note"><strong>Pros</strong>
+              <div class="body-copy">Very low operational CO₂. High energy density (small fuel volume). Reliable
+                baseload power — unaffected by sun or wind. No SO₂, NOₓ, or particulates during operation.</div>
+            </div>
+            <div class="mini-note"><strong>Cons</strong>
+              <div class="body-copy">Radioactive waste: spent fuel remains dangerous for 10,000+ years. Thermal
+                pollution from cooling water discharge. Meltdown risk (Chernobyl, Fukushima). Very high construction
+                cost and long build time.</div>
+            </div>
+            <div class="mini-note"><strong>Nuclear Waste</strong>
+              <div class="body-copy">High-level waste stored in spent fuel pools, then dry casks. No permanent U.S.
+                repository exists. Yucca Mountain (Nevada) proposed but politically blocked. Low-level waste from
+                medical/industrial uses — shorter half-lives.</div>
+            </div>
+            <div class="mini-note"><strong>Fusion vs. Fission</strong>
+              <div class="body-copy">All current reactors use fission (splitting atoms). Fusion (combining atoms, like
+                the sun) would produce far less radioactive waste — still experimental; no commercial reactors exist. Do
+                not confuse these on the exam.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Know each reactor component's function. Explain thermal pollution: hot cooling water
+              reduces dissolved oxygen in rivers/lakes. Distinguish high-level vs. low-level waste. Nuclear is
+              low-carbon operationally but NOT waste-free. APES focuses on tradeoffs, not engineering details.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g3" id="n-solar">
+          <div class="mini-label">06 · Solar &amp; Wind</div>
+          <h3>PV, CSP, Turbines &amp; Grid Challenges</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Photovoltaic (PV) Solar</strong>
+              <div class="body-copy">Silicon cells convert sunlight directly to electricity. No moving parts, no water
+                use during operation. Modular — rooftop to utility scale. Manufacturing requires energy and materials
+                (cadmium, tellurium). End-of-life panel disposal is an emerging concern.</div>
+            </div>
+            <div class="mini-note"><strong>Concentrated Solar Power (CSP)</strong>
+              <div class="body-copy">Mirrors focus sunlight onto fluid → heat → steam → turbine. Needs large areas and
+                direct sunlight (deserts). Can store thermal energy in molten salt for after-dark generation. High water
+                use for cooling systems.</div>
+            </div>
+            <div class="mini-note"><strong>Passive Solar Design</strong>
+              <div class="body-copy">Building design using south-facing windows, thermal mass (brick, concrete), and
+                insulation to capture and retain solar heat without active systems. Can reduce heating energy by 25–70%
+                in well-designed homes.</div>
+            </div>
+            <div class="mini-note"><strong>Wind Turbines</strong>
+              <div class="body-copy">Wind spins blades → rotates generator → electricity. Best sites: Great Plains,
+                offshore, mountain passes. Onshore: cheap, fast. Offshore: higher and steadier winds, higher cost.
+                Capacity factor ~25–45% — generates only when wind blows.</div>
+            </div>
+            <div class="mini-note"><strong>Wildlife Impacts</strong>
+              <div class="body-copy">Wind turbines kill ~140,000–500,000 birds and 600,000+ bats/year in U.S. — serious
+                for raptors and migratory bats. Careful siting away from migration corridors and use of
+                radar-curtailment systems reduces mortality.</div>
+            </div>
+            <div class="mini-note"><strong>Intermittency Problem</strong>
+              <div class="body-copy">Solar and wind only generate when sun shines or wind blows. Solutions: grid storage
+                (batteries, pumped hydro), geographic diversification, demand response, backup from dispatchable sources
+                (gas, hydro), long-distance transmission.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Distinguish PV (direct electric) from CSP (thermal → electric). Explain intermittency
+              and at least two solutions. Wind: pros (no combustion, low water use) vs. cons (bird/bat mortality,
+              visual, noise, land use). Both have manufacturing footprints — never call them zero-impact.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g" id="n-hydro">
+          <div class="mini-label">07 · Hydropower &amp; Geothermal</div>
+          <h3>Dispatchable Renewables with Local Tradeoffs</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Hydroelectric power</strong> converts the kinetic energy of flowing water into
+              electricity. Dams store water in reservoirs, releasing it through turbines on demand — the most
+              dispatchable renewable. Generates ~17% of global electricity.</p>
+          </div>
+          <table class="compare-table">
+            <tr>
+              <th>Factor</th>
+              <th>Hydropower</th>
+              <th>Geothermal</th>
+            </tr>
+            <tr>
+              <td>How it works</td>
+              <td>Falling water spins turbines</td>
+              <td>Steam/hot water from Earth's interior drives turbines</td>
+            </tr>
+            <tr>
+              <td>Dispatchable?</td>
+              <td>Yes — release water on demand</td>
+              <td>Yes — steady baseload, 24/7</td>
+            </tr>
+            <tr>
+              <td>Geographic limit</td>
+              <td>Rivers with adequate elevation drop</td>
+              <td>Geologically active zones (Ring of Fire, Iceland)</td>
+            </tr>
+            <tr>
+              <td>Main impacts</td>
+              <td>Fish migration blocked, habitat flooded, sediment trapped</td>
+              <td>H₂S gas, land subsidence, local seismicity</td>
+            </tr>
+            <tr>
+              <td>Water use</td>
+              <td>High — evaporation from large reservoirs</td>
+              <td>Moderate — closed-loop systems reuse water</td>
+            </tr>
+          </table>
+          <div class="note-grid" style="margin-top:14px">
+            <div class="mini-note"><strong>Dam Ecological Impacts</strong>
+              <div class="body-copy">Blocks salmon migration → population collapse. Floods terrestrial habitat upstream.
+                Traps sediment → starves downstream deltas and coastal habitats. Alters water temperature and dissolved
+                oxygen. Social impact: displacement of communities.</div>
+            </div>
+            <div class="mini-note"><strong>Pumped Storage Hydro</strong>
+              <div class="body-copy">Uses surplus electricity to pump water uphill → releases through turbines during
+                peak demand. Acts as a giant battery. Most common grid-scale energy storage technology. Critical for
+                integrating intermittent solar and wind.</div>
+            </div>
+            <div class="mini-note"><strong>Run-of-River</strong>
+              <div class="body-copy">Smaller reservoirs, lower ecological disruption — generates less power but more
+                environmentally compatible than large dams. Micro-hydro viable for remote communities without large grid
+                infrastructure.</div>
+            </div>
+            <div class="mini-note"><strong>Geothermal Pros/Cons</strong>
+              <div class="body-copy">Pros: continuous 24/7 power, small footprint, low GHG. Cons: limited to
+                volcanic/tectonic zones, hydrogen sulfide gas emissions, can deplete if overused, occasional induced
+                seismicity from enhanced geothermal systems.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Know the dam impact chain: migration blocked → sediment trapped → delta erosion →
+              habitat loss. Distinguish geothermal from hydropower on geographic availability. Pumped storage is the key
+              link between intermittent renewables and grid reliability — a high-yield exam concept.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-red" id="n-biomass">
+          <div class="mini-label">08 · Biomass, Biofuels &amp; Hydrogen</div>
+          <h3>Organic Energy &amp; Energy Carriers</h3>
+          <div class="body-copy">
+            <p><strong class="ap-term">Biomass</strong> is biological material (wood, crop waste, animal dung, energy
+              crops) burned or converted for energy. It is renewable only if harvested sustainably — if forests are
+              burned faster than they regrow, it is effectively a fossil fuel in slow motion.</p>
+          </div>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Carbon Neutrality (Conditional)</strong>
+              <div class="body-copy">Biomass is carbon-neutral IF regrowth captures as much CO₂ as burning releases over
+                a relevant timescale. Burning old-growth forests is NOT carbon-neutral — regrowth takes centuries. Crop
+                residues or fast-growing grasses are better.</div>
+            </div>
+            <div class="mini-note"><strong>Biofuels</strong>
+              <div class="body-copy">Ethanol: fermented from corn (U.S.) or sugarcane (Brazil — better energy return).
+                Biodiesel: from vegetable oils or algae. Cellulosic ethanol from crop wastes — more efficient but
+                technically harder. Food vs. fuel tradeoff: corn ethanol raises food prices.</div>
+            </div>
+            <div class="mini-note"><strong>Biogas / Methane</strong>
+              <div class="body-copy">Anaerobic digestion of organic waste (manure, landfill, sewage) produces methane —
+                burned for electricity or heat. Captures methane that would otherwise escape to atmosphere (potent GHG),
+                so net benefit relative to doing nothing with the waste.</div>
+            </div>
+            <div class="mini-note"><strong>Hydrogen as Carrier</strong>
+              <div class="body-copy">Hydrogen is not an energy source — it must be produced using energy. "Green
+                hydrogen" (electrolysis via renewables) = near-zero emissions. "Grey hydrogen" (from natural gas) =
+                significant CO₂. Fuel cells convert H₂ + O₂ → electricity + water.</div>
+            </div>
+            <div class="mini-note"><strong>Food vs. Fuel</strong>
+              <div class="body-copy">Diverting corn/sugar to biofuels raises food prices, pressures land conversion, and
+                may increase net GHG emissions if tropical forests are cleared for plantations. Life-cycle analysis must
+                include land-use change emissions.</div>
+            </div>
+            <div class="mini-note"><strong>Air Pollution from Biomass</strong>
+              <div class="body-copy">Burning wood/biomass releases particulates, CO, and volatile organics — can cause
+                worse local air quality than natural gas. Disproportionately affects low-income communities where wood
+                stoves are the primary heat source.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Biomass is only carbon-neutral under specific conditions — always qualify. Know the
+              food-vs-fuel tradeoff for corn ethanol. Hydrogen is a carrier, not a source — always ask where the
+              hydrogen comes from. Biogas from waste is usually an environmental win relative to letting methane vent
+              uncontrolled.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-gold" id="n-efficiency">
+          <div class="mini-label">09 · Energy Efficiency &amp; Conservation</div>
+          <h3>Demand Reduction: The Fastest Resource</h3>
+          <div class="body-copy">
+            <p>Reducing energy demand is often cheaper and faster than building new supply. <strong
+                class="ap-term">Efficiency</strong> delivers the same service with less energy input (LED vs.
+              incandescent). <strong class="ap-term">Conservation</strong> is using less of the service itself (turning
+              lights off). Both matter — and they work together.</p>
+          </div>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Rebound Effect</strong>
+              <div class="body-copy">Efficiency improvements reduce cost per unit → people use more → some efficiency
+                gains are erased. Efficient cars → more driving. Efficient appliances → larger appliances. Policy must
+                account for rebound to realize projected savings.</div>
+            </div>
+            <div class="mini-note"><strong>Building Efficiency</strong>
+              <div class="body-copy">Buildings use ~40% of U.S. energy. Insulation, double-pane windows, HVAC upgrades,
+                cool roofs, passive solar design. LEED certification standard. Retrofitting existing buildings is the
+                largest near-term efficiency opportunity.</div>
+            </div>
+            <div class="mini-note"><strong>Transportation</strong>
+              <div class="body-copy">CAFE standards raise fleet fuel economy. EVs shift emissions to power plant — only
+                better if grid is clean. Mass transit, cycling infrastructure, and walkable urban design reduce vehicle
+                miles traveled (VMT) per capita.</div>
+            </div>
+            <div class="mini-note"><strong>Cogeneration (CHP)</strong>
+              <div class="body-copy">Combined heat and power: captures waste heat from electricity generation for space
+                heating or industrial processes. Can raise overall efficiency from ~35% to 80–90%. Common in
+                universities, hospitals, and industrial plants.</div>
+            </div>
+            <div class="mini-note"><strong>Smart Grids</strong>
+              <div class="body-copy">Digital two-way communication between utility and users → dynamic pricing, demand
+                response (shift loads to off-peak), faster outage detection, better integration of distributed rooftop
+                renewables.</div>
+            </div>
+            <div class="mini-note"><strong>Industrial Efficiency</strong>
+              <div class="body-copy">Industry uses ~30% of U.S. energy. Motor efficiency standards, waste heat recovery,
+                process redesign, and material substitution reduce energy intensity. Iron, steel, cement, and chemicals
+                are most energy-intensive sectors.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Always distinguish efficiency from conservation with concrete examples. Calculate
+              energy and cost savings step-by-step (watts → kW → kWh → $ saved). Explain the rebound effect and how
+              policy counteracts it. Cogeneration is a high-yield concept — know how it boosts overall system
+              efficiency.</div>
+          </div>
+        </article>
+
+        <article class="note-section accent-g2" id="n-policy">
+          <div class="mini-label">10 · Energy Policy &amp; Transition</div>
+          <h3>Economics, Subsidies &amp; Environmental Justice</h3>
+          <div class="note-grid">
+            <div class="mini-note"><strong>Fossil Fuel Subsidies</strong>
+              <div class="body-copy">Governments worldwide subsidize fossil fuel extraction — keeping prices
+                artificially low and discouraging alternatives. Removing subsidies levels the playing field. IMF
+                estimates global fossil fuel subsidies at $5+ trillion/year when health and climate externalities are
+                counted.</div>
+            </div>
+            <div class="mini-note"><strong>Carbon Tax vs. Cap-and-Trade</strong>
+              <div class="body-copy">Carbon tax: fee per ton of CO₂ — simple, predictable price signal. Cap-and-trade:
+                government caps total emissions; companies buy/sell permits. Both internalize the externality of carbon.
+                BC carbon tax cut emissions while growing GDP — a real-world test case.</div>
+            </div>
+            <div class="mini-note"><strong>CAFE Standards</strong>
+              <div class="body-copy">Corporate Average Fuel Economy: sets minimum fleet fuel efficiency for automakers.
+                Has significantly reduced gasoline consumption and CO₂ per mile since 1975. Tightening standards drives
+                automaker innovation.</div>
+            </div>
+            <div class="mini-note"><strong>Renewable Portfolio Standards</strong>
+              <div class="body-copy">State/national mandates requiring utilities to source a percentage of electricity
+                from renewables by a target year. Drives investment in solar and wind. 30+ U.S. states have RPSs; some
+                target 100% clean electricity by 2050.</div>
+            </div>
+            <div class="mini-note"><strong>Environmental Justice &amp; Energy</strong>
+              <div class="body-copy">Fossil fuel infrastructure (refineries, power plants, pipelines) disproportionately
+                located near low-income and minority communities — "sacrifice zones." Energy poverty: inability to
+                afford adequate heat/cooling. A "just transition" must address historic siting inequities.</div>
+            </div>
+            <div class="mini-note"><strong>Net Metering</strong>
+              <div class="body-copy">Lets rooftop solar owners sell excess electricity back to the grid, reducing energy
+                bills. Expands renewable adoption but utility companies resist as it disrupts the traditional business
+                model. Equity issue: mainly benefits homeowners, not renters.</div>
+            </div>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Exam Focus</div>
+            <div class="body-copy">Explain how carbon pricing internalizes externalities — a key FRQ pattern. Connect
+              environmental justice to energy infrastructure siting. Distinguish carbon tax (per-ton fee) from
+              cap-and-trade (permit market). APES expects policy reasoning — propose a solution and explain its
+              mechanism, not just its name.</div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Key Terms</span>
+        <h2>Unit 6 Glossary</h2>
+        <p>Search and click any term to explore its context</p>
+      </header>
+      <div class="glossary-toolbar"><input id="glossaryFilter" type="text" placeholder="Search terms…" /></div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Active Recall</span>
+        <h2>Unit 6 Flashcards</h2>
+        <p>Click any card to flip · Review until confident</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM PREP -->
+    <section class="tab-content" id="exam">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>Key Concepts &amp; Strategies</h2>
+        <p>High-yield topics · Pattern recognition · Quick-reference</p>
+      </header>
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Efficiency Math</div>
+          <h3>kWh &amp; Savings Calculations</h3>
+          <ul class="bullet-list">
+            <li>Step 1: Convert watts → kilowatts (÷ 1000)</li>
+            <li>Step 2: Energy (kWh) = Power (kW) × Time (h)</li>
+            <li>Step 3: Cost savings = kWh saved × $/kWh</li>
+            <li>Step 4: Payback period = upfront cost ÷ annual savings</li>
+            <li>Always label units — partial credit if setup is correct even with arithmetic errors</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Externalities Pattern</div>
+          <h3>Market Failure → Policy Fix</h3>
+          <ul class="bullet-list">
+            <li>Externality = cost not paid by buyer/seller → market underprices harmful goods</li>
+            <li>Fossil fuels: pollution, climate, health costs imposed on society</li>
+            <li>Fix: carbon tax or cap-and-trade → raises price → reduces use → drives alternatives</li>
+            <li>Subsidies for renewables correct for underpriced fossil alternatives</li>
+            <li>FRQ: always explain the mechanism, not just name the policy</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-teal">
+          <div class="mini-label">Source Comparison</div>
+          <h3>Tradeoff Framework</h3>
+          <ul class="bullet-list">
+            <li>Compare on: energy density, CO₂, other pollutants, water use, land use, reliability</li>
+            <li>Coal: highest CO₂ + pollutants, dispatchable, mining destruction, cheap</li>
+            <li>Natural gas: lower CO₂ than coal, methane leak risk, fracking water issues</li>
+            <li>Nuclear: low-carbon operation, radioactive waste, meltdown risk, expensive</li>
+            <li>Wind/Solar: no combustion, intermittent, manufacturing and land impacts</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Renewable Nuance</div>
+          <h3>No Free Lunch</h3>
+          <ul class="bullet-list">
+            <li>Solar: semiconductor manufacturing, land use, panel disposal — not zero impact</li>
+            <li>Wind: bird/bat mortality, noise, aesthetics — site carefully away from corridors</li>
+            <li>Hydro: fish migration, sediment, flooded habitat — dispatchable but impactful</li>
+            <li>Biomass: only carbon-neutral if regrowth matches harvest rate</li>
+            <li>Never call any source "clean" without acknowledging at least one tradeoff</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Common Mistakes</div>
+          <h3>Avoid These Errors</h3>
+          <ul class="bullet-list">
+            <li>Calling nuclear "100% clean" — it has radioactive waste and thermal pollution</li>
+            <li>Saying biomass is automatically carbon-neutral — depends on regrowth timescale</li>
+            <li>Ignoring methane leaks when praising natural gas — leaks can negate coal's advantage</li>
+            <li>Forgetting life-cycle impacts — solar panels require energy and materials to make</li>
+            <li>Treating efficiency = conservation — they are different concepts with different mechanisms</li>
+          </ul>
+        </article>
+        <article class="principle-card feature-card accent-blue">
+          <div class="mini-label">FRQ Writing</div>
+          <h3>Energy Scenario Tips</h3>
+          <ul class="bullet-list">
+            <li>Name the specific pollutant and its specific impact: SO₂ → acid rain → pH drop → aquatic harm</li>
+            <li>Propose a solution AND explain its mechanism — not just what it is called</li>
+            <li>For efficiency: calculate step-by-step, then explain the environmental benefit</li>
+            <li>For policy: identify the externality first, then show how policy internalizes it</li>
+            <li>Environmental justice: name who lives near the facility and what they're exposed to</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Unit 6 Practice Quiz</div>
+      <button class="modal-close glass-btn" data-close="quizModal" type="button">✕ Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Bank — Unit 6</div>
+      <button class="modal-close glass-btn" data-close="essayModal" type="button">✕ Close</button>
+      <div id="essayTopics" style="margin-bottom:8px"></div>
+      <div id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", icon: `<svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="0"/><rect x="9" y="1" width="6" height="6" rx="0"/><rect x="1" y="9" width="6" height="6" rx="0"/><rect x="9" y="9" width="6" height="6" rx="0"/></svg>`, label: "Dashboard", ambient: "radial-gradient(ellipse at 55% 15%,rgba(74,158,255,.08),transparent 65%)" },
+      { id: "notes", icon: `<svg viewBox="0 0 16 16"><rect x="2" y="1" width="12" height="14" rx="0"/><line x1="5" y1="5" x2="11" y2="5"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="5" y1="11" x2="9" y2="11"/></svg>`, label: "Notes", ambient: "radial-gradient(ellipse at 30% 50%,rgba(123,95,247,.07),transparent 65%)" },
+      { id: "glossary", icon: `<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r=".6" fill="currentColor" stroke="none"/></svg>`, label: "Glossary", ambient: "radial-gradient(ellipse at 70% 30%,rgba(0,212,170,.07),transparent 65%)" },
+      { id: "flashcards", icon: `<svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="0"/><line x1="4" y1="8" x2="12" y2="8"/></svg>`, label: "Flashcards", ambient: "radial-gradient(ellipse at 50% 80%,rgba(240,184,64,.07),transparent 65%)" },
+      { id: "exam", icon: `<svg viewBox="0 0 16 16"><polygon points="8,1 15,13 1,13"/></svg>`, label: "Exam Prep", ambient: "radial-gradient(ellipse at 20% 60%,rgba(255,80,80,.06),transparent 65%)" },
+    ];
+
+    const glossaryTerms = [
+      { tab: "notes", term: "First Law of Thermodynamics", def: "Energy cannot be created or destroyed — only converted from one form to another. Total energy in a closed system is conserved." },
+      { tab: "notes", term: "Second Law of Thermodynamics", def: "Every energy conversion degrades some energy to low-quality heat. No real conversion is 100% efficient; entropy always increases." },
+      { tab: "notes", term: "Energy Efficiency", def: "Useful energy output ÷ total energy input × 100%. A 35% efficient coal plant converts 35% of coal's chemical energy into electricity; 65% is waste heat." },
+      { tab: "notes", term: "Net Energy / EROI", def: "Net energy = total energy produced minus energy required to produce it. EROI (Energy Return on Investment) = energy out ÷ energy in. Higher EROI = more practical fuel. Conventional oil ~30:1; tar sands ~5:1." },
+      { tab: "notes", term: "Rebound Effect", def: "Efficiency improvements lower cost per unit of service → people use more of that service → some or all efficiency gains are offset by increased consumption." },
+      { tab: "notes", term: "Fossil Fuels", def: "Coal, oil, and natural gas — formed from compressed ancient organic matter over millions of years. Nonrenewable on human timescales. Combustion releases CO₂ and air pollutants." },
+      { tab: "notes", term: "Externality", def: "A cost or benefit not reflected in market price. Fossil fuel externalities include health damage from air pollution, climate change, and water contamination — paid by society, not the buyer." },
+      { tab: "notes", term: "Life-Cycle Analysis", def: "Assessment of environmental impacts across a product's full life: extraction → processing → transport → use → disposal. Reveals impacts beyond point-of-use combustion." },
+      { tab: "notes", term: "Cogeneration (CHP)", def: "Combined heat and power: captures waste heat from electricity generation for space heating or industrial use. Can raise overall efficiency from ~35% to 80%+." },
+      { tab: "notes", term: "Acid Mine Drainage (AMD)", def: "Water contacts pyrite (FeS₂) exposed by mining → forms sulfuric acid → dissolves heavy metals → flows into streams → kills aquatic life. Persists decades after mining ends." },
+      { tab: "notes", term: "Carbon Capture and Storage (CCS)", def: "Capturing CO₂ from power plant flue gas and storing it underground. Can reduce emissions from fossil fuel plants but is expensive and not widely deployed at scale." },
+      { tab: "notes", term: "Hydraulic Fracturing (Fracking)", def: "High-pressure fluid injected into shale to fracture rock and release trapped oil/gas. Concerns: high water use, wastewater injection seismicity, groundwater contamination risk from failed well casings." },
+      { tab: "notes", term: "Tar Sands / Oil Sands", def: "Bitumen mixed with sand, requiring strip mining or steam injection to extract. Higher energy input and CO₂ per barrel than conventional oil; destroys boreal forest habitat." },
+      { tab: "notes", term: "Nuclear Fission", def: "Splitting heavy atomic nuclei (U-235 or Pu-239) to release large amounts of heat. Used in all current nuclear power plants to produce steam and generate electricity." },
+      { tab: "notes", term: "Control Rods", def: "Neutron-absorbing rods (boron or cadmium) inserted into a reactor to slow or stop the chain reaction. Primary mechanism for controlling reactor output and emergency shutdown." },
+      { tab: "notes", term: "Radioactive Waste", def: "Spent nuclear fuel and contaminated materials. High-level waste remains dangerous for thousands of years; requires secure long-term storage. No permanent U.S. repository currently operational." },
+      { tab: "notes", term: "Thermal Pollution", def: "Discharge of heated water from power plant cooling into rivers or lakes, reducing dissolved oxygen and harming aquatic organisms. Affects nuclear, coal, and natural gas plants." },
+      { tab: "notes", term: "Photovoltaic (PV) Cell", def: "Converts sunlight directly into electricity using semiconductor materials. No water use or combustion during operation — but manufacturing requires energy and materials; panels eventually need recycling." },
+      { tab: "notes", term: "Concentrated Solar Power (CSP)", def: "Uses mirrors to focus sunlight onto a heat-transfer fluid, producing steam to spin a turbine. Can store thermal energy in molten salt for after-dark generation; high water use for cooling." },
+      { tab: "notes", term: "Intermittency", def: "Solar and wind only generate electricity when sun shines or wind blows. Addressed by storage (batteries, pumped hydro), geographic diversification, backup generation, and demand response programs." },
+      { tab: "notes", term: "Pumped Storage Hydro", def: "Uses surplus electricity to pump water uphill; releases it through turbines during peak demand. Most common grid-scale energy storage; acts as a giant rechargeable battery for intermittent renewables." },
+      { tab: "notes", term: "Hydroelectric Power", def: "Converts kinetic energy of flowing water into electricity. Renewable and dispatchable — but dams block fish migration, flood habitat, trap sediment, alter flow regimes, and displace communities." },
+      { tab: "notes", term: "Geothermal Energy", def: "Heat from Earth's interior used to generate electricity or heat buildings. Reliable and low-carbon but geographically limited to volcanic and tectonic zones." },
+      { tab: "notes", term: "Biomass Energy", def: "Energy from biological material (wood, crop waste, manure). Carbon-neutral only if regrowth matches harvest rate over a relevant timescale. Can cause local air pollution from combustion." },
+      { tab: "notes", term: "Biogas", def: "Methane produced by anaerobic digestion of organic waste. Capturing and burning it prevents a more potent GHG from escaping to the atmosphere, making it an environmental improvement over venting." },
+      { tab: "notes", term: "Biofuels", def: "Liquid fuels (ethanol, biodiesel) from biological sources. Corn ethanol can raise food prices and may not be carbon-neutral when land conversion emissions are included. Sugarcane has better energy return." },
+      { tab: "notes", term: "Hydrogen (Energy Carrier)", def: "Not an energy source — must be produced using energy. Green hydrogen (from renewable electrolysis) is near-zero emissions. Grey hydrogen (from natural gas) still emits CO₂. Fuel cells: H₂ + O₂ → electricity + water." },
+      { tab: "notes", term: "Carbon Tax", def: "A fee charged per ton of CO₂ emitted. Creates a price signal making fossil fuels reflect their true social cost, incentivizing efficiency and fuel switching without mandating specific technologies." },
+      { tab: "notes", term: "Cap-and-Trade", def: "Government sets a total emissions cap; companies receive/buy permits to emit. Companies reducing emissions can sell surplus permits. Market mechanism to reach targets at least cost with price flexibility." },
+      { tab: "notes", term: "CAFE Standards", def: "Corporate Average Fuel Economy: U.S. federal minimum fuel efficiency standards for cars and trucks. Reducing fuel consumption per mile cuts both gasoline use and tailpipe CO₂ emissions." },
+      { tab: "notes", term: "Renewable Portfolio Standard (RPS)", def: "State or national mandate requiring utilities to supply a percentage of electricity from renewable sources by a target year. Drives investment in solar, wind, and other clean energy." },
+      { tab: "notes", term: "Environmental Justice (Energy)", def: "Fossil fuel infrastructure is disproportionately sited near low-income and minority communities, exposing them to greater pollution. A 'just transition' must address this inequity in siting and economic benefit distribution." },
+      { tab: "notes", term: "Passive Solar Design", def: "Building design using south-facing windows, thermal mass, and insulation to capture and retain solar heat without active mechanical systems. Can reduce heating energy by 25–70%." },
+      { tab: "notes", term: "Smart Grid", def: "Digital two-way communication between utility and consumers enabling dynamic pricing, demand response, faster outage detection, and better integration of distributed renewable generation." },
+      { tab: "notes", term: "Mountaintop Removal (MTR)", def: "Surface coal mining blasting hilltops to expose coal seams; overburden dumped into adjacent valleys, burying headwater streams and causing acid drainage and habitat loss downstream." },
+    ];
+
+    const flashcards = [
+      { front: "Explain the difference between energy efficiency and energy conservation — and why the distinction matters for environmental policy.", back: "Efficiency = same service with less energy input (LED vs. incandescent). Conservation = using less of the service itself (turning the light off). Both reduce consumption but through different mechanisms. Policy must address both, and account for the rebound effect that can erode efficiency gains when per-unit costs fall." },
+      { front: "A coal plant inputs 1,000 MJ of thermal energy and produces 350 MJ of electricity. What is the efficiency, and where does the rest go?", back: "Efficiency = 350 ÷ 1,000 = 35%. The remaining 650 MJ (65%) is released as waste heat — into cooling water, cooling towers, or the atmosphere. This is unavoidable per the Second Law of Thermodynamics. When this heat is discharged to rivers, it causes thermal pollution (lower dissolved oxygen, harmed aquatic life)." },
+      { front: "Why does methane leakage complicate natural gas's reputation as a 'bridge fuel' to a lower-carbon economy?", back: "Natural gas burns with ~50% less CO₂ per unit energy than coal — a real advantage. But methane (CH₄) has ~80× the warming potential of CO₂ over 20 years. If even 2–3% of gas leaks during extraction, processing, and transport, the climate benefit of switching from coal largely disappears. Leakage measurement and minimization are therefore critical." },
+      { front: "What is net energy (EROI) and why does it matter when comparing energy sources?", back: "EROI = energy returned ÷ energy invested to produce it. Conventional oil historically had EROI of ~30:1 — highly practical. Tar sands may be 5:1 or lower — much of the extracted energy must be used in production itself. Low EROI means more fuel burned per unit delivered, more pollution, and higher economic cost. Renewables' EROI is improving rapidly as technology matures." },
+      { front: "Describe the ecological impact chain from building a large hydroelectric dam on a river supporting native salmon.", back: "(1) Dam blocks upstream fish migration → salmon cannot reach spawning grounds → reproduction fails → population declines. (2) Reservoir floods terrestrial habitat upstream, displacing communities and wildlife. (3) Sediment trapped behind dam → downstream riverbed erodes, delta loses land, coastal habitats shrink. (4) Water temperature and oxygen profiles altered → aquatic species composition changes below the dam." },
+      { front: "Why is biomass not automatically carbon-neutral, and when is it considered defensible from a climate perspective?", back: "Burning biomass releases CO₂ immediately. Regrowth captures CO₂ over time — but the timescale must match. Burning old-growth forest releases centuries of stored carbon; replacement saplings take 80–150 years to resequester it. Biomass is more defensible when using crop residues, fast-growing grasses, or wastes where re-growth is rapid and no land conversion from high-carbon ecosystems occurs." },
+      { front: "What are the four main environmental concerns specific to hydraulic fracturing (fracking)?", back: "(1) High water use — can strain local supplies in arid areas. (2) Wastewater disposal — injecting produced water into deep wells triggers induced seismicity (earthquakes). (3) Groundwater contamination risk — well casing failure can allow methane or chemicals to migrate to aquifers. (4) Methane leakage — fugitive emissions at wellheads, compressor stations, and pipelines increase the GHG footprint of natural gas." },
+      { front: "Explain cogeneration and why it significantly improves overall energy efficiency.", back: "Cogeneration (CHP = combined heat and power) captures waste heat that conventional power plants discard into cooling towers or water bodies. This heat is redirected to building heating, industrial processes, or district systems. A conventional plant may be 35% efficient; the same fuel in a CHP system achieves 80–90% efficiency by using the heat that would otherwise be wasted." },
+      { front: "Compare a carbon tax to a cap-and-trade system — what does each do and how does each internalize the externality of carbon emissions?", back: "Carbon tax: government charges a fixed price per ton of CO₂. Predictable cost signal, simple to administer, lets emitters choose how to respond. Cap-and-trade: government caps total emissions; companies buy/sell permits in a market. Quantity is certain, price fluctuates. Both raise the effective cost of emissions and internalize the climate externality. BC's carbon tax is a real-world example that cut emissions while growing GDP." },
+      { front: "What is the rebound effect and how does it undermine energy efficiency policy?", back: "When efficiency improvements reduce cost per unit of service, people tend to use more of that service: more efficient cars → more driving; efficient appliances → larger models. The rebound effect can partially or fully erase efficiency gains. Policy must pair efficiency standards with price signals (fuel taxes, carbon pricing) and urban design that reduces demand structurally, not just technology that makes each unit cheaper to run." },
+      { front: "Describe the key environmental impacts specific to nuclear power (not shared with combustion sources).", back: "(1) Radioactive waste: spent fuel rods remain hazardous for thousands of years; no permanent U.S. storage exists. (2) Thermal pollution: large volumes of cooling water discharged at elevated temperatures reduce dissolved oxygen in rivers/lakes. (3) Uranium mining impacts at the extraction stage. (4) Meltdown risk: loss of coolant can cause core damage and radiation release — rare but potentially catastrophic and long-lasting." },
+      { front: "Explain environmental justice in the context of energy infrastructure siting — and what a 'just transition' requires.", back: "Fossil fuel power plants, refineries, and pipelines are disproportionately sited in or adjacent to low-income communities and communities of color — who face higher pollution exposure without proportional economic benefit. A 'just transition' to clean energy requires: equitable siting of new infrastructure, economic benefits (jobs, tax revenue) flowing to affected communities, remediation of historical contamination, and meaningful inclusion of frontline communities in energy planning decisions." },
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Fossil Fuel Life-Cycle Impacts", blocks: [
+          ["Identify the Fuel and Stage", "Name the fossil fuel (coal, oil, or natural gas) and the life-cycle stage: extraction, processing, transport, combustion, or waste. The exam may specify one stage or ask for multiple steps of the chain."],
+          ["Extraction Impacts", "Coal: surface mining destroys habitat, MTR buries streams with overburden, underground mining produces AMD. Oil: drilling disturbs land, offshore rigs risk blowouts and spills. Gas: fracking uses large water volumes, risks groundwater contamination and induced seismicity."],
+          ["Combustion Impacts", "List pollutants by name with specific outcomes: CO₂ → greenhouse effect; SO₂ → acid deposition; NOₓ → photochemical smog and acid deposition; particulates → respiratory disease; mercury (coal) → bioaccumulation. Explain the mechanism for each — not just the name."],
+          ["Mitigation Strategies", "Scrubbers reduce SO₂. Electrostatic precipitators reduce particulates. CCS reduces CO₂ but is expensive. Methane leak detection reduces GHG from gas. Acknowledge tradeoffs — CCS adds energy cost and doesn't solve extraction impacts."],
+          ["FRQ Tip", "Never stop at the stack: trace the pollutant to its environmental and health outcome. 'Coal emits SO₂ which reacts with water vapor to form H₂SO₄ (acid rain), which lowers lake pH, harming aquatic organisms' is a full-credit chain. 'Burning coal is bad' is not."]
+        ]
+      },
+      {
+        label: "Nuclear Power — Tradeoffs and Waste", blocks: [
+          ["How It Works", "Nuclear fission heats water → steam → turbine → electricity. Same generating mechanism as fossil plants; different heat source. One uranium pellet ≈ energy of one ton of coal. Enriched U-235 (3–5%) sustains a controlled chain reaction."],
+          ["Advantages", "Near-zero operational CO₂ and air pollution — a real climate advantage. High energy density reduces land footprint vs. renewables. Dispatchable: power on demand regardless of weather. Long operating life (40–60+ years once built)."],
+          ["Disadvantages", "Radioactive waste: spent fuel rods hazardous for 10,000+ years; no U.S. permanent repository. Thermal pollution: heated cooling water harms aquatic life. Meltdown risk — low probability, very high consequence. High upfront construction cost and long build time (10–20 years)."],
+          ["Waste Management", "High-level waste stored in spent fuel pools then dry casks. Yucca Mountain proposed but politically blocked. Interim storage at 70+ reactor sites accumulating. Long half-lives require institutional memory across geological time — unprecedented challenge."],
+          ["FRQ Tip", "APES rarely asks you to be pro or con nuclear. Accurately describe tradeoffs. Always include operational advantages (low CO₂) AND waste/risk disadvantages. Distinguish operational impacts (what happens while running) from waste impacts (what lingers after shutdown)."]
+        ]
+      },
+      {
+        label: "Renewable Energy Comparison (Wind vs. Solar vs. Hydro)", blocks: [
+          ["Frame the Comparison", "Organize by: energy mechanism, reliability/dispatchability, land use, water use, wildlife impacts, manufacturing footprint. Renewables are not interchangeable — they have distinct environmental profiles."],
+          ["Intermittent: Solar and Wind", "No combustion → no GHG during operation. But solar only generates by day under clear skies; wind only when blowing. Grid integration requires storage, demand response, or backup. PV manufacturing uses semiconductor supply chains; wind turbines need rare earth metals for magnets. Turbines kill birds and bats — especially raptors and migratory species near migration corridors."],
+          ["Dispatchable: Hydropower", "Power on demand — release water when needed. Low operational GHG. BUT: dams block fish migration, flood terrestrial habitat, trap sediment, displace communities, and evaporate large water volumes. Geographically constrained to rivers with adequate elevation drop."],
+          ["Geographic and Grid Factors", "Best solar: desert Southwest. Best wind: Great Plains, offshore Atlantic. Best hydro: Pacific Northwest, large river systems. A reliable clean grid requires multiple complementary sources — no single renewable can cover all times, locations, and weather conditions alone."],
+          ["FRQ Tip", "'Renewable = no environmental impact' is false and costs points. Name at least one specific environmental tradeoff for each renewable you discuss. Show that you understand intermittency and can describe at least two specific strategies for managing it."]
+        ]
+      },
+      {
+        label: "Energy Efficiency Calculation and Policy", blocks: [
+          ["The Setup", "Utility proposes replacing 1 million 60-watt incandescent bulbs with 10-watt LEDs. Each operates 4 hours/day for 365 days. Electricity costs $0.12/kWh. Calculate annual energy and cost savings; explain the environmental benefit."],
+          ["The Math", "Power saved per bulb: 60 − 10 = 50 W = 0.05 kW. Energy saved per bulb/year: 0.05 kW × 4 h × 365 days = 73 kWh. Total for 1 million bulbs: 73,000,000 kWh/year. Cost savings: 73,000,000 × $0.12 = $8,760,000/year."],
+          ["Environmental Benefit", "73 million kWh less generated → less fuel burned → less CO₂, SO₂, NOₓ, and particulates emitted at power plants. If the grid is coal-heavy (~1 lb CO₂/kWh), this prevents ~33,000 metric tons of CO₂/year. Reduced generation also lowers thermal pollution and water withdrawal for cooling."],
+          ["Rebound Caveat", "If cheaper LED operation leads people to leave lights on longer or buy more fixtures, some savings are offset. Policy must pair efficiency standards with energy pricing that reflects full cost to prevent rebound from erasing the gains."],
+          ["FRQ Tip", "Show every step of the calculation with units labeled. Even with an arithmetic error, a correctly set-up solution earns partial credit. Always follow math with one sentence connecting kWh saved → less fuel burned → specific environmental benefit."]
+        ]
+      },
+    ];
+
+    const quizQuestions = [
+      { question: "A power plant consumes 500 units of thermal energy from coal and produces 175 units of electricity. Which calculation gives the plant's efficiency, and what does the 'missing' energy represent?", options: ["175 ÷ 500 = 35% efficiency; the other 65% is lost as waste heat — an unavoidable consequence of the Second Law", "500 ÷ 175 = 286% — the plant produces more usable energy than it consumes", "175 × 500 measures energy density, not efficiency", "(500 − 175) ÷ 175 = 186%; the plant wastes nearly twice its output"], correct: 0, explanation: "Efficiency = useful energy out ÷ total energy in = 175 ÷ 500 = 35%. The remaining 65% (325 units) is degraded to low-quality waste heat — unavoidable per the Second Law of Thermodynamics. When discharged to rivers, this waste heat is thermal pollution, lowering dissolved oxygen and harming aquatic organisms." },
+      { question: "A homeowner replaces a 100 W incandescent bulb with a 12 W LED. Both run 8 hours/day, 300 days/year. Electricity costs $0.10/kWh. What is the annual cost saving?", options: ["$6.72", "$21.12", "$2.40", "$0.88"], correct: 1, explanation: "Power saved: 100 − 12 = 88 W = 0.088 kW. Energy saved: 0.088 kW × 8 h × 300 days = 211.2 kWh/year. Cost saving: 211.2 × $0.10 = $21.12. Always show steps. Even with an arithmetic error, correct setup earns partial credit on the FRQ." },
+      { question: "Natural gas is often called a 'bridge fuel' to renewables because it emits less CO₂ per unit of energy than coal. What is the MOST significant challenge to this claim?", options: ["Natural gas pipelines fragment terrestrial habitat more severely than coal mines", "Methane (CH₄) — the main component of natural gas — is ~80× more potent than CO₂ over 20 years, so significant leakage during extraction and transport can offset the combustion advantage", "Natural gas combustion produces more SO₂ than coal per unit energy, worsening acid rain", "Natural gas cannot be obtained domestically, creating energy security problems"], correct: 1, explanation: "Methane has ~80× the warming potential of CO₂ over 20 years. If even 2–3% of gas leaks between well and burner, the climate advantage over coal shrinks dramatically or disappears. Leakage measurement and minimization are therefore critical to whether natural gas provides net climate benefits over coal in the near term." },
+      { question: "A city considers building a large hydroelectric dam on a river supporting native salmon. Which sequence BEST describes the ecological impact chain?", options: ["Dam lowers water temperature → increases dissolved oxygen → boosts salmon reproduction downstream", "Dam blocks upstream migration → salmon cannot reach spawning grounds → population declines → marine-derived nutrients to riparian forest also decline", "Dam increases river velocity downstream → more sediment reaches delta → coastal habitat improves", "Dam stores water that filters pollutants → downstream water quality improves for fish"], correct: 1, explanation: "Dams physically block migratory fish from reaching upstream spawning grounds — one of the most significant freshwater biodiversity impacts globally. The broader cascade: fewer carcasses → less marine-derived nitrogen reaching riparian ecosystems → forest productivity near streams declines. Sediment trapped upstream starves the delta and coastal habitats downstream." },
+      { question: "An environmental group argues that a proposed biomass power plant burning harvested timber is NOT carbon-neutral. What is the MOST scientifically defensible basis for this claim?", options: ["Wood combustion releases pollutants beyond CO₂, so it can never be classified as carbon-neutral", "CO₂ released by burning is immediate, but replacement forest growth requires decades to centuries to recapture equivalent carbon — creating a 'carbon debt' during that period that matters for current climate targets", "Trees don't contain carbon derived from fossil fuels, so burning them cannot affect atmospheric CO₂", "Biomass plants have lower energy efficiency than coal plants, making them inherently worse for climate"], correct: 1, explanation: "Burning old-growth or mature forest creates a carbon debt: CO₂ enters the atmosphere now, but replacement forests won't resequester equivalent carbon for 50–150+ years. On climate timescales relevant to avoiding 1.5–2°C warming, this gap matters enormously. Biomass is more defensible using crop residues or fast-growing grasses with short re-growth cycles and no land-use conversion from high-carbon ecosystems." },
+      { question: "A proposed nuclear power plant promises low CO₂ emissions. An environmental group responds it is not without impact. Which TWO impacts are MOST specific to nuclear power (not shared with fossil fuel combustion)?", options: ["Radioactive waste requiring secure storage for thousands of years, and thermal pollution from cooling water discharge", "Acid mine drainage from uranium extraction, and SO₂ emissions from burning uranium pellets", "Groundwater contamination from fracking, and methane leakage during fuel transport", "Visual impact of the facility, and noise pollution from turbines during operation"], correct: 0, explanation: "Radioactive waste is uniquely challenging — hazardous for millennia, no permanent U.S. repository, scale of hazard unlike any fossil fuel waste. Thermal pollution affects nuclear, coal, and gas plants (so not unique to nuclear) but is a key nuclear-specific FRQ point since it appears even in the absence of combustion. SO₂/combustion and fracking/methane apply to fossil fuels, not nuclear." },
+      { question: "A government economist calculates the 'true cost' of coal electricity at three times its market price when health impacts from air pollution and climate damages are included. This difference is BEST described as:", options: ["A production subsidy that reduces the profitability of coal mining operations", "A negative externality — costs imposed on society not reflected in the price paid by electricity consumers", "A rebound effect in which cheap electricity encourages overuse of coal-powered devices", "A net energy calculation showing that coal's EROI has declined over time"], correct: 1, explanation: "A negative externality is a cost borne by third parties not included in the market transaction. Coal's market price reflects extraction and generation costs but not health damages, climate adaptation costs, or ecosystem losses imposed on the broader public. Policies like carbon taxes attempt to 'internalize' these externalities by making emitters pay part of the social cost." },
+      { question: "A utility company installs pumped storage hydro near a wind farm. When wind generation exceeds demand, water is pumped uphill; when demand spikes, water flows back through turbines. This MOST directly addresses:", options: ["The geographic mismatch between wind resources and population centers requiring new transmission", "The intermittency of wind energy — providing dispatchable storage to release power when wind is calm or demand peaks", "Bird and bat mortality caused by wind turbines in migration corridors", "The high capital cost of wind turbines by generating additional revenue from water management"], correct: 1, explanation: "Pumped storage is the most-deployed form of grid-scale energy storage. It converts intermittent wind surplus into dispatchable hydro power. When wind isn't blowing and demand rises, stored water is released. This is exactly the mechanism for managing the intermittency problem that otherwise limits wind and solar's grid contribution without storage backup." },
+      { question: "Hydraulic fracturing enabled major increases in U.S. natural gas production. Which environmental concern is MOST directly linked to wastewater DISPOSAL from fracking — not the fracturing process itself?", options: ["Groundwater contamination from well casing failures during fracturing", "Induced seismicity (earthquakes) from injecting large volumes of produced wastewater into deep disposal wells", "High water consumption from local surface water sources used for fracturing fluid", "Methane leakage from wellhead equipment and compressor stations"], correct: 1, explanation: "Induced seismicity is specifically linked to deep injection wells for wastewater disposal — not the fracking process itself. Produced water is pumped under pressure into porous rock formations, lubricating existing faults and triggering earthquakes. Oklahoma experienced a dramatic increase in 4.0+ magnitude events correlated with wastewater injection wells during the shale boom — a documented, well-studied pattern." },
+      { question: "A low-income neighborhood adjacent to a coal-fired power plant has significantly higher rates of asthma and cardiovascular disease than the city average. A policy analyst calls this an 'environmental justice' issue. What does that specifically mean?", options: ["The neighborhood hasn't adopted enough renewable energy and is falling behind in the energy transition", "The pollution burden from the power plant is disproportionately borne by a low-income community that had little political power to prevent the plant's siting — a distributional inequity in environmental harm", "The plant is legally violating emission standards and should be subject to enforcement", "The community's health problems are caused by lack of access to healthcare, not the power plant"], correct: 1, explanation: "Environmental justice addresses the unequal distribution of environmental harms. Fossil fuel infrastructure is disproportionately sited near communities with less political and economic power to oppose it. These communities bear the pollution, health costs, and property value losses while deriving less economic benefit. A just energy transition must address historic siting inequities and route economic benefits — jobs, tax revenue, clean infrastructure — to frontline communities." },
+      { question: "A student says 'solar panels are completely clean because they don't emit anything when generating electricity.' Which response MOST accurately evaluates this claim?", options: ["The student is correct — the absence of combustion means solar PV has no environmental impact at any stage", "The student is partially correct: PV produces no air pollution during operation, but manufacturing requires energy (often fossil-fueled), uses hazardous materials, and panel disposal at end of life raises waste concerns", "The student is incorrect because solar panels release CO₂ during electricity generation", "The student is incorrect because solar panels require nuclear energy to manufacture"], correct: 1, explanation: "Life-cycle analysis is key. Solar PV generates electricity without combustion — that part is correct. But manufacturing is energy-intensive (currently often fossil-fueled), panels contain cadmium, lead, and silicon requiring safe handling, and 25–30-year-old panels are now reaching end of life raising recycling and disposal questions. 'No emissions during operation' ≠ 'zero environmental impact across the full life cycle.'" },
+      { question: "A city wants to reduce electricity demand during peak afternoon hours without building new power plants. Which strategy uses 'demand response' — adjusting when customers use electricity — rather than increasing supply?", options: ["Building a new natural gas peaker plant that can ramp output within minutes to match demand spikes", "Installing a smart grid with dynamic pricing that charges higher rates during peak hours, incentivizing customers to shift laundry, dishwashers, and EV charging to off-peak times", "Expanding rooftop solar on commercial buildings to generate more electricity during daytime", "Upgrading transmission to import power from a neighboring region when local demand peaks"], correct: 1, explanation: "Demand response adjusts when consumers use energy rather than when utilities generate it. Dynamic (time-of-use) pricing creates economic incentives to shift flexible loads to off-peak times. This flattens the demand curve, reducing the need for expensive, polluting peaker plants. Smart meters and smart grids enable real-time pricing and automated appliance response — a cost-effective grid management tool." },
+    ];
+
+    const nav = document.getElementById("sidebarNav"), mainEl = document.getElementById("main"), ambientOverlay = document.getElementById("ambientOverlay"), cursor = document.getElementById("cursor"), pinBtn = document.getElementById("pinBtn"), sidebar = document.getElementById("sidebar"), apToggleBtn = document.getElementById("apToggleBtn"), bestScoreEl = document.getElementById("bestScore"), themeToggleBtn = document.getElementById("themeToggleBtn"), themeLabel = document.getElementById("themeLabel");
+    let currentTab = "dashboard", quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() { nav.innerHTML = tabs.map(t => `<button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button"><span class="nav-indicator"></span><span class="nav-icon">${t.icon}</span><span class="nav-label">${t.label}</span></button>`).join("") }
+
+    function switchTab(id) { currentTab = id; document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id)); document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id)); const t = tabs.find(x => x.id === id); if (t) ambientOverlay.style.background = t.ambient; mainEl.scrollTo({ top: 0, behavior: "smooth" }) }
+
+    function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
+
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
+
+    function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
+
+    function selectEssay(i, outlineId) { document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i)); const o = essayOutlines[i], ol = document.getElementById(outlineId); if (ol) { ol.innerHTML = o.blocks.map(([l, b]) => `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join(""); ol.classList.add("show") } }
+
+    function renderQuizQuestion() { const qm = document.getElementById("quizMount"), q = quizQuestions[quizIndex]; if (!q) { const pct = Math.round((quizScore / quizQuestions.length) * 100), prev = Number(localStorage.getItem("apes_u6_best") || 0), best = Math.max(prev, pct); localStorage.setItem("apes_u6_best", String(best)); bestScoreEl.textContent = best + "%"; qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review thermodynamics, fossil fuel impacts, renewables, nuclear, and policy if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`; return } quizLocked = false; qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>` }
+
+    function openModal(id) { document.getElementById(id).classList.add("open") }
+    function closeModal(id) { document.getElementById(id).classList.remove("open") }
+    function initBestScore() { const b = localStorage.getItem("apes_u6_best"); bestScoreEl.textContent = b ? b + "%" : "--" }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => { if (!window.matchMedia("(pointer:fine)").matches) return; cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px" });
+    document.addEventListener("mouseover", e => { if (!window.matchMedia("(pointer:fine)").matches) return; const s = e.target.closest("button,a,.flash-card,.glossary-card") ? "18px" : "10px"; cursor.style.width = s; cursor.style.height = s });
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin" });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab) });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100) } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped") });
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus() });
+    document.getElementById("sbInput").addEventListener("input", e => { const q = e.target.value.toLowerCase().trim(), m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8); document.getElementById("sbResults").innerHTML = m.length ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>` });
+    document.getElementById("sbResults").addEventListener("click", e => { const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return; switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open"); document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = ""; if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm) } });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab) });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active") });
+    themeToggleBtn.addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); themeLabel.textContent = off ? "Theme Off" : "Theme On" });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal") });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal") });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline") });
+    document.getElementById("quizMount").addEventListener("click", e => { const opt = e.target.closest(".quiz-option"); if (opt && !quizLocked) { quizLocked = true; const q = quizQuestions[quizIndex], sel = Number(opt.dataset.optionIndex); document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong") }); if (sel === q.correct) quizScore++; document.getElementById("quizFeedback").textContent = q.explanation; document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>` } if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion() } if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion() } });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
+    mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
+    switchTab("dashboard");
+  </script>
+</body>
+
+</html>
