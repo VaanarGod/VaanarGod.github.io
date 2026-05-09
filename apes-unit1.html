@@ -33,7 +33,8 @@
       --blue: #5b8fd4;
       --red: #d95f5f;
       --orange: #e07840;
-      --accent: #5dbf6e;    }
+      --accent: #5dbf6e;
+    }
 
     html {
       scroll-behavior: smooth;
@@ -50,58 +51,6 @@
     }
 
     /* Grid overlay */
-        body.theme-off {
-      --bg: #000;
-      --card: #0d0d0d;
-      --card2: #151515;
-      --border: rgba(255, 255, 255, .07);
-      --text: #dde3ec;
-    }
-
-    #themeToggleBtn {
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, .15);
-      background: rgba(255, 255, 255, .04);
-      color: var(--text);
-      padding: 9px 16px;
-      font-family: "DM Mono", monospace;
-      font-size: 9px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      cursor: none;
-      backdrop-filter: blur(12px);
-      transition: border-color .2s, color .2s, background .2s;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #themeToggleBtn:hover {
-      background: rgba(255, 255, 255, .08);
-    }
-
-    .theme-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 0;
-      transform: rotate(45deg);
-      background: var(--cyan);
-      display: inline-block;
-      transition: background .4s;
-      flex-shrink: 0;
-    }
-
-    body.theme-off #themeToggleBtn {
-      background: rgba(255, 255, 255, .04);
-      color: #bbb;
-      border-color: rgba(255, 255, 255, .15);
-    }
-
-    body.theme-off .theme-dot {
-      background: #bbb;
-    }
-
     body::before {
       content: '';
       position: fixed;
@@ -1422,10 +1371,7 @@
         <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
         <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
         <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
-        <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
-        <a class="glass-btn" href="apes-unit6.html">Unit 6</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
-        <button class="glass-btn" id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
       </div>
@@ -1449,12 +1395,10 @@
               climate change, resource depletion — can only be analyzed after you understand how ecosystems
               <em>normally</em> work. That means mastering <strong class="ap-term">energy flow</strong>, <strong
                 class="ap-term">nutrient cycling</strong>, <strong class="ap-term">limiting factors</strong>, and
-              <strong class="ap-term">trophic dynamics</strong>.
-            </p>
+              <strong class="ap-term">trophic dynamics</strong>.</p>
             <p>The big organizing idea: <strong class="ap-term">energy flows one-way</strong> through ecosystems, while
               <strong class="ap-term">matter cycles</strong> repeatedly. Get this right and eutrophication,
-              biomagnification, and productivity questions become predictable.
-            </p>
+              biomagnification, and productivity questions become predictable.</p>
           </div>
           <div class="dash-stats">
             <div class="stat-box"><span>Study Sections</span><strong>8</strong></div>
@@ -2366,19 +2310,6 @@
     const pinBtn = document.getElementById("pinBtn");
     const sidebar = document.getElementById("sidebar");
     const apToggleBtn = document.getElementById("apToggleBtn");
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    const bestScoreEl = document.getElementById("bestScore");
-    let currentTab = "dashboard";
-    let quizIndex = 0;
-    let quizScore = 0;
-    let quizLocked = false;    const themeLabel = document.getElementById("themeLabel");
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener("click", () => {
-        const off = document.body.classList.toggle("theme-off");
-        themeLabel.textContent = off ? "Theme Off" : "Theme On";
-      });
-    }
-
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";
     let quizIndex = 0, quizScore = 0, quizLocked = false;

@@ -33,7 +33,8 @@
       --blue: #7b8fd4;
       --red: #d95f6f;
       --orange: #e0884a;
-      --accent: #38bcd4;    }
+      --accent: #38bcd4;
+    }
 
     html {
       scroll-behavior: smooth;
@@ -47,58 +48,6 @@
       font-family: 'Space Grotesk', sans-serif;
       overflow: hidden;
       cursor: none;
-    }
-
-        body.theme-off {
-      --bg: #000;
-      --card: #0d0d0d;
-      --card2: #151515;
-      --border: rgba(255, 255, 255, .07);
-      --text: #dde3ec;
-    }
-
-    #themeToggleBtn {
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, .15);
-      background: rgba(255, 255, 255, .04);
-      color: var(--text);
-      padding: 9px 16px;
-      font-family: "DM Mono", monospace;
-      font-size: 9px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      cursor: none;
-      backdrop-filter: blur(12px);
-      transition: border-color .2s, color .2s, background .2s;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #themeToggleBtn:hover {
-      background: rgba(255, 255, 255, .08);
-    }
-
-    .theme-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 0;
-      transform: rotate(45deg);
-      background: var(--cyan);
-      display: inline-block;
-      transition: background .4s;
-      flex-shrink: 0;
-    }
-
-    body.theme-off #themeToggleBtn {
-      background: rgba(255, 255, 255, .04);
-      color: #bbb;
-      border-color: rgba(255, 255, 255, .15);
-    }
-
-    body.theme-off .theme-dot {
-      background: #bbb;
     }
 
     body::before {
@@ -1447,10 +1396,7 @@
         <a class="glass-btn" href="apes-unit2.html" style="color:var(--g);border-color:rgba(56,188,212,.32);">Unit 2</a>
         <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
         <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
-        <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
-        <a class="glass-btn" href="apes-unit6.html">Unit 6</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
-        <button class="glass-btn" id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
       </div>
@@ -1663,8 +1609,7 @@
                   individuals survive disease, climate shifts, etc. <strong class="ap-term">Population
                     bottleneck</strong>: catastrophic reduction shrinks the gene pool, increasing inbreeding risk.
                   <strong class="ap-term">MVP</strong>: minimum viable population — smallest size at which a population
-                  can persist without extinction risk from random events.
-                </div>
+                  can persist without extinction risk from random events.</div>
               </div>
               <div class="mini-note"><strong>Species Diversity</strong>
                 <div class="body-copy"><strong class="ap-term">Species richness</strong>: number of different species in
@@ -1772,8 +1717,7 @@
                 unsuitable habitat — a forest fragment surrounded by farmland functions as an island for forest species.
                 <strong class="ap-term">Island biogeography theory</strong> predicts that species richness on an island
                 reflects a balance between <strong class="ap-term">immigration</strong> (new species arriving) and
-                <strong class="ap-term">extinction</strong> (species disappearing).
-              </p>
+                <strong class="ap-term">extinction</strong> (species disappearing).</p>
             </div>
             <div class="note-grid">
               <div class="mini-note"><strong>Island Size Effect</strong>
@@ -1903,8 +1847,7 @@
                   class="ap-term">nutrient levels</strong>, and <strong class="ap-term">water movement</strong>. The
                 <strong class="ap-term">photic zone</strong> has enough light for photosynthesis; the <strong
                   class="ap-term">aphotic zone</strong> does not. Light strongly shapes aquatic productivity since food
-                webs begin with photosynthetic producers.
-              </p>
+                webs begin with photosynthetic producers.</p>
             </div>
             <h4>Freshwater Systems</h4>
             <div class="note-grid">
@@ -2021,8 +1964,7 @@
                 <div class="body-copy"><strong class="ap-term">Episodic</strong>: irregular intervals (El Niño/La Niña).
                   <strong class="ap-term">Periodic</strong>: repeated intervals (tides). <strong
                     class="ap-term">Random</strong>: no pattern (meteorite impacts). Scale and pattern affect which
-                  species adapt and how ecosystems recover.
-                </div>
+                  species adapt and how ecosystems recover.</div>
               </div>
             </div>
           </article>
@@ -2363,19 +2305,6 @@
     const pinBtn = document.getElementById("pinBtn");
     const sidebar = document.getElementById("sidebar");
     const apToggleBtn = document.getElementById("apToggleBtn");
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    const bestScoreEl = document.getElementById("bestScore");
-    let currentTab = "dashboard";
-    let quizIndex = 0;
-    let quizScore = 0;
-    let quizLocked = false;    const themeLabel = document.getElementById("themeLabel");
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener("click", () => {
-        const off = document.body.classList.toggle("theme-off");
-        themeLabel.textContent = off ? "Theme Off" : "Theme On";
-      });
-    }
-
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";
     let quizIndex = 0, quizScore = 0, quizLocked = false;

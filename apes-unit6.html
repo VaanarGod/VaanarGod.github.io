@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -42,27 +42,7 @@
       --progress-bar: linear-gradient(90deg, #4a9eff, #7b5ff7);
     }
 
-    body.theme-off {
-      --bg: #000;
-      --card: #0d0d0d;
-      --card2: #151515;
-      --border: rgba(255, 255, 255, .07);
-      --text: #e0e0e0;
-      --muted: #555;
-      --g: #aaa;
-      --g2: #999;
-      --g3: #888;
-      --gold: #bbb;
-      --blue: #aaa;
-      --red: #c06060;
-      --teal: #70b0a0;
-      --accent: #aaa;
-      --body-copy-color: #777;
-      --mini-note-body: #555;
-      --code-bg: #0a0a0a;
-      --code-border: rgba(255, 255, 255, .08);
-      --code-color: #999;
-      --progress-bar: linear-gradient(90deg, #666, #999);    }
+    
 
     html {
       scroll-behavior: smooth
@@ -138,9 +118,7 @@
       z-index: 0
     }
 
-    body.theme-off #ambientOverlay {
-      opacity: 0
-    }
+    
 
     #sidebar {
       width: 72px;
@@ -567,6 +545,33 @@
       background: rgba(74, 158, 255, .08)
     }
 
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #e0e0e0;
+      --muted: #555;
+      --g: #aaa;
+      --g2: #999;
+      --g3: #888;
+      --gold: #bbb;
+      --blue: #aaa;
+      --red: #c06060;
+      --teal: #70b0a0;
+      --accent: #aaa;
+      --body-copy-color: #777;
+      --mini-note-body: #555;
+      --code-bg: #0a0a0a;
+      --code-border: rgba(255, 255, 255, .08);
+      --code-color: #999;
+      --progress-bar: linear-gradient(90deg, #666, #999);
+    }
+
+    body.theme-off #ambientOverlay {
+      opacity: 0;
+    }
+
     #themeToggleBtn {
       border-radius: 20px;
       border: 1px solid rgba(74, 158, 255, .35);
@@ -610,6 +615,7 @@
     body.theme-off .theme-dot {
       background: #555
     }
+
 
     .tab-content {
       display: none;
@@ -1302,7 +1308,52 @@
         grid-template-columns: 1fr
       }
     }
-  </style>
+  
+
+    /* Codex fix: restore native cursor and disable decorative cursor layer */
+    html, body {
+      cursor: auto !important;
+    }
+
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    .glass-btn,
+    .nav-btn,
+    .sb-search-trigger,
+    .note-jump,
+    .flip-card,
+    .dash-tab-card,
+    .dash-action-btn,
+    .hub-card,
+    .hub-btn,
+    .modal-opt,
+    .modal-close,
+    .modal-next,
+    .drill-close,
+    .drill-card,
+    .drill-flip-btn,
+    .drill-btn,
+    .essay-btn,
+    .essay-topic-btn,
+    .dyk-dismiss,
+    .dyk-next,
+    #apToggleBtn,
+    #scoreTracker,
+    #themeToggleBtn,
+    #pinBtn {
+      cursor: pointer !important;
+    }
+
+    #cursor,
+    #cursor-glow {
+      display: none !important;
+    }
+
+</style>
 </head>
 
 <body>
@@ -1349,8 +1400,7 @@
         <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
-        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme
-            On</span></button>
+        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
       </div>
     </div>
 
@@ -2202,14 +2252,6 @@
     ];
 
     const nav = document.getElementById("sidebarNav"), mainEl = document.getElementById("main"), ambientOverlay = document.getElementById("ambientOverlay"), cursor = document.getElementById("cursor"), pinBtn = document.getElementById("pinBtn"), sidebar = document.getElementById("sidebar"), apToggleBtn = document.getElementById("apToggleBtn"), bestScoreEl = document.getElementById("bestScore"), themeToggleBtn = document.getElementById("themeToggleBtn"), themeLabel = document.getElementById("themeLabel");
-        const themeToggleBtn = document.getElementById("themeToggleBtn");    const themeLabel = document.getElementById("themeLabel");
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener("click", () => {
-        const off = document.body.classList.toggle("theme-off");
-        themeLabel.textContent = off ? "Theme Off" : "Theme On";
-      });
-    }
-
     let currentTab = "dashboard", quizIndex = 0, quizScore = 0, quizLocked = false;
 
     function renderNav() { nav.innerHTML = tabs.map(t => `<button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button"><span class="nav-indicator"></span><span class="nav-icon">${t.icon}</span><span class="nav-label">${t.label}</span></button>`).join("") }
@@ -2244,7 +2286,7 @@
     document.getElementById("sbResults").addEventListener("click", e => { const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return; switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open"); document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = ""; if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm) } });
     document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab) });
     apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active") });
-    themeToggleBtn.addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); themeLabel.textContent = off ? "Theme Off" : "Theme On" });
+    
     document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal") });
     document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal") });
     document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline") });
@@ -2253,7 +2295,9 @@
     document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
     mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
     switchTab("dashboard");
-  </script>
+      
+    document.getElementById("themeToggleBtn").addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); document.getElementById("themeLabel").textContent = off ? "Theme Off" : "Theme On" });
+</script>
 </body>
 
 </html>

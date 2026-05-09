@@ -33,7 +33,8 @@
       --blue: #6abed4;
       --red: #d95f5f;
       --teal: #4abca8;
-      --accent: #e8924a;    }
+      --accent: #e8924a;
+    }
 
     html {
       scroll-behavior: smooth;
@@ -47,58 +48,6 @@
       font-family: 'Space Grotesk', sans-serif;
       overflow: hidden;
       cursor: none;
-    }
-
-        body.theme-off {
-      --bg: #000;
-      --card: #0d0d0d;
-      --card2: #151515;
-      --border: rgba(255, 255, 255, .07);
-      --text: #dde3ec;
-    }
-
-    #themeToggleBtn {
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, .15);
-      background: rgba(255, 255, 255, .04);
-      color: var(--text);
-      padding: 9px 16px;
-      font-family: "DM Mono", monospace;
-      font-size: 9px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      cursor: none;
-      backdrop-filter: blur(12px);
-      transition: border-color .2s, color .2s, background .2s;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #themeToggleBtn:hover {
-      background: rgba(255, 255, 255, .08);
-    }
-
-    .theme-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 0;
-      transform: rotate(45deg);
-      background: var(--cyan);
-      display: inline-block;
-      transition: background .4s;
-      flex-shrink: 0;
-    }
-
-    body.theme-off #themeToggleBtn {
-      background: rgba(255, 255, 255, .04);
-      color: #bbb;
-      border-color: rgba(255, 255, 255, .15);
-    }
-
-    body.theme-off .theme-dot {
-      background: #bbb;
     }
 
     body::before {
@@ -1447,10 +1396,7 @@
         <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
         <a class="glass-btn" href="apes-unit3.html" style="color:var(--g);border-color:rgba(232,146,74,.32);">Unit 3</a>
         <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
-        <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
-        <a class="glass-btn" href="apes-unit6.html">Unit 6</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
-        <button class="glass-btn" id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
       </div>
@@ -1746,8 +1692,7 @@
               <div class="mini-note"><strong>Type I — Late Loss</strong>
                 <div class="body-copy">High survival through early and middle life; steep drop in old age. Few
                   offspring, high parental care, long-lived. Deaths concentrated near biological limit. Examples:
-                  <strong class="ap-term">humans, sheep, elephants</strong>. Associated with K-strategies.
-                </div>
+                  <strong class="ap-term">humans, sheep, elephants</strong>. Associated with K-strategies.</div>
               </div>
               <div class="mini-note"><strong>Type II — Constant Loss</strong>
                 <div class="body-copy">Roughly constant mortality at every age → steady decline. Predation often drives
@@ -1789,8 +1734,7 @@
               <div class="mini-note"><strong>Density-Independent Factors</strong>
                 <div class="body-copy">Effects unrelated to population density. Drought, floods, hurricanes, temperature
                   extremes, pollution, volcanic eruptions. Can cause large crashes regardless of population size.
-                  <strong>Never call these density-dependent</strong> on the exam.
-                </div>
+                  <strong>Never call these density-dependent</strong> on the exam.</div>
               </div>
               <div class="mini-note"><strong>Bottom-Up Control</strong>
                 <div class="body-copy">Population regulated by resource availability (food, nutrients, habitat). If
@@ -2072,8 +2016,7 @@
                 degraded), <strong class="ap-term">fisheries and coasts</strong> (estuaries drained, fish stocks
                 declining), and <strong class="ap-term">public health</strong> (12+ million die/year from dirty water
                 and poor sanitation). Remember: population size alone doesn't determine impact — per-capita consumption
-                multiplies the effect.
-              </p>
+                multiplies the effect.</p>
             </div>
           </article>
 
@@ -2346,19 +2289,6 @@
     const pinBtn = document.getElementById("pinBtn");
     const sidebar = document.getElementById("sidebar");
     const apToggleBtn = document.getElementById("apToggleBtn");
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    const bestScoreEl = document.getElementById("bestScore");
-    let currentTab = "dashboard";
-    let quizIndex = 0;
-    let quizScore = 0;
-    let quizLocked = false;    const themeLabel = document.getElementById("themeLabel");
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener("click", () => {
-        const off = document.body.classList.toggle("theme-off");
-        themeLabel.textContent = off ? "Theme Off" : "Theme On";
-      });
-    }
-
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";
     let quizIndex = 0, quizScore = 0, quizLocked = false;
