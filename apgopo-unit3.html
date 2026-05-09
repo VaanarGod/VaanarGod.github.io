@@ -30,16 +30,7 @@
       --blue: #5b8fd4;
       --red: #d95f5f;
       --orange: #f28749;
-      --purple: #9b86f4;
-          --light-bg: #f7f8fb;
-      --light-card: #ffffff;
-      --light-card2: #f2f4f8;
-      --light-border: rgba(15, 23, 42, .08);
-      --light-text: #111827;
-      --light-muted: #6b7280;
-      --light-cyan: #2563eb;
-      --light-teal: #0f766e;
-    }
+      --purple: #9b86f4;    }
 
     html {
       scroll-behavior: smooth;
@@ -55,23 +46,56 @@
       cursor: none;
     }
 
-    body.light-theme {
-      background: var(--light-bg);
-      color: var(--light-text);
+        body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #dde3ec;
     }
 
-    body.light-theme .topbar,
-    body.light-theme .glass-btn,
-    body.light-theme #scoreTracker,
-    body.light-theme .course-link {
-      background: rgba(255, 255, 255, .86);
-      border-color: var(--light-border);
-      color: var(--light-text);
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, .15);
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      padding: 9px 16px;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    body.light-theme .glass-btn:hover,
-    body.light-theme .course-link:hover {
-      background: rgba(255, 255, 255, .95);
+    #themeToggleBtn:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .theme-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 0;
+      transform: rotate(45deg);
+      background: var(--cyan);
+      display: inline-block;
+      transition: background .4s;
+      flex-shrink: 0;
+    }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255, 255, 255, .04);
+      color: #bbb;
+      border-color: rgba(255, 255, 255, .15);
+    }
+
+    body.theme-off .theme-dot {
+      background: #bbb;
     }
 
     body::before {
@@ -1319,7 +1343,7 @@
         <a class="glass-btn course-link" href="apgopo-unit2.html">Unit 2</a>
         <a class="glass-btn course-link" href="apgopo-unit3.html">Unit 3</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
-        <button class="glass-btn" id="themeToggleBtn" type="button">Toggle Theme</button>
+        <button class="glass-btn" id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
       </div>
@@ -2577,30 +2601,13 @@
     let currentTab = "dashboard";
     let quizIndex = 0;
     let quizScore = 0;
-    let quizLocked = false;
-    const themeStorageKey = "siteTheme";
-
-    function setTheme(theme) {
-      document.body.classList.toggle("light-theme", theme === "light");
-      localStorage.setItem(themeStorageKey, theme);
-      if (themeToggleBtn) {
-        themeToggleBtn.textContent = theme === "light" ? "Light Theme" : "Dark Theme";
-      }
+    let quizLocked = false;    const themeLabel = document.getElementById("themeLabel");
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener("click", () => {
+        const off = document.body.classList.toggle("theme-off");
+        themeLabel.textContent = off ? "Theme Off" : "Theme On";
+      });
     }
-
-    function initializeTheme() {
-      const savedTheme = localStorage.getItem(themeStorageKey);
-      setTheme(savedTheme === "light" ? "light" : "dark");
-
-      if (themeToggleBtn) {
-        themeToggleBtn.addEventListener("click", () => {
-          const nextTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
-          setTheme(nextTheme);
-        });
-      }
-    }
-
-    initializeTheme();
 
     const bestScoreEl = document.getElementById("bestScore");
     let currentTab = "dashboard";

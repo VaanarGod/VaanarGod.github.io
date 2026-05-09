@@ -62,16 +62,7 @@
       --code-bg: #0a0a0a;
       --code-border: rgba(255, 255, 255, .08);
       --code-color: #aaa;
-      --progress-bar: linear-gradient(90deg, #888, #aaa);
-          --light-bg: #f7f8fb;
-      --light-card: #ffffff;
-      --light-card2: #f2f4f8;
-      --light-border: rgba(15, 23, 42, .08);
-      --light-text: #111827;
-      --light-muted: #6b7280;
-      --light-cyan: #2563eb;
-      --light-teal: #0f766e;
-    }
+      --progress-bar: linear-gradient(90deg, #888, #aaa);    }
 
     html {
       scroll-behavior: smooth;
@@ -86,25 +77,6 @@
       overflow: hidden;
       cursor: none;
       transition: background .4s, color .4s;
-    }
-
-    body.light-theme {
-      background: var(--light-bg);
-      color: var(--light-text);
-    }
-
-    body.light-theme .topbar,
-    body.light-theme .glass-btn,
-    body.light-theme #scoreTracker,
-    body.light-theme .course-link {
-      background: rgba(255, 255, 255, .86);
-      border-color: var(--light-border);
-      color: var(--light-text);
-    }
-
-    body.light-theme .glass-btn:hover,
-    body.light-theme .course-link:hover {
-      background: rgba(255, 255, 255, .95);
     }
 
     body::before {
@@ -2345,30 +2317,13 @@
     let currentTab = "dashboard";
     let quizIndex = 0;
     let quizScore = 0;
-    let quizLocked = false;
-    const themeStorageKey = "siteTheme";
-
-    function setTheme(theme) {
-      document.body.classList.toggle("light-theme", theme === "light");
-      localStorage.setItem(themeStorageKey, theme);
-      if (themeToggleBtn) {
-        themeToggleBtn.textContent = theme === "light" ? "Light Theme" : "Dark Theme";
-      }
+    let quizLocked = false;    const themeLabel = document.getElementById("themeLabel");
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener("click", () => {
+        const off = document.body.classList.toggle("theme-off");
+        themeLabel.textContent = off ? "Theme Off" : "Theme On";
+      });
     }
-
-    function initializeTheme() {
-      const savedTheme = localStorage.getItem(themeStorageKey);
-      setTheme(savedTheme === "light" ? "light" : "dark");
-
-      if (themeToggleBtn) {
-        themeToggleBtn.addEventListener("click", () => {
-          const nextTheme = document.body.classList.contains("light-theme") ? "dark" : "light";
-          setTheme(nextTheme);
-        });
-      }
-    }
-
-    initializeTheme();
 
     const bestScoreEl = document.getElementById("bestScore");
     const themeToggleBtn = document.getElementById("themeToggleBtn");
