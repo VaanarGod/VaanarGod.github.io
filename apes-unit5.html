@@ -1249,30 +1249,45 @@
 
     /* NOTE JUMP LINKS */
     .note-jump {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      padding: 8px 10px;
-      border: none;
+      background: none;
+      border: 1px solid var(--border);
       border-radius: 8px;
-      background: transparent;
+      padding: 6px 12px;
       color: var(--muted);
       font-family: 'DM Mono', monospace;
       font-size: 9px;
-      letter-spacing: .1em;
+      letter-spacing: .16em;
       text-transform: uppercase;
       cursor: none;
-      transition: background .18s, color .18s;
+      transition: border-color .2s, color .2s;
+      margin: 3px
     }
 
     .note-jump:hover {
-      background: rgba(var(--g-rgb, 200, 147, 74), .06);
       color: var(--g);
+      border-color: rgba(200, 147, 74, .28)
     }
 
-    
-    /* ── NOTES SHELL (sticky sidebar) ── */
+    .notes-toc {
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    @media(max-width:900px) {
+      #main {
+        padding: 20px 18px 60px
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* ── NOTES SIDEBAR ── */
     .notes-shell {
       display: grid;
       grid-template-columns: 196px 1fr;
@@ -1289,7 +1304,7 @@
       padding: 18px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
     .notes-index-title {
@@ -1298,23 +1313,67 @@
       letter-spacing: .28em;
       text-transform: uppercase;
       color: var(--muted);
-      padding: 0 6px;
-      margin-bottom: 8px;
+      padding: 0 8px;
+      margin-bottom: 10px;
+    }
+
+    .notes-index .note-jump {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .18s, color .18s;
+      margin: 0;
+    }
+
+    .notes-index .note-jump:hover {
+      background: rgba(200, 147, 74, .08);
+      color: var(--g);
+    }
+
+    .notes-index .note-jump.active {
+      background: rgba(200, 147, 74, .1);
+      color: var(--g);
+    }
+
+    .notes-index .note-jump span:last-child {
+      color: var(--g);
+      opacity: .35;
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      flex-shrink: 0;
     }
 
     .notes-stack {
       display: flex;
       flex-direction: column;
       gap: 22px;
+      min-width: 0;
     }
 
     @media(max-width:900px) {
-      #main {
-        padding: 20px 18px 60px
+      .notes-shell {
+        grid-template-columns: 1fr;
       }
-
-      .hero-grid {
-        grid-template-columns: 1fr
+      .notes-index {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-radius: 12px;
+        gap: 4px;
+      }
+      .notes-index .note-jump span:last-child {
+        display: none;
       }
     }
   </style>
@@ -2001,7 +2060,9 @@
           </div>
         </article>
 
-    </section>
+        </div><!-- end notes-stack -->
+      </div><!-- end notes-shell -->
+</section>
 
     <!-- GLOSSARY -->
     <section class="tab-content" id="glossary">
@@ -2100,6 +2161,7 @@
             <li>Do NOT confuse with organic farming — nearly opposite approach</li>
           </ul>
         </article>
+      </div>
     </section>
 
   </main>
@@ -2315,11 +2377,7 @@
               <div class="flash-hint">Click to flip back</div>
             </div>
           </div>
-        </article>
-
-        </div><!-- end notes-stack -->
-      </div><!-- end notes-shell -->
-`).join("");
+        </article>`).join("");
     }
 
     function renderEssayTopics() {
@@ -2426,6 +2484,25 @@
 
     // Activate first tab initially
     switchTab("dashboard");
+  
+    // Highlight active section in notes-index
+    (function() {
+      const mainEl = document.getElementById('main');
+      if (!mainEl) return;
+      mainEl.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('.notes-stack .note-section');
+        const btns = document.querySelectorAll('.notes-index .note-jump');
+        let active = null;
+        sections.forEach(s => {
+          const rect = s.getBoundingClientRect();
+          if (rect.top <= 140) active = s.id;
+        });
+        btns.forEach(b => {
+          b.classList.toggle('active', b.dataset.noteTarget === active);
+        });
+      });
+    })();
+
   </script>
 </body>
 

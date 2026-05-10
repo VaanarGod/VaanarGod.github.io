@@ -943,27 +943,30 @@
       color: var(--mini-note-body)
     }
 
-    .note-jump {
+    .notes-toc {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      padding: 8px 10px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px
+    }
+
+    .note-jump {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
       color: var(--muted);
       font-family: 'Space Mono', monospace;
       font-size: 9px;
-      letter-spacing: .1em;
+      letter-spacing: .14em;
       text-transform: uppercase;
       cursor: none;
-      transition: background .18s, color .18s;
+      transition: border-color .2s, color .2s
     }
 
     .note-jump:hover {
-      background: rgba(var(--g-rgb, 200, 147, 74), .06);
       color: var(--g);
+      border-color: rgba(232, 146, 42, .3)
     }
 
     .code-block {
@@ -1319,7 +1322,7 @@
       }
     }
 
-    /* ── NOTES SHELL (sticky sidebar) ── */
+    /* ── NOTES SIDEBAR ── */
     .notes-shell {
       display: grid;
       grid-template-columns: 196px 1fr;
@@ -1336,7 +1339,7 @@
       padding: 18px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
     .notes-index-title {
@@ -1345,19 +1348,68 @@
       letter-spacing: .28em;
       text-transform: uppercase;
       color: var(--muted);
-      padding: 0 6px;
-      margin-bottom: 8px;
+      padding: 0 8px;
+      margin-bottom: 10px;
+    }
+
+    .notes-index .note-jump {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .18s, color .18s;
+      margin: 0;
+    }
+
+    .notes-index .note-jump:hover {
+      background: rgba(232, 146, 42, .08);
+      color: var(--g);
+    }
+
+    .notes-index .note-jump.active {
+      background: rgba(232, 146, 42, .1);
+      color: var(--g);
+    }
+
+    .notes-index .note-jump span:last-child {
+      color: var(--g);
+      opacity: .35;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      flex-shrink: 0;
     }
 
     .notes-stack {
       display: flex;
       flex-direction: column;
       gap: 22px;
+      min-width: 0;
     }
 
     @media(max-width:900px) {
-      .notes-shell { grid-template-columns: 1fr; }
-      .notes-index { position: static; }
+      .notes-shell {
+        grid-template-columns: 1fr;
+      }
+      .notes-index {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-radius: 12px;
+        gap: 4px;
+      }
+      .notes-index .note-jump span:last-child {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -2071,7 +2123,10 @@
             — not a direct regulation. NAAQS has primary (health) and secondary (welfare) standards.</div>
         </div>
       </article>
-    </section>
+
+        </div><!-- end notes-stack -->
+      </div><!-- end notes-shell -->
+</section>
 
     <!-- GLOSSARY -->
     <section class="tab-content" id="glossary">
@@ -2158,6 +2213,7 @@
             cause of lung cancer among non-smokers. Natural source, serious indoor hazard. The fix is ventilation, not
             eliminating the mineral.</div>
         </article>
+      </div>
     </section>
   </main>
 
@@ -2316,11 +2372,7 @@
 
     function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
 
-    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>
-
-        </div><!-- end notes-stack -->
-      </div><!-- end notes-shell -->
-`).join("") }
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
 
     function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
 
@@ -2355,6 +2407,25 @@
     document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
     mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
     switchTab("dashboard");
+  
+    // Highlight active section in notes-index
+    (function() {
+      const mainEl = document.getElementById('main');
+      if (!mainEl) return;
+      mainEl.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('.notes-stack .note-section');
+        const btns = document.querySelectorAll('.notes-index .note-jump');
+        let active = null;
+        sections.forEach(s => {
+          const rect = s.getBoundingClientRect();
+          if (rect.top <= 140) active = s.id;
+        });
+        btns.forEach(b => {
+          b.classList.toggle('active', b.dataset.noteTarget === active);
+        });
+      });
+    })();
+
   </script>
 </body>
 

@@ -781,27 +781,21 @@
     }
 
     .note-jump {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      padding: 8px 10px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: var(--muted);
+      display: inline-block;
       font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      letter-spacing: .1em;
+      font-size: 8px;
+      letter-spacing: .2em;
       text-transform: uppercase;
+      color: var(--g);
       cursor: none;
-      transition: background .18s, color .18s;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 10px;
+      transition: opacity .2s
     }
 
-    .note-jump:hover {
-      background: rgba(var(--g-rgb, 200, 147, 74), .06);
-      color: var(--g);
-    }
+    .note-jump:hover { opacity: .7 }
 
     /* ── NOTES ── */
     .note-section {
@@ -1167,7 +1161,7 @@
       }
     }
 
-    /* ── NOTES SHELL (sticky sidebar) ── */
+    /* ── NOTES SIDEBAR ── */
     .notes-shell {
       display: grid;
       grid-template-columns: 196px 1fr;
@@ -1184,7 +1178,7 @@
       padding: 18px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
 
     .notes-index-title {
@@ -1193,19 +1187,68 @@
       letter-spacing: .28em;
       text-transform: uppercase;
       color: var(--muted);
-      padding: 0 6px;
-      margin-bottom: 8px;
+      padding: 0 8px;
+      margin-bottom: 10px;
+    }
+
+    .notes-index .note-jump {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background .18s, color .18s;
+      margin: 0;
+    }
+
+    .notes-index .note-jump:hover {
+      background: rgba(224, 128, 48, .08);
+      color: var(--g);
+    }
+
+    .notes-index .note-jump.active {
+      background: rgba(224, 128, 48, .1);
+      color: var(--g);
+    }
+
+    .notes-index .note-jump span:last-child {
+      color: var(--g);
+      opacity: .35;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      flex-shrink: 0;
     }
 
     .notes-stack {
       display: flex;
       flex-direction: column;
       gap: 22px;
+      min-width: 0;
     }
 
     @media(max-width:900px) {
-      .notes-shell { grid-template-columns: 1fr; }
-      .notes-index { position: static; }
+      .notes-shell {
+        grid-template-columns: 1fr;
+      }
+      .notes-index {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-radius: 12px;
+        gap: 4px;
+      }
+      .notes-index .note-jump span:last-child {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -1367,8 +1410,6 @@
         <h2>Detailed Notes</h2>
         <p>Read, review, and reference · AP-tested concepts highlighted</p>
       </header>
-
-      <!-- 01 -->
 
       <div class="notes-shell">
         <aside class="notes-index">
@@ -1746,7 +1787,10 @@ Same molecule, opposite roles → altitude matters</div>
           <div class="body-copy">Adaptation (genetic, over generations) ≠ acclimatization (individual, within lifetime). Invasive species cause BOTH ecological AND economic/infrastructure damage (zebra mussels clog pipes). Habitat fragmentation blocks climate-driven range shifts — corridors are critical. Explain mechanism when proposing biodiversity strategies: how do sanctuaries or corridors reduce extinction risk?</div>
         </div>
       </article>
-    </section>
+
+        </div><!-- end notes-stack -->
+      </div><!-- end notes-shell -->
+</section>
 
     <!-- GLOSSARY -->
     <section class="tab-content" id="glossary">
@@ -1819,6 +1863,7 @@ Same molecule, opposite roles → altitude matters</div>
           <h3 class="card-title">Greenhouse Effect Mechanism</h3>
           <div class="body-copy">The greenhouse effect traps OUTGOING infrared radiation — it does NOT block incoming sunlight. Students often write "greenhouse gases block the sun." Wrong. Sunlight passes through freely; GHGs intercept the heat radiating outward from the warm surface.</div>
         </article>
+      </div>
     </section>
   </main>
 
@@ -1977,11 +2022,7 @@ Same molecule, opposite roles → altitude matters</div>
 
     function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
 
-    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>
-
-        </div><!-- end notes-stack -->
-      </div><!-- end notes-shell -->
-`).join("") }
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
 
     function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
 
@@ -2016,6 +2057,25 @@ Same molecule, opposite roles → altitude matters</div>
     document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
     mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
     switchTab("dashboard");
+  
+    // Highlight active section in notes-index
+    (function() {
+      const mainEl = document.getElementById('main');
+      if (!mainEl) return;
+      mainEl.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('.notes-stack .note-section');
+        const btns = document.querySelectorAll('.notes-index .note-jump');
+        let active = null;
+        sections.forEach(s => {
+          const rect = s.getBoundingClientRect();
+          if (rect.top <= 140) active = s.id;
+        });
+        btns.forEach(b => {
+          b.classList.toggle('active', b.dataset.noteTarget === active);
+        });
+      });
+    })();
+
   </script>
 </body>
 
