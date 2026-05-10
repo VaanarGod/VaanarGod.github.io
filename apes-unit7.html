@@ -943,30 +943,27 @@
       color: var(--mini-note-body)
     }
 
-    .notes-toc {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 28px
-    }
-
     .note-jump {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
       color: var(--muted);
       font-family: 'Space Mono', monospace;
       font-size: 9px;
-      letter-spacing: .14em;
+      letter-spacing: .1em;
       text-transform: uppercase;
       cursor: none;
-      transition: border-color .2s, color .2s
+      transition: background .18s, color .18s;
     }
 
     .note-jump:hover {
+      background: rgba(var(--g-rgb, 200, 147, 74), .06);
       color: var(--g);
-      border-color: rgba(232, 146, 42, .3)
     }
 
     .code-block {
@@ -1321,6 +1318,47 @@
         grid-template-columns: 1fr
       }
     }
+
+    /* ── NOTES SHELL (sticky sidebar) ── */
+    .notes-shell {
+      display: grid;
+      grid-template-columns: 196px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .notes-index {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notes-index-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 6px;
+      margin-bottom: 8px;
+    }
+
+    .notes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    @media(max-width:900px) {
+      .notes-shell { grid-template-columns: 1fr; }
+      .notes-index { position: static; }
+    }
   </style>
 </head>
 
@@ -1506,20 +1544,24 @@
         <h2>Unit 7 Deep Dive</h2>
         <p>Scroll through all topics · Use links to jump</p>
       </header>
-      <div class="notes-toc">
-        <button class="note-jump" data-note-target="n-basics">Air Pollution Basics</button>
-        <button class="note-jump" data-note-target="n-atmosphere">Atmospheric System</button>
-        <button class="note-jump" data-note-target="n-types">Pollutant Types</button>
-        <button class="note-jump" data-note-target="n-smog">Photochem Smog</button>
-        <button class="note-jump" data-note-target="n-industrial">Industrial Smog</button>
-        <button class="note-jump" data-note-target="n-acid">Acid Deposition</button>
-        <button class="note-jump" data-note-target="n-ozone">Ozone Depletion</button>
-        <button class="note-jump" data-note-target="n-indoor">Indoor Air</button>
-        <button class="note-jump" data-note-target="n-noise">Noise &amp; Light</button>
-        <button class="note-jump" data-note-target="n-policy">Policy &amp; Controls</button>
-      </div>
 
-      <article class="note-section accent-g" id="n-basics">
+      <div class="notes-shell">
+        <aside class="notes-index">
+          <div class="notes-index-title">Sections</div>
+          <button class="note-jump" type="button" data-note-target="n-basics"><span>Air Basics</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-atmosphere"><span>Atmosphere</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-types"><span>Pollutant Types</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-smog"><span>Photochem Smog</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-industrial"><span>Industrial Smog</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-acid"><span>Acid Deposition</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-ozone"><span>Ozone Depletion</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-indoor"><span>Indoor Air</span><span>08</span></button>
+          <button class="note-jump" type="button" data-note-target="n-noise"><span>Noise &amp; Light</span><span>09</span></button>
+          <button class="note-jump" type="button" data-note-target="n-policy"><span>Policy</span><span>10</span></button>
+        </aside>
+        <div class="notes-stack">
+
+<article class="note-section accent-g" id="n-basics">
         <div class="mini-label">01 · Introduction</div>
         <h3>Air Pollution Basics</h3>
         <div class="body-copy">
@@ -2116,7 +2158,6 @@
             cause of lung cancer among non-smokers. Natural source, serious indoor hazard. The fix is ventilation, not
             eliminating the mineral.</div>
         </article>
-      </div>
     </section>
   </main>
 
@@ -2275,7 +2316,11 @@
 
     function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
 
-    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>
+
+        </div><!-- end notes-stack -->
+      </div><!-- end notes-shell -->
+`).join("") }
 
     function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
 

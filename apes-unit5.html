@@ -1249,32 +1249,63 @@
 
     /* NOTE JUMP LINKS */
     .note-jump {
-      background: none;
-      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
       border-radius: 8px;
-      padding: 6px 12px;
+      background: transparent;
       color: var(--muted);
       font-family: 'DM Mono', monospace;
       font-size: 9px;
-      letter-spacing: .16em;
+      letter-spacing: .1em;
       text-transform: uppercase;
       cursor: none;
-      transition: border-color .2s, color .2s;
-      margin: 3px
+      transition: background .18s, color .18s;
     }
 
     .note-jump:hover {
+      background: rgba(var(--g-rgb, 200, 147, 74), .06);
       color: var(--g);
-      border-color: rgba(200, 147, 74, .28)
     }
 
-    .notes-toc {
-      margin-bottom: 24px;
+    
+    /* ── NOTES SHELL (sticky sidebar) ── */
+    .notes-shell {
+      display: grid;
+      grid-template-columns: 196px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .notes-index {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid var(--border)
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notes-index-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 6px;
+      margin-bottom: 8px;
+    }
+
+    .notes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
     }
 
     @media(max-width:900px) {
@@ -1443,24 +1474,25 @@
         <p>Scroll through all topics · Use links to jump</p>
       </header>
 
-      <div class="notes-toc">
-        <button class="note-jump" data-note-target="n-commons">Commons</button>
-        <button class="note-jump" data-note-target="n-forest">Forestry</button>
-        <button class="note-jump" data-note-target="n-agri">Agriculture</button>
-        <button class="note-jump" data-note-target="n-range">Rangelands</button>
-        <button class="note-jump" data-note-target="n-soil">Soil</button>
-        <button class="note-jump" data-note-target="n-irr">Irrigation</button>
-        <button class="note-jump" data-note-target="n-ipm">Pest Control / IPM</button>
-        <button class="note-jump" data-note-target="n-meat">Meat / CAFOs</button>
-        <button class="note-jump" data-note-target="n-fish">Fisheries</button>
-        <button class="note-jump" data-note-target="n-mining">Mining</button>
-        <button class="note-jump" data-note-target="n-urban">Urbanization</button>
-        <button class="note-jump" data-note-target="n-sustain">Sustainable Ag</button>
-      </div>
+      <div class="notes-shell">
+        <aside class="notes-index">
+          <div class="notes-index-title">Sections</div>
+          <button class="note-jump" type="button" data-note-target="n-commons"><span>Commons</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-forest"><span>Forestry</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-agri"><span>Agriculture</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-range"><span>Rangelands</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-soil"><span>Soil</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-irr"><span>Irrigation</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-ipm"><span>Pest Mgmt / IPM</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-meat"><span>Meat &amp; CAFOs</span><span>08</span></button>
+          <button class="note-jump" type="button" data-note-target="n-fish"><span>Fisheries</span><span>09</span></button>
+          <button class="note-jump" type="button" data-note-target="n-mining"><span>Mining</span><span>10</span></button>
+          <button class="note-jump" type="button" data-note-target="n-urban"><span>Urbanization</span><span>11</span></button>
+          <button class="note-jump" type="button" data-note-target="n-sustain"><span>Sustainable Ag</span><span>12</span></button>
+        </aside>
+        <div class="notes-stack">
 
-      <div>
-
-        <article class="note-section accent-g" id="n-commons">
+<article class="note-section accent-g" id="n-commons">
           <div class="mini-label">01 · Shared Resources</div>
           <h3>Tragedy of the Commons</h3>
           <div class="body-copy">
@@ -1969,7 +2001,6 @@
           </div>
         </article>
 
-      </div>
     </section>
 
     <!-- GLOSSARY -->
@@ -2069,7 +2100,6 @@
             <li>Do NOT confuse with organic farming — nearly opposite approach</li>
           </ul>
         </article>
-      </div>
     </section>
 
   </main>
@@ -2285,7 +2315,11 @@
               <div class="flash-hint">Click to flip back</div>
             </div>
           </div>
-        </article>`).join("");
+        </article>
+
+        </div><!-- end notes-stack -->
+      </div><!-- end notes-shell -->
+`).join("");
     }
 
     function renderEssayTopics() {

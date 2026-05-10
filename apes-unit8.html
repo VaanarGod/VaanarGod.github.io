@@ -798,40 +798,29 @@
     }
 
     .note-jump {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
       font-family: 'Space Mono', monospace;
       font-size: 9px;
-      letter-spacing: .14em;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      color: var(--g);
-      background: transparent;
-      border: none;
       cursor: none;
-      padding: 0;
-      transition: opacity .2s
+      transition: background .18s, color .18s;
     }
 
     .note-jump:hover {
-      opacity: .7
+      background: rgba(var(--g-rgb, 200, 147, 74), .06);
+      color: var(--g);
     }
 
     /* ── NOTES ── */
-    .notes-toc {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 28px
-    }
-
-    .notes-toc .note-jump {
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 7px 14px;
-      background: var(--card2)
-    }
-
-    .notes-toc .note-jump:hover {
-      border-color: rgba(42, 160, 220, .3)
-    }
 
     .note-section {
       background: var(--card);
@@ -1212,6 +1201,47 @@
         grid-template-columns: 1fr
       }
     }
+
+    /* ── NOTES SHELL (sticky sidebar) ── */
+    .notes-shell {
+      display: grid;
+      grid-template-columns: 196px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .notes-index {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notes-index-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 6px;
+      margin-bottom: 8px;
+    }
+
+    .notes-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    @media(max-width:900px) {
+      .notes-shell { grid-template-columns: 1fr; }
+      .notes-index { position: static; }
+    }
   </style>
 </head>
 
@@ -1393,22 +1423,27 @@
         <h2>Unit 8 Deep Dive</h2>
         <p>Scroll through all topics · Use links to jump</p>
       </header>
-      <div class="notes-toc">
-        <button class="note-jump" data-note-target="n-basics">Pollution Basics</button>
-        <button class="note-jump" data-note-target="n-waterquality">Water Quality</button>
-        <button class="note-jump" data-note-target="n-wastewater">Wastewater Treatment</button>
-        <button class="note-jump" data-note-target="n-eutrophication">Eutrophication</button>
-        <button class="note-jump" data-note-target="n-toxics">Toxic Chemicals</button>
-        <button class="note-jump" data-note-target="n-metals">Heavy Metals</button>
-        <button class="note-jump" data-note-target="n-oil">Oil Pollution</button>
-        <button class="note-jump" data-note-target="n-wetlands">Wetlands &amp; Mangroves</button>
-        <button class="note-jump" data-note-target="n-solidwaste">Solid Waste</button>
-        <button class="note-jump" data-note-target="n-hazwaste">Hazardous Waste</button>
-        <button class="note-jump" data-note-target="n-policy">Policy &amp; Solutions</button>
-      </div>
 
       <!-- 01 -->
-      <article class="note-section accent-g" id="n-basics">
+
+      <div class="notes-shell">
+        <aside class="notes-index">
+          <div class="notes-index-title">Sections</div>
+          <button class="note-jump" type="button" data-note-target="n-basics"><span>Pollution Basics</span><span>01</span></button>
+          <button class="note-jump" type="button" data-note-target="n-waterquality"><span>Water Quality</span><span>02</span></button>
+          <button class="note-jump" type="button" data-note-target="n-wastewater"><span>Wastewater</span><span>03</span></button>
+          <button class="note-jump" type="button" data-note-target="n-eutrophication"><span>Eutrophication</span><span>04</span></button>
+          <button class="note-jump" type="button" data-note-target="n-toxics"><span>Toxic Chemicals</span><span>05</span></button>
+          <button class="note-jump" type="button" data-note-target="n-metals"><span>Heavy Metals</span><span>06</span></button>
+          <button class="note-jump" type="button" data-note-target="n-oil"><span>Oil Pollution</span><span>07</span></button>
+          <button class="note-jump" type="button" data-note-target="n-wetlands"><span>Wetlands</span><span>08</span></button>
+          <button class="note-jump" type="button" data-note-target="n-solidwaste"><span>Solid Waste</span><span>09</span></button>
+          <button class="note-jump" type="button" data-note-target="n-hazwaste"><span>Hazardous Waste</span><span>10</span></button>
+          <button class="note-jump" type="button" data-note-target="n-policy"><span>Policy</span><span>11</span></button>
+        </aside>
+        <div class="notes-stack">
+
+<article class="note-section accent-g" id="n-basics">
         <div class="mini-label">01 · Introduction</div>
         <h3>Pollution Basics: Sources, Pathways &amp; Fate</h3>
         <div class="body-copy">
@@ -2104,7 +2139,6 @@
             filtration, and carbon storage. Wetland destruction has water quality consequences, not just ecological
             ones. Never call a wetland a "wasteland."</div>
         </article>
-      </div>
     </section>
   </main>
 
@@ -2269,7 +2303,11 @@
 
     function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
 
-    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>
+
+        </div><!-- end notes-stack -->
+      </div><!-- end notes-shell -->
+`).join("") }
 
     function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
 
