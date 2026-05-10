@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 9: Global Change</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #080604;
+      --card: #0e0a06;
+      --card2: #120c07;
+      --border: rgba(255, 160, 40, .08);
+      --text: #e8c890;
+      --muted: #705030;
+      --g: #e08030;
+      --g2: #c45020;
+      --g3: #a0c840;
+      --gold: #f0c040;
+      --orange: #e08030;
+      --red: #c45020;
+      --amber: #a0c840;
+      --accent: #e08030;
+      --body-copy-color: #806040;
+      --mini-note-body: #504030;
+      --code-bg: #060402;
+      --code-border: rgba(255, 160, 40, .12);
+      --code-color: #e08030;
+      --progress-bar: linear-gradient(90deg, #e08030, #c45020);
+    }
+
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #e0e0e0;
+      --muted: #555;
+      --g: #aaa;
+      --g2: #999;
+      --g3: #888;
+      --gold: #bbb;
+      --orange: #aaa;
+      --red: #999;
+      --amber: #888;
+      --accent: #aaa;
+      --body-copy-color: #777;
+      --mini-note-body: #555;
+      --code-bg: #0a0a0a;
+      --code-border: rgba(255, 255, 255, .08);
+      --code-color: #999;
+      --progress-bar: linear-gradient(90deg, #666, #999);
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      cursor: none;
+      transition: background .4s, color .4s
+    }
+
+    /* Solar atmosphere grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 160, 40, .018) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 160, 40, .018) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+      opacity: .22;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--g);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      transition: width .2s, height .2s
+    }
+
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 3px;
+      z-index: 100
+    }
+
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--progress-bar);
+      transition: background .4s
+    }
+
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 40% 20%, rgba(255, 160, 40, .09), transparent 60%), radial-gradient(ellipse at 80% 70%, rgba(196, 80, 32, .05), transparent 50%);
+      opacity: .22;
+      pointer-events: none;
+      transition: background 1s, opacity .25s;
+      z-index: 0
+    }
+
+    body.theme-off #ambientOverlay {
+      opacity: 0
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(8, 4, 2, .96);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(.23, 1, .32, 1), background .4s
+    }
+
+    body.theme-off #sidebar {
+      background: rgba(5, 5, 5, .95)
+    }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 264px
+    }
+
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .1em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s, color .2s, border-color .2s;
+      font-family: 'Space Mono', monospace
+    }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1
+    }
+
+    #pinBtn.pinned {
+      color: var(--g);
+      border-color: rgba(255, 160, 40, .3)
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 160, 40, .3);
+      background: rgba(255, 160, 40, .07);
+      color: var(--g);
+      flex-shrink: 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .05em
+    }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1
+    }
+
+    .logo-copy h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--g);
+      text-transform: uppercase
+    }
+
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      font-family: 'Space Mono', monospace
+    }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px
+    }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px
+    }
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(255, 160, 40, .25)
+    }
+
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(255, 160, 40, .2);
+      background: rgba(8, 4, 2, .98);
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s, transform .22s;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .8)
+    }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0)
+    }
+
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .05)
+    }
+
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none
+    }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto
+    }
+
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      cursor: none;
+      transition: background .15s
+    }
+
+    .sb-result:hover {
+      background: rgba(255, 160, 40, .05)
+    }
+
+    .sb-result:last-child {
+      border-bottom: none
+    }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'Space Mono', monospace
+    }
+
+    .sb-result-term {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: .04em
+    }
+
+    .sb-result-snip {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px
+    }
+
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      position: relative;
+      font-family: 'Space Mono', monospace
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 160, 40, .05);
+      color: #c07030
+    }
+
+    .nav-btn.active {
+      background: rgba(255, 160, 40, .10);
+      color: var(--g)
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 8px;
+      width: 4px;
+      height: 4px;
+      background: var(--g);
+      border-radius: 50%;
+      opacity: 0
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px
+    }
+
+    .nav-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .nav-label {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap
+    }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .sidebar-footer span:last-child,
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--g);
+      flex-shrink: 0;
+      animation: blink 2.4s ease-in-out infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .2
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ── MAIN ── */
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px)
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .glass-btn,
+    #scoreTracker {
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      background: rgba(255, 160, 40, .05);
+      color: var(--muted);
+      padding: 9px 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block
+    }
+
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--g);
+      border-color: rgba(255, 160, 40, .3)
+    }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(255, 160, 40, .36);
+      background: rgba(255, 160, 40, .1)
+    }
+
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(255, 160, 40, .35);
+      background: rgba(255, 160, 40, .08);
+      color: var(--g);
+      padding: 9px 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    #themeToggleBtn:hover {
+      background: rgba(255, 160, 40, .16)
+    }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255, 255, 255, .04);
+      color: #555;
+      border-color: rgba(255, 255, 255, .15)
+    }
+
+    /* ── TAB CONTENT ── */
+    .tab-content {
+      display: none;
+      animation: fadeUp .35s ease both
+    }
+
+    .tab-content.active {
+      display: block
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .unit-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      display: block;
+      margin-bottom: 10px
+    }
+
+    .page-header h2 {
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: white
+    }
+
+    .page-header p {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .1em;
+      margin-top: 8px
+    }
+
+    /* ── CARDS ── */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .card-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: white;
+      margin-bottom: 14px
+    }
+
+    .body-copy {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      color: var(--body-copy-color);
+      line-height: 1.65
+    }
+
+    .body-copy p+p {
+      margin-top: 10px
+    }
+
+    .body-copy strong {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    .ap-term {
+      color: var(--g);
+      font-weight: 600
+    }
+
+    body:not(.ap-highlight) .ap-term {
+      color: inherit;
+      font-weight: 600
+    }
+
+    body.ap-highlight .ap-term {
+      background: rgba(255, 160, 40, .12);
+      border-radius: 3px;
+      padding: 0 3px;
+      color: var(--g)
+    }
+
+    .focus-callout {
+      margin-top: 18px;
+      background: rgba(255, 160, 40, .04);
+      border: 1px solid rgba(255, 160, 40, .12);
+      border-radius: 10px;
+      padding: 16px 18px
+    }
+
+    .focus-callout .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .mini-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .feature-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color .2s, transform .2s
+    }
+
+    .feature-card:hover {
+      border-color: rgba(255, 160, 40, .22);
+      transform: translateY(-2px)
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      color: white;
+      margin-bottom: 10px
+    }
+
+    .feature-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px
+    }
+
+    .accent-g { border-left: 3px solid var(--g) }
+    .accent-g2 { border-left: 3px solid var(--g2) }
+    .accent-g3 { border-left: 3px solid var(--g3) }
+    .accent-gold { border-left: 3px solid var(--gold) }
+    .accent-red { border-left: 3px solid var(--red) }
+    .accent-amber { border-left: 3px solid var(--amber) }
+
+    .principle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px
+    }
+
+    .principle-card .body-copy {
+      font-size: 13px;
+      margin-bottom: 12px
+    }
+
+    .note-jump {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--g);
+      cursor: none;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 10px;
+      transition: opacity .2s
+    }
+
+    .note-jump:hover { opacity: .7 }
+
+    /* ── NOTES ── */
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative
+    }
+
+    .note-section h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 14px;
+      letter-spacing: -.01em
+    }
+
+    .note-section h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 20px 0 10px;
+      letter-spacing: .04em
+    }
+
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+      margin-top: 16px
+    }
+
+    .mini-note {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px
+    }
+
+    .mini-note strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .06em;
+      margin-bottom: 8px
+    }
+
+    .mini-note .body-copy {
+      font-size: 12px;
+      color: var(--mini-note-body)
+    }
+
+    .code-block {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      line-height: 1.8;
+      color: var(--code-color);
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 14px;
+      white-space: pre-wrap
+    }
+
+    /* ── GLOSSARY ── */
+    .glossary-filter-wrap {
+      margin-bottom: 20px
+    }
+
+    .glossary-filter-wrap input {
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      outline: none;
+      transition: border-color .2s
+    }
+
+    .glossary-filter-wrap input:focus {
+      border-color: rgba(255, 160, 40, .3)
+    }
+
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px
+    }
+
+    .glossary-card {
+      cursor: none
+    }
+
+    .glossary-card h4 {
+      margin-bottom: 8px
+    }
+
+    /* ── FLASHCARDS ── */
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px
+    }
+
+    .flash-card {
+      height: 220px;
+      perspective: 1000px;
+      cursor: none
+    }
+
+    .flash-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform .5s cubic-bezier(.23, 1, .32, 1);
+      transform-style: preserve-3d
+    }
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg)
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between
+    }
+
+    .flash-back {
+      transform: rotateY(180deg);
+      background: var(--card2);
+      border-color: rgba(255, 160, 40, .15)
+    }
+
+    .flash-front h3,
+    .flash-back .body-copy {
+      font-size: 14px;
+      line-height: 1.55
+    }
+
+    .flash-front h3 {
+      font-weight: 600;
+      color: white
+    }
+
+    .flash-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    /* ── EXAM PREP ── */
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px
+    }
+
+    .exam-card .card-title {
+      font-size: 17px;
+      margin-bottom: 10px
+    }
+
+    /* ── MODALS ── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .75);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(6px)
+    }
+
+    .modal.open {
+      display: flex
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative
+    }
+
+    .modal-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 20px
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px
+    }
+
+    .essay-topic-btn {
+      display: inline-block;
+      margin: 6px 6px 6px 0;
+      padding: 9px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: all .2s
+    }
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      border-color: rgba(255, 160, 40, .36);
+      color: var(--g);
+      background: rgba(255, 160, 40, .07)
+    }
+
+    .essay-block {
+      margin-top: 14px;
+      padding: 16px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px
+    }
+
+    .essay-block-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .essay-block-body {
+      font-size: 13px;
+      color: var(--body-copy-color);
+      line-height: 1.6
+    }
+
+    #essayOutline {
+      display: none
+    }
+
+    #essayOutline.show {
+      display: block
+    }
+
+    /* ── QUIZ ── */
+    .quiz-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px
+    }
+
+    .quiz-question {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      line-height: 1.55;
+      margin-bottom: 20px
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .quiz-option {
+      text-align: left;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--body-copy-color);
+      font-size: 13px;
+      line-height: 1.5;
+      cursor: none;
+      transition: border-color .2s, color .2s, background .2s
+    }
+
+    .quiz-option:hover {
+      border-color: rgba(255, 160, 40, .25);
+      color: var(--text)
+    }
+
+    .quiz-option.correct {
+      border-color: #a0c840;
+      background: rgba(160, 200, 64, .08);
+      color: #a0c840
+    }
+
+    .quiz-option.wrong {
+      border-color: #c45020;
+      background: rgba(196, 80, 32, .08);
+      color: #c45020
+    }
+
+    .quiz-feedback {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--body-copy-color);
+      line-height: 1.6
+    }
+
+    .quiz-next {
+      margin-top: 18px
+    }
+
+    /* ── READING PROGRESS ── */
+    #readingProgress {
+      left: 72px
+    }
+
+    /* ── SCORE TRACKER ── */
+    #bestScore {
+      color: var(--g);
+      font-weight: 700
+    }
+
+    @media (max-width: 900px) {
+      #main {
+        padding: 24px 20px 80px
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
+  <div id="ambientOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">U9</div>
+      <div class="logo-copy">
+        <h1>APES</h1>
+        <p>Global Change</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">
+        <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Search terms…
+      </button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="sbInput" type="text" placeholder="Search…" autocomplete="off" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="dot"></div>
+      <span>APES</span>
+      <span>Unit 9 · Global Change</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <a class="glass-btn" href="apes-index.html">← All Units</a>
+        <a class="glass-btn" href="apes-unit1.html">Unit 1</a>
+        <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
+        <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
+        <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
+        <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
+        <a class="glass-btn" href="apes-unit6.html">Unit 6</a>
+        <a class="glass-btn" href="apes-unit7.html">Unit 7</a>
+        <a class="glass-btn" href="apes-unit8.html">Unit 8</a>
+        <a class="glass-btn" href="apes-unit9.html" style="color:var(--g);border-color:rgba(255,160,40,.36);">Unit 9</a>
+      </div>
+      <div class="top-actions">
+        <div id="scoreTracker">Best: <span id="bestScore">--</span></div>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Outlines</button>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
+        <button id="themeToggleBtn" type="button"><span id="themeLabel">Theme On</span></button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 9 · AP Environmental Science</span>
+        <h2>Global Change</h2>
+        <p>Climate · Ozone · Biodiversity · Cause → Mechanism → Impact → Response</p>
+      </header>
+
+      <div class="hero-grid">
+        <article class="card accent-g">
+          <div class="card-sub">Unit Overview</div>
+          <h2 class="card-title">Earth's Changing Systems</h2>
+          <div class="body-copy">
+            <p>Unit 9 examines how human activity alters Earth's atmosphere and climate at a planetary scale. Two headline topics dominate: <strong>climate change</strong> driven by greenhouse gas accumulation, and <strong>stratospheric ozone depletion</strong> caused by CFCs and halons. These are related but distinct problems with different causes, mechanisms, and solutions.</p>
+          </div>
+        </article>
+
+        <article class="card accent-amber">
+          <div class="card-sub">Why It Matters</div>
+          <h2 class="card-title">Cause → Effect → Response</h2>
+          <div class="body-copy">
+            <p>The core reasoning pattern for global change is always: identify the cause (emissions, land use), trace the physical/chemical mechanism (greenhouse effect, catalytic ozone destruction), predict the impacts (warming, sea-level rise, UV increase), and evaluate mitigation or adaptation responses.</p>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Big Picture</div>
+            <div class="body-copy">Energy budget · Greenhouse gases · Feedback loops · Climate impacts · Adaptation · Mitigation · Ozone layer · CFCs · Montreal Protocol · Biodiversity · Invasive species</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Energy & Greenhouse Effect</div>
+          <h3>Earth's Heat Balance</h3>
+          <div class="body-copy">Shortwave in, longwave out. Greenhouse gases trap outgoing infrared. Albedo controls reflection. Understanding the energy budget explains all of climate change.</div>
+          <button class="note-jump" data-note-target="n-greenhouse">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-amber">
+          <div class="mini-label">Evidence & Drivers</div>
+          <h3>Climate Science Basics</h3>
+          <div class="body-copy">Temperature records, ice cores, sea-level rise, and ecosystem shifts all point the same direction. Human emissions are the primary modern driver; natural factors don't explain recent warming.</div>
+          <button class="note-jump" data-note-target="n-evidence">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Climate Impacts</div>
+          <h3>Sea Level, Heat & Ecosystems</h3>
+          <div class="body-copy">Thermal expansion and land-ice melt raise seas. Species shift ranges or face extinction. Crops, infrastructure, and public health are all affected — unevenly by region and wealth.</div>
+          <button class="note-jump" data-note-target="n-impacts">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Adaptation</div>
+          <h3>Reducing Harm</h3>
+          <div class="body-copy">Adaptation adjusts to unavoidable change: seawalls, drought-tolerant crops, heat warning systems, managed retreat. Distinct from mitigation, which cuts emissions.</div>
+          <button class="note-jump" data-note-target="n-adaptation">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Mitigation</div>
+          <h3>Cutting Emissions & Sinks</h3>
+          <div class="body-copy">Decarbonize electricity, electrify transport, protect forests. Policy tools include carbon taxes, cap-and-trade, fuel standards, and international agreements like the Paris Agreement.</div>
+          <button class="note-jump" data-note-target="n-mitigation">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g3">
+          <div class="mini-label">Ozone Layer</div>
+          <h3>CFCs & Stratospheric Depletion</h3>
+          <div class="body-copy">CFCs are stable enough to reach the stratosphere, where UV releases chlorine that catalytically destroys ozone. Strongest over Antarctica. The Montreal Protocol reversed the trend.</div>
+          <button class="note-jump" data-note-target="n-ozone">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Ozone Impacts & Solutions</div>
+          <h3>UV-B, Health & Policy</h3>
+          <div class="body-copy">Ozone thinning increases UV-B reaching Earth: more skin cancer, cataracts, immune suppression, damage to phytoplankton and crops. Montreal Protocol = major policy success story.</div>
+          <button class="note-jump" data-note-target="n-ozoneimpacts">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-amber">
+          <div class="mini-label">Biodiversity</div>
+          <h3>Invasive Species & Endangerment</h3>
+          <div class="body-copy">Climate change shifts habitats, blocking migration corridors. Invasive species traits, endangered species characteristics, and strategies to protect biodiversity are all high-yield exam topics.</div>
+          <button class="note-jump" data-note-target="n-biodiversity">View Notes →</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Unit 9 · Notes</span>
+        <h2>Detailed Notes</h2>
+        <p>Read, review, and reference · AP-tested concepts highlighted</p>
+      </header>
+
+      <!-- 01 -->
+      <article class="note-section accent-g" id="n-greenhouse">
+        <div class="mini-label">01 · Earth's Energy Budget & the Greenhouse Effect</div>
+        <h3>How Greenhouse Gases Warm the Planet</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Global change</strong> refers to large-scale shifts in Earth's climate system driven by human activity over decades to centuries. The two headline topics are <strong class="ap-term">climate change</strong> (greenhouse gas accumulation) and <strong class="ap-term">ozone depletion</strong> (CFC chemistry). They are different problems — different causes, mechanisms, and solutions.</p>
+        </div>
+        <h4>Earth's Energy Budget</h4>
+        <div class="code-block">Incoming: shortwave solar radiation (visible + UV)
+Some reflected by clouds, ice, aerosols (high albedo = more reflection)
+Remainder absorbed by surface and atmosphere → warms the planet
+Earth emits: longwave infrared (heat) radiation back to space
+Greenhouse gases intercept outgoing infrared → re-emit in all directions → surface warms
+If absorbed energy > outgoing energy → net warming until new balance</div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Albedo</strong>
+            <div class="body-copy">Fraction of incoming solar radiation reflected. High albedo (ice, snow, light clouds) = more cooling. Low albedo (oceans, forests, asphalt) = more absorption and warming. Formula: Reflected energy = albedo × incoming energy.</div>
+          </div>
+          <div class="mini-note"><strong>Greenhouse Effect (Natural)</strong>
+            <div class="body-copy">Sunlight → surface absorbs and warms → emits infrared → greenhouse gases absorb and re-emit infrared in all directions, including downward → Earth is warmer than it would be without GHGs. Not inherently bad — without it, Earth would be frozen.</div>
+          </div>
+          <div class="mini-note"><strong>Carbon Dioxide (CO₂)</strong>
+            <div class="body-copy">Sources: fossil fuel combustion, deforestation, cement production; also natural (respiration, volcanoes). Accumulates in atmosphere because it persists for centuries. Primary long-term driver of modern warming.</div>
+          </div>
+          <div class="mini-note"><strong>Methane (CH₄)</strong>
+            <div class="body-copy">Sources: livestock digestion, rice paddies, landfills, fossil fuel extraction, wastewater. More potent warming effect per molecule than CO₂ but shorter-lived. Reducing methane gives faster short-term benefits.</div>
+          </div>
+          <div class="mini-note"><strong>Nitrous Oxide (N₂O)</strong>
+            <div class="body-copy">Sources: agricultural soils (especially from nitrogen fertilizer), manure management, industrial processes. Very high warming potential per molecule. Primarily from agriculture.</div>
+          </div>
+          <div class="mini-note"><strong>Water Vapor</strong>
+            <div class="body-copy">Most abundant greenhouse gas, but primarily a <strong class="ap-term">feedback</strong>, not the original long-term driver. Warm air holds more moisture → strengthens greenhouse effect → amplifies CO₂-initiated warming.</div>
+          </div>
+          <div class="mini-note"><strong>Fluorinated Gases</strong>
+            <div class="body-copy">Industrial processes, refrigeration, consumer products. Includes HFCs, PFCs, and sulfur hexafluoride (SF₆). Very high warming potential per molecule; though small in volume, very significant pound-for-pound.</div>
+          </div>
+          <div class="mini-note"><strong>Not Greenhouse Gases</strong>
+            <div class="body-copy">Oxygen (O₂) and nitrogen (N₂) do NOT absorb infrared radiation effectively. Black carbon (soot) is not a gas — it's a particle that warms by absorbing sunlight and darkening ice surfaces (lowers albedo).</div>
+          </div>
+        </div>
+        <h4>Key Positive Feedback Loops</h4>
+        <div class="note-grid" style="margin-top:0">
+          <div class="mini-note"><strong>Ice–Albedo Feedback</strong>
+            <div class="body-copy">Warming → melts ice/snow → exposes darker surfaces → lower albedo → more solar absorption → more warming → more melting. Explains <strong class="ap-term">polar amplification</strong> (poles warming faster than global average).</div>
+          </div>
+          <div class="mini-note"><strong>Water Vapor Feedback</strong>
+            <div class="body-copy">Warming → more evaporation → more atmospheric water vapor → stronger greenhouse effect → more warming. Amplifies initial CO₂-driven change.</div>
+          </div>
+          <div class="mini-note"><strong>Arctic Methane Feedback</strong>
+            <div class="body-copy">Warming → thaws <strong class="ap-term">permafrost</strong> → frozen organic matter decomposes → releases methane (and CO₂) → more warming → more thaw. An important tipping-point concern.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Greenhouse effect traps OUTGOING infrared, not incoming sunlight. Water vapor is a feedback, not the original cause. O₂ and N₂ are not GHGs. Black carbon is not a gas. Positive feedbacks amplify change — they are NOT the original cause. Albedo change is crucial: ice loss → lower albedo → more warming.</div>
+        </div>
+      </article>
+
+      <!-- 02 -->
+      <article class="note-section accent-amber" id="n-evidence">
+        <div class="mini-label">02 · Evidence for Climate Change & Its Drivers</div>
+        <h3>Multiple Lines of Evidence & Human vs. Natural Causes</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Climate</strong> is the long-term pattern of weather over decades; <strong class="ap-term">weather</strong> is short-term. A cold week does not contradict a long-term warming trend. Climate change conclusions emerge from many independent lines of evidence ("consilience") that all point the same direction.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Instrumental Temperature Records</strong>
+            <div class="body-copy">Long-term trends in global average surface temperature from weather stations and ocean buoys show clear, sustained warming since the Industrial Revolution, with the most rapid warming in recent decades.</div>
+          </div>
+          <div class="mini-note"><strong>Ocean Heat Content</strong>
+            <div class="body-copy">Oceans absorb most of the excess heat entering the climate system. Even when surface air temps vary year-to-year, ocean heat content rises consistently — a powerful long-term indicator of warming.</div>
+          </div>
+          <div class="mini-note"><strong>Glacier & Ice Sheet Mass Loss</strong>
+            <div class="body-copy">Glaciers worldwide have retreated significantly since the late 1800s. Ice cores from Antarctica and Greenland preserve bubbles of ancient atmosphere, showing CO₂ and temperature have historically moved together over hundreds of thousands of years.</div>
+          </div>
+          <div class="mini-note"><strong>Sea-Level Rise</strong>
+            <div class="body-copy">Sea level has risen about 120 m since the last ice age peak (~18,000 years ago). Modern rise is accelerating, driven by thermal expansion and land-ice melt — measured at roughly 3 mm/year in recent decades.</div>
+          </div>
+          <div class="mini-note"><strong>Phenology & Range Shifts</strong>
+            <div class="body-copy">Earlier flowering, breeding, and migration times. Species moving poleward or to higher elevations. These biological responses track temperature changes independently of physical records.</div>
+          </div>
+          <div class="mini-note"><strong>Paleoclimate Proxies</strong>
+            <div class="body-copy">Ice cores, tree rings, sediment cores, and corals show climate history over millennia. These confirm modern warming is rapid relative to natural variation and tightly linked to CO₂ concentrations.</div>
+          </div>
+        </div>
+        <h4>Anthropogenic vs. Natural Drivers</h4>
+        <div class="note-grid" style="margin-top:0">
+          <div class="mini-note"><strong>Human (Anthropogenic) Drivers</strong>
+            <div class="body-copy">Fossil fuel combustion (CO₂) · Deforestation/land-use change (less carbon sequestration, more CO₂ release) · Agriculture (CH₄ from livestock/rice, N₂O from fertilizers) · Industrial processes (cement produces CO₂; some industries emit fluorinated gases) · Waste management (landfill CH₄).</div>
+          </div>
+          <div class="mini-note"><strong>Solar Variability</strong>
+            <div class="body-copy">Solar output changes in cycles but typical temperature influence is small (~0.1°C between maxima/minima). Cannot explain the rate or magnitude of modern warming. Direction of forcing also doesn't match recent temperature rise.</div>
+          </div>
+          <div class="mini-note"><strong>Volcanic Eruptions</strong>
+            <div class="body-copy">Large eruptions inject aerosols into the stratosphere that <em>reflect</em> sunlight → temporary <strong>cooling</strong>, not sustained warming. Significant for short-term effects only; not the cause of modern trend.</div>
+          </div>
+          <div class="mini-note"><strong>Milankovitch Cycles</strong>
+            <div class="body-copy">Long-term changes in Earth's orbital shape, axial tilt, and wobble. Operate over thousands to tens of thousands of years. Way too slow to explain rapid recent warming.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">One cold event ≠ climate trend. Volcanoes usually COOL short-term. Solar cycles can't explain the rate of modern warming. Correlation + mechanism + multiple lines of evidence = strong case. Deforestation affects CO₂ by removing sinks AND releasing stored carbon. Ocean CO₂ uptake affects both heat storage and ocean chemistry (acidification).</div>
+        </div>
+      </article>
+
+      <!-- 03 -->
+      <article class="note-section accent-red" id="n-impacts">
+        <div class="mini-label">03 · Impacts of Climate Change</div>
+        <h3>Heat, Sea Level, Ecosystems & Human Health</h3>
+        <div class="body-copy">
+          <p>Climate change shifts averages and changes the probability of extremes. Effects are <strong>uneven by region, latitude, and socioeconomic status</strong> — a core environmental justice dimension. Communities with fewer resources face higher risks and have less capacity to adapt.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Heat & Precipitation</strong>
+            <div class="body-copy">Heat waves become more frequent and intense. Precipitation shifts: some regions face more flooding, others more drought. Warmer oceans increase potential energy for stronger tropical cyclones. Regional patterns diverge — not "everywhere hotter and wetter."</div>
+          </div>
+          <div class="mini-note"><strong>Sea-Level Rise: 2 Mechanisms</strong>
+            <div class="body-copy">1. <strong class="ap-term">Thermal expansion</strong> — water expands as it warms. 2. <strong class="ap-term">Melting land ice</strong> — glaciers and ice sheets add water to ocean. Melting floating sea ice does NOT significantly raise sea level (already displaces water), but strongly affects albedo and ecosystems.</div>
+          </div>
+          <div class="mini-note"><strong>Antarctica & Ice Facts</strong>
+            <div class="body-copy">Antarctica holds ~90% of world's ice and ~70% of its freshwater. If all Antarctic ice melted, sea level would rise ~60 m (~200 ft). Glacier retreat already affects freshwater availability in regions relying on seasonal meltwater.</div>
+          </div>
+          <div class="mini-note"><strong>Permafrost Thaw</strong>
+            <div class="body-copy">Thawing permafrost releases previously frozen organic carbon as methane and CO₂ → positive feedback. Also damages infrastructure (roads, buildings) built on frozen ground. Especially significant in Arctic regions.</div>
+          </div>
+          <div class="mini-note"><strong>Ocean Acidification</strong>
+            <div class="body-copy">CO₂ + seawater → carbonic acid → lower pH → reduced carbonate availability → corals and shellfish struggle to build shells/skeletons. Distinct from acid rain. Driven by CO₂ uptake, not temperature alone.</div>
+          </div>
+          <div class="mini-note"><strong>Ecosystem & Biodiversity Impacts</strong>
+            <div class="body-copy">Species shift poleward or upslope. Phenology changes (earlier flowering, migration). Species unable to move or adapt fast enough face higher extinction risk. Habitat fragmentation blocks migration corridors, compounding climate stress.</div>
+          </div>
+          <div class="mini-note"><strong>Agriculture & Food Security</strong>
+            <div class="body-copy">Heat stress, shifting rainfall, increased pests, and extreme-event risk reduce crop yields. Some regions gain longer growing seasons, but benefits are often constrained by water availability and heat extremes.</div>
+          </div>
+          <div class="mini-note"><strong>Human Health Pathways</strong>
+            <div class="body-copy">Heat-related illness/mortality · Air quality degradation (higher ground-level ozone, wildfire smoke) · Vector-borne diseases expanding (mosquitoes, ticks carrying malaria, dengue, Zika, yellow fever) · Waterborne disease risks from warmer water · Coastal flooding damage.</div>
+          </div>
+          <div class="mini-note"><strong>Displacement Risk</strong>
+            <div class="body-copy">Estimates suggest hundreds of millions may need relocation due to coastal flooding, shoreline erosion, and agricultural disruption — often cited as ~150 million people by 2050. Disproportionately affects low-income coastal communities.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">SEA ICE melt ≠ major sea level driver (land ice is key). Thermal expansion AND land ice melt both matter. Ocean acidification ≠ acid rain. Regional impacts vary — not uniform globally. Connect each impact to its climate variable (temperature, precipitation, sea level, or extremes). Environmental justice: who is most vulnerable, who caused the problem?</div>
+        </div>
+      </article>
+
+      <!-- 04 -->
+      <article class="note-section accent-gold" id="n-adaptation">
+        <div class="mini-label">04 · Adapting to Climate Change</div>
+        <h3>Reducing Harm & Building Resilience</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Adaptation</strong> means adjusting human systems to reduce harm from climate impacts that are already occurring or unavoidable. It is <em>not</em> a substitute for mitigation. The key distinction:</p>
+        </div>
+        <div class="code-block">Mitigation = reduce the SIZE of climate change (cut GHG emissions, increase sinks)
+Adaptation = reduce the DAMAGE from climate change (prepare for flooding, heat, drought)</div>
+        <div class="note-grid" style="margin-top:16px">
+          <div class="mini-note"><strong>Infrastructure & Engineering</strong>
+            <div class="body-copy">Elevating buildings, redesigning stormwater systems, improving drainage. Seawalls, levees, and surge barriers protect coasts but are expensive and can create "lock-in" — failure under extreme conditions is catastrophic.</div>
+          </div>
+          <div class="mini-note"><strong>Nature-Based Solutions</strong>
+            <div class="body-copy">Restoring wetlands and mangroves reduces storm surge and erosion while providing habitat. Urban tree canopy reduces heat islands and improves air quality. Often cheaper and more resilient than hard engineering.</div>
+          </div>
+          <div class="mini-note"><strong>Water & Agriculture Adaptations</strong>
+            <div class="body-copy">Drought-tolerant crops, drip irrigation, adjusting planting dates. Reduces crop losses under hotter/drier conditions. Connects land management to food security.</div>
+          </div>
+          <div class="mini-note"><strong>Public Health Preparedness</strong>
+            <div class="body-copy">Heat warning systems, cooling centers with targeted outreach for vulnerable populations, disaster planning for floods/hurricanes/wildfires. Reduce mortality and economic disruption without large capital costs.</div>
+          </div>
+          <div class="mini-note"><strong>Managed Retreat</strong>
+            <div class="body-copy">Moving infrastructure away from high-risk coastal zones. Most sustainable long-term option where risk is extreme. Socially and politically difficult when culture, livelihoods, and property are tied to place.</div>
+          </div>
+          <div class="mini-note"><strong>Equity in Adaptation</strong>
+            <div class="body-copy"><strong class="ap-term">Resilience</strong> is stronger with reliable infrastructure, social networks, healthcare, financial resources, and good governance. Low-income communities face higher risks but have fewer adaptation resources — a core environmental justice concern.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Solar panels are MITIGATION, not adaptation. Seawalls can harm wetlands (unintended consequence). Air conditioning as adaptation can increase emissions (tradeoff). Explain mechanism: how does the adaptation reduce risk? Consider equity: adaptations must be realistic for low-income communities, not only expensive engineering. Managed retreat is a legitimate option — acknowledge social tradeoffs.</div>
+        </div>
+      </article>
+
+      <!-- 05 -->
+      <article class="note-section accent-g2" id="n-mitigation">
+        <div class="mini-label">05 · Mitigating Climate Change</div>
+        <h3>Cutting Greenhouse Gases & Increasing Carbon Sinks</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Mitigation</strong> aims to limit future climate change by reducing greenhouse gas emissions and enhancing <strong class="ap-term">carbon sequestration</strong> — capturing carbon in biomass, soils, or geologic formations. Connect each strategy to a specific emission source.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Decarbonizing Electricity</strong>
+            <div class="body-copy">Solar, wind, hydroelectric, geothermal: low direct CO₂ emissions. Nuclear: low direct CO₂ with tradeoffs (radioactive waste, cost, public perception). Energy efficiency: same output with less electricity (LEDs, insulation, efficient motors).</div>
+          </div>
+          <div class="mini-note"><strong>Electrifying End Uses</strong>
+            <div class="body-copy">If electricity is cleaner, shift cars, heating, and some industry from direct fuel combustion to electricity. Electric vehicles reduce tailpipe emissions; total benefit depends on the electricity mix (still helps if grid is cleaner than gasoline).</div>
+          </div>
+          <div class="mini-note"><strong>Reducing Transportation Emissions</strong>
+            <div class="body-copy">Public transit, biking, walkable city design (reduces vehicle miles), higher fuel efficiency, and alternative fuels. Multiple strategies stack — efficiency × cleaner fuels × reduced travel distance.</div>
+          </div>
+          <div class="mini-note"><strong>Cutting CH₄ & N₂O</strong>
+            <div class="body-copy">Capture methane from landfills or manure lagoons. Reduce leaks from natural gas systems. Improve fertilizer management (right source, rate, time, place) to reduce N₂O from soils. High warming potential per molecule → quick relative benefits.</div>
+          </div>
+          <div class="mini-note"><strong>Carbon Sinks & Land Use</strong>
+            <div class="body-copy">Reforestation and afforestation increase carbon storage. Soil conservation increases soil organic carbon. Key nuance: forests store carbon but become sources if burned or degraded — long-term protection is required.</div>
+          </div>
+          <div class="mini-note"><strong>Renewable Tradeoffs</strong>
+            <div class="body-copy">"Renewable" ≠ no environmental impact. Hydroelectric dams alter ecosystems. Wind and solar require materials and land. APES rewards recognizing tradeoffs while still comparing carbon benefits — don't treat renewables as perfect.</div>
+          </div>
+        </div>
+        <h4>Policy Tools</h4>
+        <div class="note-grid" style="margin-top:0">
+          <div class="mini-note"><strong>Carbon Tax</strong>
+            <div class="body-copy">Fee proportional to carbon content of fuels or CO₂ emissions. Makes high-carbon choices more expensive → incentivizes low-carbon alternatives. Broad and simple price signal. Political resistance; equity concerns if not redistributed.</div>
+          </div>
+          <div class="mini-note"><strong>Cap-and-Trade</strong>
+            <div class="body-copy">Sets a total emissions limit (CAP) and issues tradeable allowances. The CAP guarantees total limit; TRADE is the market mechanism letting reductions happen where cheapest. Don't confuse: the cap is the environmental limit, the trade is the flexibility mechanism.</div>
+          </div>
+          <div class="mini-note"><strong>Regulations & Standards</strong>
+            <div class="body-copy">Fuel economy standards, emissions performance standards, renewable portfolio standards, building codes, appliance efficiency standards. Reduce emissions through rules rather than prices.</div>
+          </div>
+          <div class="mini-note"><strong>Kyoto Protocol (2005)</strong>
+            <div class="body-copy">International agreement under UN framework with binding GHG reduction targets for developed (Annex I) countries. First major international climate commitment. Limited reach — U.S. did not ratify.</div>
+          </div>
+          <div class="mini-note"><strong>Paris Agreement (2016)</strong>
+            <div class="body-copy">Goal: keep warming well below 2°C above pre-industrial levels. Each country sets its own plans (Nationally Determined Contributions). Broader participation than Kyoto. Non-binding targets but with transparency and review framework.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">"Recycling more" is NOT a primary GHG mitigation strategy. Cap-and-trade does NOT mean each firm reduces equally — trading allows flexibility. Carbon sequestration in forests is only reliable with long-term protection. Connect each mitigation strategy to the sector and gas it targets. Kyoto = binding; Paris = nationally determined contributions.</div>
+        </div>
+      </article>
+
+      <!-- 06 -->
+      <article class="note-section accent-g3" id="n-ozone">
+        <div class="mini-label">06 · The Stratospheric Ozone Layer</div>
+        <h3>CFCs, Catalytic Destruction & the Ozone Hole</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Ozone (O₃)</strong> has opposite roles depending on altitude. The critical distinction: <strong class="ap-term">stratospheric ozone</strong> is protective; <strong class="ap-term">tropospheric ozone</strong> is a pollutant. "Ozone is good up high, bad nearby."</p>
+        </div>
+        <div class="code-block">Stratospheric ozone (15–40 km up): absorbs harmful UV-B radiation → beneficial, protective shield
+Tropospheric ozone (near ground): major component of photochemical smog → lung damage, plant harm
+Same molecule, opposite roles → altitude matters</div>
+        <div class="note-grid" style="margin-top:16px">
+          <div class="mini-note"><strong>UV Radiation Types</strong>
+            <div class="body-copy"><strong>UVA</strong>: closest to visible light; associated with tanning. <strong>UVB</strong>: causes blistering sunburns; linked to skin cancer; ozone shields most of this. <strong>UVC</strong>: largely absorbed in upper atmosphere; involved in ozone formation reactions.</div>
+          </div>
+          <div class="mini-note"><strong>Natural Ozone Balance</strong>
+            <div class="body-copy">UV splits O₂ → atomic oxygen. Atomic oxygen combines with O₂ → O₃ (ozone). Ozone also breaks back to O₂. Concentration depends on balance of formation and destruction — naturally maintained.</div>
+          </div>
+          <div class="mini-note"><strong>CFCs (Chlorofluorocarbons)</strong>
+            <div class="body-copy">Nonflammable compounds (carbon, chlorine, fluorine). Were used in aerosol propellants, refrigeration, and foam-blowing. Chemically stable in lower atmosphere → persist long enough to reach stratosphere → UV breaks them apart → releases chlorine atoms.</div>
+          </div>
+          <div class="mini-note"><strong>Halocarbons / Halons</strong>
+            <div class="body-copy">Organic molecules with at least one carbon and one or more halogens (fluorine, chlorine, bromine, iodine). Used in fire suppression. Bromine is even more effective at catalytic ozone destruction than chlorine.</div>
+          </div>
+          <div class="mini-note"><strong>Catalytic Destruction</strong>
+            <div class="body-copy">Chlorine (or bromine) atoms from CFC breakdown destroy ozone in a catalytic cycle — the halogen atom is NOT consumed and can destroy thousands of ozone molecules. One CFC molecule → huge ozone damage.</div>
+          </div>
+          <div class="mini-note"><strong>Antarctic Ozone Hole</strong>
+            <div class="body-copy">Ozone depletion is most severe over Antarctica because extreme cold creates <strong class="ap-term">polar stratospheric clouds</strong>. Reactions on cloud surfaces convert chlorine to forms that rapidly destroy ozone when spring sunlight returns. The <strong class="ap-term">polar vortex</strong> isolates Antarctic air, intensifying the effect.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">The "ozone hole" is thinning, NOT a literal hole. Ozone depletion ≠ global warming (different layers, chemicals, effects). CFCs work because they are STABLE (reach stratosphere), then UV breaks them. Catalytic = one chlorine atom destroys many ozone molecules. UVB causes skin cancer and cataracts — ozone depletion increases UVB reaching surface.</div>
+        </div>
+      </article>
+
+      <!-- 07 -->
+      <article class="note-section accent-g" id="n-ozoneimpacts">
+        <div class="mini-label">07 · Ozone Depletion Impacts & Solutions</div>
+        <h3>UV-B Effects & the Montreal Protocol</h3>
+        <div class="body-copy">
+          <p>When stratospheric ozone decreases, more <strong class="ap-term">UV-B radiation</strong> reaches Earth's surface. UV-B damages tissues and DNA. These impacts are about <em>ultraviolet exposure</em>, not heat — do not confuse with climate change impacts.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Human Health Impacts</strong>
+            <div class="body-copy">Higher risk of <strong>skin cancer</strong> · Increased <strong>cataracts</strong> and eye damage · <strong>Immune suppression</strong> (reduced effectiveness of immune system) · More sunburns and skin damage. These are UV-B effects, not temperature effects.</div>
+          </div>
+          <div class="mini-note"><strong>Ecosystem & Agriculture Impacts</strong>
+            <div class="body-copy">Reduced <strong class="ap-term">phytoplankton</strong> growth → cascading effects through aquatic food webs. Damage to plant tissues → reduced crop yields. Increased mutations (UV changes DNA structure). Deleterious effects on animals.</div>
+          </div>
+          <div class="mini-note"><strong>Stratospheric Cooling</strong>
+            <div class="body-copy">Ozone depletion can cool the stratosphere (less UV absorbed there). This is separate from greenhouse warming of the lower atmosphere. Keep causal chains distinct.</div>
+          </div>
+          <div class="mini-note"><strong>Materials Degradation</strong>
+            <div class="body-copy">Increased UV accelerates breakdown of certain plastics and paints. Less obvious but real economic impact of ozone depletion.</div>
+          </div>
+          <div class="mini-note"><strong>Montreal Protocol (1987)</strong>
+            <div class="body-copy">International treaty phasing out CFCs and other ozone-depleting substances. Worked because causes were concentrated in a narrow set of chemicals/industries, alternatives were developed, and costs/benefits were clearer than for climate change. Major policy success — ozone layer slowly recovering.</div>
+          </div>
+          <div class="mini-note"><strong>Policy Tools for Ozone</strong>
+            <div class="body-copy"><strong>Tariffs</strong> on products from countries allowing CFC use · <strong>Tax credits/rebates</strong> for turning in old refrigerators and air conditioners · Product regulations on aerosols, inhalers, fire extinguishers · Coolant alternatives: helium, ammonia, propane, or butane where appropriate.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Ozone depletion impacts = UV-B exposure, NOT temperature increase. Montreal Protocol = ozone; Paris Agreement = climate change. Recovery takes decades even with CFC phase-out. Phytoplankton damage ripples through entire marine food webs. Replacement chemicals (HFCs) have their own tradeoffs (still potent GHGs) — solutions can introduce new impacts.</div>
+        </div>
+      </article>
+
+      <!-- 08 -->
+      <article class="note-section accent-amber" id="n-biodiversity">
+        <div class="mini-label">08 · Biodiversity, Invasive Species & Endangered Species</div>
+        <h3>Species Responses to a Changing World</h3>
+        <div class="body-copy">
+          <p>Climate change threatens biodiversity by shifting habitats, altering life-cycle timing, and increasing stress from extremes. These impacts compound <strong>habitat loss and fragmentation</strong>, which can block migration corridors that would allow range shifts.</p>
+        </div>
+        <h4>Migration, Adaptation & Acclimatization</h4>
+        <div class="note-grid" style="margin-top:0">
+          <div class="mini-note"><strong>Migration (Organism Movement)</strong>
+            <div class="body-copy">Success depends on access routes/corridors, magnitude and rate of change, organism's ability to travel, and availability of suitable new habitats. Habitat fragmentation is the biggest barrier.</div>
+          </div>
+          <div class="mini-note"><strong>Adaptation (Genetic, Population-Level)</strong>
+            <div class="body-copy">Ability of a <em>population/species</em> to survive across generations in changing conditions. Depends on birth rate, genetic variability, population size, generation length, and gene flow between populations. Slow — requires generations.</div>
+          </div>
+          <div class="mini-note"><strong>Acclimatization (Individual Physiology)</strong>
+            <div class="body-copy">An individual organism adjusts to gradual environmental change to maintain performance. Depends on physiological/behavioral limits and rate of change. NOT genetic — occurs within one organism's lifetime.</div>
+          </div>
+          <div class="mini-note"><strong>Plants' Vulnerability</strong>
+            <div class="body-copy">Plants cannot migrate as individuals, cannot seek water or nutrients, seedlings must survive in degraded conditions, seed dispersal can be slow. Often more immediately susceptible to habitat loss than mobile animals.</div>
+          </div>
+        </div>
+        <h4>Invasive Species</h4>
+        <div class="note-grid" style="margin-top:0">
+          <div class="mini-note"><strong>Definition & Traits</strong>
+            <div class="body-copy">Species transported to areas where it does not naturally live, then spreads. Common traits: broad diet, high dispersal, high reproduction, short generation times, wide environmental tolerance, close association with humans, genetic variability.</div>
+          </div>
+          <div class="mini-note"><strong>Dutch Elm Disease</strong>
+            <div class="body-copy">Transmitted by elm bark beetles; fungal pathogen killed over half of elm trees in northern United States. Demonstrates how a combination of invasive vector + invasive pathogen can devastate a dominant native tree species.</div>
+          </div>
+          <div class="mini-note"><strong>European Green Crabs</strong>
+            <div class="body-copy">Introduced to San Francisco Bay 1989; threaten commercial fisheries and native invertebrates. Competitive exclusion of native species, disruption of food webs.</div>
+          </div>
+          <div class="mini-note"><strong>Water Hyacinth</strong>
+            <div class="body-copy">Introduced from South America; forms dense mats that reduce sunlight for submerged plants, crowd out native aquatics, and clog waterways and water intake pipes. Economic and ecological damage.</div>
+          </div>
+          <div class="mini-note"><strong>Zebra Mussels</strong>
+            <div class="body-copy">Attach to hard surfaces: clog water intake/discharge pipes, attach to boat hulls, docks, native mussels, and crayfish. Economic damage through infrastructure impacts in addition to ecological disruption.</div>
+          </div>
+        </div>
+        <h4>Endangered Species</h4>
+        <div class="note-grid" style="margin-top:0">
+          <div class="mini-note"><strong>Definition & Factors</strong>
+            <div class="body-copy">Species facing very high risk of extinction in the wild. Assessed by breeding success, known threats, population trend, and number remaining. Factors increasing risk include low reproductive rates, limited range, specialized diet, and habitat loss.</div>
+          </div>
+          <div class="mini-note"><strong>Traits Leading to Endangerment</strong>
+            <div class="body-copy">Low reproductive rates (whales, elephants) · Limited range (pandas) · Specialized diet (pandas) · Large territory needed (tigers) · Long/fixed migration routes (Pacific Northwest salmon) · Commercially valuable (elephants, rhinos) · Cannot adapt quickly (polar bears).</div>
+          </div>
+          <div class="mini-note"><strong>Why Protect Endangered Species?</strong>
+            <div class="body-copy">Genetic diversity · Keystone and indicator species preserve ecosystem function · Aesthetic, ecological, educational, historical, recreational, scientific value · Potential undiscovered uses (medicines, etc.) · Intrinsic ethical value.</div>
+          </div>
+          <div class="mini-note"><strong>Biodiversity Strategies</strong>
+            <div class="body-copy">Wildlife sanctuaries and corridors · Captive breeding programs · Habitat management and monitoring · Protective laws (Endangered Species Act) · Land trusts · Species reintroduction · Ecosystem restoration · Reducing invasive species.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Adaptation (genetic, over generations) ≠ acclimatization (individual, within lifetime). Invasive species cause BOTH ecological AND economic/infrastructure damage (zebra mussels clog pipes). Habitat fragmentation blocks climate-driven range shifts — corridors are critical. Explain mechanism when proposing biodiversity strategies: how do sanctuaries or corridors reduce extinction risk?</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Key Terms</span>
+        <h2>Glossary</h2>
+        <p>Search or browse · Click a card to jump to that topic's notes</p>
+      </header>
+      <div class="glossary-filter-wrap">
+        <input type="text" id="glossaryFilter" placeholder="Search terms…" autocomplete="off" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Active Recall</span>
+        <h2>Flashcards</h2>
+        <p>Click a card to flip · Test yourself before looking</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM PREP -->
+    <section class="tab-content" id="examprep">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>Common Mistakes &amp; Traps</h2>
+        <p>High-yield patterns · Things the AP loves to test</p>
+      </header>
+      <div class="exam-grid">
+        <article class="exam-card feature-card accent-g">
+          <div class="mini-label">Trap #1</div>
+          <h3 class="card-title">Ozone ≠ Climate Change</h3>
+          <div class="body-copy">These are two different problems. Ozone depletion = CFCs destroying O₃ in the stratosphere → more UV-B. Climate change = GHGs trapping infrared → warming. Different chemicals, different atmospheric layers, different consequences, different solutions. Never conflate them.</div>
+        </article>
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Trap #2</div>
+          <h3 class="card-title">Sea Ice vs. Land Ice</h3>
+          <div class="body-copy">Melting sea ice does NOT significantly raise sea level (it already displaces ocean water). Melting LAND ice (glaciers, Greenland, Antarctica) adds new water to the ocean. For sea-level rise questions, land ice + thermal expansion are your two mechanisms.</div>
+        </article>
+        <article class="exam-card feature-card accent-amber">
+          <div class="mini-label">Trap #3</div>
+          <h3 class="card-title">Adaptation vs. Mitigation</h3>
+          <div class="body-copy">Solar panels = MITIGATION (cuts emissions). Seawalls = ADAPTATION (reduces harm from sea-level rise). Cooling centers = ADAPTATION. Reforestation = MITIGATION (carbon sink). The exam loves to blur these — always ask: does the strategy reduce emissions (mitigation) or reduce harm (adaptation)?</div>
+        </article>
+        <article class="exam-card feature-card accent-gold">
+          <div class="mini-label">Trap #4</div>
+          <h3 class="card-title">Water Vapor Confusion</h3>
+          <div class="body-copy">Water vapor is the most abundant greenhouse gas but is a FEEDBACK, not the original long-term driver. It amplifies CO₂-initiated warming because warm air holds more moisture. CO₂ drives long-term trend; water vapor amplifies it. Don't say "water vapor is the main cause of climate change."</div>
+        </article>
+        <article class="exam-card feature-card accent-g2">
+          <div class="mini-label">Trap #5</div>
+          <h3 class="card-title">Volcanoes Cool, Not Warm</h3>
+          <div class="body-copy">Large volcanic eruptions inject aerosols into the stratosphere that REFLECT sunlight → temporary COOLING, not sustained warming. Students often say volcanoes cause warming. They don't explain the modern trend — they work in the wrong direction and the wrong timescale.</div>
+        </article>
+        <article class="exam-card feature-card accent-g3">
+          <div class="mini-label">Trap #6</div>
+          <h3 class="card-title">Adaptation vs. Acclimatization</h3>
+          <div class="body-copy">Adaptation = genetic change at the POPULATION level across generations. Acclimatization = physiological adjustment in an INDIVIDUAL within its lifetime. One cold summer doesn't give polar bears new genetics. A plant adjusting stomatal opening to heat is acclimatization. These are very different biological processes.</div>
+        </article>
+        <article class="exam-card feature-card accent-g">
+          <div class="mini-label">Trap #7</div>
+          <h3 class="card-title">Montreal vs. Paris</h3>
+          <div class="body-copy">Montreal Protocol (1987) = phased out CFCs and other ozone-depleting substances → stratospheric ozone recovery. Paris Agreement (2016) = climate change, greenhouse gases, 2°C target, nationally determined contributions. Don't apply one to the other's problem.</div>
+        </article>
+        <article class="exam-card feature-card accent-amber">
+          <div class="mini-label">Trap #8</div>
+          <h3 class="card-title">Greenhouse Effect Mechanism</h3>
+          <div class="body-copy">The greenhouse effect traps OUTGOING infrared radiation — it does NOT block incoming sunlight. Students often write "greenhouse gases block the sun." Wrong. Sunlight passes through freely; GHGs intercept the heat radiating outward from the warm surface.</div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Practice Quiz — Unit 9</div>
+      <button class="glass-btn modal-close" data-close="quizModal" type="button">✕ Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Outlines — Unit 9</div>
+      <button class="glass-btn modal-close" data-close="essayModal" type="button">✕ Close</button>
+      <div id="essayTopics"></div>
+      <div id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", label: "Dashboard", icon: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`, ambient: "radial-gradient(ellipse at 50% 10%, rgba(255,160,40,.10), transparent 60%)" },
+      { id: "notes", label: "Notes", icon: `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`, ambient: "radial-gradient(ellipse at 20% 30%, rgba(196,80,32,.08), transparent 55%)" },
+      { id: "glossary", label: "Glossary", icon: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`, ambient: "radial-gradient(ellipse at 70% 20%, rgba(160,200,64,.07), transparent 55%)" },
+      { id: "flashcards", label: "Flashcards", icon: `<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>`, ambient: "radial-gradient(ellipse at 40% 60%, rgba(255,160,40,.08), transparent 55%)" },
+      { id: "examprep", label: "Exam Prep", icon: `<svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`, ambient: "radial-gradient(ellipse at 60% 40%, rgba(196,80,32,.07), transparent 55%)" }
+    ];
+
+    const glossaryTerms = [
+      { term: "Global change", def: "Large-scale shifts in Earth's climate system and atmosphere over decades to centuries, including climate change and ozone depletion.", tab: "notes" },
+      { term: "Climate change", def: "Long-term shift in global temperature and weather patterns, driven largely by increasing concentrations of greenhouse gases from human activities.", tab: "notes" },
+      { term: "Greenhouse effect", def: "Natural process where greenhouse gases absorb outgoing infrared radiation from Earth's surface and re-emit it, warming the lower atmosphere and surface.", tab: "notes" },
+      { term: "Greenhouse gases (GHGs)", def: "Gases that absorb and re-emit infrared radiation: CO₂, CH₄, N₂O, water vapor, and fluorinated gases. O₂ and N₂ are NOT greenhouse gases.", tab: "notes" },
+      { term: "Albedo", def: "Fraction of incoming solar radiation reflected by a surface. High albedo (ice, snow) = more reflection, cooling. Low albedo (oceans, forests) = more absorption, warming.", tab: "notes" },
+      { term: "Shortwave radiation", def: "Incoming solar energy (visible and UV wavelengths). Passes through the atmosphere relatively freely; some reflected, rest absorbed by Earth's surface.", tab: "notes" },
+      { term: "Longwave (infrared) radiation", def: "Heat energy emitted by Earth's warm surface. Greenhouse gases absorb this outgoing radiation and re-emit it, warming the lower atmosphere.", tab: "notes" },
+      { term: "Positive feedback loop", def: "A change that triggers effects that amplify the original change. In climate: ice melt → lower albedo → more warming. Feedbacks magnify but do not initiate change.", tab: "notes" },
+      { term: "Ice–albedo feedback", def: "Warming melts ice/snow, exposing darker surfaces that absorb more solar energy, causing more warming and more melting. Explains polar amplification.", tab: "notes" },
+      { term: "Permafrost", def: "Ground that remains frozen year-round. Thawing permafrost releases methane and CO₂ from decomposing organic matter, creating a positive feedback loop.", tab: "notes" },
+      { term: "Polar amplification", def: "Phenomenon where polar regions warm faster than the global average, partly due to the ice–albedo feedback as sea ice declines.", tab: "notes" },
+      { term: "Consilience", def: "Multiple independent lines of evidence pointing to the same conclusion. APES emphasizes consilience as the basis for climate change conclusions.", tab: "notes" },
+      { term: "Climate vs. weather", def: "Weather is short-term (today's temperature). Climate is the long-term pattern over decades. A single cold event does not contradict a warming trend.", tab: "notes" },
+      { term: "Thermal expansion", def: "Water expands as it warms. One of the two primary mechanisms of sea-level rise (along with melting land ice).", tab: "notes" },
+      { term: "Ocean acidification", def: "CO₂ dissolves in seawater to form carbonic acid, lowering pH and reducing carbonate availability. Harms corals, shellfish, and other organisms that build calcium carbonate shells.", tab: "notes" },
+      { term: "Phenology", def: "Timing of seasonal biological events (flowering, migration, breeding). Climate change shifts phenology earlier, causing mismatches in ecosystems.", tab: "notes" },
+      { term: "Mitigation", def: "Actions to reduce the magnitude of climate change by cutting greenhouse gas emissions or increasing carbon sinks. Addresses the cause.", tab: "notes" },
+      { term: "Adaptation", def: "Adjusting human systems to reduce harm from climate change impacts that are already occurring or unavoidable. Addresses the effects.", tab: "notes" },
+      { term: "Carbon sequestration", def: "Capture and long-term storage of carbon in biomass (forests), soils, or geologic formations. Forests are major natural carbon sinks.", tab: "notes" },
+      { term: "Carbon sink", def: "System that absorbs more carbon than it releases. Oceans and forests are primary natural sinks. Can become sources if degraded.", tab: "notes" },
+      { term: "Carbon tax", def: "Fee on fossil fuels proportional to their carbon content. Makes high-carbon choices more expensive, incentivizing low-carbon alternatives.", tab: "notes" },
+      { term: "Cap-and-trade", def: "Sets a total emissions cap and allows companies to trade emission allowances. Cap ensures the environmental limit; trade is the market mechanism.", tab: "notes" },
+      { term: "Paris Agreement (2016)", def: "International climate agreement aiming to keep warming well below 2°C above pre-industrial levels. Countries set their own plans (NDCs). Broader than Kyoto.", tab: "notes" },
+      { term: "Kyoto Protocol", def: "International agreement (entered into force 2005) with binding GHG reduction targets for developed countries. Predecessor to the Paris Agreement.", tab: "notes" },
+      { term: "Managed retreat", def: "Moving infrastructure and development away from high-risk coastal zones as a long-term adaptation to sea-level rise. Socially and politically difficult.", tab: "notes" },
+      { term: "Stratospheric ozone", def: "Ozone (O₃) found 15–40 km above Earth's surface. Beneficial: absorbs harmful UV-B radiation. ~97% of atmospheric ozone is in the stratosphere.", tab: "notes" },
+      { term: "Tropospheric ozone", def: "Ozone near ground level. A pollutant and major component of photochemical smog. Harms lungs and plants. SAME molecule, opposite role to stratospheric ozone.", tab: "notes" },
+      { term: "CFCs (Chlorofluorocarbons)", def: "Stable compounds (carbon, chlorine, fluorine) formerly used in aerosols, refrigeration, and foam. Reach stratosphere, where UV breaks them apart releasing ozone-destroying chlorine.", tab: "notes" },
+      { term: "Catalytic ozone destruction", def: "Process where chlorine (from CFCs) destroys many ozone molecules in a cycle without being consumed itself. One CFC can destroy thousands of ozone molecules.", tab: "notes" },
+      { term: "Polar stratospheric clouds", def: "Clouds that form in extremely cold stratospheric air over Antarctica. Reactions on their surfaces activate chlorine that rapidly destroys ozone in Antarctic spring.", tab: "notes" },
+      { term: "Polar vortex", def: "Pattern of winds that isolates Antarctic (or Arctic) stratospheric air, intensifying ozone depletion by concentrating ozone-destroying chemicals over the pole.", tab: "notes" },
+      { term: "UV-B radiation", def: "Ultraviolet radiation (mid-wavelength) that causes sunburns and skin cancer. The ozone layer absorbs most UV-B; thinning ozone increases UV-B reaching Earth's surface.", tab: "notes" },
+      { term: "Montreal Protocol (1987)", def: "International treaty that phased out CFCs and other ozone-depleting substances. Major success — stratospheric ozone is slowly recovering.", tab: "notes" },
+      { term: "Invasive species", def: "Animal or plant transported to an area where it does not naturally live, then spreads, often harming ecosystems, economies, or human health.", tab: "notes" },
+      { term: "Endangered species", def: "Species facing very high risk of extinction in the wild. Assessed by breeding success, threats, population trend, and number remaining.", tab: "notes" },
+      { term: "Adaptation (biological)", def: "Genetic change at the population level over generations, allowing a species to survive in changing conditions. Different from acclimatization.", tab: "notes" },
+      { term: "Acclimatization", def: "An individual organism's physiological adjustment to gradual environmental change within its own lifetime. Not genetic; does not pass to offspring.", tab: "notes" },
+      { term: "Black carbon (soot)", def: "Not a gas — a particle/aerosol from incomplete combustion. Warms by absorbing sunlight in atmosphere and darkening ice/snow surfaces (lowering albedo).", tab: "notes" },
+      { term: "Milankovitch cycles", def: "Long-term changes in Earth's orbital shape, axial tilt, and wobble. Operate over thousands to tens of thousands of years — too slow to explain modern rapid warming.", tab: "notes" },
+      { term: "Resilience", def: "Ability of a system to withstand shocks and recover. Climate resilience is stronger with reliable infrastructure, financial resources, social networks, and effective governance.", tab: "notes" },
+    ];
+
+    const flashcards = [
+      { front: "Explain the greenhouse effect step by step, including which radiation types are involved.", back: "Shortwave solar radiation reaches Earth → surface absorbs energy and warms → warm surface emits LONGWAVE (infrared) radiation upward → greenhouse gases absorb outgoing infrared and re-emit in all directions, including back toward surface → Earth warms more than it would without GHGs. GHGs trap OUTGOING infrared; they do NOT block incoming sunlight." },
+      { front: "What is albedo and how does ice loss create a positive feedback loop?", back: "Albedo = fraction of incoming solar radiation reflected. Ice and snow have HIGH albedo (more reflection, more cooling). Warming melts ice → darker ocean/land exposed → LOWER albedo → more solar energy absorbed → more warming → more ice melts. This ice–albedo feedback explains why the poles warm faster than the global average (polar amplification)." },
+      { front: "List the main greenhouse gases and connect each to its key human source.", back: "CO₂ → fossil fuel combustion, deforestation, cement. CH₄ → livestock, rice paddies, landfills, natural gas leaks. N₂O → nitrogen fertilizers, manure management. Fluorinated gases → refrigeration, industrial processes. Water vapor → mainly a FEEDBACK, not a direct emission driver. O₂ and N₂ are NOT greenhouse gases." },
+      { front: "What are the two primary mechanisms of sea-level rise, and why does melting sea ice not matter?", back: "1. THERMAL EXPANSION: water expands as it warms. 2. MELTING LAND ICE: glaciers and ice sheets add water to ocean. Melting FLOATING sea ice doesn't significantly raise sea level because it already displaces ocean water (like ice in a glass). Sea ice affects albedo and ecosystems, but not sea level directly." },
+      { front: "Why can't natural factors (solar variability, volcanoes, Milankovitch cycles) explain modern warming?", back: "Solar variability: influence too small (~0.1°C) and doesn't match the rate or direction of modern warming. Volcanic eruptions: inject stratospheric aerosols that REFLECT sunlight → temporary COOLING, not sustained warming. Milankovitch cycles: operate over thousands of years — way too slow for modern rapid warming. Human GHG emissions are the only factor that matches the rate, direction, and magnitude." },
+      { front: "Distinguish stratospheric ozone from tropospheric ozone.", back: "STRATOSPHERIC ozone (15–40 km): BENEFICIAL — absorbs UV-B, protecting life below. TROPOSPHERIC ozone (ground level): POLLUTANT — major component of photochemical smog, harms lungs and plants. Same molecule (O₃), OPPOSITE roles. 'Ozone is good up high, bad nearby.' Never confuse ozone depletion (stratospheric) with smog (tropospheric)." },
+      { front: "How do CFCs destroy ozone, and why is the destruction 'catalytic'?", back: "CFCs are chemically stable → persist in lower atmosphere → eventually reach stratosphere → UV radiation breaks CFC apart → releases chlorine atoms → Cl reacts with O₃ (ozone) → destroys it → Cl is released again (NOT consumed) → can destroy thousands more O₃ molecules. CATALYTIC = the chlorine is a catalyst: speeds the reaction but is not used up. One CFC = massive ozone damage." },
+      { front: "Why is ozone depletion worst over Antarctica?", back: "Extremely cold Antarctic stratospheric temperatures (winter) form POLAR STRATOSPHERIC CLOUDS. Reactions on cloud surfaces convert chlorine reservoirs into forms that rapidly destroy ozone when sunlight returns in Antarctic SPRING. The POLAR VORTEX isolates Antarctic air from mixing with the rest of the atmosphere, concentrating ozone-destroying chemicals. Combined effect = the Antarctic 'ozone hole.'" },
+      { front: "What is the difference between adaptation and mitigation? Give examples of each.", back: "MITIGATION reduces the SIZE of climate change (cuts GHG emissions or increases sinks): solar panels, wind energy, reforestation, carbon tax, electric vehicles. ADAPTATION reduces the DAMAGE from climate change (prepares for impacts): seawalls, drought-tolerant crops, heat warning systems, cooling centers, managed retreat. A common trap: solar panels are mitigation, not adaptation." },
+      { front: "Compare carbon tax and cap-and-trade: how does each reduce emissions?", back: "CARBON TAX: sets a price per unit of CO₂ (or carbon content of fuel). Makes high-carbon options more expensive; firms and consumers switch to lower-carbon alternatives. Price is fixed; total reduction varies. CAP-AND-TRADE: sets a total emissions LIMIT (cap); issues allowances that can be traded. Cap guarantees the environmental limit; trading means cheapest reductions happen first. Quantity of emissions is fixed; price varies." },
+      { front: "Distinguish biological adaptation from acclimatization with an example of each.", back: "ADAPTATION (biological): genetic change at the population level across GENERATIONS. Example: a fish population evolving heat tolerance over many generations. ACCLIMATIZATION: an individual organism's physiological adjustment within its LIFETIME. Example: a person's body producing more red blood cells at high altitude. Adaptation = evolutionary, heritable, slow. Acclimatization = individual, non-heritable, faster." },
+      { front: "Identify three traits that make a species likely to become invasive, and give one example.", back: "Invasive species traits: broad diet (can eat many things), high reproduction rate, wide environmental tolerance, short generation times, high dispersal ability, close association with humans. Example: Zebra mussels — reproduce rapidly, attach to any hard surface, tolerant of varied water conditions, transported on boat hulls. Economic AND ecological damage: clog pipes, displace native mussels, alter food webs." },
+      { front: "What are the human health and ecosystem impacts of increased UV-B from ozone depletion?", back: "HUMAN: increased skin cancer risk, cataracts, eye damage, immune suppression, more sunburns. ECOSYSTEM: reduced phytoplankton growth (cascades through aquatic food webs), damaged plant tissues, reduced crop yields, increased mutations in organisms. MATERIALS: accelerated degradation of plastics and paints. Remember: these are UV-B exposure effects — NOT temperature effects. Don't confuse with climate change impacts." },
+      { front: "What is ocean acidification, what causes it, and which organisms are most affected?", back: "CAUSE: atmospheric CO₂ dissolves in seawater → forms carbonic acid → lowers ocean pH → reduces carbonate ion availability. AFFECTED ORGANISMS: corals (can't build calcium carbonate skeletons), shellfish (oysters, clams, mussels), pteropods, some plankton. NOT caused by acid rain (that's a different problem). Ocean acidification is driven by CO₂ uptake from the atmosphere — separate from, but compounding, ocean warming." },
+      { front: "Why is permafrost thaw considered a positive feedback loop in climate change?", back: "Warming temperatures → thaw permafrost (permanently frozen ground) → frozen organic matter (dead plants etc.) begins decomposing → decomposers release CO₂ and CH₄ (methane) → these GHGs increase warming → more permafrost thaws → more GHG release. The initial warming creates more warming. Also practical consequence: infrastructure (buildings, roads) built on permafrost can collapse as ground thaws." },
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Greenhouse Effect & Feedbacks",
+        blocks: [
+          ["Restate the Problem", "Explain the enhanced greenhouse effect: how rising CO₂ and other GHG concentrations from human activities amplify the natural greenhouse effect, leading to net warming."],
+          ["Mechanism", "Shortwave radiation in → surface absorbs → emits longwave infrared → GHGs absorb outgoing infrared and re-emit toward surface → surface warms. Identify key gases (CO₂, CH₄, N₂O) and sources (fossil fuels, agriculture, deforestation)."],
+          ["Positive Feedbacks", "Ice–albedo: warming melts ice → lower albedo → more absorption → more warming. Water vapor: warming → more evaporation → stronger GHE → more warming. Permafrost: warming → thaw → CH₄/CO₂ release → more warming."],
+          ["Evaluation/Tradeoffs", "Distinguish feedbacks (amplify) from forcings (initiate). Acknowledge natural factors (solar, volcanic) but explain why they cannot account for modern warming — wrong direction, wrong timescale, wrong magnitude."],
+          ["Conclusion", "Propose mitigation strategies targeting the specific emission source: electricity (renewables), transport (EVs), agriculture (fertilizer management, manure capture), land (reforestation)."]
+        ]
+      },
+      {
+        label: "Sea-Level Rise Impacts & Adaptation",
+        blocks: [
+          ["Restate the Problem", "Sea level is rising due to thermal expansion and land-ice melt; this threatens coastal communities with inundation, saltwater intrusion, storm surge, and displacement."],
+          ["Two Mechanisms", "1. Thermal expansion: water expands as oceans absorb heat. 2. Melting land ice: glaciers and ice sheets add water. Clarify: melting sea ice does NOT significantly raise sea level."],
+          ["Cascading Impacts", "Coastal flooding and storm surge amplification · Saltwater intrusion into freshwater aquifers · Inundation of coastal wetlands and estuaries · Displacement of coastal populations · Economic damage to infrastructure and agriculture."],
+          ["Adaptation Strategies", "Engineered: seawalls, levees, elevated buildings — effective but expensive, can fail under extremes, may harm wetlands. Nature-based: restore coastal wetlands and mangroves — cheaper, provides habitat and carbon storage. Managed retreat: move development inland — most sustainable long-term but socially difficult."],
+          ["Equity Dimension", "Low-income coastal communities face disproportionate risk and have fewer resources to adapt. Environmental justice requires strategies accessible to all communities, not only expensive engineering solutions."]
+        ]
+      },
+      {
+        label: "Ozone Depletion: Cause, Effects & Solution",
+        blocks: [
+          ["Restate the Problem", "CFCs and other ozone-depleting substances thin the stratospheric ozone layer, increasing UV-B radiation reaching Earth's surface with serious biological and health consequences."],
+          ["Mechanism of Depletion", "CFCs stable in troposphere → reach stratosphere → UV breaks CFC apart → releases Cl → Cl reacts with O₃ → destroys ozone catalytically (Cl not consumed) → one CFC destroys thousands of O₃ molecules. Worst over Antarctica: polar stratospheric clouds + polar vortex intensify destruction in spring."],
+          ["Impacts", "Human: skin cancer, cataracts, immune suppression. Ecosystem: phytoplankton decline → aquatic food web disruption; reduced crop yields; increased mutation rates. Materials: accelerated degradation of plastics and paints."],
+          ["Solution: Montreal Protocol", "Phase-out of CFCs and halons by international agreement. Worked because causes were narrow (specific chemicals/industries), alternatives were developed, costs/benefits were clearer than for climate change. Ozone is slowly recovering."],
+          ["Additional Policies", "Tariffs on CFC-producing countries · Rebates for old appliance turn-in · Product regulations · Coolant alternatives (ammonia, propane) · Consumer education. Note: replacement chemicals (HFCs) are potent GHGs — solutions can introduce new problems."]
+        ]
+      },
+      {
+        label: "Biodiversity Loss & Invasive Species",
+        blocks: [
+          ["Restate the Problem", "Climate change compounds habitat loss, fragmentation, and invasive species pressure to threaten biodiversity worldwide, increasing extinction risk for many species."],
+          ["Species Responses to Change", "Migration: requires corridors, limited by fragmentation. Adaptation (genetic): requires many generations, depends on population size and variability. Acclimatization (individual): physiological, non-heritable. Plants especially vulnerable — cannot migrate as individuals."],
+          ["Invasive Species Mechanisms", "Competitive exclusion · Predation of native species · Disease transmission · Habitat modification · Economic damage (infrastructure). Example: zebra mussels clog pipes AND displace native mussels. Traits: high reproduction, broad diet, wide tolerance, close human association."],
+          ["Endangered Species", "Contributing factors: low reproductive rate, limited range, specialized diet, hunting/harvest pressure, habitat loss, fixed migration routes. Protecting species preserves genetic diversity, keystone and indicator species, and ecosystem function."],
+          ["Conservation Strategies", "Wildlife corridors and sanctuaries · Captive breeding programs · Protective laws · Land trusts · Ecosystem restoration · Invasive species control · Habitat management. Explain mechanism: corridors reduce isolation, allow climate-driven range shifts, maintain gene flow."]
+        ]
+      }
+    ];
+
+    const quizQuestions = [
+      { question: "Earth receives solar energy as shortwave radiation. A student argues that 'greenhouse gases block sunlight from reaching Earth's surface, which is why the planet is warming.' What is wrong with this reasoning?", options: ["Greenhouse gases only block UV radiation, not visible light, so the student is partially correct", "Greenhouse gases do not block incoming shortwave radiation — they absorb and re-emit OUTGOING longwave (infrared) radiation emitted by Earth's warm surface. Blocking incoming sunlight would cool the planet, not warm it", "The student is correct — greenhouse gases do block incoming sunlight in the stratosphere", "Greenhouse gases only warm the planet by reflecting solar radiation from space back toward the surface"], correct: 1, explanation: "This is the most common misconception. The greenhouse effect involves OUTGOING longwave (infrared) radiation from Earth's warm surface, not incoming sunlight. GHGs let shortwave solar radiation pass through, then absorb the longer-wavelength infrared emitted by the warm surface and re-radiate it in all directions, including back toward the surface. Blocking incoming sunlight would cause cooling, not warming — that's what volcanic aerosols and high albedo surfaces do." },
+      { question: "Scientists document that global average surface temperatures have increased over the past century, CO₂ concentrations have risen by over 50% since pre-industrial times, and ocean heat content has risen consistently. A skeptic argues that a single cold winter in a major city disproves warming. What logical error is the skeptic making, and what is the correct interpretation?", options: ["The skeptic is correct — local temperature measurements are the most reliable indicators of climate change", "The skeptic is confusing weather (short-term local conditions) with climate (long-term global patterns). A single cold winter is consistent with long-term warming if the average trend is upward; multiple independent lines of evidence (temperature, ocean heat, ice loss, sea level) all point to the same conclusion", "The skeptic is right that ocean heat content is irrelevant because only atmospheric measurements matter", "The skeptic's argument is valid because warming should eliminate cold weather entirely if it were real"], correct: 1, explanation: "Weather vs. climate is a fundamental distinction. Weather is short-term and local; climate is the long-term average over decades and globally. Natural variability creates cold events even during warming trends. The APES principle is consilience: multiple independent lines of evidence (temperature records, ocean heat, glacier retreat, sea level rise, phenology shifts) all point to the same conclusion, which is much stronger than any single measurement. One cold winter is expected noise, not a trend." },
+      { question: "A coastal city at sea level is planning long-term adaptation to climate change. Which combination of approaches addresses the MOST important drivers of sea-level rise and provides the MOST sustainable benefits?", options: ["Desalinate seawater to reduce ocean volume and build floating platforms for city infrastructure", "Implement cooling centers and heat warning systems to address the city's most immediate climate risk", "Restore coastal mangrove forests and wetlands (reduces storm surge and provides habitat), upgrade stormwater systems to handle more intense rainfall, and develop a managed retreat plan for the most vulnerable low-lying areas", "Build a large concrete seawall around the entire city perimeter to permanently block all sea-level rise"], correct: 2, explanation: "This multi-strategy approach is strongest because it uses nature-based solutions (mangroves reduce storm surge, cost-effectively, with habitat co-benefits), infrastructure upgrades (stormwater handles the precipitation dimension of climate impacts), and managed retreat planning (acknowledges that some areas are too risky for permanent occupation long-term). A seawall alone is expensive, can fail catastrophically under extreme conditions, and may harm the wetlands that provide natural protection. Cooling centers address heat, not sea-level rise — a category error." },
+      { question: "A student writes: 'Water vapor is the strongest greenhouse gas, so water vapor is the main driver of long-term climate change, and reducing human water vapor emissions would solve the problem.' Identify TWO errors in this statement.", options: ["Water vapor is not actually a greenhouse gas, and human water vapor emissions are the primary driver of warming", "Error 1: While water vapor is the most abundant GHG, it is primarily a FEEDBACK (amplifier) not the original long-term driver — it responds to warming initiated by longer-lived gases like CO₂. Error 2: Human activities do not significantly change atmospheric water vapor directly — warm air from CO₂-driven warming holds more moisture, which is what increases water vapor. Controlling CO₂ is the lever.", "Error 1: Water vapor is not the strongest GHG — CO₂ is more powerful per molecule. Error 2: Water vapor emissions have no warming effect because they condense out of the atmosphere too quickly to matter at all.", "The student is correct — water vapor management is the most important climate policy tool"], correct: 1, explanation: "Two key concepts: First, water vapor is a FEEDBACK, not a forcing. Warming from longer-lived GHGs (CO₂, CH₄) increases evaporation, which raises water vapor concentration, which amplifies the initial warming. Second, humans don't emit enough water vapor to meaningfully change atmospheric concentrations — what humans do is increase CO₂, which warms the atmosphere, which allows it to hold more water vapor. Control CO₂ to control the feedback." },
+      { question: "Why is ozone depletion worst over Antarctica each spring, even though CFCs were primarily released in the Northern Hemisphere and industrialized nations?", options: ["Antarctica is closest to the Sun during spring, so UV radiation is strongest there", "CFCs are heavier than air and sink to the lowest altitude, which is at the South Pole", "Extremely cold Antarctic winter temperatures form polar stratospheric clouds; reactions on their surfaces convert chlorine to highly reactive forms; when spring sunlight returns, these destroy ozone rapidly. The polar vortex isolates Antarctic stratospheric air, preventing mixing and concentrating ozone-destroying chemicals", "The ozone hole is actually worst over the Arctic, not Antarctica — a common misconception"], correct: 2, explanation: "The mechanism is specific: (1) Antarctic winter creates extremely cold stratospheric temperatures, forming polar stratospheric clouds. (2) Reactions on cloud surfaces convert chlorine reservoirs (from CFC breakdown) into highly reactive forms. (3) When sunlight returns in Antarctic spring, these reactive chlorine species rapidly destroy ozone. (4) The polar vortex acts like a containment vessel, preventing Antarctic stratospheric air from mixing with ozone-richer air from lower latitudes. CFCs travel globally via atmospheric circulation — they don't stay where they're released." },
+      { question: "A government wants to reduce greenhouse gas emissions using a market-based mechanism that GUARANTEES total emissions stay within a specific limit, while allowing flexibility in WHERE reductions occur. Which policy tool fits this description, and how does it work?", options: ["A carbon tax — sets a price on carbon that guarantees a specific emission level will be reached", "Cap-and-trade — sets a total emissions limit (cap) and issues tradeable allowances. The cap ensures the environmental limit is met; companies can buy/sell allowances so reductions happen wherever they are cheapest. Total emissions are capped; price of allowances varies with demand", "A fuel economy standard — guarantees specific emissions from the transportation sector only", "A renewable portfolio standard — guarantees zero emissions from the electricity sector"], correct: 1, explanation: "This is a precise policy distinction. A CARBON TAX sets a price but doesn't guarantee a specific quantity of emissions — firms might pay the tax and keep emitting if it's cheaper than reducing. CAP-AND-TRADE sets the QUANTITY (cap) and lets the price float. This guarantees the environmental outcome (total emissions ≤ cap) while allowing market flexibility (reductions occur where cheapest). Carbon tax controls price, not quantity; cap-and-trade controls quantity, not price." },
+      { question: "A marine ecologist studying ocean chemistry finds that coral reefs in a warm tropical sea are bleaching and failing to grow new skeleton material, despite water temperatures having risen only slightly. She also notes the water pH has dropped measurably over the past 50 years. What process most likely explains the coral decline, and what is its primary cause?", options: ["Thermal pollution from shipping lanes is raising water temperature above coral tolerance thresholds", "Ocean acidification: rising atmospheric CO₂ dissolves in seawater → forms carbonic acid → lowers pH → reduces carbonate ion concentration → corals and other calcifiers cannot build or maintain calcium carbonate skeletons. The primary cause is increasing atmospheric CO₂ from fossil fuel combustion.", "Eutrophication from agricultural runoff is providing excess nutrients that stimulate algae overgrowth on the coral", "Acid rain from industrial emissions is lowering ocean pH in the tropics"], correct: 1, explanation: "The key indicators are pH drop + shell/skeleton formation failure + open ocean tropical location. This is ocean acidification, not temperature stress (bleaching from heat looks different — coral expelling symbiotic algae), not eutrophication (that's nutrient-driven, not pH-driven), and not acid rain (which affects lakes and terrestrial ecosystems near sources, not open tropical oceans). CO₂ + H₂O → H₂CO₃ (carbonic acid) → releases H⁺ ions → lowers pH → fewer carbonate ions → corals can't grow skeleton." },
+      { question: "A conservation biologist argues that building wildlife corridors between fragmented forest patches is a critical climate change adaptation strategy. Why would habitat corridors help species cope with climate change specifically (not just habitat loss generally)?", options: ["Corridors allow natural gas to flow between forest patches, providing energy for hibernating animals", "As climate zones shift poleward and to higher elevations, species must migrate to track suitable conditions. Corridors provide connected pathways for species to move through the landscape, preventing isolated populations from being trapped in conditions they can no longer tolerate. Without corridors, fragmentation makes range shifts physically impossible even if suitable habitat exists elsewhere", "Corridors allow non-native species to colonize new areas, which increases biodiversity and resilience", "Corridors only help migratory birds; non-migratory species are unaffected by climate shifts"], correct: 1, explanation: "Climate change is shifting the geographic location of suitable habitat conditions — warmer or drier conditions push species to higher latitudes or elevations. For species to track these shifting conditions, they need physically connected pathways. Without corridors, even if suitable habitat exists 50 km north, a species cannot reach it across a sea of developed land. This is a specific climate adaptation function of corridors, beyond their general role in supporting genetic diversity and population viability in fragmented landscapes." },
+      { question: "An island nation in the Pacific is considering four climate strategies. Which one is MITIGATION, and how does it differ from the other three (which are adaptation)?", options: ["All four are mitigation strategies if they involve reducing the use of fossil fuels on the island", "A: Building coastal mangrove buffers to reduce storm surge (adaptation). B: Developing drought-resistant crop varieties (adaptation). C: Switching electricity generation from diesel to solar panels (MITIGATION — reduces GHG emissions). D: Establishing emergency evacuation plans for flooding (adaptation). Mitigation = reduces the cause; adaptation = reduces the harm.", "All four are adaptation strategies because they are responses to climate change", "Switching to solar is adaptation because it helps the island adapt its energy system to modern technology"], correct: 1, explanation: "Mitigation = reducing greenhouse gas emissions or increasing carbon sinks (addressing the CAUSE of climate change). Switching from diesel to solar eliminates CO₂ emissions from electricity generation. The other three reduce harm from impacts (storm surge, drought, flooding) but don't reduce global GHG levels — they're adaptation. This is one of the most-tested distinctions in Unit 9. Key question: does this action reduce the amount of future climate change, or reduce damage from climate change that's already happening?" },
+      { question: "A species of salmon historically migrated from the Pacific Ocean to spawn in cold mountain streams. Engineers have built dams for hydropower on these rivers, and upstream water temperatures have warmed by 3°C. Biologists observe rapid decline in salmon populations. Which combination of stressors is MOST accurately described as creating a 'double trap' for this species?", options: ["Overfishing in the ocean combined with invasive predatory species in the streams", "Dams physically block migration routes (preventing salmon from reaching spawning habitat), AND warmer upstream water temperatures stress salmon physiology and reduce oxygen availability — both barriers operate simultaneously, preventing both movement and survival even if one barrier were removed alone", "Changing precipitation patterns have reduced stream flow, and predatory birds have increased in number near the streams", "Salmon have evolved to spawn in warmer waters, so the temperature increase is actually beneficial"], correct: 1, explanation: "This question tests the concept of multiple interacting stressors. Salmon require: (1) the ability to travel to their spawning grounds (blocked by dams) and (2) cold, well-oxygenated water for spawning and rearing juveniles (compromised by warming). Each stressor alone would be severe; together they eliminate viable salmon populations even if one could be partially addressed. This also illustrates how climate change interacts with human infrastructure — the dam is not climate change, but climate warming worsens conditions in the remaining accessible habitat." },
+    ];
+
+    const nav = document.getElementById("sidebarNav"), mainEl = document.getElementById("main"), ambientOverlay = document.getElementById("ambientOverlay"), cursor = document.getElementById("cursor"), pinBtn = document.getElementById("pinBtn"), sidebar = document.getElementById("sidebar"), apToggleBtn = document.getElementById("apToggleBtn"), bestScoreEl = document.getElementById("bestScore"), themeToggleBtn = document.getElementById("themeToggleBtn"), themeLabel = document.getElementById("themeLabel");
+
+    let currentTab = "dashboard", quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() { nav.innerHTML = tabs.map(t => `<button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button"><span class="nav-indicator"></span><span class="nav-icon">${t.icon}</span><span class="nav-label">${t.label}</span></button>`).join("") }
+
+    function switchTab(id) { currentTab = id; document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id)); document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id)); const t = tabs.find(x => x.id === id); if (t) ambientOverlay.style.background = t.ambient; mainEl.scrollTo({ top: 0, behavior: "smooth" }) }
+
+    function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
+
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
+
+    function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
+
+    function selectEssay(i, outlineId) { document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i)); const o = essayOutlines[i], ol = document.getElementById(outlineId); if (ol) { ol.innerHTML = o.blocks.map(([l, b]) => `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join(""); ol.classList.add("show") } }
+
+    function renderQuizQuestion() { const qm = document.getElementById("quizMount"), q = quizQuestions[quizIndex]; if (!q) { const pct = Math.round((quizScore / quizQuestions.length) * 100), prev = Number(localStorage.getItem("apes_u9_best") || 0), best = Math.max(prev, pct); localStorage.setItem("apes_u9_best", String(best)); bestScoreEl.textContent = best + "%"; qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review the greenhouse effect mechanism, sea-level rise drivers, mitigation vs. adaptation distinction, and ozone chemistry if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`; return } quizLocked = false; qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>` }
+
+    function openModal(id) { document.getElementById(id).classList.add("open") }
+    function closeModal(id) { document.getElementById(id).classList.remove("open") }
+    function initBestScore() { const b = localStorage.getItem("apes_u9_best"); bestScoreEl.textContent = b ? b + "%" : "--" }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => { if (!window.matchMedia("(pointer:fine)").matches) return; cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px" });
+    document.addEventListener("mouseover", e => { if (!window.matchMedia("(pointer:fine)").matches) return; const s = e.target.closest("button,a,.flash-card,.glossary-card") ? "18px" : "10px"; cursor.style.width = s; cursor.style.height = s });
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin" });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab) });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100) } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped") });
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus() });
+    document.getElementById("sbInput").addEventListener("input", e => { const q = e.target.value.toLowerCase().trim(), m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8); document.getElementById("sbResults").innerHTML = m.length ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>` });
+    document.getElementById("sbResults").addEventListener("click", e => { const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return; switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open"); document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = ""; if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm) } });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab) });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active") });
+    themeToggleBtn.addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); themeLabel.textContent = off ? "Theme Off" : "Theme On" });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal") });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal") });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline") });
+    document.getElementById("quizMount").addEventListener("click", e => { const opt = e.target.closest(".quiz-option"); if (opt && !quizLocked) { quizLocked = true; const q = quizQuestions[quizIndex], sel = Number(opt.dataset.optionIndex); document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong") }); if (sel === q.correct) quizScore++; document.getElementById("quizFeedback").textContent = q.explanation; document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>` } if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion() } if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion() } });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
+    mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
+    switchTab("dashboard");
+  </script>
+</body>
+
+</html>

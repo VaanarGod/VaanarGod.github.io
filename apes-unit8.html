@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AP Environmental Science — Unit 8: Aquatic &amp; Terrestrial Pollution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #060a0e;
+      --card: #080e13;
+      --card2: #0a1218;
+      --border: rgba(42, 160, 220, .08);
+      --text: #b0d5e8;
+      --muted: #305070;
+      --g: #2aa0dc;
+      --g2: #2a6cc4;
+      --g3: #4bb8a0;
+      --gold: #60d0f0;
+      --orange: #2aa0dc;
+      --red: #2a6cc4;
+      --amber: #4bb8a0;
+      --accent: #2aa0dc;
+      --body-copy-color: #406880;
+      --mini-note-body: #204050;
+      --code-bg: #020508;
+      --code-border: rgba(42, 160, 220, .12);
+      --code-color: #2aa0dc;
+      --progress-bar: linear-gradient(90deg, #2aa0dc, #2a6cc4);
+    }
+
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #e0e0e0;
+      --muted: #555;
+      --g: #aaa;
+      --g2: #999;
+      --g3: #888;
+      --gold: #bbb;
+      --orange: #aaa;
+      --red: #6090c0;
+      --amber: #60a090;
+      --accent: #aaa;
+      --body-copy-color: #777;
+      --mini-note-body: #555;
+      --code-bg: #0a0a0a;
+      --code-border: rgba(255, 255, 255, .08);
+      --code-color: #999;
+      --progress-bar: linear-gradient(90deg, #666, #999);
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      cursor: none;
+      transition: background .4s, color .4s
+    }
+
+    /* Water ripple grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(42, 160, 220, .018) 1px, transparent 1px), linear-gradient(90deg, rgba(42, 160, 220, .018) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+      opacity: .22;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--g);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      transition: width .2s, height .2s
+    }
+
+    #readingProgress {
+      position: fixed;
+      top: 0;
+      left: 72px;
+      right: 0;
+      height: 3px;
+      z-index: 100
+    }
+
+    #readingProgressFill {
+      width: 0%;
+      height: 100%;
+      background: var(--progress-bar);
+      transition: background .4s
+    }
+
+    #ambientOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 40% 20%, rgba(42, 160, 220, .09), transparent 60%), radial-gradient(ellipse at 80% 70%, rgba(42, 108, 196, .05), transparent 50%);
+      opacity: .22;
+      pointer-events: none;
+      transition: background 1s, opacity .25s;
+      z-index: 0
+    }
+
+    body.theme-off #ambientOverlay {
+      opacity: 0
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 72px;
+      height: 100vh;
+      flex-shrink: 0;
+      background: rgba(2, 5, 8, .96);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: width .4s cubic-bezier(.23, 1, .32, 1), background .4s
+    }
+
+    body.theme-off #sidebar {
+      background: rgba(5, 5, 5, .95)
+    }
+
+    #sidebar:hover,
+    #sidebar.pinned {
+      width: 264px
+    }
+
+    #pinBtn {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      padding: 4px 7px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 8px;
+      letter-spacing: .1em;
+      opacity: 0;
+      cursor: none;
+      transition: opacity .25s, color .2s, border-color .2s;
+      font-family: 'Space Mono', monospace
+    }
+
+    #sidebar:hover #pinBtn,
+    #sidebar.pinned #pinBtn {
+      opacity: 1
+    }
+
+    #pinBtn.pinned {
+      color: var(--g);
+      border-color: rgba(42, 160, 220, .3)
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(42, 160, 220, .3);
+      background: rgba(42, 160, 220, .07);
+      color: var(--g);
+      flex-shrink: 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .05em
+    }
+
+    .logo-copy {
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .logo-copy,
+    #sidebar.pinned .logo-copy {
+      opacity: 1
+    }
+
+    .logo-copy h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--g);
+      text-transform: uppercase
+    }
+
+    .logo-copy p {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      font-family: 'Space Mono', monospace
+    }
+
+    .search-wrap {
+      position: relative;
+      padding: 10px
+    }
+
+    .sb-search-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .02);
+      color: var(--muted);
+      cursor: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, border-color .2s;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px
+    }
+
+    #sidebar:hover .sb-search-trigger,
+    #sidebar.pinned .sb-search-trigger {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .sb-search-trigger:hover {
+      border-color: rgba(42, 160, 220, .25)
+    }
+
+    #sbSearchPanel {
+      position: absolute;
+      top: calc(100% - 4px);
+      left: 10px;
+      right: 10px;
+      border: 1px solid rgba(42, 160, 220, .2);
+      background: rgba(2, 5, 8, .98);
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s, transform .22s;
+      z-index: 80;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .8)
+    }
+
+    #sbSearchPanel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0)
+    }
+
+    #sbSearchInner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .05)
+    }
+
+    #sbInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      outline: none;
+      cursor: none
+    }
+
+    #sbResults {
+      max-height: 280px;
+      overflow: auto
+    }
+
+    .sb-result {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      cursor: none;
+      transition: background .15s
+    }
+
+    .sb-result:hover {
+      background: rgba(42, 160, 220, .05)
+    }
+
+    .sb-result:last-child {
+      border-bottom: none
+    }
+
+    .sb-result-tab {
+      font-size: 8px;
+      color: var(--g);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-family: 'Space Mono', monospace
+    }
+
+    .sb-result-term {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: .04em
+    }
+
+    .sb-result-snip {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px
+    }
+
+    nav {
+      height: calc(100vh - 176px);
+      padding: 0 10px 14px;
+      overflow: auto
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--muted);
+      cursor: none;
+      white-space: nowrap;
+      transition: background .2s, color .2s;
+      position: relative;
+      font-family: 'Space Mono', monospace
+    }
+
+    .nav-btn:hover {
+      background: rgba(42, 160, 220, .05);
+      color: #4a90c0
+    }
+
+    .nav-btn.active {
+      background: rgba(42, 160, 220, .10);
+      color: var(--g)
+    }
+
+    .nav-btn.active .nav-indicator {
+      opacity: 1
+    }
+
+    .nav-indicator {
+      position: absolute;
+      left: 8px;
+      width: 4px;
+      height: 4px;
+      background: var(--g);
+      border-radius: 50%;
+      opacity: 0
+    }
+
+    .nav-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px
+    }
+
+    .nav-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .nav-label {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .nav-label,
+    #sidebar.pinned .nav-label {
+      opacity: 1
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      overflow: hidden;
+      white-space: nowrap
+    }
+
+    .sidebar-footer span:last-child {
+      opacity: 0;
+      transition: opacity .25s
+    }
+
+    #sidebar:hover .sidebar-footer span:last-child,
+    #sidebar.pinned .sidebar-footer span:last-child {
+      opacity: 1
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--g);
+      flex-shrink: 0;
+      animation: blink 2.4s ease-in-out infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .2
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ── MAIN ── */
+    #main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 36px 54px 80px;
+      position: relative;
+      z-index: 2
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 8px 0 20px;
+      backdrop-filter: blur(8px)
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .glass-btn,
+    #scoreTracker {
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      background: rgba(42, 160, 220, .05);
+      color: var(--muted);
+      padding: 9px 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block
+    }
+
+    .glass-btn:hover,
+    #scoreTracker:hover {
+      color: var(--g);
+      border-color: rgba(42, 160, 220, .3)
+    }
+
+    .glass-btn.active {
+      color: var(--g);
+      border-color: rgba(42, 160, 220, .36);
+      background: rgba(42, 160, 220, .1)
+    }
+
+    #themeToggleBtn {
+      border-radius: 20px;
+      border: 1px solid rgba(42, 160, 220, .35);
+      background: rgba(42, 160, 220, .08);
+      color: var(--g);
+      padding: 9px 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      backdrop-filter: blur(12px);
+      transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    #themeToggleBtn:hover {
+      background: rgba(42, 160, 220, .16)
+    }
+
+    body.theme-off #themeToggleBtn {
+      background: rgba(255, 255, 255, .04);
+      color: #555;
+      border-color: rgba(255, 255, 255, .15)
+    }
+
+    /* ── TAB CONTENT ── */
+    .tab-content {
+      display: none;
+      animation: fadeUp .35s ease both
+    }
+
+    .tab-content.active {
+      display: block
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .unit-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      display: block;
+      margin-bottom: 10px
+    }
+
+    .page-header h2 {
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: white
+    }
+
+    .page-header p {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .1em;
+      margin-top: 8px
+    }
+
+    /* ── CARDS ── */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .card-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: white;
+      margin-bottom: 14px
+    }
+
+    .body-copy {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      color: var(--body-copy-color);
+      line-height: 1.65
+    }
+
+    .body-copy p+p {
+      margin-top: 10px
+    }
+
+    .body-copy strong {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    .ap-term {
+      color: var(--g);
+      font-weight: 600
+    }
+
+    body:not(.ap-highlight) .ap-term {
+      color: inherit;
+      font-weight: 600
+    }
+
+    body.ap-highlight .ap-term {
+      background: rgba(42, 160, 220, .12);
+      border-radius: 3px;
+      padding: 0 3px;
+      color: var(--g)
+    }
+
+    .focus-callout {
+      margin-top: 18px;
+      background: rgba(42, 160, 220, .04);
+      border: 1px solid rgba(42, 160, 220, .12);
+      border-radius: 10px;
+      padding: 16px 18px
+    }
+
+    .focus-callout .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .mini-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 8px
+    }
+
+    .feature-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color .2s, transform .2s
+    }
+
+    .feature-card:hover {
+      border-color: rgba(42, 160, 220, .22);
+      transform: translateY(-2px)
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      color: white;
+      margin-bottom: 10px
+    }
+
+    .feature-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px
+    }
+
+    .accent-g {
+      border-left: 3px solid var(--g)
+    }
+
+    .accent-g2 {
+      border-left: 3px solid var(--g2)
+    }
+
+    .accent-g3 {
+      border-left: 3px solid var(--g3)
+    }
+
+    .accent-gold {
+      border-left: 3px solid var(--gold)
+    }
+
+    .accent-red {
+      border-left: 3px solid var(--red)
+    }
+
+    .accent-amber {
+      border-left: 3px solid var(--amber)
+    }
+
+    .principle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px
+    }
+
+    .principle-card .body-copy {
+      font-size: 13px;
+      margin-bottom: 12px
+    }
+
+    .note-jump {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--g);
+      background: transparent;
+      border: none;
+      cursor: none;
+      padding: 0;
+      transition: opacity .2s
+    }
+
+    .note-jump:hover {
+      opacity: .7
+    }
+
+    /* ── NOTES ── */
+    .notes-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px
+    }
+
+    .notes-toc .note-jump {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 14px;
+      background: var(--card2)
+    }
+
+    .notes-toc .note-jump:hover {
+      border-color: rgba(42, 160, 220, .3)
+    }
+
+    .note-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 20px;
+      scroll-margin-top: 80px
+    }
+
+    .note-section h3 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: white;
+      margin-bottom: 14px
+    }
+
+    .note-section h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .04em;
+      margin: 18px 0 10px
+    }
+
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 16px
+    }
+
+    .mini-note {
+      background: var(--card2);
+      border-radius: 10px;
+      padding: 14px 16px;
+      border: 1px solid var(--border)
+    }
+
+    .mini-note strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px
+    }
+
+    .mini-note .body-copy {
+      font-size: 12px;
+      color: var(--mini-note-body);
+      line-height: 1.55
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--code-color);
+      line-height: 1.8;
+      margin-top: 14px;
+      white-space: pre-wrap
+    }
+
+    /* ── GLOSSARY ── */
+    .glossary-filter-wrap {
+      margin-bottom: 20px
+    }
+
+    .glossary-filter-wrap input {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 10px 18px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      outline: none;
+      cursor: none;
+      transition: border-color .2s
+    }
+
+    .glossary-filter-wrap input:focus {
+      border-color: rgba(42, 160, 220, .35)
+    }
+
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px
+    }
+
+    .glossary-card {
+      cursor: none;
+      transition: border-color .2s, transform .2s
+    }
+
+    .glossary-card:hover {
+      border-color: rgba(42, 160, 220, .3);
+      transform: translateY(-2px)
+    }
+
+    .glossary-card h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+      letter-spacing: -.01em
+    }
+
+    /* ── FLASHCARDS ── */
+    .flash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px
+    }
+
+    .flash-card {
+      height: 200px;
+      perspective: 1000px;
+      cursor: none
+    }
+
+    .flash-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .5s cubic-bezier(.23, 1, .32, 1)
+    }
+
+    .flash-card.flipped .flash-inner {
+      transform: rotateY(180deg)
+    }
+
+    .flash-front,
+    .flash-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color .2s
+    }
+
+    .flash-card:hover .flash-front,
+    .flash-card:hover .flash-back {
+      border-color: rgba(42, 160, 220, .25)
+    }
+
+    .flash-back {
+      transform: rotateY(180deg)
+    }
+
+    .flash-front h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      line-height: 1.4
+    }
+
+    .flash-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    /* ── EXAM PREP ── */
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px
+    }
+
+    .exam-card .card-title {
+      font-size: 17px;
+      margin-bottom: 10px
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px
+    }
+
+    .modal.open {
+      display: flex
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid rgba(42, 160, 220, .2);
+      border-radius: 18px;
+      padding: 32px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative
+    }
+
+    .modal-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 20px
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px
+    }
+
+    /* ── QUIZ ── */
+    .quiz-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px
+    }
+
+    .quiz-question {
+      font-size: 17px;
+      font-weight: 600;
+      color: white;
+      line-height: 1.45;
+      margin-bottom: 20px;
+      letter-spacing: -.01em
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .quiz-option {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      text-align: left;
+      cursor: none;
+      transition: border-color .15s, background .15s
+    }
+
+    .quiz-option:hover {
+      border-color: rgba(42, 160, 220, .3);
+      background: rgba(42, 160, 220, .04)
+    }
+
+    .quiz-option.correct {
+      border-color: var(--g3);
+      background: rgba(75, 184, 160, .12);
+      color: var(--g3)
+    }
+
+    .quiz-option.wrong {
+      border-color: #c06060;
+      background: rgba(192, 96, 96, .1);
+      color: #c06060
+    }
+
+    .quiz-feedback {
+      margin-top: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      color: var(--body-copy-color);
+      line-height: 1.6
+    }
+
+    .quiz-next {
+      margin-top: 16px
+    }
+
+    .essay-topic-btn {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 10px 14px;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: border-color .2s, color .2s;
+      margin: 4px
+    }
+
+    .essay-topic-btn:hover,
+    .essay-topic-btn.active {
+      color: var(--g);
+      border-color: rgba(42, 160, 220, .32)
+    }
+
+    #essayOutline {
+      display: none;
+      margin-top: 20px;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    #essayOutline.show {
+      display: flex
+    }
+
+    .essay-block {
+      background: var(--card2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--g)
+    }
+
+    .essay-block-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--g);
+      margin-bottom: 6px
+    }
+
+    .essay-block-body {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--body-copy-color)
+    }
+
+    /* Score tracker */
+    #scoreTracker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 9px
+    }
+
+    #bestScore {
+      color: var(--g);
+      font-weight: 700
+    }
+
+    @media (max-width: 900px) {
+      #main {
+        padding: 24px 20px 80px
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="readingProgress">
+    <div id="readingProgressFill"></div>
+  </div>
+  <div id="ambientOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <button id="pinBtn" type="button">Pin</button>
+    <div class="sidebar-logo">
+      <div class="logo-icon">U8</div>
+      <div class="logo-copy">
+        <h1>APES</h1>
+        <p>Aquatic &amp; Terrestrial</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <button class="sb-search-trigger" id="openSearch" type="button">
+        <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Search terms…
+      </button>
+      <div id="sbSearchPanel">
+        <div id="sbSearchInner">
+          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="sbInput" type="text" placeholder="Search…" autocomplete="off" />
+        </div>
+        <div id="sbResults"></div>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <div class="dot"></div>
+      <span>APES</span>
+      <span>Unit 8 · Pollution</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div class="topbar">
+      <div class="top-actions">
+        <a class="glass-btn" href="apes-index.html">← All Units</a>
+        <a class="glass-btn" href="apes-unit1.html">Unit 1</a>
+        <a class="glass-btn" href="apes-unit2.html">Unit 2</a>
+        <a class="glass-btn" href="apes-unit3.html">Unit 3</a>
+        <a class="glass-btn" href="apes-unit4.html">Unit 4</a>
+        <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
+        <a class="glass-btn" href="apes-unit6.html">Unit 6</a>
+        <a class="glass-btn" href="apes-unit7.html">Unit 7</a>
+        <a class="glass-btn" href="apes-unit8.html" style="color:var(--g);border-color:rgba(42,160,220,.36);">Unit 8</a>
+        <a class="glass-btn" href="apes-unit9.html">Unit 9</a>
+      </div>
+      <div class="top-actions">
+        <div id="scoreTracker">Best: <span id="bestScore">--</span></div>
+        <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
+        <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Outlines</button>
+        <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
+        <button id="themeToggleBtn" type="button"><span id="themeLabel">Theme On</span></button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="tab-content active" id="dashboard">
+      <header class="page-header">
+        <span class="unit-tag">Unit 8 · AP Environmental Science</span>
+        <h2>Aquatic &amp; Terrestrial Pollution</h2>
+        <p>Source → pathway → impact → solution · The full pollution chain</p>
+      </header>
+
+      <div class="hero-grid">
+        <article class="card accent-g">
+          <div class="card-sub">Unit Overview</div>
+          <h2 class="card-title">Where Pollutants Go</h2>
+          <div class="body-copy">
+            <p>Unit 8 traces how pollution moves through watersheds, soils, food webs, and oceans. Water, air, and
+              living tissue act as "pipes" that move materials; soils, sediments, and organisms act as "sponges" that
+              store them. The core reasoning pattern is always <strong>source → movement → impact → solution</strong>.
+            </p>
+          </div>
+        </article>
+
+        <article class="card accent-amber">
+          <div class="card-sub">Why It Matters</div>
+          <h2 class="card-title">Persistence, Mobility &amp; Transformation</h2>
+          <div class="body-copy">
+            <p>A pollutant's impact depends on how long it lasts, how easily it spreads, and whether it becomes more or
+              less dangerous over time. The classic example is mercury converting to methylmercury — more bioavailable
+              and dangerous than its original form.</p>
+          </div>
+          <div class="focus-callout">
+            <div class="label">Big Picture</div>
+            <div class="body-copy">Eutrophication · BOD/DO · Wastewater treatment · Bioaccumulation · Heavy metals · Oil
+              spills · Solid waste · Hazardous waste · Clean Water Act · CERCLA</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="principle-grid">
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Pollution Basics</div>
+          <h3>Sources, Pathways &amp; Fate</h3>
+          <div class="body-copy">Point vs. nonpoint sources. Watersheds move pollutants. Persistence, mobility, and
+            transformation control impact.</div>
+          <button class="note-jump" data-note-target="n-basics">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-amber">
+          <div class="mini-label">Water Quality</div>
+          <h3>DO, BOD, pH &amp; Turbidity</h3>
+          <div class="body-copy">Key indicators of water health. BOD measures organic pollution load; high BOD depletes
+            dissolved oxygen and causes fish kills.</div>
+          <button class="note-jump" data-note-target="n-waterquality">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Wastewater Treatment</div>
+          <h3>Septic to Municipal</h3>
+          <div class="body-copy">Primary, secondary, and tertiary treatment stages. Septic system failure risks.
+            Anaerobic digestion for biogas.</div>
+          <button class="note-jump" data-note-target="n-wastewater">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g2">
+          <div class="mini-label">Eutrophication</div>
+          <h3>Nutrients → Dead Zones</h3>
+          <div class="body-copy">Nutrient enrichment → algal blooms → decomposition → hypoxia. Cultural eutrophication
+            links farms to coastal dead zones.</div>
+          <button class="note-jump" data-note-target="n-eutrophication">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-gold">
+          <div class="mini-label">Toxic Chemicals</div>
+          <h3>POPs, Biomagnification &amp; Endocrine Disruptors</h3>
+          <div class="body-copy">Persistent organics travel far, accumulate in fat, and magnify through food webs.
+            Endocrine disruptors cause reproductive and developmental harm.</div>
+          <button class="note-jump" data-note-target="n-toxics">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g3">
+          <div class="mini-label">Heavy Metals</div>
+          <h3>Mercury, Lead &amp; Mining</h3>
+          <div class="body-copy">Metals don't biodegrade. Methylmercury biomagnifies. Acid mine drainage dissolves
+            metals into streams.</div>
+          <button class="note-jump" data-note-target="n-metals">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-amber">
+          <div class="mini-label">Oil Pollution</div>
+          <h3>Spills, Runoff &amp; Cleanup</h3>
+          <div class="body-copy">Physical coating and chemical toxicity harm organisms. Dispersants redistribute rather
+            than remove oil. Chronic runoff matters as much as spills.</div>
+          <button class="note-jump" data-note-target="n-oil">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-red">
+          <div class="mini-label">Solid Waste &amp; Plastics</div>
+          <h3>Landfills, Microplastics &amp; Gyres</h3>
+          <div class="body-copy">MSW, hazardous waste, radioactive waste. Microplastics enter food webs. The Great
+            Pacific Garbage Patch concentrates floating debris.</div>
+          <button class="note-jump" data-note-target="n-solidwaste">View Notes →</button>
+        </article>
+        <article class="principle-card feature-card accent-g">
+          <div class="mini-label">Policy &amp; Solutions</div>
+          <h3>Clean Water Act, CERCLA &amp; BMPs</h3>
+          <div class="body-copy">CWA regulates discharges; SDWA protects drinking water; CERCLA funds Superfund
+            cleanups. BMPs tackle nonpoint runoff.</div>
+          <button class="note-jump" data-note-target="n-policy">View Notes →</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="tab-content" id="notes">
+      <header class="page-header">
+        <span class="unit-tag">Study Notes</span>
+        <h2>Unit 8 Deep Dive</h2>
+        <p>Scroll through all topics · Use links to jump</p>
+      </header>
+      <div class="notes-toc">
+        <button class="note-jump" data-note-target="n-basics">Pollution Basics</button>
+        <button class="note-jump" data-note-target="n-waterquality">Water Quality</button>
+        <button class="note-jump" data-note-target="n-wastewater">Wastewater Treatment</button>
+        <button class="note-jump" data-note-target="n-eutrophication">Eutrophication</button>
+        <button class="note-jump" data-note-target="n-toxics">Toxic Chemicals</button>
+        <button class="note-jump" data-note-target="n-metals">Heavy Metals</button>
+        <button class="note-jump" data-note-target="n-oil">Oil Pollution</button>
+        <button class="note-jump" data-note-target="n-wetlands">Wetlands &amp; Mangroves</button>
+        <button class="note-jump" data-note-target="n-solidwaste">Solid Waste</button>
+        <button class="note-jump" data-note-target="n-hazwaste">Hazardous Waste</button>
+        <button class="note-jump" data-note-target="n-policy">Policy &amp; Solutions</button>
+      </div>
+
+      <!-- 01 -->
+      <article class="note-section accent-g" id="n-basics">
+        <div class="mini-label">01 · Introduction</div>
+        <h3>Pollution Basics: Sources, Pathways &amp; Fate</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Pollution</strong> is any substance or energy introduced into the environment that
+            harms organisms, ecosystems, or human systems. On the AP exam, trace every scenario as <strong>source →
+              movement → impact → solution</strong>. A pollutant's impact depends heavily on its <strong
+              class="ap-term">persistence</strong> (how long it lasts), <strong class="ap-term">mobility</strong> (how
+            easily it moves), and <strong class="ap-term">transformations</strong> (whether it becomes more or less
+            harmful).</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Point vs. Nonpoint Sources</strong>
+            <div class="body-copy"><strong class="ap-term">Point source</strong>: specific, identifiable location
+              (factory discharge pipe, wastewater outfall). Easier to regulate. <strong class="ap-term">Nonpoint
+                source</strong>: diffuse pollution from many spread-out sources (farm runoff, urban streets). Harder to
+              regulate — no single outflow to sample.</div>
+          </div>
+          <div class="mini-note"><strong>Watersheds &amp; Runoff</strong>
+            <div class="body-copy">A <strong class="ap-term">watershed</strong> (drainage basin) is all land draining to
+              a common outlet. Any pollutant released anywhere in a watershed can be transported downhill with rain and
+              snowmelt. Runoff increases with impermeable surfaces, removed vegetation, and intense rainfall.</div>
+          </div>
+          <div class="mini-note"><strong>Urban Runoff Effects</strong>
+            <div class="body-copy">Large paved areas increase flooding and water pollution. Asphalt creates
+              microclimates, fragments habitats, depletes groundwater recharge, and reduces biodiversity. Storm drains
+              often discharge <em>untreated</em> water directly to rivers.</div>
+          </div>
+          <div class="mini-note"><strong>Pollutant Transformation</strong>
+            <div class="body-copy">Mercury → <strong class="ap-term">methylmercury</strong> (via microbes): far more
+              bioavailable and dangerous. Sunlight and microbes can also break pollutants down. The key lesson: dilution
+              does not eliminate persistent pollutants or prevent bioaccumulation.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Classify sources as point vs. nonpoint and propose targeted solutions. Trace a
+            pollutant through a watershed (source → pathway → impact). Don't call nonpoint source "unknown" — it means
+            diffuse. Storm drains often discharge untreated water; don't assume they connect to treatment plants.</div>
+        </div>
+      </article>
+
+      <!-- 02 -->
+      <article class="note-section accent-amber" id="n-waterquality">
+        <div class="mini-label">02 · Water Quality</div>
+        <h3>Indicators, Testing &amp; Pollution Categories</h3>
+        <div class="body-copy">
+          <p>Water quality is assessed using physical, chemical, and biological indicators. "Clean-looking" water is not
+            necessarily safe — water can be clear but contaminated with dissolved toxins or pathogens. The key AP chain
+            is: <strong>nutrients → algal bloom → decomposition → oxygen depletion → fish kills</strong>.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Dissolved Oxygen (DO)</strong>
+            <div class="body-copy">Amount of oxygen gas dissolved in water. Low DO signals organic pollution or warm
+              temperatures. Healthy streams have high DO; polluted or warm water has low DO. DO is the final indicator
+              of ecosystem health — fish die when DO drops too far.</div>
+          </div>
+          <div class="mini-note"><strong>BOD (Biochemical Oxygen Demand)</strong>
+            <div class="body-copy"><strong class="ap-term">BOD</strong> estimates organic pollution by measuring oxygen
+              consumed by decomposers. High BOD = more organic waste = more decomposer respiration = lower DO. Sewage,
+              manure, and food waste all raise BOD.</div>
+          </div>
+          <div class="mini-note"><strong>Temperature Effects</strong>
+            <div class="body-copy">Warmer water holds less dissolved oxygen (gases less soluble in warm water). Warm
+              water also raises metabolic rates, increasing organisms' oxygen needs just as supply decreases. Thermal
+              pollution from power plants causes these effects.</div>
+          </div>
+          <div class="mini-note"><strong>pH &amp; Metals</strong>
+            <div class="body-copy">Natural waters range ~pH 5–8.5. Lower pH increases solubility and mobility of heavy
+              metals, making them more toxic. Acid mine drainage drops pH and releases metals simultaneously — a double
+              threat.</div>
+          </div>
+          <div class="mini-note"><strong>Turbidity</strong>
+            <div class="body-copy">Cloudiness from suspended particles. Reduces light penetration → harms
+              photosynthesis. Can damage fish gills. Caused by sediment erosion, algal blooms, and urban runoff.</div>
+          </div>
+          <div class="mini-note"><strong>Nitrates vs. Phosphates</strong>
+            <div class="body-copy"><strong class="ap-term">Nitrates</strong>: water-soluble, leach easily into
+              groundwater and surface water. <strong class="ap-term">Phosphates</strong>: bind to soil particles —
+              erosion is the main delivery pathway. Small P inputs can contaminate large water volumes.</div>
+          </div>
+          <div class="mini-note"><strong>Fecal Coliform &amp; Pathogens</strong>
+            <div class="body-copy">Fecal coliform bacteria indicate untreated sewage contamination (from humans, farms,
+              feedlots). Presence means risk of disease-causing bacteria, viruses, and protozoa. A key water quality
+              indicator for swimming and drinking water.</div>
+          </div>
+          <div class="mini-note"><strong>Thermal Pollution</strong>
+            <div class="body-copy">Power plants and industrial cooling water raise water temperature. Warm water holds
+              less DO, kills temperature-sensitive species, and shifts species composition. Even a few degrees can
+              collapse local ecosystems.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">High BOD leads to LOW DO — don't confuse them. Eutrophication is a chain reaction, not
+            just "algae." Warmer water naturally holds less oxygen — thermal pollution worsens DO before decomposition
+            effects even kick in. Low pH → greater metal mobility → more toxicity.</div>
+        </div>
+      </article>
+
+      <!-- 03 -->
+      <article class="note-section accent-red" id="n-wastewater">
+        <div class="mini-label">03 · Wastewater Treatment</div>
+        <h3>Septic Systems, Municipal Treatment &amp; Drinking Water</h3>
+        <div class="body-copy">
+          <p>Managing wastewater is one of society's most direct tools for reducing waterborne disease and
+            oxygen-demanding pollution. Know the difference between <strong class="ap-term">septic systems</strong> and
+            <strong class="ap-term">municipal sewage treatment</strong>, and recognize key <strong
+              class="ap-term">drinking water treatment</strong> steps.
+          </p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Septic Systems</strong>
+            <div class="body-copy">Tank receives wastewater → solids settle (sludge), oils float → clarified liquid
+              flows to drain field → soil and microbes filter pathogens. Fails if drain field is too close to water
+              table or soils drain too quickly → nitrate leaching and pathogen contamination of groundwater.</div>
+          </div>
+          <div class="mini-note"><strong>Primary Treatment</strong>
+            <div class="body-copy">Physical removal: screens and settling tanks remove trash, grit, and suspended
+              solids. Does NOT remove dissolved nutrients or most pathogens. Only the first step — by itself,
+              insufficient.</div>
+          </div>
+          <div class="mini-note"><strong>Secondary Treatment</strong>
+            <div class="body-copy">Biological removal: microbes in aerated systems break down dissolved organic matter,
+              removing most BOD. Crucial for preventing oxygen depletion in receiving waters. Does not fully remove
+              nutrients.</div>
+          </div>
+          <div class="mini-note"><strong>Tertiary Treatment</strong>
+            <div class="body-copy">"Polishing" step: targets remaining nutrients — especially <strong
+                class="ap-term">nitrogen and phosphorus</strong> — via filtration, chemical precipitation, and
+              biological nutrient removal. Required to prevent eutrophication in sensitive receiving waters.</div>
+          </div>
+          <div class="mini-note"><strong>Disinfection</strong>
+            <div class="body-copy">Chlorine, ozone, or UV light kills pathogens. Does NOT remove dissolved toxic
+              chemicals or nutrients. Final pathogen-control step, not a catch-all cleanup.</div>
+          </div>
+          <div class="mini-note"><strong>Anaerobic Digestion</strong>
+            <div class="body-copy">Microbes break down sewage sludge without oxygen → produces <strong
+                class="ap-term">biogas</strong> (methane). Renewable energy strategy: reduces landfill volume, reduces
+              methane emissions, produces nutrient-rich digestate for fertilizer. Used for sludge (biosolids)
+              management.</div>
+          </div>
+          <div class="mini-note"><strong>Combined Sewer Overflows (CSOs)</strong>
+            <div class="body-copy">Older cities combine sewage and stormwater in one pipe. During heavy rain, capacity
+              is exceeded → raw sewage mixed with stormwater overflows directly into waterways. A major water quality
+              threat after storms.</div>
+          </div>
+          <div class="mini-note"><strong>Drinking Water Treatment</strong>
+            <div class="body-copy">Steps: <strong>flocculation-sedimentation</strong> (particles clump and settle) →
+              <strong>filtration</strong> (removes clays, organic matter) → <strong>disinfection</strong> (kills
+              pathogens) → <strong>ion exchange</strong> (removes arsenic, nitrates, heavy metals). Each step targets
+              different contaminants.
+            </div>
+          </div>
+        </div>
+        <h4>Treatment Stage Summary</h4>
+        <div class="code-block">Primary → physical settling → removes solids
+          Secondary → biological decomposition → removes BOD
+          Tertiary → advanced filtration/chemistry → removes N &amp; P
+          Disinfection → chlorine/UV → kills pathogens (NOT nutrients/metals)</div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Primary does NOT remove nutrients. Disinfection does NOT remove chemicals. To stop
+            eutrophication, tertiary treatment is needed. CSOs release untreated sewage after storms. Anaerobic
+            digestion produces energy and reduces waste — a renewable strategy, not just treatment.</div>
+        </div>
+      </article>
+
+      <!-- 04 -->
+      <article class="note-section accent-g2" id="n-eutrophication">
+        <div class="mini-label">04 · Eutrophication</div>
+        <h3>Nutrient Pollution &amp; Dead Zones</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Eutrophication</strong> occurs when a body of water becomes enriched with
+            nutrients, especially nitrogen and phosphorus, leading to excessive algal growth. When human activities are
+            the cause, it's called <strong class="ap-term">cultural eutrophication</strong>. The AP exam tests the full
+            causal chain, not just "algae blooms."</p>
+        </div>
+        <h4>Eutrophication Chain (Must Know)</h4>
+        <div class="code-block">1. Nutrients (N, P) enter water via runoff or sewage effluent
+          2. Algal blooms form → phytoplankton biomass increases
+          3. Turbidity increases → light penetration decreases → submerged plants die
+          4. Algae die and sink → decomposers consume them
+          5. BOD rises → decomposers respire heavily → DO drops (hypoxia)
+          6. Fish and invertebrates suffocate or flee → dead zone forms
+          7. Anaerobic bacteria may release toxic gases in severe low-oxygen conditions</div>
+        <div class="note-grid" style="margin-top:16px">
+          <div class="mini-note"><strong>Limiting Nutrients</strong>
+            <div class="body-copy">Freshwater systems are often <strong>phosphorus-limited</strong>. Marine/coastal
+              systems are often <strong>nitrogen-limited</strong>. Both N and P drive cultural eutrophication; manage
+              the limiting one for that system.</div>
+          </div>
+          <div class="mini-note"><strong>Harmful Algal Blooms (HABs)</strong>
+            <div class="body-copy"><strong class="ap-term">Cyanobacteria</strong> (blue-green algae) can produce toxins
+              affecting wildlife, pets, and humans. Even non-toxic blooms cause turbidity and oxygen depletion. HABs are
+              worsened by warm, nutrient-rich, calm water.</div>
+          </div>
+          <div class="mini-note"><strong>Coastal Dead Zones</strong>
+            <div class="body-copy">River drains farmed watershed → spring rains wash N-rich fertilizer to coast → algal
+              blooms offshore → algae die → decomposition consumes O₂ in bottom waters → hypoxia → bottom-dwellers die →
+              seasonal dead zone. The Gulf of Mexico dead zone is the classic U.S. example.</div>
+          </div>
+          <div class="mini-note"><strong>Major Sources</strong>
+            <div class="body-copy">Agricultural fertilizer runoff · animal feedlots and manure · sewage/septic failures
+              · household phosphate products · wastewater treatment plants lacking tertiary treatment. Mostly nonpoint —
+              hard to regulate with single permits.</div>
+          </div>
+          <div class="mini-note"><strong>Best Management Practices</strong>
+            <div class="body-copy">Riparian buffer strips · precision fertilizer application (right place, right time,
+              right amount) · vegetated buffer zones · retention ponds · permeable pavement · upgrade wastewater
+              treatment to tertiary · drip irrigation to reduce runoff · native vegetation landscaping.</div>
+          </div>
+          <div class="mini-note"><strong>Common Misconception</strong>
+            <div class="body-copy">More fertilizer does not always increase yield — fertilizer beyond crop demand
+              becomes pollution. Also: eutrophication's tested outcome is usually oxygen <em>depletion</em> after
+              decomposition, not oxygen increase from photosynthesis.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Explain eutrophication as a full causal chain from nutrient input to hypoxia. Propose
+            BMPs for agricultural nonpoint runoff. High nutrients → high algae → high BOD → LOW DO. Light reduction
+            happens before oxygen depletion. Don't treat it as point-source only.</div>
+        </div>
+      </article>
+
+      <!-- 05 -->
+      <article class="note-section accent-gold" id="n-toxics">
+        <div class="mini-label">05 · Toxic Chemicals</div>
+        <h3>Pesticides, POPs, Bioaccumulation &amp; Endocrine Disruptors</h3>
+        <div class="body-copy">
+          <p>Some pollutants harm organisms at very low concentrations by disrupting cells, nerves, hormones, or
+            development. The highest-risk chemicals are persistent, mobile, and likely to accumulate. The AP exam
+            emphasizes tracing <strong class="ap-term">POPs</strong> through food webs and distinguishing <strong
+              class="ap-term">bioaccumulation</strong> from <strong class="ap-term">biomagnification</strong>.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Persistent Organic Pollutants (POPs)</strong>
+            <div class="body-copy">Carbon-based compounds resistant to degradation. Can travel long distances via
+              atmosphere, evaporate in hot regions and condense in cold regions (<strong class="ap-term">global
+                distillation effect</strong>). High fat-solubility, low water-solubility → stored in fatty tissue →
+              biomagnify. Found in remote Arctic despite no local sources.</div>
+          </div>
+          <div class="mini-note"><strong>Bioaccumulation</strong>
+            <div class="body-copy">Increasing pollutant concentration <em>within a single organism over time</em>
+              (intake exceeds elimination). Depends on fat solubility, lipid content, and elimination rate. A single
+              organism accumulates pollutant through its lifetime of exposure.</div>
+          </div>
+          <div class="mini-note"><strong>Biomagnification</strong>
+            <div class="body-copy">Increasing concentration <em>at successively higher trophic levels</em>. Top
+              predators have highest concentrations. Requires pollutant to be long-lived, mobile, fat-soluble, and
+              biologically active. Classic example: DDT in eagles/ospreys causing eggshell thinning.</div>
+          </div>
+          <div class="mini-note"><strong>Pesticide Pathways</strong>
+            <div class="body-copy">Applied broadly → drift in air → wash off in runoff → persist in soil/sediments →
+              harm non-target species (pollinators, aquatic insects, birds). <strong class="ap-term">Integrated Pest
+                Management (IPM)</strong> uses multiple strategies to minimize pesticide use while controlling pests.
+            </div>
+          </div>
+          <div class="mini-note"><strong>Endocrine Disruptors</strong>
+            <div class="body-copy">Chemicals that mimic, block, or alter hormone production. Cause reproductive,
+              developmental, and behavioral harm even at low doses — especially during sensitive life stages. Examples:
+              BPA, dioxins, phthalates, PCBs. Health effects include birth defects, cancerous tumors, loss of fertility.
+            </div>
+          </div>
+          <div class="mini-note"><strong>Why Dilute ≠ Safe</strong>
+            <div class="body-copy">A lake may have very low pesticide concentration, but plankton absorb it → small fish
+              eat thousands of plankton → large fish eat many small fish → bird or human consuming large fish gets a
+              high dose. Tissue concentration at the top of the food web can be millions of times higher than water
+              concentration.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">POPs found in top predators and remote locations: persistence + atmospheric transport +
+            biomagnification. Bioaccumulation = one organism over time; biomagnification = across trophic levels.
+            Endocrine disruption is subtle and developmental — not just acute poisoning. "Top predator highest
+            concentration" = biomagnification cue.</div>
+        </div>
+      </article>
+
+      <!-- 06 -->
+      <article class="note-section accent-g3" id="n-metals">
+        <div class="mini-label">06 · Heavy Metals &amp; Mining</div>
+        <h3>Mercury, Lead, Acid Mine Drainage</h3>
+        <div class="body-copy">
+          <p>Heavy metals are naturally occurring elements that are toxic at low concentrations. They do NOT biodegrade
+            — they change form, bind to sediments, and cycle through ecosystems for long periods. This distinguishes
+            them from organic pollutants like pesticides, which can sometimes be broken down.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Mercury &amp; Methylmercury</strong>
+            <div class="body-copy">Mercury enters water from coal combustion, mining. Microbes convert it to <strong
+                class="ap-term">methylmercury</strong> — highly bioavailable, strongly biomagnifies. Human risk highest
+              through fish consumption (especially large, long-lived fish like tuna and swordfish).</div>
+          </div>
+          <div class="mini-note"><strong>Lead (Pb)</strong>
+            <div class="body-copy">Harms nervous system, especially children's neurological development. Legacy lead
+              persists in soils and old pipes (lead service lines in plumbing). The Flint, Michigan water crisis was a
+              lead-in-pipes example. No safe level of lead exposure for children.</div>
+          </div>
+          <div class="mini-note"><strong>Arsenic &amp; Cadmium</strong>
+            <div class="body-copy"><strong>Arsenic</strong>: contaminates groundwater via natural geology or mining. A
+              concern in many developing nations. <strong>Cadmium</strong>: enters waterways via mining and industrial
+              processes. Both bind to sediments, creating long-term contamination reservoirs.</div>
+          </div>
+          <div class="mini-note"><strong>pH &amp; Metal Solubility</strong>
+            <div class="body-copy">As water becomes more acidic, metal solubility increases → metals become more mobile
+              and bioavailable. Acid deposition into watersheds can mobilize metals already in sediments. Conversely,
+              metals can be "locked up" in sediments at neutral pH — a temporary sink.</div>
+          </div>
+          <div class="mini-note"><strong>Mining &amp; Tailings</strong>
+            <div class="body-copy">Mining releases "earth-locked" metals. Rainwater over <strong
+                class="ap-term">tailings</strong> (mining waste) can carry metals into streams. In some regions, mining
+              waste is dumped directly into rivers. Cyanide may be used to extract gold from ore — a major water quality
+              hazard.</div>
+          </div>
+          <div class="mini-note"><strong>Acid Mine Drainage (AMD)</strong>
+            <div class="body-copy">Sulfide minerals exposed during mining + oxygen + water → acidic runoff. This acidity
+              dissolves more metals → streams hit by both low pH AND elevated dissolved metals. AMD can continue for
+              centuries after a mine closes, long after the economic activity is over.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Mercury risk is a food-web concentration issue, not just water concentration. Metals
+            cannot be biodegraded — remediation focuses on removal or stabilization. Sediments are both a sink (store
+            metals) and a source (release them later). AMD drops pH AND increases dissolved metals — double impact.
+          </div>
+        </div>
+      </article>
+
+      <!-- 07 -->
+      <article class="note-section accent-amber" id="n-oil">
+        <div class="mini-label">07 · Oil Pollution</div>
+        <h3>Spills, Chronic Runoff &amp; Cleanup Tradeoffs</h3>
+        <div class="body-copy">
+          <p>Oil pollution is visible and fast-moving but also causes long-term ecosystem damage through physical and
+            chemical pathways. On the exam, explain multiple mechanisms of harm — not just "toxicity" — and evaluate
+            cleanup strategy tradeoffs.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Oil Sources</strong>
+            <div class="body-copy">Tanker accidents and pipeline leaks · offshore drilling accidents · chronic urban
+              runoff (motor oil from roads and parking lots). Everyday runoff inputs can be ecologically important even
+              without a dramatic "spill" headline.</div>
+          </div>
+          <div class="mini-note"><strong>Physical Coating</strong>
+            <div class="body-copy">Oil coats feathers and fur, destroying insulation and buoyancy. Seabirds ingest
+              feather oil while preening → kidney and liver damage. Smothers intertidal organisms. Oil penetrating
+              sediments can persist for decades.</div>
+          </div>
+          <div class="mini-note"><strong>Chemical Toxicity</strong>
+            <div class="body-copy">Petroleum components damage tissues and organs. Some compounds are carcinogenic.
+              Dissolved fractions are often most acutely toxic to aquatic organisms.</div>
+          </div>
+          <div class="mini-note"><strong>Ecosystem-Level Effects</strong>
+            <div class="body-copy">Surface films reduce oxygen exchange at the water surface. Floating oil blocks
+              sunlight from phytoplankton, disrupting the base of the food web. Coastal marshes and shorelines suffer
+              long-term contamination if oil penetrates sediments.</div>
+          </div>
+          <div class="mini-note"><strong>Cleanup Methods</strong>
+            <div class="body-copy">Containment booms (limit spread) · skimming/vacuuming · sorbents (absorb oil) ·
+              dispersants (disperse but DON'T remove — shift exposure to water column) · controlled burning (air quality
+              tradeoff) · bioremediation (microbes break down oil — needs oxygen, nutrients, right temperature).</div>
+          </div>
+          <div class="mini-note"><strong>Acute vs. Chronic</strong>
+            <div class="body-copy">A major spill causes immediate mass mortality and shoreline contamination. Chronic
+              runoff may not cause a single dramatic die-off but continuously stresses ecosystems and contributes to
+              long-term sediment contamination — often the larger cumulative problem.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Dispersants redistribute oil — they don't remove it. Harm is both physical (coating)
+            and chemical (toxicity) — mention both. Urban runoff is a major everyday oil source. Bioremediation works
+            best for petroleum hydrocarbons under suitable conditions; not effective for metals.</div>
+        </div>
+      </article>
+
+      <!-- 08 -->
+      <article class="note-section accent-g" id="n-wetlands">
+        <div class="mini-label">08 · Wetlands &amp; Mangroves</div>
+        <h3>High-Value Ecosystems Under Pressure</h3>
+        <div class="body-copy">
+          <p>A <strong class="ap-term">wetland</strong> is any area where land is covered by water (freshwater,
+            saltwater, or brackish), including marshes, swamps, and deltas. Wetlands are among the most productive
+            ecosystems on Earth, supporting high biodiversity, breeding grounds, and water filtration. A <strong
+              class="ap-term">mangrove</strong> grows in brackish estuarine water with specialized salt-filtration roots
+            adapted to low-oxygen, saline soils.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Wetland Services</strong>
+            <div class="body-copy">Flood control (slow water movement) · water quality improvement (filter nutrients and
+              sediments) · carbon storage (peat bogs) · nursery habitat for fish and wildlife · shoreline stabilization
+              · rice cultivation for human food supply.</div>
+          </div>
+          <div class="mini-note"><strong>Mangrove Services</strong>
+            <div class="body-copy">Coastal protection from storms and tsunamis · nursery habitat for marine species ·
+              carbon sequestration (blue carbon) · shoreline stabilization. Mangroves have been lost rapidly to
+              aquaculture, urban development, and sea-level rise.</div>
+          </div>
+          <div class="mini-note"><strong>Human Impacts</strong>
+            <div class="body-copy">Diking and dredging · filling for urban development (alters runoff patterns and water
+              quality) · agricultural conversion · increased hurricane frequency (sea surges damage coastal wetlands).
+              Since the Industrial Revolution, more than half of global wetlands have been lost.</div>
+          </div>
+          <div class="mini-note"><strong>Consequences of Loss</strong>
+            <div class="body-copy">Increased flooding · reduced water quality (nutrients and sediments no longer
+              filtered) · loss of habitat and biodiversity · increased coastal erosion · reduced carbon storage · loss
+              of fishery nursery areas affecting food security.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Wetlands are NOT wastelands — they are high-value ecosystems. Loss affects water
+            quality AND biodiversity AND flood control. Mangroves in brackish water; regular wetlands can be freshwater,
+            saltwater, or brackish. Filling wetlands changes runoff patterns — a water quality consequence beyond just
+            habitat loss.</div>
+        </div>
+      </article>
+
+      <!-- 09 -->
+      <article class="note-section accent-red" id="n-solidwaste">
+        <div class="mini-label">09 · Solid Waste &amp; Plastics</div>
+        <h3>Landfills, Microplastics &amp; Ocean Gyres</h3>
+        <div class="body-copy">
+          <p>Solid waste management connects terrestrial pollution to aquatic pollution — mismanaged waste reaches
+            rivers and oceans. The AP exam tests waste types, decomposition times, disposal tradeoffs, and the mechanism
+            by which plastics accumulate in ocean gyres.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Waste Types &amp; Decomposition</strong>
+            <div class="body-copy">Organic (kitchen waste): weeks. Paper: 10–30 days. Wood: 10–15 years. Metals: 100–500
+              years. Some plastics: up to ~1 million years. Glass: does not decompose. Radioactive waste: hundreds of
+              thousands of years. Know the relative scale for exam scenarios.</div>
+          </div>
+          <div class="mini-note"><strong>Microplastics</strong>
+            <div class="body-copy">Form from breakdown of larger plastics or are manufactured small (microbeads).
+              Ingested by aquatic organisms → move through food webs. "Biodegradable" plastics may only break down under
+              industrial composting conditions, not in oceans.</div>
+          </div>
+          <div class="mini-note"><strong>Great Pacific Garbage Patch</strong>
+            <div class="body-copy">Large system of marine litter concentrated by the <strong class="ap-term">North
+                Pacific Gyre</strong> — rotating ocean currents that trap floating debris at their center. Plastics
+              <strong class="ap-term">photodegrade</strong> into smaller fragments (still polymers) that leach chemicals
+              and are ingested by organisms.
+            </div>
+          </div>
+          <div class="mini-note"><strong>Sanitary Landfills</strong>
+            <div class="body-copy">Engineered sites with liners, leachate collection, daily cover, and often methane
+              capture. Key reality: landfills <em>store</em> waste; liners reduce but do not guarantee zero leakage over
+              time. Methane produced can be flared or used for energy.</div>
+          </div>
+          <div class="mini-note"><strong>Incineration / Waste-to-Energy</strong>
+            <div class="body-copy">Reduces volume and can generate heat/electricity. Tradeoffs: air pollutants and toxic
+              ash requiring hazardous-waste disposal. Not a pollution-free solution.</div>
+          </div>
+          <div class="mini-note"><strong>Recycling &amp; Composting</strong>
+            <div class="body-copy">Recycling depends on contamination, sorting, market demand, and transport energy.
+              Composting converts organics to soil amendments, reduces landfill methane, improves soils, and reduces
+              runoff — linking waste management to water quality.</div>
+          </div>
+          <div class="mini-note"><strong>Waste Hierarchy</strong>
+            <div class="body-copy"><strong>Source reduction &gt; reuse &gt; recycling &gt; composting &gt; energy
+                recovery &gt; landfill</strong>. Source reduction prevents waste from being created — the
+              highest-priority strategy with the largest upstream and downstream benefits.</div>
+          </div>
+          <div class="mini-note"><strong>Chemical Substitution (Freon vs. Puron)</strong>
+            <div class="body-copy"><strong class="ap-term">Freon</strong> (CFCs): depletes stratospheric ozone. <strong
+                class="ap-term">Puron</strong> (HFCs): replaces chlorine with fluorine → less ozone impact. Substitution
+              is a "reduce hazardous waste" strategy, not just a climate strategy.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Recycling isn't automatically beneficial — consider contamination and markets.
+            Landfills store, not destroy. Dispersants and ocean disposal are last resorts with tradeoffs. Gyre =
+            currents concentrate debris. Microplastics are a food-web issue, not just an aesthetic problem.</div>
+        </div>
+      </article>
+
+      <!-- 10 -->
+      <article class="note-section accent-g2" id="n-hazwaste">
+        <div class="mini-label">10 · Hazardous Waste</div>
+        <h3>Contaminated Land, Leaching &amp; Long-Term Storage</h3>
+        <div class="body-copy">
+          <p><strong class="ap-term">Hazardous waste</strong> poses substantial threats to health or environment due to
+            toxicity, reactivity, corrosiveness, or flammability. Soils can store contaminants for decades, and those
+            contaminants can migrate into groundwater and food chains.</p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Hazardous Waste Types</strong>
+            <div class="body-copy">Toxic (leach to groundwater) · Reactive (unstable; may explode or release toxic gas)
+              · Corrosive (acid/base burns) · Flammable. Also includes teratogens (cause birth defects) and radioactive
+              waste. Common household hazardous wastes: paints, solvents, batteries, pesticides.</div>
+          </div>
+          <div class="mini-note"><strong>Leaching &amp; Groundwater</strong>
+            <div class="body-copy"><strong class="ap-term">Leaching</strong>: water dissolves chemicals and carries them
+              downward into groundwater. Groundwater contamination is difficult to address — moves slowly, persists
+              long, cleanup is expensive, and many communities rely on it for drinking water.</div>
+          </div>
+          <div class="mini-note"><strong>RCRA (Resource Conservation and Recovery Act)</strong>
+            <div class="body-copy">Manages hazardous waste "cradle to grave" — from generation through disposal. Applies
+              to ongoing waste management by generators, transporters, and disposal facilities.</div>
+          </div>
+          <div class="mini-note"><strong>CERCLA / Superfund</strong>
+            <div class="body-copy">Comprehensive Environmental Response, Compensation, and Liability Act. Funds cleanup
+              of <em>existing</em> contaminated sites and assigns liability to responsible parties. Different from RCRA:
+              RCRA = ongoing management; CERCLA = after-the-fact cleanup.</div>
+          </div>
+          <div class="mini-note"><strong>Remediation Strategies</strong>
+            <div class="body-copy"><strong>Containment (capping)</strong>: barrier reduces exposure but doesn't remove
+              pollutants. <strong>Excavation/removal</strong>: dig out and dispose off-site. <strong>Soil
+                washing</strong>: separate contaminated particles. <strong>Bioremediation</strong>: microbes break down
+              organic pollutants. <strong>Phytoremediation</strong>: plants absorb/stabilize metals.</div>
+          </div>
+          <div class="mini-note"><strong>Long-Term Storage Options</strong>
+            <div class="body-copy">Geologic repositories (salt domes, mines) · surface impoundments (liquid hazardous
+              waste) · injection wells (fluids into stable porous rock) · hazardous waste landfills (engineered, lined).
+              Landfill capping: topsoil + compacted clay + low-permeability synthetic layer.</div>
+          </div>
+          <div class="mini-note"><strong>Brownfields</strong>
+            <div class="body-copy">Former industrial/commercial land potentially contaminated with hazardous waste.
+              Common in urban areas. Cleanup and redevelopment (brownfield redevelopment) can restore land and reduce
+              urban sprawl — an environmental justice and urban planning strategy.</div>
+          </div>
+          <div class="mini-note"><strong>Metals vs. Organics</strong>
+            <div class="body-copy">Organic pollutants (petroleum, many pesticides) can often be biodegraded. Metals
+              (lead, mercury, arsenic) cannot — they are elements. Bioremediation works for organics; metals require
+              removal or stabilization. Never propose bioremediation for metal contamination on the AP exam.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">RCRA = ongoing management; CERCLA = contaminated site cleanup. Capping is containment,
+            not cleanup. Metals can't be biodegraded. Bioremediation works for organics only. Groundwater contamination
+            is difficult to reverse — prevention is critical.</div>
+        </div>
+      </article>
+
+      <!-- 11 -->
+      <article class="note-section accent-g" id="n-policy">
+        <div class="mini-label">11 · Policy &amp; Solutions</div>
+        <h3>Prevention, BMPs, Clean Water Act &amp; Environmental Justice</h3>
+        <div class="body-copy">
+          <p>Strong AP answers combine <strong>prevention</strong> (stop pollution before creation),
+            <strong>control</strong> (manage after creation), and <strong>restoration</strong> (fix damage), while
+            matching solutions to the source type (point vs. nonpoint). Prevention is often cheaper and more effective
+            long-term.
+          </p>
+        </div>
+        <div class="note-grid">
+          <div class="mini-note"><strong>Clean Water Act (CWA)</strong>
+            <div class="body-copy">Regulates pollutant discharges into surface waters via point-source permitting (NPDES
+              permits). Established the goal of fishable/swimmable waters. Applies to rivers, lakes, wetlands — not
+              groundwater or drinking water supplies.</div>
+          </div>
+          <div class="mini-note"><strong>Safe Drinking Water Act (SDWA)</strong>
+            <div class="body-copy">Focuses on contaminants in drinking water supplies. Sets maximum contaminant levels
+              (MCLs). Key for groundwater protection and public water system regulation. CWA = surface water discharges;
+              SDWA = drinking water quality.</div>
+          </div>
+          <div class="mini-note"><strong>Agricultural BMPs</strong>
+            <div class="body-copy">Riparian buffer strips · cover crops · no-till/reduced tillage · contour plowing and
+              terracing · retention ponds and constructed wetlands · precise fertilizer timing and amount · manure
+              management. Core logic: slow water, increase infiltration, keep soil in place, apply nutrients when plants
+              use them.</div>
+          </div>
+          <div class="mini-note"><strong>Urban Stormwater Solutions</strong>
+            <div class="body-copy">Permeable pavement (increases infiltration) · rain gardens and bioswales (filter and
+              slow runoff) · green roofs (absorb precipitation) · street sweeping · proper disposal of oils and
+              chemicals. All aim to reduce runoff volume and filter pollutants before they reach waterways.</div>
+          </div>
+          <div class="mini-note"><strong>Environmental Justice</strong>
+            <div class="body-copy">Pollution risks and cleanup benefits are not distributed evenly. Communities near
+              industrial zones, hazardous waste sites, or aging infrastructure face higher exposure and fewer resources.
+              EJ asks who is most affected, who has decision-making power, and how to reduce inequities.</div>
+          </div>
+          <div class="mini-note"><strong>Multi-Source Solutions</strong>
+            <div class="body-copy">Most real watersheds need layered fixes. High nitrate + pathogen spikes after storms?
+              → upstream agricultural BMPs + sewer infrastructure upgrades + tertiary treatment improvements. Single
+              solutions rarely fix multi-source problems.</div>
+          </div>
+        </div>
+        <div class="focus-callout">
+          <div class="label">Exam Focus</div>
+          <div class="body-copy">Match the law to the scenario: river discharge permits → CWA; contaminants in tap water
+            → SDWA; contaminated site cleanup → CERCLA; ongoing waste management → RCRA. Propose layered solutions for
+            multi-source problems. Prevention beats control long-term. EJ = disproportionate burden on vulnerable
+            communities.</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="tab-content" id="glossary">
+      <header class="page-header">
+        <span class="unit-tag">Key Terms</span>
+        <h2>Glossary</h2>
+        <p>Search or browse · Click a card to jump to that topic's notes</p>
+      </header>
+      <div class="glossary-filter-wrap">
+        <input type="text" id="glossaryFilter" placeholder="Search terms…" autocomplete="off" />
+      </div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section class="tab-content" id="flashcards">
+      <header class="page-header">
+        <span class="unit-tag">Active Recall</span>
+        <h2>Flashcards</h2>
+        <p>Click a card to flip · Test yourself before looking</p>
+      </header>
+      <div class="flash-grid" id="flashGrid"></div>
+    </section>
+
+    <!-- EXAM PREP -->
+    <section class="tab-content" id="examprep">
+      <header class="page-header">
+        <span class="unit-tag">Exam Prep</span>
+        <h2>Common Mistakes &amp; Traps</h2>
+        <p>High-yield patterns · Things the AP loves to test</p>
+      </header>
+      <div class="exam-grid">
+        <article class="exam-card feature-card accent-g">
+          <div class="mini-label">Trap #1</div>
+          <h3 class="card-title">BOD vs. DO Direction</h3>
+          <div class="body-copy">High BOD does NOT mean high oxygen — it means MORE oxygen is consumed by decomposers,
+            so DO <em>drops</em>. High BOD → LOW DO. This is the #1 source of confusion on eutrophication questions.
+          </div>
+        </article>
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Trap #2</div>
+          <h3 class="card-title">Eutrophication's Tested Outcome</h3>
+          <div class="body-copy">Students write "algae photosynthesize → more oxygen." Wrong direction for the exam. The
+            tested outcome is oxygen <em>depletion</em> after algae die and decomposers respire. The chain ends in
+            hypoxia, not oxygen abundance.</div>
+        </article>
+        <article class="exam-card feature-card accent-amber">
+          <div class="mini-label">Trap #3</div>
+          <h3 class="card-title">Bioaccumulation ≠ Biomagnification</h3>
+          <div class="body-copy">Bioaccumulation = one organism, over time. Biomagnification = across trophic levels,
+            top predators highest. If the question mentions "top predator" having the highest concentration, the answer
+            is biomagnification.</div>
+        </article>
+        <article class="exam-card feature-card accent-g2">
+          <div class="mini-label">Trap #4</div>
+          <h3 class="card-title">Metals Can't Be Biodegraded</h3>
+          <div class="body-copy">Never propose bioremediation for lead, mercury, or other metals. Metals are elements —
+            they can change form or bind to sediments, but they cannot be broken down by microbes. Bioremediation is for
+            organic pollutants only.</div>
+        </article>
+        <article class="exam-card feature-card accent-gold">
+          <div class="mini-label">Trap #5</div>
+          <h3 class="card-title">Dispersants Redistribute, Don't Remove</h3>
+          <div class="body-copy">Oil dispersants break oil into droplets and shift it into the water column — they do
+            NOT remove oil from the environment. The tradeoff is increased water-column exposure for organisms vs.
+            reduced shoreline impact.</div>
+        </article>
+        <article class="exam-card feature-card accent-g3">
+          <div class="mini-label">Trap #6</div>
+          <h3 class="card-title">Primary Treatment ≠ Nutrient Removal</h3>
+          <div class="body-copy">Primary treatment is physical settling — it removes solids, not dissolved nutrients. To
+            prevent eutrophication, you need <em>tertiary</em> treatment. Disinfection kills pathogens but does not
+            clean up nutrients, metals, or dissolved chemicals.</div>
+        </article>
+        <article class="exam-card feature-card accent-amber">
+          <div class="mini-label">Trap #7</div>
+          <h3 class="card-title">Point vs. Nonpoint Confusion</h3>
+          <div class="body-copy">Nonpoint doesn't mean "unknown" — it means diffuse, from many spread-out sources.
+            Nutrient runoff from farms is nonpoint even though you know it comes from farming. You can't permit your way
+            out of nonpoint pollution; you need BMPs.</div>
+        </article>
+        <article class="exam-card feature-card accent-red">
+          <div class="mini-label">Trap #8</div>
+          <h3 class="card-title">Law Matching</h3>
+          <div class="body-copy">CWA = surface water discharge permits. SDWA = drinking water contaminant levels. RCRA =
+            ongoing hazardous waste management (cradle to grave). CERCLA/Superfund = cleanup of existing contaminated
+            sites. Know which law applies to which scenario.</div>
+        </article>
+        <article class="exam-card feature-card accent-g">
+          <div class="mini-label">Trap #9</div>
+          <h3 class="card-title">Capping ≠ Cleanup</h3>
+          <div class="body-copy">A landfill cap or containment barrier reduces exposure and leaching — it does NOT
+            remove or destroy contaminants. "Containment" and "cleanup" are different strategies. Capping is used when
+            removal is too expensive or risky.</div>
+        </article>
+        <article class="exam-card feature-card accent-g2">
+          <div class="mini-label">Trap #10</div>
+          <h3 class="card-title">Wetlands = High-Value Habitat</h3>
+          <div class="body-copy">Filling wetlands isn't just a biodiversity loss — it also reduces flood control, water
+            filtration, and carbon storage. Wetland destruction has water quality consequences, not just ecological
+            ones. Never call a wetland a "wasteland."</div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- QUIZ MODAL -->
+  <div class="modal" id="quizModal">
+    <div class="modal-box">
+      <div class="modal-title">Practice Quiz — Unit 8</div>
+      <button class="glass-btn modal-close" data-close="quizModal" type="button">✕ Close</button>
+      <div id="quizMount"></div>
+    </div>
+  </div>
+
+  <!-- ESSAY MODAL -->
+  <div class="modal" id="essayModal">
+    <div class="modal-box">
+      <div class="modal-title">FRQ Outlines — Unit 8</div>
+      <button class="glass-btn modal-close" data-close="essayModal" type="button">✕ Close</button>
+      <div id="essayTopics"></div>
+      <div id="essayOutline"></div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { id: "dashboard", label: "Dashboard", icon: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`, ambient: "radial-gradient(ellipse at 50% 10%, rgba(42,160,220,.10), transparent 60%)" },
+      { id: "notes", label: "Notes", icon: `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`, ambient: "radial-gradient(ellipse at 20% 30%, rgba(42,108,196,.08), transparent 55%)" },
+      { id: "glossary", label: "Glossary", icon: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`, ambient: "radial-gradient(ellipse at 70% 20%, rgba(75,184,160,.07), transparent 55%)" },
+      { id: "flashcards", label: "Flashcards", icon: `<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>`, ambient: "radial-gradient(ellipse at 40% 60%, rgba(42,160,220,.08), transparent 55%)" },
+      { id: "examprep", label: "Exam Prep", icon: `<svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`, ambient: "radial-gradient(ellipse at 60% 40%, rgba(42,108,196,.07), transparent 55%)" }
+    ];
+
+    const glossaryTerms = [
+      { term: "Pollution", def: "Any substance or form of energy introduced into the environment that causes harm to organisms, ecosystems, or human systems.", tab: "notes" },
+      { term: "Point source", def: "Pollution from a specific, identifiable location such as a factory discharge pipe or wastewater outfall. Easier to regulate.", tab: "notes" },
+      { term: "Nonpoint source", def: "Diffuse pollution from many spread-out sources across a broad area (farm runoff, urban streets). Harder to regulate.", tab: "notes" },
+      { term: "Watershed", def: "The land area that drains water to a common outlet (stream, river, lake, or ocean). Any pollutant released in a watershed can be transported downhill.", tab: "notes" },
+      { term: "Dissolved oxygen (DO)", def: "Amount of oxygen gas dissolved in water. Low DO signals pollution or warm temperatures and indicates reduced ability for aquatic life to survive.", tab: "notes" },
+      { term: "BOD (Biochemical Oxygen Demand)", def: "Measure of organic pollution load — the amount of oxygen decomposers require to break down organic matter in water. High BOD leads to low DO.", tab: "notes" },
+      { term: "Eutrophication", def: "Process by which a body of water becomes enriched with nutrients (N and P), causing excessive algal growth, reduced DO, and ecosystem disruption.", tab: "notes" },
+      { term: "Cultural eutrophication", def: "Eutrophication caused by human activities — agricultural runoff, sewage, urban stormwater — that accelerate natural nutrient enrichment.", tab: "notes" },
+      { term: "Algal bloom", def: "Rapid proliferation of algae or cyanobacteria in a water body due to excess nutrients. Can deplete oxygen and produce toxins.", tab: "notes" },
+      { term: "Hypoxia", def: "Condition of severely depleted dissolved oxygen in water, often caused by decomposition of algal blooms. Leads to dead zones and fish kills.", tab: "notes" },
+      { term: "Dead zone", def: "Area in a body of water so oxygen-depleted that most aquatic life cannot survive. Often seasonal and linked to agricultural runoff.", tab: "notes" },
+      { term: "Bioaccumulation", def: "Increasing pollutant concentration within a single organism over time as intake exceeds elimination. Depends on fat solubility and lipid content.", tab: "notes" },
+      { term: "Biomagnification", def: "Increasing pollutant concentration at successively higher trophic levels in a food chain. Top predators have the highest concentrations.", tab: "notes" },
+      { term: "Persistent Organic Pollutants (POPs)", def: "Organic compounds resistant to degradation that persist in the environment, travel long distances, and bioaccumulate in fatty tissue.", tab: "notes" },
+      { term: "Endocrine disruptors", def: "Chemicals that interfere with hormone systems by mimicking, blocking, or altering hormone production. Cause harm at low doses, especially during development.", tab: "notes" },
+      { term: "Methylmercury", def: "Highly toxic organic form of mercury produced by microbes. Readily taken up by organisms and strongly biomagnifies through food webs.", tab: "notes" },
+      { term: "Acid mine drainage (AMD)", def: "Acidic runoff produced when sulfide minerals exposed during mining react with oxygen and water. Drops pH and increases dissolved metal concentrations in streams.", tab: "notes" },
+      { term: "Tailings", def: "Waste materials left after ore is processed during mining. Can contain heavy metals and sulfides; rainwater running over tailings pollutes waterways.", tab: "notes" },
+      { term: "Primary treatment", def: "First stage of wastewater treatment: physical settling removes solids. Does not remove dissolved nutrients or most pathogens.", tab: "notes" },
+      { term: "Secondary treatment", def: "Biological stage of wastewater treatment: microbes break down dissolved organic matter, removing BOD. Does not fully remove nutrients.", tab: "notes" },
+      { term: "Tertiary treatment", def: "Advanced wastewater treatment targeting remaining pollutants, especially nitrogen and phosphorus, through filtration and biological nutrient removal.", tab: "notes" },
+      { term: "Anaerobic digestion", def: "Microbial breakdown of organic matter without oxygen. Produces biogas (methane) for energy and nutrient-rich digestate. Used for sewage sludge.", tab: "notes" },
+      { term: "Combined sewer overflow (CSO)", def: "Release of untreated sewage mixed with stormwater during heavy rain when combined sewer systems exceed capacity.", tab: "notes" },
+      { term: "Turbidity", def: "Cloudiness of water caused by suspended particles. Reduces light penetration, harms photosynthesis, and can damage fish gills.", tab: "notes" },
+      { term: "Thermal pollution", def: "Degradation of water quality by raising water temperature, typically from power plant cooling water. Reduces DO and can kill temperature-sensitive species.", tab: "notes" },
+      { term: "Great Pacific Garbage Patch", def: "Large system of marine debris concentrated by the North Pacific Gyre's rotating currents. Dominated by microplastics that photodegrade from larger plastic items.", tab: "notes" },
+      { term: "Microplastics", def: "Tiny plastic particles formed from breakdown of larger plastics or manufactured small. Ingested by aquatic organisms and move through food webs.", tab: "notes" },
+      { term: "Photodegradation", def: "Breakdown of a material by light (especially UV radiation). Causes plastics to fragment into smaller pieces that remain as polymers in the environment.", tab: "notes" },
+      { term: "Leaching", def: "Movement of water-dissolved chemicals downward through soil into groundwater. A major pathway for contamination of drinking water aquifers.", tab: "notes" },
+      { term: "CERCLA (Superfund)", def: "Comprehensive Environmental Response, Compensation, and Liability Act. Federal law that funds cleanup of contaminated sites and assigns liability to responsible parties.", tab: "notes" },
+      { term: "RCRA", def: "Resource Conservation and Recovery Act. Manages hazardous waste from generation through disposal ('cradle to grave'). Applies to ongoing waste management.", tab: "notes" },
+      { term: "Clean Water Act (CWA)", def: "Federal law regulating pollutant discharges into surface waters. Established the goal of fishable/swimmable waters. Uses point-source discharge permits.", tab: "notes" },
+      { term: "Safe Drinking Water Act (SDWA)", def: "Federal law setting standards for contaminants in public drinking water supplies. Protects groundwater and drinking water quality.", tab: "notes" },
+      { term: "Bioremediation", def: "Use of microorganisms to break down pollutants. Effective for organic pollutants (petroleum, some pesticides). NOT effective for metals, which are elements.", tab: "notes" },
+      { term: "Phytoremediation", def: "Use of plants to absorb, concentrate, or stabilize contaminants in soil or water. Can be used for some metals and organic pollutants.", tab: "notes" },
+      { term: "Brownfield", def: "Land previously used for industrial or commercial purposes that may be contaminated with hazardous wastes. Common in urban areas; candidates for redevelopment.", tab: "notes" },
+      { term: "Riparian buffer", def: "Strips of vegetation along waterways that slow erosion, absorb nutrients, and filter runoff before it reaches streams. A key agricultural BMP.", tab: "notes" },
+      { term: "Best Management Practices (BMPs)", def: "Techniques to reduce nonpoint source pollution, especially from agriculture. Include riparian buffers, cover crops, no-till, and precision fertilizer application.", tab: "notes" },
+      { term: "Septic system", def: "Onsite wastewater treatment using a tank and drain field. Can contaminate groundwater if drain field is near the water table or soils drain too quickly.", tab: "notes" },
+      { term: "Harmful algal bloom (HAB)", def: "Algal bloom involving species (often cyanobacteria) that produce toxins harmful to wildlife, pets, and humans. Worsened by warm, nutrient-rich, calm conditions.", tab: "notes" },
+      { term: "Global distillation effect", def: "Process by which POPs evaporate in warm regions, travel via atmosphere, and condense in cold polar regions — explaining why POPs accumulate in the Arctic despite no local sources.", tab: "notes" },
+      { term: "Wetland", def: "Area where land is covered by water (freshwater, saltwater, or brackish), including marshes, swamps, and deltas. High-value ecosystems providing flood control, water filtration, and habitat.", tab: "notes" },
+      { term: "Mangrove", def: "Shrub or small tree growing in brackish estuarine water with specialized salt-filtration roots. Provides coastal protection, nursery habitat, and carbon sequestration.", tab: "notes" },
+      { term: "Integrated Pest Management (IPM)", def: "Multi-strategy pest control approach minimizing pesticide use through biological, cultural, and chemical controls. Reduces non-target impacts and environmental contamination.", tab: "notes" },
+    ];
+
+    const flashcards = [
+      { front: "What is the difference between bioaccumulation and biomagnification?", back: "Bioaccumulation = increasing concentration within ONE organism over time (intake > elimination). Biomagnification = increasing concentration across TROPHIC LEVELS — top predators have highest concentrations. If top predator has highest levels, it's biomagnification." },
+      { front: "Trace the eutrophication chain from nutrient input to fish kill.", back: "Nutrients (N, P) enter water → algal bloom → turbidity increases, light decreases → algae die, sink → decomposers respire, consuming O₂ → BOD rises → DO drops (hypoxia) → fish and invertebrates die or flee → dead zone." },
+      { front: "What does high BOD indicate, and what happens to DO?", back: "High BOD indicates high organic pollution load. Decomposers consume oxygen breaking down this organic matter, so high BOD leads to LOW dissolved oxygen (DO). Never confuse them — they move in opposite directions." },
+      { front: "What are the three stages of municipal sewage treatment and what does each remove?", back: "Primary (physical): removes solids. Secondary (biological): removes BOD via microbial decomposition. Tertiary (advanced): removes N and P. Disinfection (at any stage) kills pathogens but does NOT remove nutrients or chemicals." },
+      { front: "Why are POPs found in polar regions and top predators despite being released elsewhere?", back: "POPs evaporate in warm regions, travel via atmosphere (global distillation effect), and condense in cold polar regions. They bioaccumulate (fat-soluble, persist in tissue) and biomagnify through food webs, concentrating in top predators like polar bears and orcas." },
+      { front: "What is acid mine drainage and what are its two main impacts on streams?", back: "AMD forms when sulfide minerals exposed during mining react with oxygen and water, producing acidic runoff. Two impacts: (1) drops stream pH (acidification), and (2) increases dissolved metal concentrations as low pH increases metal solubility. Double threat to aquatic life." },
+      { front: "Compare point source and nonpoint source pollution with examples.", back: "Point source: specific, identifiable location — factory discharge pipe, wastewater plant outfall. Easier to regulate via permits. Nonpoint source: diffuse from many sources — agricultural runoff, urban stormwater. Harder to regulate; needs BMPs and land management, not just permits." },
+      { front: "What is the Great Pacific Garbage Patch and how does it form?", back: "Large concentration of marine debris (mostly plastics) trapped by the North Pacific Gyre's rotating currents. Wind-driven surface currents move floating debris toward the gyre center. Plastics photodegrade into microplastics that leach chemicals and are ingested by marine organisms." },
+      { front: "What is the difference between RCRA and CERCLA?", back: "RCRA (Resource Conservation and Recovery Act): manages hazardous waste from generation to disposal — 'cradle to grave.' Ongoing management. CERCLA (Superfund): funds cleanup of EXISTING contaminated sites and assigns liability to responsible parties. After-the-fact cleanup." },
+      { front: "Why can't bioremediation be used for metal contamination?", back: "Bioremediation uses microbes to break down pollutants. Metals (lead, mercury, arsenic, etc.) are ELEMENTS — they cannot be broken down into simpler, harmless forms. They can only be removed, stabilized, or contained. Use phytoremediation or excavation for metals." },
+      { front: "What are the effects of oil spills on seabirds beyond just toxicity?", back: "Oil coats feathers, destroying insulation and buoyancy → hypothermia and drowning. Seabirds ingest oil while preening → kidney and liver damage. Reduced foraging ability → dehydration and starvation. Both physical coating AND chemical toxicity contribute." },
+      { front: "Why does warm water have lower dissolved oxygen, and why does this matter for aquatic ecosystems?", back: "Gases are less soluble in warmer water. Also, warmer water increases organisms' metabolic rates, raising their oxygen demand while supply drops. Thermal pollution from power plants can collapse aquatic communities even before organic pollution effects occur." },
+      { front: "How do dispersants affect oil spills? Are they a cleanup solution?", back: "Dispersants break oil into tiny droplets and move it into the water column — they do NOT remove oil from the environment. They reduce shoreline contamination but increase water-column exposure for organisms. A tradeoff, not a cleanup. Bioremediation or skimming actually removes oil." },
+      { front: "What are endocrine disruptors and why are low concentrations still dangerous?", back: "Chemicals that mimic, block, or alter hormone production (examples: BPA, dioxins, PCBs, phthalates). Hormones operate at very low concentrations, so disruption can occur at low exposure — especially during sensitive developmental stages. Effects include birth defects, cancer, and infertility." },
+      { front: "Explain why a lake in the Arctic can have high concentrations of a pesticide applied thousands of miles away.", back: "Persistent fat-soluble pesticides (POPs) evaporate in warm application regions and travel via atmosphere (global distillation effect), condensing in cold polar regions. They enter Arctic food webs, bioaccumulate in each organism's fat, and biomagnify to high concentrations in top predators." },
+    ];
+
+    const essayOutlines = [
+      {
+        label: "Eutrophication FRQ",
+        blocks: [
+          ["Context / Define the Problem", "Cultural eutrophication occurs when human activities — agricultural fertilizer runoff, sewage, urban stormwater — enrich water with excess N and P, triggering a cascade of ecosystem effects."],
+          ["Mechanism (Chain)", "Nutrients enter water → algal bloom → turbidity increases → submerged plants die → algae die → decomposers respire, raising BOD → DO drops (hypoxia) → fish kills and dead zone formation."],
+          ["Sources", "Nonpoint: agricultural runoff (fertilizers, manure), urban stormwater. Point: wastewater treatment plant effluent lacking tertiary treatment. Both N and P drive the process; the limiting nutrient for that system matters most."],
+          ["Solutions", "Agricultural BMPs: riparian buffers, precision fertilizer timing, cover crops, retention ponds. Urban: permeable pavement, rain gardens, stormwater capture. Wastewater: upgrade to tertiary treatment to remove N and P. Regulatory: enforce nonpoint source controls."],
+          ["Conclusion", "Eutrophication is a systems problem requiring prevention (reduce nutrient inputs) and treatment (upgrade wastewater). Single-source solutions are rarely sufficient — most watersheds need layered BMPs and upgraded infrastructure."]
+        ]
+      },
+      {
+        label: "Bioaccumulation & Biomagnification FRQ",
+        blocks: [
+          ["Definitions", "Bioaccumulation: increasing pollutant concentration within a single organism over time (intake > elimination). Biomagnification: increasing concentration across trophic levels in a food chain. Both require fat-soluble, persistent pollutants."],
+          ["Mechanism", "Fat-soluble POPs are stored in fatty tissue rather than excreted. Each trophic level consumes many organisms from the level below, concentrating the pollutant further. Top predators (eagles, sharks, humans eating large fish) receive the highest doses."],
+          ["Example to Explain", "Lake with low pesticide concentration → plankton absorb it → small fish eat thousands of plankton, raising tissue concentration → large fish eat many small fish → birds or humans consuming large fish receive a high dose even though water concentration is low."],
+          ["Why Remote Areas Are Affected", "POPs evaporate in warm regions, travel via atmosphere, condense in cold polar regions (global distillation effect). This is why DDT and PCBs appear in Arctic organisms with no local sources."],
+          ["Policy Implications", "Because dilution doesn't solve biomagnification, the solution is preventing persistent chemicals from entering the environment — banning DDT, regulating PCBs, and monitoring top predator tissue concentrations as indicators of ecosystem contamination."]
+        ]
+      },
+      {
+        label: "Wastewater Treatment FRQ",
+        blocks: [
+          ["Context", "Wastewater treatment prevents waterborne disease and oxygen-demanding pollution from reaching surface waters. Treatment level must match the receiving water's sensitivity — discharging into a eutrophication-prone lake requires tertiary treatment."],
+          ["Treatment Stages", "Primary (physical): removes solids. Secondary (biological): removes BOD via aeration and microbial decomposition. Tertiary (advanced): removes N and P via filtration, chemical precipitation, biological nutrient removal. Disinfection: kills pathogens (not nutrients or chemicals)."],
+          ["Septic System Risks", "Septic systems treat wastewater onsite. Failure occurs when drain field is too close to water table, soils drain too quickly, or maintenance is neglected → nitrate leaching into groundwater, pathogen contamination."],
+          ["Anaerobic Digestion", "Sewage sludge processed by anaerobic microbes produces biogas (methane) for energy and nutrient-rich digestate. Reduces landfill need and captures energy — renewable energy strategy embedded in wastewater treatment."],
+          ["Combined Sewer Overflow Problem", "Older cities have combined sewage + stormwater pipes. Heavy rain exceeds plant capacity → overflow discharges raw sewage to waterways. Solution: separate sewer infrastructure, increased plant capacity, green infrastructure to reduce stormwater."]
+        ]
+      },
+      {
+        label: "Hazardous Waste & Remediation FRQ",
+        blocks: [
+          ["What Makes Waste Hazardous", "Hazardous waste is toxic, reactive, corrosive, or flammable. Includes industrial chemicals, heavy metals, pesticides, radioactive waste, and many household products. Key characteristic: poses substantial threat beyond normal waste."],
+          ["Leaching to Groundwater", "Leaching occurs when water dissolves chemicals and carries them downward through soil into groundwater. Groundwater contamination is difficult to reverse: slow movement, persistent contamination, expensive cleanup, and communities depending on it for drinking."],
+          ["RCRA vs. CERCLA", "RCRA: cradle-to-grave management of hazardous waste — tracks generators, transporters, and disposal facilities. CERCLA (Superfund): funds cleanup of existing contaminated sites; assigns liability to responsible parties. Different purposes: ongoing management vs. after-the-fact cleanup."],
+          ["Remediation Strategy Selection", "Organic pollutants (petroleum, pesticides): bioremediation (microbes break them down). Metals (lead, arsenic): bioremediation DOES NOT work (elements cannot be decomposed); use excavation, phytoremediation, or stabilization. Capping contains but does not remove — important distinction."],
+          ["Environmental Justice", "Hazardous waste sites and brownfields are disproportionately located near low-income communities and communities of color. These communities face greater exposure risk and often have fewer resources to advocate for cleanup. CERCLA and EPA EJ programs aim to address these inequities."]
+        ]
+      }
+    ];
+
+    const quizQuestions = [
+      { question: "A coastal dead zone forms every summer at the mouth of a river draining an agricultural watershed. Which sequence of events BEST explains the formation of this dead zone?", options: ["Excess salt from irrigation runoff kills marine organisms directly", "Agricultural runoff delivers excess nitrogen and phosphorus → offshore algal blooms → algae die and sink → decomposers respire, consuming dissolved oxygen in bottom waters → hypoxia kills bottom-dwelling organisms", "Thermal pollution from irrigation water raises ocean temperatures, lowering dissolved oxygen", "Sedimentation from farm erosion smothers the seafloor, preventing oxygen from reaching bottom organisms"], correct: 1, explanation: "The classic eutrophication chain: nutrient runoff → algal bloom → decomposition → hypoxia → dead zone. The key is that oxygen is depleted by decomposers after algae die, not directly by the algae themselves. This is why the dead zone is in bottom waters where stratification limits oxygen replenishment." },
+      { question: "A water quality test of a polluted stream shows high BOD and low dissolved oxygen. A student concludes that 'high BOD causes low DO.' Is this reasoning correct, and what is the mechanism?", options: ["Incorrect — high BOD indicates more photosynthesis, which actually produces oxygen", "Correct — high BOD means high organic pollution, so decomposers consume more oxygen during respiration, depleting dissolved oxygen in the water", "Incorrect — BOD and DO are unrelated measurements with no causal link", "Correct — high BOD indicates more oxygen is being added to the water by decomposer activity"], correct: 1, explanation: "The student's conclusion is correct and the mechanism is microbial respiration. High BOD measures the amount of organic waste available for decomposers. As decomposers break down this organic matter, they consume oxygen through aerobic respiration. When organic load is high, this process depletes dissolved oxygen below levels fish and invertebrates need to survive." },
+      { question: "A factory discharges warm water from its cooling system into a river. Even without any chemical pollutants in the discharge, aquatic organisms begin to die. What is the most likely explanation?", options: ["The warm water carries bacteria that infect river organisms", "Warmer water holds less dissolved oxygen (gases are less soluble at higher temperatures), and warmer temperatures also increase organisms' metabolic rates, creating an oxygen deficit that suffocates aquatic life", "The temperature difference causes a pH shift that makes water too acidic for most organisms", "Thermal currents from the warm discharge prevent mixing, concentrating other pollutants near the discharge point"], correct: 1, explanation: "This is thermal pollution. Warm water holds less dissolved oxygen — a fundamental gas solubility principle. Simultaneously, warmer water increases aquatic organisms' metabolic rates, so they need MORE oxygen just as supply decreases. This double pressure can cause fish kills even with chemically clean water. Power plants are the classic thermal pollution source." },
+      { question: "A researcher finds elevated concentrations of a fat-soluble pesticide in bald eagles, even though the pesticide was applied to farm fields 200 miles away and has not been detected in water samples near the eagle nesting site. Which combination of processes BEST explains this?", options: ["The eagles must be migrating to areas where the pesticide is used and absorbing it through their feet", "The pesticide traveled via stormwater runoff through a connected watershed to the eagle's lake", "The pesticide bioaccumulated in organisms throughout the food chain (fish and their prey), and then biomagnified to high concentrations in the eagle as a top predator — concentration increases at each trophic level", "Eagles are uniquely sensitive to this pesticide and accumulate it faster than other species"], correct: 2, explanation: "This question tests biomagnification. Fat-soluble persistent pesticides accumulate in the fatty tissues of each organism. Eagles eat many fish, each of which ate many smaller organisms, each of which absorbed the pesticide from the environment. Concentration multiplies at each trophic level. The eagle at the top receives a dose millions of times higher than the original water concentration, even 200 miles from the application site." },
+      { question: "A city's aging wastewater treatment plant discharges secondary-treated effluent into a lake known for recurring algal blooms. An environmental engineer recommends upgrading to tertiary treatment. Why is this the MOST targeted solution?", options: ["Secondary treatment fails to remove pathogens, which directly cause algal blooms", "Tertiary treatment specifically targets nitrogen and phosphorus — the nutrients driving eutrophication — while secondary treatment primarily removes BOD but leaves most nutrients in the effluent", "Tertiary treatment produces higher water temperatures that inhibit algal growth", "The upgrade is needed to meet federal disinfection standards under the Safe Drinking Water Act"], correct: 1, explanation: "Secondary treatment is effective at removing BOD (organic matter) via biological decomposition, but it does NOT significantly remove dissolved nutrients — nitrogen and phosphorus. These nutrients pass through secondary treatment and drive algal blooms in the receiving lake. Tertiary treatment specifically targets N and P through filtration, chemical precipitation, and biological nutrient removal, directly addressing the eutrophication problem." },
+      { question: "A mining company's tailings pile sits on a hillside above a pristine trout stream. Even on dry days with no runoff, water chemistry tests show elevated dissolved metals downstream. What best explains this ongoing contamination?", options: ["Trout naturally bioconcentrate metals from geological sources, skewing the downstream readings", "Acid mine drainage: sulfide minerals in the tailings react with oxygen and water to produce acidic leachate that continuously drains into the stream, and the low pH dissolves metals from the tailings and surrounding rock", "The mine's blasting activities send metal-laden dust that settles into the stream during operations", "Naturally occurring metal deposits in the streambed are eroding independently of the mine"], correct: 1, explanation: "Acid mine drainage is a continuous chemical process. Sulfide minerals (like pyrite) exposed during mining react with oxygen and water, producing sulfuric acid. This acid continuously leaches from the tailings pile, dissolving heavy metals as it drains into the stream. Low pH in the stream further increases metal solubility. AMD can persist for decades to centuries after a mine closes — it doesn't require active mining or rainfall events." },
+      { question: "After a major oil spill, response crews apply chemical dispersants to the slick. A community member asks, 'Did the dispersants clean up the oil?' What is the most accurate response?", options: ["Yes — dispersants chemically break down oil into water and carbon dioxide, eliminating it from the environment", "No — dispersants break oil into tiny droplets and move it into the water column rather than removing it. The oil remains in the marine environment and can increase exposure for organisms in the water column, though it reduces shoreline impact", "Yes — dispersants cause oil to sink harmlessly to the seafloor where it is absorbed by sediments", "No — dispersants are ineffective in salt water and should not be used in marine oil spill response"], correct: 1, explanation: "Dispersants are often misunderstood as a 'cleanup' tool. They physically and chemically break oil into tiny droplets, dispersing it into the water column — but the oil is still there. This tradeoff reduces acute shoreline contamination and surface film effects, but increases exposure of water-column organisms (fish larvae, zooplankton, invertebrates) to oil droplets. Actual oil removal requires skimming, burning, or bioremediation." },
+      { question: "A homeowner discovers their old house has lead-contaminated soil in the backyard from decades of leaded paint chipping. An environmental consultant recommends against bioremediation. Why?", options: ["Bioremediation is too expensive for residential use compared to other options", "Lead is a metal element and cannot be broken down or transformed into harmless compounds by microorganisms — bioremediation works on organic pollutants that microbes can metabolize, not metals", "Bioremediation works for lead but would take too long to be practical", "Regulatory agencies prohibit bioremediation near residential areas"], correct: 1, explanation: "This is a key distinction: bioremediation uses microbial metabolism to break down organic molecules (petroleum, many pesticides, some solvents). Lead is an element — it cannot be broken down into something harmless; it can only be moved, stabilized, or contained. Options for lead-contaminated soil include excavation and disposal, soil washing, phytoremediation (plants accumulate lead), or capping to prevent exposure and reduce leaching." },
+      { question: "A municipality must choose between two laws when addressing pollution scenarios: the Clean Water Act (CWA) or the Safe Drinking Water Act (SDWA). Which law applies to each scenario? (A) A factory wants to discharge treated wastewater into a river. (B) A city's public tap water tests positive for arsenic above acceptable levels.", options: ["Both scenarios are covered by the Clean Water Act", "Scenario A: Safe Drinking Water Act (river protection); Scenario B: Clean Water Act (tap water safety)", "Scenario A: Clean Water Act (surface water discharge permit); Scenario B: Safe Drinking Water Act (drinking water contaminant standard)", "Both scenarios are covered by CERCLA, which governs all water-related contamination"], correct: 2, explanation: "Law-matching is a core AP skill. The Clean Water Act regulates pollutant discharges into surface waters — industrial and municipal discharge permits (NPDES) are its primary tool. The Safe Drinking Water Act regulates the quality of public drinking water supplies, setting Maximum Contaminant Levels (MCLs) for substances like arsenic, lead, and nitrates. CERCLA (Superfund) is for cleaning up contaminated sites, not for discharge or drinking water standards." },
+      { question: "A watershed manager wants to reduce phosphorus loading to a downstream lake that suffers from algal blooms. Most of the phosphorus comes from agricultural fields. Which combination of strategies would be MOST effective?", options: ["Install a new wastewater treatment plant and increase chlorination to kill algae in the lake", "Build riparian buffer strips along streams to trap phosphorus-laden sediment, require farmers to reduce fertilizer applications to amounts plants can actually use, and retrofit the wastewater treatment plant with tertiary treatment to remove phosphorus before discharge", "Dredge the lake bottom to remove accumulated phosphorus from sediments", "Switch all agricultural irrigation to sprinkler systems to reduce water use and incidentally reduce runoff"], correct: 1, explanation: "Phosphorus often enters water bound to soil particles (via erosion) and in fertilizer runoff. The best plan addresses both nonpoint and point sources: riparian buffers slow runoff and trap sediment/phosphorus before it reaches the stream; precise fertilizer management prevents overapplication; tertiary treatment at the wastewater plant removes dissolved phosphorus from effluent. Dredging addresses accumulated sediment but not ongoing inputs — it's not a prevention strategy." },
+      { question: "Microplastics from the breakdown of larger plastic debris are found in the stomachs of fish hundreds of kilometers from any major plastic waste site. Which process BEST explains the distribution and persistence of microplastics in the ocean?", options: ["Microplastics are produced directly by ocean microorganisms as a metabolic byproduct", "Plastic items enter the ocean, are concentrated by gyre currents, photodegrade into smaller fragments under UV light, and are then transported throughout the water column where organisms ingest them while feeding", "Microplastics are deposited by atmospheric precipitation from industrial sites and are not related to larger plastic debris", "Ocean currents only concentrate microplastics in coastal areas near population centers, not in remote open ocean locations"], correct: 1, explanation: "The pathway: plastic enters ocean → ocean gyres concentrate floating debris → UV radiation causes photodegradation, fragmenting plastic into smaller and smaller pieces that remain as plastic polymers → microplastics are ingested by organisms filter-feeding or eating near the surface → they enter the food web. The North Pacific Gyre concentrates debris far from coastlines, which is why the Garbage Patch is in the open ocean, not near shore." },
+      { question: "After a period of heavy rain, a river's fecal coliform bacteria count spikes dramatically. The river receives treated municipal sewage through a permitted outfall, but the spike is far larger than the sewage plant's daily discharge could explain. What is the MOST likely explanation?", options: ["The sewage treatment plant's disinfection system malfunctioned temporarily", "The river drains urban areas with combined sewer systems — heavy rainfall exceeded treatment capacity, causing combined sewer overflows (CSOs) that discharged untreated sewage mixed with stormwater directly into the river", "Agricultural runoff from upstream farms introduced animal waste during the storm", "River sediments disturbed by storm flow released stored fecal coliform bacteria"], correct: 1, explanation: "The clue is the magnitude of the spike beyond the permitted outfall's capacity. Combined sewer overflow is the answer: in older cities with combined sewer and stormwater pipes, heavy rain can exceed treatment plant capacity, causing the system to overflow raw, untreated sewage mixed with stormwater directly into the receiving water body. This is a well-documented source of pathogen contamination after storms and is distinct from the normal (treated) plant discharge." },
+    ];
+
+    const nav = document.getElementById("sidebarNav"), mainEl = document.getElementById("main"), ambientOverlay = document.getElementById("ambientOverlay"), cursor = document.getElementById("cursor"), pinBtn = document.getElementById("pinBtn"), sidebar = document.getElementById("sidebar"), apToggleBtn = document.getElementById("apToggleBtn"), bestScoreEl = document.getElementById("bestScore"), themeToggleBtn = document.getElementById("themeToggleBtn"), themeLabel = document.getElementById("themeLabel");
+
+    let currentTab = "dashboard", quizIndex = 0, quizScore = 0, quizLocked = false;
+
+    function renderNav() { nav.innerHTML = tabs.map(t => `<button class="nav-btn ${t.id === currentTab ? "active" : ""}" data-tab="${t.id}" type="button"><span class="nav-indicator"></span><span class="nav-icon">${t.icon}</span><span class="nav-label">${t.label}</span></button>`).join("") }
+
+    function switchTab(id) { currentTab = id; document.querySelectorAll(".tab-content").forEach(s => s.classList.toggle("active", s.id === id)); document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === id)); const t = tabs.find(x => x.id === id); if (t) ambientOverlay.style.background = t.ambient; mainEl.scrollTo({ top: 0, behavior: "smooth" }) }
+
+    function renderGlossary(filter = "") { const v = filter.toLowerCase().trim(); const items = glossaryTerms.filter(t => t.term.toLowerCase().includes(v) || t.def.toLowerCase().includes(v)); document.getElementById("glossaryGrid").innerHTML = items.map(i => `<article class="feature-card glossary-card accent-g" data-target-tab="${i.tab}"><div class="mini-label">${i.tab}</div><h4>${i.term}</h4><div class="body-copy">${i.def}</div></article>`).join("") }
+
+    function renderFlashcards() { document.getElementById("flashGrid").innerHTML = flashcards.map(c => `<article class="flash-card" tabindex="0"><div class="flash-inner"><div class="flash-front"><div><div class="mini-label">Prompt</div><h3>${c.front}</h3></div><div class="flash-hint">Click to reveal</div></div><div class="flash-back"><div><div class="mini-label">Answer</div><div class="body-copy">${c.back}</div></div><div class="flash-hint">Click to flip back</div></div></div></article>`).join("") }
+
+    function renderEssayTopics() { const el = document.getElementById("essayTopics"); if (el) el.innerHTML = essayOutlines.map((o, i) => `<button class="essay-topic-btn" type="button" data-essay-index="${i}">${o.label}</button>`).join(""); const ol = document.getElementById("essayOutline"); if (ol) { ol.classList.remove("show"); ol.innerHTML = "" } }
+
+    function selectEssay(i, outlineId) { document.querySelectorAll(".essay-topic-btn").forEach(b => b.classList.toggle("active", Number(b.dataset.essayIndex) === i)); const o = essayOutlines[i], ol = document.getElementById(outlineId); if (ol) { ol.innerHTML = o.blocks.map(([l, b]) => `<div class="essay-block"><div class="essay-block-label">${l}</div><div class="essay-block-body">${b}</div></div>`).join(""); ol.classList.add("show") } }
+
+    function renderQuizQuestion() { const qm = document.getElementById("quizMount"), q = quizQuestions[quizIndex]; if (!q) { const pct = Math.round((quizScore / quizQuestions.length) * 100), prev = Number(localStorage.getItem("apes_u8_best") || 0), best = Math.max(prev, pct); localStorage.setItem("apes_u8_best", String(best)); bestScoreEl.textContent = best + "%"; qm.innerHTML = `<div class="quiz-status">Complete</div><div class="quiz-question">Score: ${quizScore} / ${quizQuestions.length} (${pct}%)</div><div class="quiz-feedback">Review eutrophication chains, BOD/DO relationships, wastewater treatment stages, and bioaccumulation vs. biomagnification if you missed any.</div><div class="quiz-next"><button class="glass-btn" id="restartQuizBtn" type="button">Restart Quiz</button></div>`; return } quizLocked = false; qm.innerHTML = `<div class="quiz-status">Question ${quizIndex + 1} of ${quizQuestions.length}</div><div class="quiz-question">${q.question}</div><div class="quiz-options">${q.options.map((o, i) => `<button class="quiz-option" type="button" data-option-index="${i}">${o}</button>`).join("")}</div><div class="quiz-feedback" id="quizFeedback"></div><div class="quiz-next" id="quizNext"></div>` }
+
+    function openModal(id) { document.getElementById(id).classList.add("open") }
+    function closeModal(id) { document.getElementById(id).classList.remove("open") }
+    function initBestScore() { const b = localStorage.getItem("apes_u8_best"); bestScoreEl.textContent = b ? b + "%" : "--" }
+
+    renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
+
+    document.addEventListener("mousemove", e => { if (!window.matchMedia("(pointer:fine)").matches) return; cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px" });
+    document.addEventListener("mouseover", e => { if (!window.matchMedia("(pointer:fine)").matches) return; const s = e.target.closest("button,a,.flash-card,.glossary-card") ? "18px" : "10px"; cursor.style.width = s; cursor.style.height = s });
+    pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin" });
+    nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab) });
+    document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100) } }));
+    document.getElementById("glossaryFilter").addEventListener("input", e => renderGlossary(e.target.value));
+    document.getElementById("flashGrid").addEventListener("click", e => { const c = e.target.closest(".flash-card"); if (c) c.classList.toggle("flipped") });
+    document.getElementById("openSearch").addEventListener("click", () => { const p = document.getElementById("sbSearchPanel"); p.classList.toggle("open"); if (p.classList.contains("open")) document.getElementById("sbInput").focus() });
+    document.getElementById("sbInput").addEventListener("input", e => { const q = e.target.value.toLowerCase().trim(), m = glossaryTerms.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q)).slice(0, 8); document.getElementById("sbResults").innerHTML = m.length ? m.map(i => `<div class="sb-result" data-target-tab="${i.tab}" data-target-term="${i.term}"><div class="sb-result-tab">${i.tab}</div><div class="sb-result-term">${i.term}</div><div class="sb-result-snip">${i.def}</div></div>`).join("") : `<div class="sb-result"><div class="sb-result-snip">No matches.</div></div>` });
+    document.getElementById("sbResults").addEventListener("click", e => { const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return; switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open"); document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = ""; if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm) } });
+    document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab) });
+    apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active") });
+    themeToggleBtn.addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); themeLabel.textContent = off ? "Theme Off" : "Theme On" });
+    document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal") });
+    document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal") });
+    document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline") });
+    document.getElementById("quizMount").addEventListener("click", e => { const opt = e.target.closest(".quiz-option"); if (opt && !quizLocked) { quizLocked = true; const q = quizQuestions[quizIndex], sel = Number(opt.dataset.optionIndex); document.querySelectorAll(".quiz-option").forEach((b, i) => { if (i === q.correct) b.classList.add("correct"); if (i === sel && sel !== q.correct) b.classList.add("wrong") }); if (sel === q.correct) quizScore++; document.getElementById("quizFeedback").textContent = q.explanation; document.getElementById("quizNext").innerHTML = `<button class="glass-btn" id="nextQuizBtn" type="button">${quizIndex === quizQuestions.length - 1 ? "See Score" : "Next Question"}</button>` } if (e.target.id === "nextQuizBtn") { quizIndex++; renderQuizQuestion() } if (e.target.id === "restartQuizBtn") { quizIndex = 0; quizScore = 0; renderQuizQuestion() } });
+    document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
+    mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
+    switchTab("dashboard");
+  </script>
+</body>
+
+</html>

@@ -42,7 +42,7 @@
       --progress-bar: linear-gradient(90deg, #4a9eff, #7b5ff7);
     }
 
-    
+
 
     html {
       scroll-behavior: smooth
@@ -118,7 +118,7 @@
       z-index: 0
     }
 
-    
+
 
     #sidebar {
       width: 72px;
@@ -1308,10 +1308,7 @@
         grid-template-columns: 1fr
       }
     }
-  
-
-
-</style>
+  </style>
 </head>
 
 <body>
@@ -1356,10 +1353,13 @@
         <a class="glass-btn" href="apes-unit5.html">Unit 5</a>
         <a class="glass-btn" href="apes-unit6.html" style="color:var(--g);border-color:rgba(74,158,255,.36);">Unit 6</a>
         <a class="glass-btn" href="apes-unit7.html">Unit 7</a>
+        <a class="glass-btn" href="apes-unit8.html">Unit 8</a>
+        <a class="glass-btn" href="apes-unit9.html">Unit 9</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Terms</button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Practice Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">FRQ Bank</button>
-        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme On</span></button>
+        <button id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme
+            On</span></button>
       </div>
     </div>
 
@@ -2245,7 +2245,7 @@
     document.getElementById("sbResults").addEventListener("click", e => { const r = e.target.closest(".sb-result"); if (!r || !r.dataset.targetTab) return; switchTab(r.dataset.targetTab); document.getElementById("sbSearchPanel").classList.remove("open"); document.getElementById("sbInput").value = ""; document.getElementById("sbResults").innerHTML = ""; if (r.dataset.targetTab === "glossary") { document.getElementById("glossaryFilter").value = r.dataset.targetTerm; renderGlossary(r.dataset.targetTerm) } });
     document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab) });
     apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active") });
-    
+
     document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal") });
     document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal") });
     document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex), "essayOutline") });
@@ -2254,9 +2254,9 @@
     document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) m.classList.remove("open") }));
     mainEl.addEventListener("scroll", () => { const max = mainEl.scrollHeight - mainEl.clientHeight; document.getElementById("readingProgressFill").style.width = (max > 0 ? (mainEl.scrollTop / max) * 100 : 0) + "%" });
     switchTab("dashboard");
-      
+
     document.getElementById("themeToggleBtn").addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); document.getElementById("themeLabel").textContent = off ? "Theme Off" : "Theme On" });
-</script>
+  </script>
 </body>
 
 </html>
