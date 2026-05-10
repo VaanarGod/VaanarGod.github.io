@@ -63,8 +63,11 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: linear-gradient(rgba(74, 158, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(74, 158, 255, .025) 1px, transparent 1px);
-      background-size: 40px 40px;
+      background-image:
+        linear-gradient(rgba(74, 158, 255, .012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 158, 255, .012) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
       pointer-events: none;
       z-index: 1
     }
@@ -81,14 +84,14 @@
 
     #cursor {
       position: fixed;
-      width: 10px;
-      height: 10px;
-      border-radius: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
       background: var(--g);
       pointer-events: none;
       z-index: 9999;
-      transform: translate(-50%, -50%) rotate(45deg);
-      mix-blend-mode: screen;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
       transition: width .2s, height .2s
     }
 
@@ -147,7 +150,7 @@
       top: 12px;
       right: 10px;
       padding: 4px 7px;
-      border-radius: 3px;
+      border-radius: 6px;
       border: 1px solid var(--border);
       background: transparent;
       color: var(--muted);
@@ -184,7 +187,7 @@
       height: 36px;
       display: grid;
       place-items: center;
-      border-radius: 4px;
+      border-radius: 10px;
       border: 1px solid rgba(74, 158, 255, .3);
       background: rgba(74, 158, 255, .06);
       color: var(--g);
@@ -234,7 +237,7 @@
       align-items: center;
       gap: 10px;
       padding: 10px 14px;
-      border-radius: 4px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       background: rgba(255, 255, 255, .02);
       color: var(--muted);
@@ -263,7 +266,7 @@
       right: 10px;
       border: 1px solid rgba(74, 158, 255, .2);
       background: rgba(4, 6, 14, .98);
-      border-radius: 4px;
+      border-radius: 12px;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
@@ -357,7 +360,7 @@
       gap: 14px;
       padding: 10px 14px;
       border: none;
-      border-radius: 4px;
+      border-radius: 10px;
       background: transparent;
       color: var(--muted);
       cursor: none;
@@ -387,7 +390,7 @@
       width: 2px;
       height: 24px;
       background: var(--g);
-      border-radius: 0;
+      border-radius: 5px;
       opacity: 0
     }
 
@@ -455,8 +458,7 @@
     .dot {
       width: 6px;
       height: 6px;
-      border-radius: 0;
-      transform: rotate(45deg);
+      border-radius: 50%;
       background: var(--g);
       flex-shrink: 0;
       animation: blink 2.4s ease-in-out infinite
@@ -516,7 +518,7 @@
 
     .glass-btn,
     #scoreTracker {
-      border-radius: 4px;
+      border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, .09);
       background: rgba(74, 158, 255, .04);
       color: var(--muted);
@@ -604,8 +606,7 @@
     .theme-dot {
       width: 8px;
       height: 8px;
-      border-radius: 0;
-      transform: rotate(45deg);
+      border-radius: 50%;
       background: var(--g);
       display: inline-block;
       transition: background .4s;
@@ -697,7 +698,7 @@
     .writing-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 20px;
       padding: 28px;
       position: relative;
       overflow: hidden;
@@ -805,7 +806,7 @@
     .stat-box {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 12px;
       padding: 14px;
       text-align: center;
       transition: background .4s
@@ -832,7 +833,7 @@
     .focus-callout {
       margin-top: 20px;
       padding: 16px 18px;
-      border-radius: 4px;
+      border-radius: 12px;
       background: rgba(74, 158, 255, .04);
       border: 1px solid rgba(74, 158, 255, .12);
       transition: background .4s
@@ -876,7 +877,7 @@
     .note-section {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 20px;
       padding: 28px;
       position: relative;
       overflow: hidden;
@@ -925,7 +926,7 @@
     .mini-note {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 12px;
       padding: 16px;
       transition: background .4s
     }
@@ -983,7 +984,7 @@
     .code-block {
       background: var(--code-bg);
       border: 1px solid var(--code-border);
-      border-radius: 4px;
+      border-radius: 10px;
       padding: 16px 18px;
       margin-top: 16px;
       font-family: 'IBM Plex Mono', monospace;
@@ -1028,7 +1029,7 @@
       max-width: 360px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 10px;
       padding: 10px 14px;
       color: var(--text);
       font-family: 'IBM Plex Mono', monospace;
@@ -1079,8 +1080,7 @@
       backface-visibility: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 24px
+      justify-content: space-between
     }
 
     .flash-back {
@@ -1123,7 +1123,7 @@
     .modal-box {
       background: var(--card);
       border: 1px solid rgba(74, 158, 255, .15);
-      border-radius: 6px;
+      border-radius: 20px;
       padding: 32px;
       max-width: 640px;
       width: 90vw;
@@ -1176,7 +1176,7 @@
     .quiz-option {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 10px;
       padding: 12px 16px;
       color: var(--body-copy-color);
       font-family: 'IBM Plex Sans', sans-serif;
@@ -1218,7 +1218,7 @@
     .essay-topic-btn {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 8px;
       padding: 10px 14px;
       color: var(--muted);
       font-family: 'IBM Plex Mono', monospace;
@@ -1249,7 +1249,7 @@
 
     .essay-block {
       background: var(--card2);
-      border-radius: 4px;
+      border-radius: 10px;
       padding: 14px 16px;
       border-left: 2px solid var(--g)
     }
@@ -1273,7 +1273,7 @@
     .note-jump {
       background: none;
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 8px;
       padding: 6px 12px;
       color: var(--muted);
       font-family: 'IBM Plex Mono', monospace;
@@ -2234,7 +2234,7 @@
     renderNav(); renderGlossary(); renderFlashcards(); renderEssayTopics(); initBestScore();
 
     document.addEventListener("mousemove", e => { if (!window.matchMedia("(pointer:fine)").matches) return; cursor.style.left = e.clientX + "px"; cursor.style.top = e.clientY + "px" });
-    document.addEventListener("mouseover", e => { if (!window.matchMedia("(pointer:fine)").matches) return; const s = e.target.closest("button,a,.flash-card,.glossary-card") ? "18px" : "10px"; cursor.style.width = s; cursor.style.height = s });
+    document.addEventListener("mouseover", e => { if (!window.matchMedia("(pointer:fine)").matches) return; cursor.style.width = e.target.closest("button,a,.flash-card,.glossary-card") ? "20px" : "12px"; cursor.style.height = cursor.style.width });
     pinBtn.addEventListener("click", () => { sidebar.classList.toggle("pinned"); pinBtn.classList.toggle("pinned"); pinBtn.textContent = sidebar.classList.contains("pinned") ? "Pinned" : "Pin" });
     nav.addEventListener("click", e => { const b = e.target.closest(".nav-btn"); if (b) switchTab(b.dataset.tab) });
     document.querySelectorAll(".note-jump").forEach(b => b.addEventListener("click", () => { const t = document.getElementById(b.dataset.noteTarget); if (t) { switchTab("notes"); setTimeout(() => t.scrollIntoView({ behavior: "smooth", block: "start" }), 100) } }));
