@@ -35,6 +35,22 @@
             --green: #4caf7d;
             --accent-main: #9b86f4;
         }
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #ffffff;
+      --muted: #555;
+      --cyan: #aaa;
+      --teal: #999;
+      --blue: #7a9ab8;
+      --red: #c06060;
+      --orange: #a07850;
+      --purple: #a090c0;
+      --green: #70a880;
+    }
+
 
         html { scroll-behavior: smooth; }
 
@@ -1020,7 +1036,31 @@
             .topbar { position: static }
             .glossary-toolbar input { min-width: 100%; width: 100% }
         }
-    </style>
+    
+    #themeToggleBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      flex-shrink: 0;
+      transition: background .3s;
+    }
+    body.theme-off .theme-dot {
+      background: #555;
+    }
+
+    body.theme-off .body-copy,
+    body.theme-off .bullet-list li,
+    body.theme-off .mini-note .body-copy { color: #fff; }
+    body.theme-off .code-block { color: #ccc; }
+    body.theme-off strong.ap-term { color: #fff; }
+    body.theme-off .nav-btn:hover { color: #ccc; }
+</style>
 </head>
 
 <body>
@@ -1063,6 +1103,7 @@
                 <a class="glass-btn" href="apcsp-unit5.html"
                     style="color:var(--purple);border-color:rgba(155,134,244,.32);">Big Idea 5</a>
                 <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme</span></button>
                 <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
                 <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
             </div>
@@ -1923,6 +1964,7 @@ Correct response:
         });
         document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
         apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("themeToggleBtn").addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); document.getElementById("themeLabel").textContent = off ? "Theme Off" : "Theme On"; });
         document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
         document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
         document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });

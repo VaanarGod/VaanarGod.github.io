@@ -15,6 +15,22 @@
       --cyan: #3eb8d4; --teal: #3eb89a; --blue: #5b8fd4;
       --red: #d95f5f; --orange: #f28749; --purple: #9b86f4; --green: #4caf7d;
     }
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #ffffff;
+      --muted: #555;
+      --cyan: #aaa;
+      --teal: #999;
+      --blue: #7a9ab8;
+      --red: #c06060;
+      --orange: #a07850;
+      --purple: #a090c0;
+      --green: #70a880;
+    }
+
     html { scroll-behavior: smooth; }
     body { min-height:100vh; display:flex; background:var(--bg); color:var(--text); font-family:"DM Mono",monospace; overflow:hidden; cursor:none; }
     body::before { content:""; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity:.35; pointer-events:none; z-index:1; }
@@ -161,7 +177,28 @@
     @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
     @media(max-width:1020px){.hero-grid{grid-template-columns:1fr} .dash-stats{grid-template-columns:1fr} #main{padding-left:26px;padding-right:26px} .notes-shell{grid-template-columns:1fr}}
     @media(max-width:760px){body{cursor:auto;overflow:auto;display:block} #cursor,#readingProgress{display:none} #sidebar{width:100%;height:auto;border-right:none;border-bottom:1px solid var(--border)} #sidebar:hover,#sidebar.pinned{width:100%} .logo-copy,.nav-label,.sidebar-footer span:last-child,.sb-search-trigger{opacity:1!important;pointer-events:auto!important} #pinBtn{display:none} nav{height:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:8px} #main{height:auto;overflow:visible} .topbar{position:static} .glossary-toolbar input{min-width:100%;width:100%}}
-  </style>
+  
+    #themeToggleBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      flex-shrink: 0;
+      transition: background .3s;
+    }
+    body.theme-off .theme-dot {
+      background: #555;
+    }
+
+    body.theme-off strong.ap-term { color: #fff; }
+    body.theme-off .code-block { color: #ccc; }
+    body.theme-off .nav-btn:hover { color: #ccc; }
+</style>
 </head>
 <body>
   <div id="cursor"></div>
@@ -200,6 +237,7 @@
         <a class="glass-btn" href="apcsp-unit4.html">Big Idea 4</a>
         <a class="glass-btn" href="apcsp-unit5.html">Big Idea 5</a>
         <button class="glass-btn" id="apToggleBtn" type="button">AP Highlight</button>
+        <button class="glass-btn" id="themeToggleBtn" type="button"><span class="theme-dot"></span><span id="themeLabel">Theme</span></button>
         <button class="glass-btn" id="quizOpenBtn" type="button">Launch Quiz</button>
         <button class="glass-btn" id="essayOpenBtn" type="button">Prompt Bank</button>
       </div>
@@ -802,6 +840,7 @@ DISPLAY(countHot)   // outputs 2</div>
     });
     document.getElementById("glossaryGrid").addEventListener("click", e => { const c = e.target.closest(".glossary-card"); if (c) switchTab(c.dataset.targetTab); });
     apToggleBtn.addEventListener("click", () => { document.body.classList.toggle("ap-highlight"); apToggleBtn.classList.toggle("active"); });
+    document.getElementById("themeToggleBtn").addEventListener("click", () => { const off = document.body.classList.toggle("theme-off"); document.getElementById("themeLabel").textContent = off ? "Theme Off" : "Theme On"; });
     document.getElementById("quizOpenBtn").addEventListener("click", () => { quizIndex = 0; quizScore = 0; renderQuizQuestion(); openModal("quizModal"); });
     document.getElementById("essayOpenBtn").addEventListener("click", () => { renderEssayTopics(); openModal("essayModal"); });
     document.getElementById("essayTopics").addEventListener("click", e => { const b = e.target.closest(".essay-topic-btn"); if (b) selectEssay(Number(b.dataset.essayIndex)); });
