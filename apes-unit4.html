@@ -414,6 +414,16 @@
     .nav-icon {
       font-size: 14px;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      transition: color .2s;
+    }
+
+    .nav-btn.active .nav-icon,
+    .nav-btn:hover .nav-icon {
+      color: var(--accent);
     }
 
     .nav-label {
@@ -2187,11 +2197,11 @@
 
   <script>
     const tabs = [
-      { id: "dashboard", icon: "🌍", label: "Dashboard", ambient: "radial-gradient(ellipse at 40% 20%, rgba(74,184,216,.09), transparent 65%)" },
-      { id: "notes", icon: "📋", label: "Notes", ambient: "radial-gradient(ellipse at 60% 30%, rgba(61,207,176,.07), transparent 65%)" },
-      { id: "glossary", icon: "📖", label: "Glossary", ambient: "radial-gradient(ellipse at 50% 10%, rgba(90,143,212,.08), transparent 65%)" },
-      { id: "flashcards", icon: "🃏", label: "Flashcards", ambient: "radial-gradient(ellipse at 30% 50%, rgba(106,216,184,.07), transparent 65%)" },
-      { id: "exam", icon: "🎯", label: "Exam Prep", ambient: "radial-gradient(ellipse at 70% 20%, rgba(122,184,248,.08), transparent 65%)" },
+      { id: "dashboard", icon: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 1.5L14.5 8 8 14.5 1.5 8Z"/></svg>`, label: "Dashboard", ambient: "radial-gradient(ellipse at 40% 20%, rgba(74,184,216,.09), transparent 65%)" },
+      { id: "notes", icon: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/></svg>`, label: "Notes", ambient: "radial-gradient(ellipse at 60% 30%, rgba(61,207,176,.07), transparent 65%)" },
+      { id: "glossary", icon: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="2.5" y1="5.5" x2="13.5" y2="5.5"/><line x1="2.5" y1="10.5" x2="13.5" y2="10.5"/><line x1="5.5" y1="2.5" x2="5.5" y2="13.5"/><line x1="10.5" y1="2.5" x2="10.5" y2="13.5"/></svg>`, label: "Glossary", ambient: "radial-gradient(ellipse at 50% 10%, rgba(90,143,212,.08), transparent 65%)" },
+      { id: "flashcards", icon: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M8 2L14 13.5H2Z"/></svg>`, label: "Flashcards", ambient: "radial-gradient(ellipse at 30% 50%, rgba(106,216,184,.07), transparent 65%)" },
+      { id: "exam", icon: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l2.5-.5L13 5a1.414 1.414 0 00-2-2L3.5 10.5 3 13z"/><line x1="9.5" y1="4.5" x2="11.5" y2="6.5"/></svg>`, label: "Exam Prep", ambient: "radial-gradient(ellipse at 70% 20%, rgba(122,184,248,.08), transparent 65%)" },
     ];
 
     const glossaryTerms = [

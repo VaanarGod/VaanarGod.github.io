@@ -36,6 +36,23 @@
       --accent: #5dbf6e;
     }
 
+    body.theme-off {
+      --bg: #000;
+      --card: #0d0d0d;
+      --card2: #151515;
+      --border: rgba(255, 255, 255, .07);
+      --text: #ffffff;
+      --muted: #555;
+      --g: #aaa;
+      --g2: #999;
+      --g3: #888;
+      --gold: #bbb;
+      --blue: #7a9ab8;
+      --red: #c06060;
+      --orange: #a07850;
+      --accent: #aaa;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -1374,6 +1391,16 @@
         width: 100%
       }
     }
+
+    body.theme-off .body-copy,
+    body.theme-off .bullet-list li,
+    body.theme-off .mini-note .body-copy,
+    body.theme-off .flash-back .body-copy,
+    body.theme-off .compare-table td { color: #fff; }
+
+    body.theme-off .code-block { color: #ccc; }
+    body.theme-off strong.ap-term { color: #fff; }
+    body.theme-off .nav-btn:hover { color: #ccc; }
   </style>
 </head>
 
